@@ -1,0 +1,6 @@
+{
+  "name": "APEX Việt Nam - Cửa Chống Cháy & Giải Pháp PCCC Toàn Diện",
+  "description": "Công ty TNHH APEX Việt Nam - Giải pháp cửa chống cháy, cửa cuốn ngăn cháy, rèm ngăn cháy và thiết bị PCCC đồng bộ cho mọi công trình.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
