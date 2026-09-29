@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   ArrowRight, ArrowUpRight, Award, Building, Building2, ChevronLeft,
-  ChevronRight, Clock3, Factory, FileCheck2, Hotel, MapPin,
+  ChevronRight, Factory, FileCheck2, Hotel, MapPin,
   MessageSquare, School, ShieldCheck, Store, Wrench,
 } from 'lucide-react';
 import {
@@ -21,11 +21,11 @@ const trustPoints = [
   { value: 'QCVN 06', label: 'Đáp ứng quy chuẩn' },
 ];
 
-const reasons = [
-  { icon: FileCheck2, title: 'Hồ sơ kiểm định minh bạch', description: 'Mẫu cửa được thử nghiệm tại IBST, đủ cơ sở phục vụ thẩm duyệt và nghiệm thu.' },
-  { icon: Wrench, title: 'Thiết kế theo hiện trạng', description: 'Kỹ sư khảo sát khẩu độ, điều kiện vận hành và đề xuất cấu hình phù hợp từng khu vực.' },
-  { icon: Clock3, title: 'Chủ động tiến độ', description: 'Sản xuất, vận chuyển và lắp đặt được kiểm soát theo mốc nghiệm thu của dự án.' },
-  { icon: ShieldCheck, title: 'Đồng hành sau bàn giao', description: 'Bảo trì định kỳ và tiếp nhận sự cố kỹ thuật trong suốt vòng đời sản phẩm.' },
+const coreValues = [
+  { letter: 'A', icon: FileCheck2, english: 'Assurance', vietnamese: 'An tâm', description: 'Cam kết rõ ràng về tiêu chuẩn, hồ sơ và chất lượng để mỗi công trình được triển khai với sự tin cậy.' },
+  { letter: 'P', icon: ShieldCheck, english: 'Protection', vietnamese: 'Bảo vệ', description: 'Mọi giải pháp đều hướng tới mục tiêu cốt lõi: bảo vệ con người, tài sản và khả năng thoát nạn.' },
+  { letter: 'E', icon: Wrench, english: 'Engineering', vietnamese: 'Kỹ thuật', description: 'Khảo sát đúng hiện trạng, thiết kế đúng yêu cầu và kiểm soát chính xác trong từng khâu sản xuất, lắp đặt.' },
+  { letter: 'X', icon: Award, english: 'eXcellence', vietnamese: 'Vượt trội', description: 'Liên tục nâng chuẩn sản phẩm, tiến độ và dịch vụ để tạo ra giá trị bền vững cho mỗi dự án.' },
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onOpenChat }) => {
@@ -56,7 +56,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
           <div className="max-w-3xl">
             <p className="mb-6 flex items-center gap-3 text-xs font-semibold text-red-300">
               <span className="h-px w-10 bg-red-400" />
-              Giải pháp ngăn cháy cho công trình
+              Vững chuẩn an toàn, trọn niềm an tâm
             </p>
             <h1 className="max-w-3xl text-4xl font-semibold leading-[1.15] text-white sm:text-5xl lg:text-6xl">
               Bảo vệ công trình bằng giải pháp được kiểm chứng.
@@ -184,17 +184,21 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
 
       <section className="bg-white py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
+          <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr]">
             <div>
-              <span className="section-kicker">Năng lực triển khai</span>
-              <h2 className="section-title">Một đầu mối từ thiết kế đến bảo trì</h2>
-              <p className="mt-5 text-sm leading-7 text-slate-600">Quy trình rõ ràng giúp chủ đầu tư và nhà thầu kiểm soát chất lượng, tiến độ và hồ sơ nghiệm thu.</p>
+              <span className="section-kicker">Giá trị cốt lõi</span>
+              <h2 className="section-title">Bốn cam kết định hình APEX</h2>
+              <p className="mt-5 max-w-md text-sm leading-7 text-slate-600">Tên gọi APEX là lời cam kết xuyên suốt từ tư vấn, thiết kế đến sản xuất, lắp đặt và đồng hành sau bàn giao.</p>
+              <p className="mt-6 border-l-2 border-red-700 pl-4 text-sm font-semibold leading-6 text-slate-900">Vững chuẩn an toàn,<br />trọn niềm an tâm.</p>
             </div>
             <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-              {reasons.map(({ icon: Icon, title, description }, index) => (
-                <div key={title} className="border-t border-slate-300 pt-5">
-                  <div className="flex items-center justify-between"><Icon className="h-5 w-5 text-red-700" strokeWidth={1.7} /><span className="text-xs text-slate-400">0{index + 1}</span></div>
-                  <h3 className="mt-5 text-base font-semibold text-slate-900">{title}</h3>
+              {coreValues.map(({ letter, icon: Icon, english, vietnamese, description }) => (
+                <div key={letter} className="border-t border-slate-300 pt-5">
+                  <div className="flex items-start justify-between gap-4">
+                    <span className="text-4xl font-semibold leading-none text-[#14532d]">{letter}</span>
+                    <Icon className="h-5 w-5 text-red-700" strokeWidth={1.7} aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-5 text-base font-semibold text-slate-900">{english} <span className="font-normal text-slate-500">/ {vietnamese}</span></h3>
                   <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
                 </div>
               ))}

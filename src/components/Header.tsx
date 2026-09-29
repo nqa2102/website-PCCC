@@ -74,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
                 CÔNG TY TNHH APEX VIỆT NAM
               </p>
               <p className="text-[9px] sm:text-[10px] text-slate-500">
-                Giải pháp PCCC & Cửa Chống Cháy Toàn Diện
+                Vững chuẩn an toàn, trọn niềm an tâm
               </p>
             </div>
           </button>

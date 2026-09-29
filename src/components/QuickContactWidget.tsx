@@ -32,7 +32,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
          ======================================================== */}
       <aside 
         aria-label="Kênh liên hệ nhanh desktop" 
-        className="hidden sm:flex fixed right-4 bottom-6 z-40 flex-col items-center gap-2"
+        className="hidden min-[1440px]:flex fixed right-4 bottom-6 z-40 flex-col items-center gap-2"
       >
         {/* 1. Gọi ngay */}
         <a
@@ -103,7 +103,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
          ======================================================== */}
       <nav 
         aria-label="Thanh liên hệ nhanh mobile"
-        className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-neutral-200 py-1.5 px-3 flex items-center justify-between shadow-2xl safe-area-bottom"
+        className="min-[1440px]:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-neutral-200 py-1.5 px-3 flex items-center justify-between shadow-2xl safe-area-bottom"
       >
         {/* Call Hotline */}
         <a
@@ -153,7 +153,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
         <button
           onClick={scrollToTop}
           aria-label="Lên đầu trang"
-          className="sm:hidden fixed right-3 bottom-16 z-40 flex items-center justify-center w-9 h-9 rounded-full bg-slate-900/80 text-white backdrop-blur-xs shadow-lg active:scale-90 transition-transform"
+          className="min-[1440px]:hidden fixed right-3 bottom-16 z-40 flex items-center justify-center w-9 h-9 rounded-full bg-slate-900/80 text-white backdrop-blur-xs shadow-lg active:scale-90 transition-transform"
         >
           <ArrowUp className="w-4 h-4" />
         </button>

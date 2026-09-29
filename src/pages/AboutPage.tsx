@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, Award, Factory, Users, CheckCircle2, FileCheck, ArrowRight, Phone } from 'lucide-react';
+import { ShieldCheck, Award, Wrench, CheckCircle2, FileCheck, ArrowRight, Phone } from 'lucide-react';
 import { HERO_IMAGE, STEEL_DOOR_IMAGE } from '../data/mockData';
 
 interface AboutPageProps {
@@ -8,6 +8,13 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate }) => {
+  const coreValues = [
+    { letter: 'A', icon: FileCheck, english: 'Assurance', vietnamese: 'An tâm', description: 'Cam kết minh bạch về tiêu chuẩn, hồ sơ và chất lượng trong toàn bộ quá trình triển khai.' },
+    { letter: 'P', icon: ShieldCheck, english: 'Protection', vietnamese: 'Bảo vệ', description: 'Đặt sự an toàn của con người, tài sản và công trình làm mục tiêu cao nhất.' },
+    { letter: 'E', icon: Wrench, english: 'Engineering', vietnamese: 'Kỹ thuật', description: 'Lấy khảo sát thực tế, tính chính xác và khả năng nghiệm thu làm nền tảng cho mọi giải pháp.' },
+    { letter: 'X', icon: Award, english: 'eXcellence', vietnamese: 'Vượt trội', description: 'Không ngừng nâng cao sản phẩm, tiến độ và chất lượng phục vụ sau bàn giao.' },
+  ];
+
   return (
     <div className="w-full bg-white">
       {/* Hero Banner */}
@@ -20,6 +27,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
           <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white font-serif">
             CÔNG TY TNHH APEX VIỆT NAM
           </h1>
+          <p className="mt-3 text-sm font-semibold text-red-300 sm:text-base">
+            Vững chuẩn an toàn, trọn niềm an tâm.
+          </p>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-3 leading-relaxed">
             Tiên phong trong lĩnh vực nghiên cứu, chế tạo và cung ứng giải pháp cửa chống cháy, cửa cuốn ngăn cháy siêu trường và rèm ngăn khói theo quy chuẩn an toàn PCCC cao nhất tại Việt Nam.
           </p>
@@ -82,51 +92,26 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
       <section className="py-14 bg-neutral-50 border-y border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-xl mx-auto mb-10">
-            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
-              GIÁ TRỊ CỐT LÕI
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Định hướng phát triển bền vững và cam kết trách nhiệm với sự an toàn của cộng đồng.
+          <div className="mb-10 max-w-2xl">
+            <span className="section-kicker">Giá trị cốt lõi</span>
+            <h2 className="section-title">APEX không chỉ là tên gọi</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-600">
+              Bốn chữ cái đại diện cho bốn nguyên tắc được áp dụng nhất quán trong sản phẩm, kỹ thuật và cách APEX đồng hành cùng khách hàng.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 uppercase">
-                An Toàn Tuyệt Đối
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Chúng tôi không thỏa hiệp về chất lượng. Mọi sản phẩm đều đạt hoặc vượt tiêu chuẩn QCVN 06:2022/BXD để bảo vệ sinh mạng và tài sản trong tình huống khẩn cấp nhất.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
-                <Factory className="w-5 h-5" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 uppercase">
-                Tiên Phong Công Nghệ
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Ứng dụng vật liệu lõi MgO xanh, bông gốm cách nhiệt không độc hại, máy cắt chấn CNC tốc độ cao cho độ chính xác kích thước đến từng milimet.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
-                <Users className="w-5 h-5" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 uppercase">
-                Đồng Hành Nghiệm Thu
-              </h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Không chỉ bán sản phẩm, APEX hỗ trợ trọn gói thủ tục hồ sơ kiểm định, tem kiểm định PCCC và phối hợp với cơ quan chức năng nghiệm thu công trình.
-              </p>
-            </div>
+          <div className="grid border-l border-t border-slate-200 sm:grid-cols-2 lg:grid-cols-4">
+            {coreValues.map(({ letter, icon: Icon, english, vietnamese, description }) => (
+              <article key={letter} className="min-h-64 border-b border-r border-slate-200 bg-white p-6 sm:p-7">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="text-5xl font-semibold leading-none text-[#14532d]">{letter}</span>
+                  <Icon className="h-5 w-5 text-red-700" strokeWidth={1.7} aria-hidden="true" />
+                </div>
+                <h3 className="mt-8 text-base font-semibold text-slate-900">{english}</h3>
+                <p className="mt-1 text-xs font-semibold text-red-700">{vietnamese}</p>
+                <p className="mt-4 text-sm leading-6 text-slate-600">{description}</p>
+              </article>
+            ))}
           </div>
 
         </div>

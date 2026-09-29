@@ -24,6 +24,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
                 VIỆT NAM
               </span>
             </div>
+            <p className="text-sm font-semibold text-white">
+              Vững chuẩn an toàn, trọn niềm an tâm.
+            </p>
             <p className="text-xs text-neutral-400 leading-relaxed pr-4">
               CÔNG TY TNHH APEX VIỆT NAM là đơn vị hàng đầu chuyên sản xuất, cung cấp và thi công các giải pháp cửa chống cháy, cửa cuốn ngăn cháy siêu trường, rèm ngăn khói tự động và phụ kiện PCCC đồng bộ kiểm định theo QCVN 06:2022/BXD.
             </p>
