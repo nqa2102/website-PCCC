@@ -8,7 +8,7 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
   return (
-    <footer className="bg-slate-950 text-neutral-300 border-t border-slate-900 text-xs">
+    <footer className="bg-[#102b21] text-neutral-300 border-t border-white/10 text-xs">
       {/* Main Footer Links & Info */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
@@ -190,21 +190,21 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
               Tiêu Chuẩn & Chứng Chỉ
             </h4>
             <div className="space-y-2">
-              <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-start gap-2">
+              <div className="bg-[#163b2c] p-2.5 rounded-lg border border-white/10 flex items-start gap-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-white">QCVN 06:2022/BXD</p>
                   <p className="text-[10px] text-neutral-400">Đốt mẫu thực nghiệm tại IBST</p>
                 </div>
               </div>
-              <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-start gap-2">
+              <div className="bg-[#163b2c] p-2.5 rounded-lg border border-white/10 flex items-start gap-2">
                 <FileCheck className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-white">Cục CS PCCC & CNCH</p>
                   <p className="text-[10px] text-neutral-400">Cấp tem kiểm định phương tiện PCCC</p>
                 </div>
               </div>
-              <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 flex items-start gap-2">
+              <div className="bg-[#163b2c] p-2.5 rounded-lg border border-white/10 flex items-start gap-2">
                 <ShieldCheck className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
                 <div>
                   <p className="font-semibold text-white">ISO 9001:2015</p>
@@ -217,7 +217,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-slate-800 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-neutral-500 text-[11px]">
+        <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-neutral-400 text-[11px]">
           <div>
             © {new Date().getFullYear()} CÔNG TY TNHH APEX VIỆT NAM. Mã số thuế: 0108924618. Giấy phép ĐKKD do Sở KH&ĐT cấp.
           </div>

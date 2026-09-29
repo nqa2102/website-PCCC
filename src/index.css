@@ -3,20 +3,57 @@
 @theme {
   --font-sans: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
   --font-serif: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+
+  /* APEX palette: Wood supports Fire, expressed as forest + ember. */
+  --color-red-50: #fff3ef;
+  --color-red-100: #ffe2da;
+  --color-red-200: #ffc7b8;
+  --color-red-300: #f7a089;
+  --color-red-400: #e76f51;
+  --color-red-500: #c2410c;
+  --color-red-600: #9f1d20;
+  --color-red-700: #86181b;
+  --color-red-800: #6f1719;
+  --color-red-900: #551214;
+  --color-red-950: #360a0c;
+
+  --color-slate-50: #f8f5ef;
+  --color-slate-100: #eee8df;
+  --color-slate-200: #ddd4c8;
+  --color-slate-300: #c3b9ad;
+  --color-slate-400: #9a9187;
+  --color-slate-500: #746f68;
+  --color-slate-600: #5f5a54;
+  --color-slate-700: #4a4540;
+  --color-slate-800: #3a342e;
+  --color-slate-900: #27241f;
+  --color-slate-950: #102b21;
+
+  --color-neutral-50: #fffaf3;
+  --color-neutral-100: #f5efe6;
+  --color-neutral-200: #e7ded1;
+  --color-neutral-300: #d5c8b8;
+  --color-neutral-400: #b9aa9b;
+  --color-neutral-500: #9c8e80;
+
+  --color-emerald-500: #15803d;
+  --color-emerald-600: #166534;
+  --color-emerald-700: #14532d;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    background: #f7f7f5;
+    background: #fff7ed;
   }
 
   body {
     margin: 0;
     min-width: 320px;
-    color: #18212b;
+    color: #27241f;
     font-family: var(--font-sans);
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 1.6;
     letter-spacing: 0;
     text-rendering: optimizeLegibility;
   }
@@ -41,7 +78,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid #dc2626;
+    outline: 2px solid #c2410c;
     outline-offset: 3px;
   }
 }
@@ -51,7 +88,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.625rem;
-    color: #b91c1c;
+    color: #9f1d20;
     font-size: 0.75rem;
     font-weight: 700;
   }
@@ -65,7 +102,7 @@
 
   .section-title {
     margin-top: 0.75rem;
-    color: #18212b;
+    color: #27241f;
     font-size: clamp(1.75rem, 3vw, 2.75rem);
     font-weight: 700;
     line-height: 1.2;

@@ -46,11 +46,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
   };
 
   return (
-    <div className="w-full bg-[#f7f7f5]">
-      <section className="relative min-h-[620px] overflow-hidden bg-slate-950 text-white lg:min-h-[700px]">
+    <div className="w-full bg-neutral-50">
+      <section className="relative min-h-[620px] overflow-hidden bg-[#102b21] text-white lg:min-h-[700px]">
         <img src={HERO_IMAGE} alt="Cửa chống cháy APEX tại công trình" className="absolute inset-0 h-full w-full object-cover object-center" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,15,24,0.96)_0%,rgba(8,15,24,0.8)_48%,rgba(8,15,24,0.18)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950/70 to-transparent" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,43,33,0.97)_0%,rgba(16,43,33,0.84)_48%,rgba(39,36,31,0.16)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#102b21]/75 to-transparent" />
 
         <div className="relative mx-auto flex min-h-[620px] max-w-7xl flex-col justify-center px-5 py-20 sm:px-8 lg:min-h-[700px] lg:px-10">
           <div className="max-w-3xl">
@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
-      <section className="bg-[#18212b] py-20 text-white sm:py-24">
+      <section className="bg-[#14532d] py-20 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
             <div>
@@ -151,7 +151,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
-      <section className="bg-[#f7f7f5] py-20 sm:py-24">
+      <section className="bg-neutral-50 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
@@ -203,7 +203,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
-      <section className="border-y border-slate-200 bg-[#f7f7f5] py-14">
+      <section className="border-y border-slate-200 bg-neutral-50 py-14">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <p className="text-xs font-semibold text-slate-500">Đối tác và thương hiệu đồng hành</p>
           <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
