@@ -32,16 +32,15 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
          ======================================================== */}
       <aside 
         aria-label="Kênh liên hệ nhanh desktop" 
-        className="hidden sm:flex fixed right-3 bottom-6 z-40 flex-col items-center gap-2.5"
+        className="hidden sm:flex fixed right-4 bottom-6 z-40 flex-col items-center gap-2"
       >
         {/* 1. Gọi ngay */}
         <a
           href="tel:0901234567"
           aria-label="Gọi ngay hotline 0901 234 567"
-          className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full bg-red-600 text-white shadow-lg hover:bg-red-700 transition-all hover:scale-105 active:scale-95 animate-pulse"
+          className="group relative flex items-center justify-center w-11 h-11 rounded bg-white text-red-700 border border-slate-200 shadow-md hover:border-red-300 transition-colors"
         >
           <Phone className="w-5 h-5" />
-          <span className="text-[8px] font-bold tracking-tight">Gọi ngay</span>
           {/* Tooltip */}
           <span className="absolute right-14 whitespace-nowrap bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-md">
             Hotline: 0901 234 567
@@ -52,7 +51,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
         <button
           onClick={() => setShowZaloModal(true)}
           aria-label="Liên hệ qua Zalo"
-          className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all hover:scale-105 active:scale-95"
+          className="group relative flex items-center justify-center w-11 h-11 rounded bg-white text-blue-700 border border-slate-200 shadow-md hover:border-blue-300 transition-colors"
         >
           <span className="text-[11px] font-extrabold tracking-tight">Zalo</span>
           {/* Tooltip */}
@@ -65,10 +64,9 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
         <button
           onClick={onOpenChat}
           aria-label="Chat tư vấn kỹ thuật PCCC"
-          className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full bg-sky-500 text-white shadow-lg hover:bg-sky-600 transition-all hover:scale-105 active:scale-95"
+          className="group relative flex items-center justify-center w-11 h-11 rounded bg-white text-slate-700 border border-slate-200 shadow-md hover:border-slate-400 transition-colors"
         >
           <MessageSquare className="w-4 h-4" />
-          <span className="text-[8px] font-bold text-center leading-tight">Chat tư vấn</span>
           {/* Tooltip */}
           <span className="absolute right-14 whitespace-nowrap bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-md">
             Tư vấn kỹ thuật PCCC trực tuyến
@@ -79,10 +77,9 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
         <button
           onClick={onOpenQuote}
           aria-label="Yêu cầu gửi báo giá"
-          className="group relative flex flex-col items-center justify-center w-12 h-12 rounded-full bg-amber-500 text-white shadow-lg hover:bg-amber-600 transition-all hover:scale-105 active:scale-95"
+          className="group relative flex items-center justify-center w-11 h-11 rounded bg-red-700 text-white border border-red-700 shadow-md hover:bg-red-800 transition-colors"
         >
           <FileText className="w-4 h-4" />
-          <span className="text-[8px] font-bold text-center leading-tight">Báo giá</span>
           {/* Tooltip */}
           <span className="absolute right-14 whitespace-nowrap bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-md">
             Nhận dự toán & báo giá trong 15p

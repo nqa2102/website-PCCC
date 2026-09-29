@@ -1,1 +1,73 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+  --font-serif: "Be Vietnam Pro", "Segoe UI", Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background: #f7f7f5;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    color: #18212b;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    letter-spacing: 0;
+    text-rendering: optimizeLegibility;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid #dc2626;
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .section-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    color: #b91c1c;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .section-kicker::before {
+    width: 1.75rem;
+    height: 2px;
+    background: currentColor;
+    content: "";
+  }
+
+  .section-title {
+    margin-top: 0.75rem;
+    color: #18212b;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}

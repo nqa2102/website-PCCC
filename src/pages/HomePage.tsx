@@ -1,33 +1,11 @@
 import React, { useState } from 'react';
-import { 
-  ArrowRight, 
-  MessageSquare, 
-  ShieldCheck, 
-  Sparkles, 
-  Cog, 
-  Users, 
-  Building2, 
-  Building, 
-  Store, 
-  Factory, 
-  School, 
-  Hotel, 
-  ChevronLeft, 
-  ChevronRight, 
-  CheckCircle2, 
-  Wrench, 
-  Clock, 
-  Award,
-  Layers,
-  Flame
+import {
+  ArrowRight, ArrowUpRight, Award, Building, Building2, ChevronLeft,
+  ChevronRight, Clock3, Factory, FileCheck2, Hotel, MapPin,
+  MessageSquare, School, ShieldCheck, Store, Wrench,
 } from 'lucide-react';
-import { 
-  PRODUCTS, 
-  SOLUTIONS, 
-  PROJECTS, 
-  NEWS_ARTICLES, 
-  PARTNER_LOGOS, 
-  HERO_IMAGE 
+import {
+  HERO_IMAGE, NEWS_ARTICLES, PARTNER_LOGOS, PRODUCTS, PROJECTS, SOLUTIONS,
 } from '../data/mockData';
 
 interface HomePageProps {
@@ -36,552 +14,234 @@ interface HomePageProps {
   onOpenChat: () => void;
 }
 
-export const HomePage: React.FC<HomePageProps> = ({
-  onNavigate,
-  onOpenQuote,
-  onOpenChat,
-}) => {
+const trustPoints = [
+  { value: 'EI60-EI120', label: 'Dải giới hạn chịu lửa' },
+  { value: '36 tháng', label: 'Bảo hành cơ khí' },
+  { value: '24/7', label: 'Hỗ trợ kỹ thuật' },
+  { value: 'QCVN 06', label: 'Đáp ứng quy chuẩn' },
+];
+
+const reasons = [
+  { icon: FileCheck2, title: 'Hồ sơ kiểm định minh bạch', description: 'Mẫu cửa được thử nghiệm tại IBST, đủ cơ sở phục vụ thẩm duyệt và nghiệm thu.' },
+  { icon: Wrench, title: 'Thiết kế theo hiện trạng', description: 'Kỹ sư khảo sát khẩu độ, điều kiện vận hành và đề xuất cấu hình phù hợp từng khu vực.' },
+  { icon: Clock3, title: 'Chủ động tiến độ', description: 'Sản xuất, vận chuyển và lắp đặt được kiểm soát theo mốc nghiệm thu của dự án.' },
+  { icon: ShieldCheck, title: 'Đồng hành sau bàn giao', description: 'Bảo trì định kỳ và tiếp nhận sự cố kỹ thuật trong suốt vòng đời sản phẩm.' },
+];
+
+export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onOpenChat }) => {
   const [projectIndex, setProjectIndex] = useState(0);
+  const activeProject = PROJECTS[projectIndex];
 
-  const nextProject = () => {
-    setProjectIndex((prev) => (prev + 1) % PROJECTS.length);
+  const solutionIcons: Record<string, React.ElementType> = {
+    'chung-cu-can-ho': Building2,
+    'van-phong-toa-nha': Building,
+    'trung-tam-thuong-mai': Store,
+    'nha-xuong-khu-cong-nghiep': Factory,
+    'benh-vien-truong-hoc': School,
+    'khach-san-resort': Hotel,
   };
 
-  const prevProject = () => {
-    setProjectIndex((prev) => (prev - 1 + PROJECTS.length) % PROJECTS.length);
-  };
-
-  const solutionIcons: Record<string, React.ReactNode> = {
-    'chung-cu-can-ho': <Building2 className="w-8 h-8 text-sky-600 mb-2" />,
-    'van-phong-toa-nha': <Building className="w-8 h-8 text-sky-600 mb-2" />,
-    'trung-tam-thuong-mai': <Store className="w-8 h-8 text-sky-600 mb-2" />,
-    'nha-xuong-khu-cong-nghiep': <Factory className="w-8 h-8 text-sky-600 mb-2" />,
-    'benh-vien-truong-hoc': <School className="w-8 h-8 text-sky-600 mb-2" />,
-    'khach-san-resort': <Hotel className="w-8 h-8 text-sky-600 mb-2" />,
+  const changeProject = (direction: number) => {
+    setProjectIndex((current) => (current + direction + PROJECTS.length) % PROJECTS.length);
   };
 
   return (
-    <div className="w-full">
-      {/* ========================================================
-          1. HERO SECTION (Identical to screenshot)
-         ======================================================== */}
-      <section className="relative bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 text-white overflow-hidden">
-        {/* Subtle background glow */}
-        <div className="absolute top-0 right-0 w-1/2 h-full opacity-10 bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+    <div className="w-full bg-[#f7f7f5]">
+      <section className="relative min-h-[620px] overflow-hidden bg-slate-950 text-white lg:min-h-[700px]">
+        <img src={HERO_IMAGE} alt="Cửa chống cháy APEX tại công trình" className="absolute inset-0 h-full w-full object-cover object-center" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(8,15,24,0.96)_0%,rgba(8,15,24,0.8)_48%,rgba(8,15,24,0.18)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950/70 to-transparent" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-8 sm:pb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
-            
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-4 sm:space-y-5 z-10">
-              
-              {/* Tagline */}
-              <div className="inline-block">
-                <span className="text-[10px] sm:text-xs font-bold text-red-400 tracking-widest uppercase">
-                  AN TOÀN KIẾN TẠO GIÁ TRỊ BỀN VỮNG
-                </span>
-              </div>
-
-              {/* Main Headline */}
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-white leading-tight font-serif">
-                CỬA CHỐNG CHÁY <br />
-                <span className="text-slate-100">GIẢI PHÁP PCCC TOÀN DIỆN</span> <br />
-                <span className="text-red-500">CHO MỌI CÔNG TRÌNH</span>
-              </h1>
-
-              {/* Description */}
-              <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
-                Công ty TNHH APEX Việt Nam cung cấp các giải pháp cửa chống cháy, cửa cuốn ngăn cháy, rèm ngăn cháy và thiết bị PCCC đồng bộ, đáp ứng tiêu chuẩn an toàn cho công trình dân dụng và công nghiệp.
-              </p>
-
-              {/* CTAs */}
-              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
-                <button
-                  onClick={() => onNavigate('products')}
-                  className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg shadow-lg hover:shadow-red-600/30 transition-all active:scale-95 group"
-                >
-                  <span>Khám phá sản phẩm</span>
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </button>
-
-                <button
-                  onClick={onOpenChat}
-                  className="flex items-center gap-2 bg-slate-800/80 hover:bg-slate-700 text-white font-semibold text-xs sm:text-sm px-4 py-2.5 sm:px-5 sm:py-3 rounded-lg border border-slate-700 hover:border-slate-500 transition-all active:scale-95"
-                >
-                  <span>Tư vấn ngay</span>
-                  <MessageSquare className="w-4 h-4 text-sky-400" />
-                </button>
-              </div>
-
-            </div>
-
-            {/* Right Hero Image Card */}
-            <div className="lg:col-span-5 relative mt-2 sm:mt-0">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-700/60 bg-slate-900 group">
-                <img
-                  src={HERO_IMAGE}
-                  alt="Cửa chống cháy APEX Việt Nam"
-                  className="w-full h-64 sm:h-80 md:h-96 object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                
-                {/* Float indicator badge */}
-                <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 bg-slate-950/80 backdrop-blur-md p-2.5 sm:p-3 rounded-xl border border-slate-700/80 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] sm:text-[11px] font-bold text-white block">Cửa thép ngăn cháy EI120</span>
-                    <span className="text-[9px] sm:text-[10px] text-slate-400">Đạt thử nghiệm kiểm định IBST</span>
-                  </div>
-                  <button
-                    onClick={() => onOpenQuote('steel-door')}
-                    className="text-[10px] sm:text-[11px] font-bold text-red-400 hover:text-red-300 underline"
-                  >
-                    Báo giá nhanh →
-                  </button>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* 4 Trust Indicators Banner (Bottom of Hero in Screenshot) */}
-          <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-800 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-            <div className="flex items-center gap-2.5 sm:gap-3 bg-slate-900/50 p-2.5 sm:p-0 rounded-xl sm:rounded-none border border-slate-800/80 sm:border-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 text-red-500">
-                <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div>
-                <h4 className="text-[11px] sm:text-xs font-bold text-white">Đạt tiêu chuẩn</h4>
-                <p className="text-[10px] sm:text-[11px] text-slate-400">PCCC Việt Nam & Quốc tế</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 sm:gap-3 bg-slate-900/50 p-2.5 sm:p-0 rounded-xl sm:rounded-none border border-slate-800/80 sm:border-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 text-red-500">
-                <Cog className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div>
-                <h4 className="text-[11px] sm:text-xs font-bold text-white">Sản phẩm chính hãng</h4>
-                <p className="text-[10px] sm:text-[11px] text-slate-400">Chất lượng cao</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 sm:gap-3 bg-slate-900/50 p-2.5 sm:p-0 rounded-xl sm:rounded-none border border-slate-800/80 sm:border-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 text-red-500">
-                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div>
-                <h4 className="text-[11px] sm:text-xs font-bold text-white">Giải pháp đồng bộ</h4>
-                <p className="text-[10px] sm:text-[11px] text-slate-400">Tư vấn chuyên sâu</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 sm:gap-3 bg-slate-900/50 p-2.5 sm:p-0 rounded-xl sm:rounded-none border border-slate-800/80 sm:border-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 text-red-500">
-                <Users className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
-              <div>
-                <h4 className="text-[11px] sm:text-xs font-bold text-white">Đồng hành cùng</h4>
-                <p className="text-[10px] sm:text-[11px] text-slate-400">Dự án lớn nhỏ</p>
-              </div>
+        <div className="relative mx-auto flex min-h-[620px] max-w-7xl flex-col justify-center px-5 py-20 sm:px-8 lg:min-h-[700px] lg:px-10">
+          <div className="max-w-3xl">
+            <p className="mb-6 flex items-center gap-3 text-xs font-semibold text-red-300">
+              <span className="h-px w-10 bg-red-400" />
+              Giải pháp ngăn cháy cho công trình
+            </p>
+            <h1 className="max-w-3xl text-4xl font-semibold leading-[1.15] text-white sm:text-5xl lg:text-6xl">
+              Bảo vệ công trình bằng giải pháp được kiểm chứng.
+            </h1>
+            <p className="mt-6 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg sm:leading-8">
+              APEX Việt Nam thiết kế, sản xuất và thi công cửa chống cháy, cửa cuốn và rèm ngăn cháy theo đúng yêu cầu kỹ thuật của từng dự án.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <button onClick={() => onNavigate('products')} className="flex min-h-12 items-center gap-2 bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700">
+                Xem giải pháp <ArrowRight className="h-4 w-4" />
+              </button>
+              <button onClick={onOpenChat} className="flex min-h-12 items-center gap-2 border border-white/40 bg-black/15 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-slate-950">
+                Trao đổi với kỹ sư <MessageSquare className="h-4 w-4" />
+              </button>
             </div>
           </div>
 
-        </div>
-      </section>
-
-      {/* ========================================================
-          2. SẢN PHẨM CHỦ LỰC (Core Products - 4 Cards)
-         ======================================================== */}
-      <section className="py-14 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-bold text-red-600 uppercase tracking-wider mb-1">
-                <span className="w-1 h-3.5 bg-red-600 inline-block rounded-xs"></span>
-                <span>SẢN PHẨM CHỦ LỰC</span>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight">
-                GIẢI PHÁP PCCC ĐỒNG BỘ TỪ APEX VIỆT NAM
-              </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                Cung cấp hệ thống sản phẩm và thiết bị phòng cháy chữa cháy chính hãng, đáp ứng đa dạng nhu cầu công trình.
-              </p>
-            </div>
-
-            <button
-              onClick={() => onNavigate('products')}
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 group whitespace-nowrap"
-            >
-              <span>Xem tất cả sản phẩm</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-
-          {/* 4 Product Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PRODUCTS.slice(0, 4).map((product) => (
-              <div
-                key={product.id}
-                className="bg-white rounded-xl border border-neutral-200 overflow-hidden shadow-xs hover:shadow-md transition-all group flex flex-col"
-              >
-                {/* Image */}
-                <div className="relative h-48 bg-neutral-100 overflow-hidden">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
-                  />
-                  <span className="absolute top-2.5 left-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm">
-                    {product.fireRating}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="p-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <h3 className="text-sm font-bold text-slate-900 uppercase group-hover:text-red-600 transition-colors">
-                        {product.name}
-                      </h3>
-                      <button
-                        onClick={() => onNavigate('products', product.id)}
-                        className="w-7 h-7 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:bg-red-600 transition-colors shrink-0"
-                        aria-label={`Xem chi tiết ${product.name}`}
-                      >
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                      {product.description}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 border-t border-neutral-100 mt-3 flex items-center justify-between text-xs">
-                    <span className="text-red-600 font-bold">{product.priceEstimate}</span>
-                    <button
-                      onClick={() => onOpenQuote(product.category)}
-                      className="text-[11px] font-medium text-slate-600 hover:text-red-600 underline"
-                    >
-                      Báo giá
-                    </button>
-                  </div>
-                </div>
+          <div className="mt-14 grid max-w-3xl grid-cols-2 border-y border-white/20 sm:grid-cols-4">
+            {trustPoints.map((item) => (
+              <div key={item.label} className="border-white/20 px-3 py-5 first:pl-0 sm:border-r sm:px-5">
+                <strong className="block text-lg font-semibold text-white">{item.value}</strong>
+                <span className="mt-1 block text-[11px] leading-4 text-slate-300">{item.label}</span>
               </div>
             ))}
           </div>
-
         </div>
       </section>
 
-      {/* ========================================================
-          3. GIẢI PHÁP AN TOÀN CHO MỌI LOẠI CÔNG TRÌNH
-         ======================================================== */}
-      <section className="relative py-14 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden">
-        {/* Subtle fire warmth backdrop */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(220,38,38,0.15),transparent_60%)] pointer-events-none"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
-          {/* Header Banner */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-10 border-b border-slate-800">
+      <section className="bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight text-white font-serif">
-                GIẢI PHÁP AN TOÀN <br />
-                <span className="text-red-500">CHO MỌI LOẠI CÔNG TRÌNH</span>
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-300 mt-2 max-w-xl">
-                Từ nhà ở, chung cư, văn phòng đến nhà xưởng, trung tâm thương mại... APEX Việt Nam luôn đồng hành cùng bạn với giải pháp PCCC tối ưu.
-              </p>
+              <span className="section-kicker">Sản phẩm chủ lực</span>
+              <h2 className="section-title">Hệ sản phẩm đồng bộ cho từng khoang cháy</h2>
             </div>
-
-            <button
-              onClick={() => onNavigate('contact')}
-              className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-lg shadow-lg hover:shadow-red-600/30 transition-all self-start md:self-auto shrink-0 group active:scale-95"
-            >
-              <span>Liên hệ tư vấn ngay</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </div>
-
-          {/* 6 Building Facility Types (Grid from screenshot) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 pt-8">
-            {SOLUTIONS.map((sol) => (
-              <button
-                key={sol.id}
-                onClick={() => onNavigate('solutions', sol.id)}
-                className="bg-white text-slate-900 rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-md hover:shadow-xl hover:translate-y-[-2px] transition-all group border border-neutral-100"
-              >
-                <div className="p-2 rounded-lg bg-sky-50 group-hover:bg-red-50 transition-colors">
-                  {solutionIcons[sol.id] || <Building className="w-8 h-8 text-sky-600 mb-2" />}
-                </div>
-                <h3 className="text-xs font-bold text-slate-900 group-hover:text-red-600 transition-colors mt-2">
-                  {sol.title}
-                </h3>
-              </button>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================
-          4. DỰ ÁN TIÊU BIỂU (Featured Projects Grid/Carousel)
-         ======================================================== */}
-      <section className="py-14 bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-bold text-red-600 uppercase tracking-wider mb-1">
-                <span className="w-1 h-3.5 bg-red-600 inline-block rounded-xs"></span>
-                <span>DỰ ÁN TIÊU BIỂU</span>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight">
-                ĐỒNG HÀNH CÙNG NHIỀU CÔNG TRÌNH TRỌNG ĐIỂM
-              </h2>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => onNavigate('projects')}
-                className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 group whitespace-nowrap mr-2"
-              >
-                <span>Xem tất cả dự án</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button
-                onClick={prevProject}
-                className="w-8 h-8 rounded-full border border-neutral-300 bg-white hover:bg-neutral-100 flex items-center justify-center text-slate-700 transition-colors"
-                aria-label="Dự án trước"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={nextProject}
-                className="w-8 h-8 rounded-full border border-neutral-300 bg-white hover:bg-neutral-100 flex items-center justify-center text-slate-700 transition-colors"
-                aria-label="Dự án tiếp theo"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Projects 4-column Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PROJECTS.map((project) => (
-              <div
-                key={project.id}
-                onClick={() => onNavigate('projects', project.id)}
-                className="bg-white rounded-xl border border-neutral-200 overflow-hidden shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col"
-              >
-                {/* Image */}
-                <div className="relative h-48 bg-neutral-200 overflow-hidden">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
-                  />
-                  <span className="absolute bottom-2 left-2 bg-slate-900/80 text-white text-[10px] px-2 py-0.5 rounded-xs">
-                    {project.location}
-                  </span>
-                </div>
-
-                {/* Content */}
-                <div className="p-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-1">
-                      {project.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                      {project.itemsSupplied}
-                    </p>
-                  </div>
-                  <div className="pt-3 border-t border-neutral-100 mt-3 flex items-center justify-between text-[11px] text-slate-400">
-                    <span>Quy mô: {project.scale}</span>
-                    <span className="text-red-600 font-semibold group-hover:translate-x-0.5 transition-transform">→</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================
-          5. VÌ SAO CHỌN APEX VIỆT NAM? (4 Pillars)
-         ======================================================== */}
-      <section className="py-14 bg-white border-y border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center max-w-xl mx-auto mb-10">
-            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
-              VÌ SAO CHỌN APEX VIỆT NAM?
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Cam kết chất lượng vững bền cùng dịch vụ hỗ trợ kỹ thuật chuyên sâu từ giai đoạn thiết kế đến nghiệm thu.
+            <p className="max-w-2xl text-sm leading-7 text-slate-600 sm:text-base lg:pb-1">
+              Từ cửa thép cho hành lang thoát hiểm đến cửa cuốn siêu trường và rèm ngăn khói, mỗi cấu hình đều được lựa chọn theo vị trí lắp đặt và hồ sơ thiết kế PCCC.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="flex flex-col items-center text-center p-4">
-              <div className="w-14 h-14 rounded-2xl bg-neutral-100 text-slate-900 flex items-center justify-center mb-4 group-hover:bg-red-50 group-hover:text-red-600 transition-colors">
-                <Layers className="w-7 h-7" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1">
-                Sản phẩm chính hãng chất lượng cao
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Đốt mẫu thực nghiệm tại IBST, đạt kiểm định PCCC QCVN 06:2022/BXD.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center text-center p-4">
-              <div className="w-14 h-14 rounded-2xl bg-neutral-100 text-slate-900 flex items-center justify-center mb-4">
-                <Sparkles className="w-7 h-7" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1">
-                Tư vấn giải pháp theo từng công trình
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Tối ưu chi phí đầu tư và đáp ứng trọn vẹn tiêu chuẩn an toàn từng phân khu.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center text-center p-4">
-              <div className="w-14 h-14 rounded-2xl bg-neutral-100 text-slate-900 flex items-center justify-center mb-4">
-                <Wrench className="w-7 h-7" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1">
-                Thi công chuyên nghiệp đúng tiến độ
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Đội ngũ kỹ thuật lành nghề, máy móc hiện đại, đồng hành nghiệm thu bàn giao.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center text-center p-4">
-              <div className="w-14 h-14 rounded-2xl bg-neutral-100 text-slate-900 flex items-center justify-center mb-4">
-                <Clock className="w-7 h-7" />
-              </div>
-              <h3 className="text-sm font-bold text-slate-900 mb-1">
-                Hỗ trợ bảo trì lâu dài
-              </h3>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Chính sách bảo hành cơ khí 36 tháng, xử lý sự cố kỹ thuật khẩn cấp 24/7.
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ========================================================
-          6. ĐỐI TÁC & THƯƠNG HIỆU (Brand Logos Carousel)
-         ======================================================== */}
-      <section className="py-12 bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-sm sm:text-base font-bold uppercase tracking-wider text-slate-900">
-              ĐỐI TÁC & THƯƠNG HIỆU
-            </h2>
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] text-slate-400">Đồng hành cùng các tập đoàn hàng đầu</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {PARTNER_LOGOS.map((partner, idx) => (
-              <div
-                key={idx}
-                className="bg-white p-4 rounded-xl border border-neutral-200 flex flex-col items-center justify-center text-center shadow-xs hover:border-red-300 transition-colors"
-              >
-                <span className="text-sm sm:text-base font-black tracking-tighter text-slate-800">
-                  {partner.name}
-                </span>
-                <span className="text-[9px] text-slate-400 mt-1 line-clamp-1">
-                  {partner.tag}
-                </span>
-              </div>
+          <div className="mt-12 grid gap-px overflow-hidden border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
+            {PRODUCTS.slice(0, 4).map((product) => (
+              <article key={product.id} className="group flex min-w-0 flex-col bg-white">
+                <button onClick={() => onNavigate('products', product.id)} className="relative block h-56 overflow-hidden bg-slate-100 text-left" aria-label={`Xem ${product.name}`}>
+                  <img src={product.image} alt={product.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                  <span className="absolute left-4 top-4 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm">{product.fireRating}</span>
+                </button>
+                <div className="flex flex-1 flex-col p-5">
+                  <h3 className="text-base font-semibold leading-6 text-slate-900">{product.name}</h3>
+                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{product.description}</p>
+                  <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
+                    <span className="text-xs font-semibold text-red-700">{product.priceEstimate}</span>
+                    <button onClick={() => onOpenQuote(product.category)} className="text-xs font-semibold text-slate-700 hover:text-red-700">Nhận báo giá</button>
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
-
+          <button onClick={() => onNavigate('products')} className="mt-8 flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-red-700">
+            Xem toàn bộ danh mục <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </section>
 
-      {/* ========================================================
-          7. TIN TỨC & KIẾN THỨC PCCC
-         ======================================================== */}
-      <section className="py-14 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+      <section className="bg-[#18212b] py-20 text-white sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
             <div>
-              <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
-                TIN TỨC & KIẾN THỨC PCCC
-              </h2>
+              <span className="section-kicker !text-red-400">Giải pháp theo công trình</span>
+              <h2 className="mt-3 max-w-lg text-3xl font-semibold leading-tight text-white sm:text-4xl">Không có một cấu hình chung cho mọi dự án.</h2>
+              <p className="mt-5 max-w-lg text-sm leading-7 text-slate-300 sm:text-base">
+                Mỗi loại công trình có mật độ sử dụng, lối thoát nạn và yêu cầu vận hành khác nhau. Đội ngũ APEX khảo sát trước khi đề xuất sản phẩm.
+              </p>
+              <button onClick={() => onNavigate('contact')} className="mt-8 flex items-center gap-2 border-b border-red-400 pb-1.5 text-sm font-semibold text-white">
+                Đặt lịch khảo sát <ArrowUpRight className="h-4 w-4 text-red-400" />
+              </button>
             </div>
-            <button
-              onClick={() => onNavigate('news')}
-              className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1 group whitespace-nowrap"
-            >
-              <span>Xem tất cả</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+
+            <div className="grid border-l border-t border-white/15 sm:grid-cols-2 lg:grid-cols-3">
+              {SOLUTIONS.map((solution) => {
+                const Icon = solutionIcons[solution.id] || Building;
+                return (
+                  <button key={solution.id} onClick={() => onNavigate('solutions', solution.id)} className="group min-h-40 border-b border-r border-white/15 p-5 text-left transition-colors hover:bg-white/5">
+                    <Icon className="h-6 w-6 text-red-400" strokeWidth={1.6} />
+                    <h3 className="mt-8 max-w-[12rem] text-sm font-semibold leading-6 text-white">{solution.title}</h3>
+                    <ArrowUpRight className="mt-3 h-4 w-4 text-slate-500 transition-colors group-hover:text-white" />
+                  </button>
+                );
+              })}
+            </div>
           </div>
-
-          {/* 3 News Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {NEWS_ARTICLES.map((article) => (
-              <div
-                key={article.id}
-                onClick={() => onNavigate('news', article.id)}
-                className="bg-white rounded-xl border border-neutral-200 overflow-hidden shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col"
-              >
-                <div className="relative h-44 bg-neutral-100 overflow-hidden">
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
-                  />
-                  <span className="absolute top-2.5 left-2.5 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-xs">
-                    {article.category}
-                  </span>
-                </div>
-
-                <div className="p-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-2 leading-snug">
-                      {article.title}
-                    </h3>
-                    <p className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
-                      {article.summary}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-neutral-100 mt-3 flex items-center justify-between text-[11px] text-slate-400">
-                    <span>{article.date}</span>
-                    <span className="text-red-600 font-semibold group-hover:translate-x-0.5 transition-transform">
-                      Đọc tiếp →
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
         </div>
       </section>
 
+      <section className="bg-[#f7f7f5] py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+            <div>
+              <span className="section-kicker">Dự án tiêu biểu</span>
+              <h2 className="section-title max-w-2xl">Kinh nghiệm được xây dựng từ công trường</h2>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => changeProject(-1)} className="flex h-10 w-10 items-center justify-center border border-slate-300 bg-white text-slate-700 hover:border-slate-900" aria-label="Dự án trước"><ChevronLeft className="h-4 w-4" /></button>
+              <button onClick={() => changeProject(1)} className="flex h-10 w-10 items-center justify-center border border-slate-300 bg-white text-slate-700 hover:border-slate-900" aria-label="Dự án tiếp theo"><ChevronRight className="h-4 w-4" /></button>
+            </div>
+          </div>
+
+          <article className="mt-12 grid overflow-hidden bg-white lg:grid-cols-[1.35fr_0.65fr]">
+            <div className="h-80 overflow-hidden lg:h-[520px]"><img src={activeProject.image} alt={activeProject.title} className="h-full w-full object-cover" /></div>
+            <div className="flex flex-col justify-between p-6 sm:p-9 lg:p-10">
+              <div>
+                <p className="text-xs font-semibold text-red-700">{activeProject.categoryLabel}</p>
+                <h3 className="mt-3 text-2xl font-semibold leading-8 text-slate-900">{activeProject.title}</h3>
+                <p className="mt-5 text-sm leading-7 text-slate-600">{activeProject.description}</p>
+                <dl className="mt-8 space-y-4 border-t border-slate-200 pt-6 text-sm">
+                  <div className="flex gap-3"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-red-700" /><div><dt className="text-xs text-slate-500">Địa điểm</dt><dd className="mt-1 font-medium text-slate-800">{activeProject.location}</dd></div></div>
+                  <div className="flex gap-3"><Award className="mt-0.5 h-4 w-4 shrink-0 text-red-700" /><div><dt className="text-xs text-slate-500">Phạm vi cung cấp</dt><dd className="mt-1 font-medium leading-6 text-slate-800">{activeProject.itemsSupplied}</dd></div></div>
+                </dl>
+              </div>
+              <button onClick={() => onNavigate('projects', activeProject.id)} className="mt-10 flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-red-700">Xem hồ sơ dự án <ArrowRight className="h-4 w-4" /></button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section className="bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="grid gap-12 lg:grid-cols-[0.7fr_1.3fr]">
+            <div>
+              <span className="section-kicker">Năng lực triển khai</span>
+              <h2 className="section-title">Một đầu mối từ thiết kế đến bảo trì</h2>
+              <p className="mt-5 text-sm leading-7 text-slate-600">Quy trình rõ ràng giúp chủ đầu tư và nhà thầu kiểm soát chất lượng, tiến độ và hồ sơ nghiệm thu.</p>
+            </div>
+            <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
+              {reasons.map(({ icon: Icon, title, description }, index) => (
+                <div key={title} className="border-t border-slate-300 pt-5">
+                  <div className="flex items-center justify-between"><Icon className="h-5 w-5 text-red-700" strokeWidth={1.7} /><span className="text-xs text-slate-400">0{index + 1}</span></div>
+                  <h3 className="mt-5 text-base font-semibold text-slate-900">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-slate-200 bg-[#f7f7f5] py-14">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <p className="text-xs font-semibold text-slate-500">Đối tác và thương hiệu đồng hành</p>
+          <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
+            {PARTNER_LOGOS.map((partner) => (
+              <div key={partner.name} className="border-l-2 border-slate-300 pl-3">
+                <strong className="block text-sm font-semibold text-slate-800">{partner.name}</strong>
+                <span className="mt-1 block text-[10px] leading-4 text-slate-500">{partner.tag}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20 sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="flex items-end justify-between gap-6">
+            <div><span className="section-kicker">Tài liệu chuyên môn</span><h2 className="section-title">Kiến thức PCCC từ thực tế triển khai</h2></div>
+            <button onClick={() => onNavigate('news')} className="hidden items-center gap-2 text-sm font-semibold text-slate-900 hover:text-red-700 sm:flex">Xem tất cả <ArrowRight className="h-4 w-4" /></button>
+          </div>
+          <div className="mt-12 grid gap-10 border-t border-slate-200 pt-8 md:grid-cols-3">
+            {NEWS_ARTICLES.map((article) => (
+              <article key={article.id} className="group cursor-pointer" onClick={() => onNavigate('news', article.id)}>
+                <div className="aspect-[16/10] overflow-hidden bg-slate-100"><img src={article.image} alt={article.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" /></div>
+                <div className="mt-5 flex items-center gap-2 text-[11px] text-slate-500"><span className="font-semibold text-red-700">{article.category}</span><span>•</span><span>{article.date}</span></div>
+                <h3 className="mt-3 text-lg font-semibold leading-7 text-slate-900 transition-colors group-hover:text-red-700">{article.title}</h3>
+                <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-600">{article.summary}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-red-700 py-14 text-white">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-7 px-5 sm:px-8 md:flex-row md:items-center lg:px-10">
+          <div><p className="text-xs font-semibold text-red-100">Cần tư vấn cho dự án đang triển khai?</p><h2 className="mt-2 max-w-2xl text-2xl font-semibold leading-9 text-white sm:text-3xl">Gửi bản vẽ hoặc yêu cầu kỹ thuật, APEX sẽ phản hồi phương án phù hợp.</h2></div>
+          <button onClick={() => onOpenQuote()} className="flex min-h-12 shrink-0 items-center justify-center gap-2 bg-white px-6 py-3 text-sm font-semibold text-red-700 hover:bg-red-50">Nhận tư vấn và báo giá <ArrowRight className="h-4 w-4" /></button>
+        </div>
+      </section>
     </div>
   );
 };

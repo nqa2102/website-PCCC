@@ -1,10 +1,15 @@
 import { Product, Solution, Project, TechnicalDoc, NewsArticle } from '../types';
+import heroImage from '../assets/images/hero_fire_door_apex_1790648819738.jpg';
+import steelDoorImage from '../assets/images/product_steel_fire_door_1790648833826.jpg';
+import rollerShutterImage from '../assets/images/product_fire_roller_shutter_1790648844563.jpg';
+import fireCurtainImage from '../assets/images/product_fire_curtain_1790648858516.jpg';
+import vincomImage from '../assets/images/project_vincom_facade_1790648869674.jpg';
 
-export const HERO_IMAGE = '/src/assets/images/hero_fire_door_apex_1790648819738.jpg';
-export const STEEL_DOOR_IMAGE = '/src/assets/images/product_steel_fire_door_1790648833826.jpg';
-export const ROLLER_SHUTTER_IMAGE = '/src/assets/images/product_fire_roller_shutter_1790648844563.jpg';
-export const FIRE_CURTAIN_IMAGE = '/src/assets/images/product_fire_curtain_1790648858516.jpg';
-export const VINCOM_IMAGE = '/src/assets/images/project_vincom_facade_1790648869674.jpg';
+export const HERO_IMAGE = heroImage;
+export const STEEL_DOOR_IMAGE = steelDoorImage;
+export const ROLLER_SHUTTER_IMAGE = rollerShutterImage;
+export const FIRE_CURTAIN_IMAGE = fireCurtainImage;
+export const VINCOM_IMAGE = vincomImage;
 
 export const PRODUCTS: Product[] = [
   {

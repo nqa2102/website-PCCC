@@ -9,35 +9,6 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
   return (
     <footer className="bg-slate-950 text-neutral-300 border-t border-slate-900 text-xs">
-      {/* Top Value Banner */}
-      <div className="bg-red-600 text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="text-base sm:text-lg font-bold">
-              Cần Tư Vấn Thiết Kế Hoặc Nhận Báo Giá Dự Án PCCC?
-            </h3>
-            <p className="text-xs text-red-100">
-              Đội ngũ kỹ sư APEX sẵn sàng hỗ trợ bóc tách khối lượng, tư vấn giải pháp đạt chuẩn nghiệm thu PCCC.
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <a
-              href="tel:0901234567"
-              className="px-4 py-2 bg-slate-950 hover:bg-slate-900 text-white font-bold rounded-lg text-xs transition-colors flex items-center gap-1.5"
-            >
-              <Phone className="w-4 h-4 text-red-400" />
-              <span>0901 234 567</span>
-            </a>
-            <button
-              onClick={onOpenQuote}
-              className="px-4 py-2 bg-white hover:bg-neutral-100 text-red-600 font-bold rounded-lg text-xs transition-colors shadow-sm"
-            >
-              Yêu cầu báo giá nhanh
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Main Footer Links & Info */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
