@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  ArrowRight, ArrowUpRight, Award, Building, Building2,
-  Factory, FileCheck2, Hotel,
+  AlertTriangle, ArrowRight, ArrowUpRight, Award, Building, Building2,
+  CheckCircle2, Factory, FileCheck2, Flame, Hotel,
   MessageSquare, School, ShieldCheck, Store, Wrench,
 } from 'lucide-react';
 import {
@@ -102,7 +102,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
                   <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{product.description}</p>
                   <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
                     <span className="text-xs font-semibold text-red-700">{product.priceEstimate}</span>
-                    <button onClick={() => onOpenQuote(product.category)} className="text-xs font-semibold text-slate-700 hover:text-red-700">Nhận báo giá</button>
+                    <button onClick={() => onOpenQuote(product.category)} className="text-xs font-semibold text-slate-700 hover:text-red-700">Liên hệ kinh doanh</button>
                   </div>
                 </div>
               </article>
@@ -114,28 +114,46 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
-      <section className="bg-[#14532d] py-20 text-white sm:py-24">
+      <section className="border-y border-slate-200 bg-[#f4f4f1] py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-            <div>
-              <span className="section-kicker !text-red-400">Giải pháp theo công trình</span>
-              <h2 className="mt-3 max-w-lg text-3xl font-semibold leading-tight text-white sm:text-4xl">Không có một cấu hình chung cho mọi dự án.</h2>
-              <p className="mt-5 max-w-lg text-sm leading-7 text-slate-300 sm:text-base">
-                Mỗi loại công trình có mật độ sử dụng, lối thoát nạn và yêu cầu vận hành khác nhau. Đội ngũ APEX khảo sát trước khi đề xuất sản phẩm.
+          <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
+            <div className="lg:sticky lg:top-32 lg:self-start">
+              <span className="section-kicker">Giải pháp theo công trình</span>
+              <h2 className="section-title max-w-lg">Bắt đầu từ điểm có thể làm hỏng cả phương án PCCC.</h2>
+              <p className="mt-5 max-w-lg text-sm leading-7 text-slate-600 sm:text-base">
+                Một bộ cửa đúng sản phẩm nhưng sai vị trí, sai chiều mở hoặc thiếu phụ kiện vẫn có thể làm gián đoạn lối thoát nạn. APEX phân tích rủi ro trước khi chọn cấu hình.
               </p>
-              <button onClick={() => onNavigate('contact')} className="mt-8 flex items-center gap-2 border-b border-red-400 pb-1.5 text-sm font-semibold text-white">
-                Đặt lịch khảo sát <ArrowUpRight className="h-4 w-4 text-red-400" />
+
+              <div className="mt-8 border-l-4 border-red-600 bg-white px-5 py-5 shadow-sm">
+                <p className="flex items-center gap-2 text-xs font-semibold uppercase text-red-700"><AlertTriangle className="h-4 w-4" />Ba điểm cần khóa ngay</p>
+                <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
+                  <li>Khói và lửa lan qua hành lang, giếng trời hoặc khoảng mở lớn.</li>
+                  <li>Cửa cản trở luồng người, xe hàng hoặc vận hành thường ngày.</li>
+                  <li>Cấu hình thực tế không khớp hồ sơ thiết kế và vị trí lắp đặt.</li>
+                </ul>
+              </div>
+
+              <button onClick={() => onOpenQuote()} className="mt-7 flex min-h-11 items-center gap-2 bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700">
+                Trao đổi với kinh doanh <ArrowUpRight className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="grid border-l border-t border-white/15 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               {SOLUTIONS.map((solution) => {
                 const Icon = solutionIcons[solution.id] || Building;
                 return (
-                  <button key={solution.id} onClick={() => onNavigate('solutions', solution.id)} className="group min-h-40 border-b border-r border-white/15 p-5 text-left transition-colors hover:bg-white/5">
-                    <Icon className="h-6 w-6 text-red-400" strokeWidth={1.6} />
-                    <h3 className="mt-8 max-w-[12rem] text-sm font-semibold leading-6 text-white">{solution.title}</h3>
-                    <ArrowUpRight className="mt-3 h-4 w-4 text-slate-500 transition-colors group-hover:text-white" />
+                  <button key={solution.id} onClick={() => onNavigate('solutions', solution.id)} className="group min-h-64 border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-red-300 hover:shadow-md sm:p-6">
+                    <div className="flex items-center justify-between gap-4">
+                      <span className="flex h-11 w-11 items-center justify-center bg-slate-950 text-white transition-colors group-hover:bg-red-700"><Icon className="h-5 w-5" strokeWidth={1.7} /></span>
+                      <ArrowUpRight className="h-4 w-4 text-slate-400 transition-colors group-hover:text-red-700" />
+                    </div>
+                    <h3 className="mt-6 text-base font-semibold leading-6 text-slate-950">{solution.title}</h3>
+                    <p className="mt-3 text-xs font-semibold uppercase text-red-700">Rủi ro cần xử lý</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-600">{solution.challenges[0]}</p>
+                    <div className="mt-4 flex items-start gap-2 border-t border-slate-100 pt-4 text-xs leading-5 text-slate-700">
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                      <span>{solution.recommendedProducts[0]}</span>
+                    </div>
                   </button>
                 );
               })}
@@ -160,26 +178,51 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
-      <section className="bg-white py-20 sm:py-24">
+      <section className="relative overflow-hidden bg-slate-950 py-20 text-white sm:py-24">
+        <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#dc2626_0%,#f97316_45%,#dc2626_100%)]" />
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="grid gap-12 lg:grid-cols-[0.72fr_1.28fr]">
+          <div className="grid gap-12 lg:grid-cols-[0.68fr_1.32fr]">
             <div>
-              <span className="section-kicker">Giá trị cốt lõi</span>
-              <h2 className="section-title">Bốn cam kết định hình APEX</h2>
-              <p className="mt-5 max-w-md text-sm leading-7 text-slate-600">Tên gọi APEX là lời cam kết xuyên suốt từ tư vấn, thiết kế đến sản xuất, lắp đặt và đồng hành sau bàn giao.</p>
+              <span className="text-xs font-semibold uppercase text-red-400">Giá trị cốt lõi</span>
+              <h2 className="mt-3 max-w-md text-3xl font-semibold leading-tight text-white sm:text-4xl">APEX là bốn lớp bảo vệ trong một cam kết.</h2>
+              <p className="mt-5 max-w-md text-sm leading-7 text-slate-300">Từ hồ sơ đến sản phẩm, mỗi lớp đều phải đứng vững trước áp lực của lửa, khói, tiến độ và nghiệm thu.</p>
+              <div className="mt-9 flex items-center gap-4">
+                <span className="flex h-14 w-14 items-center justify-center border border-red-500 bg-red-600/10 text-red-400"><Flame className="h-6 w-6" /></span>
+                <div><strong className="block text-sm text-white">Tư duy ngăn cháy thụ động</strong><span className="mt-1 block text-xs text-slate-400">An toàn được thiết kế từ trước sự cố</span></div>
+              </div>
             </div>
-            <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-              {coreValues.map(({ letter, icon: Icon, english, vietnamese, description }) => (
-                <div key={letter} className="border-t border-slate-300 pt-5">
+            <div className="grid border-l border-t border-white/15 sm:grid-cols-2">
+              {coreValues.map(({ letter, icon: Icon, english, vietnamese, description }, index) => (
+                <div key={letter} className="relative min-h-64 border-b border-r border-white/15 p-6 transition-colors hover:bg-white/[0.04] sm:p-7">
+                  <span className="absolute right-5 top-5 text-[10px] font-mono text-slate-500">0{index + 1}</span>
                   <div className="flex items-start justify-between gap-4">
-                    <span className="text-4xl font-semibold leading-none text-[#14532d]">{letter}</span>
-                    <Icon className="h-5 w-5 text-red-700" strokeWidth={1.7} aria-hidden="true" />
+                    <span className="text-5xl font-semibold leading-none text-red-500">{letter}</span>
+                    <Icon className="mr-7 h-5 w-5 text-slate-400" strokeWidth={1.7} aria-hidden="true" />
                   </div>
-                  <h3 className="mt-5 text-base font-semibold text-slate-900">{english} <span className="font-normal text-slate-500">/ {vietnamese}</span></h3>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
+                  <h3 className="mt-8 text-base font-semibold text-white">{english} <span className="font-normal text-red-400">/ {vietnamese}</span></h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-300">{description}</p>
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="mt-12 grid border-y border-white/15 sm:grid-cols-4">
+            {['Ngăn lửa lan', 'Chặn khói độc', 'Giữ lối thoát', 'Đồng bộ hồ sơ'].map((label, index) => (
+              <div key={label} className="flex items-center gap-3 border-b border-white/15 py-4 sm:border-b-0 sm:border-r sm:px-5 first:pl-0 last:border-r-0">
+                <span className="text-xs font-mono text-red-400">0{index + 1}</span><span className="text-sm font-semibold text-slate-200">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-slate-200 bg-white py-14">
+        <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-10">
+          <div><span className="section-kicker">Cấu hình vật tư</span><h2 className="mt-3 text-2xl font-semibold text-slate-950">Chọn đúng vật liệu cho từng vị trí lắp đặt.</h2></div>
+          <div className="grid border-l border-t border-slate-200 sm:grid-cols-3">
+            {[['Lõi cách nhiệt', 'Bông gốm, MGO hoặc bông thủy tinh'], ['Phụ kiện đồng bộ', 'Khóa, panic bar, ô kính và tay co'], ['Màu hoàn thiện', 'Bảng màu sơn Jotun theo lựa chọn']].map(([title, detail]) => (
+              <div key={title} className="min-h-32 border-b border-r border-slate-200 p-5"><p className="text-xs font-semibold uppercase text-red-700">{title}</p><p className="mt-3 text-sm leading-6 text-slate-700">{detail}</p></div>
+            ))}
           </div>
         </div>
       </section>
@@ -187,7 +230,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
       <section className="bg-red-700 py-14 text-white">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-7 px-5 sm:px-8 md:flex-row md:items-center lg:px-10">
           <div><p className="text-xs font-semibold text-red-100">Cần tư vấn cho dự án đang triển khai?</p><h2 className="mt-2 max-w-2xl text-2xl font-semibold leading-9 text-white sm:text-3xl">Gửi bản vẽ hoặc yêu cầu kỹ thuật, APEX sẽ phản hồi phương án phù hợp.</h2></div>
-          <button onClick={() => onOpenQuote()} className="flex min-h-12 shrink-0 items-center justify-center gap-2 bg-white px-6 py-3 text-sm font-semibold text-red-700 hover:bg-red-50">Nhận tư vấn và báo giá <ArrowRight className="h-4 w-4" /></button>
+          <button onClick={() => onOpenQuote()} className="flex min-h-12 shrink-0 items-center justify-center gap-2 bg-white px-6 py-3 text-sm font-semibold text-red-700 hover:bg-red-50">Gọi hoặc nhắn kinh doanh <ArrowRight className="h-4 w-4" /></button>
         </div>
       </section>
     </div>

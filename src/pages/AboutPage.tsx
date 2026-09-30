@@ -158,7 +158,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
                   onClick={onOpenQuote}
                   className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg border border-slate-700 transition-colors"
                 >
-                  Nhận báo giá dự án
+                  Liên hệ kinh doanh
                 </button>
               </div>
             </div>

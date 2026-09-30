@@ -68,7 +68,6 @@ export default function App() {
           setTargetProductCategory(undefined);
           setTargetSolutionId(undefined);
         }}
-        onOpenQuote={() => handleOpenQuote()}
         onOpenSearch={() => setSearchModalOpen(true)}
         onSelectProductCategory={(catId) => {
           setActiveTab('products');
@@ -150,7 +149,6 @@ export default function App() {
 
       {/* Floating Action Dock Widget (Right edge: Call, Zalo, Chat, Quote, ScrollTop) */}
       <QuickContactWidget
-        onOpenQuote={() => handleOpenQuote()}
         onOpenChat={() => setChatModalOpen(true)}
       />
 

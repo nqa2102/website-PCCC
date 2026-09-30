@@ -233,7 +233,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
                 }}
                 className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg"
               >
-                Báo giá công trình của bạn
+                Liên hệ kinh doanh
               </button>
             </div>
           </div>

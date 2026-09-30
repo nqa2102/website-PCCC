@@ -131,7 +131,7 @@ export const SOLUTIONS: Solution[] = [
       'Yêu cầu thẩm mỹ cao cho cửa chính căn hộ kết hợp tính năng PCCC'
     ],
     recommendedProducts: [
-      'Cửa thép ngăn cháy EI60/EI90 cho buồng thang bộ thoát hiểm',
+      'Cửa thép ngăn cháy cho buồng thang bộ và hành lang thoát hiểm',
       'Cửa căn hộ vân gỗ cách nhiệt EI60 thẩm mỹ cao',
       'Hệ thống tay co tự đóng giữ kín khoang thang không để khói xâm nhập'
     ],
@@ -151,7 +151,7 @@ export const SOLUTIONS: Solution[] = [
       'Yêu cầu cách âm cao cho các phòng họp và khu làm việc tập trung'
     ],
     recommendedProducts: [
-      'Cửa thép chống cháy EI90 phòng điện, phòng máy biến áp',
+      'Cửa thép ngăn cháy cho phòng điện và khu vực kỹ thuật',
       'Vách kính chống cháy EI60 trong suốt sảnh lễ tân văn phòng',
       'Khóa thoát hiểm panic bar điện từ liên động hệ thống kiểm soát ra vào Access Control'
     ],
@@ -171,7 +171,7 @@ export const SOLUTIONS: Solution[] = [
       'Cần tích hợp âm trần để không che chắn biển hiệu các gian hàng thời trang'
     ],
     recommendedProducts: [
-      'Rèm ngăn cháy tự động hạ âm trần khi có tín hiệu khói',
+      'Rèm hoặc cửa cuốn ngăn cháy cho khoảng mở và không gian thông tầng',
       'Cửa cuốn ngăn cháy nhịp lớn EI120 phân chia khoang gian hàng',
       'Cửa thép 2 cánh thoát hiểm bản rộng thoát nạn số đông'
     ],
@@ -191,7 +191,7 @@ export const SOLUTIONS: Solution[] = [
       'Môi trường có độ ẩm, bụi kim loại hoặc hóa chất ăn mòn'
     ],
     recommendedProducts: [
-      'Cửa cuốn chống cháy siêu trường nan thép 1.4mm',
+      'Cửa cuốn ngăn cháy cho các khoảng mở lớn trong nhà xưởng',
       'Cửa thép bọc chì hoặc inox 304 kháng hóa chất',
       'Cửa chống cháy tự đóng liên kết rơ-le nhiệt khi nguồn điện bị cắt'
     ],
@@ -211,7 +211,7 @@ export const SOLUTIONS: Solution[] = [
       'Cần độ êm ái khi đóng mở để duy trì sự yên tĩnh cho khu điều trị'
     ],
     recommendedProducts: [
-      'Cửa chống cháy 2 cánh lệch có ô kính quan sát chống cháy',
+      'Cửa ngăn cháy có cấu hình mở phù hợp xe đẩy và luồng thoát nạn',
       'Bản lề tự đóng êm và gioăng cản khói kín khí 100%',
       'Cửa trượt tự động ngăn khói phòng mổ áp lực dương'
     ],
@@ -231,7 +231,7 @@ export const SOLUTIONS: Solution[] = [
       'Yêu cầu cách âm cao để tránh tiếng ồn từ hành lang'
     ],
     recommendedProducts: [
-      'Cửa thép chống cháy phủ phim vân gỗ sồi, óc chó cao cấp',
+      'Cửa thép ngăn cháy với màu hoàn thiện phù hợp thiết kế nội thất',
       'Khóa thông minh khách sạn tích hợp chức năng mở nhanh khẩn cấp',
       'Cửa thoát nạn sảnh tiệc hội nghị vách kính chịu nhiệt'
     ],

@@ -33,7 +33,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
 
   const quickPrompts = [
     'Cửa thép EI70, EI90 và EI120 khác nhau thế nào?',
-    'Báo giá cửa thép ngăn cháy',
+    'Liên hệ kinh doanh về cửa thép',
     'Yêu cầu hồ sơ kỹ thuật sản phẩm',
     'Tư vấn cửa cuốn hoặc rèm ngăn cháy'
   ];
@@ -61,7 +61,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
 
     // Simulate engineer response
     setTimeout(() => {
-      let reply = 'Cảm ơn Quý khách đã quan tâm. APEX sẽ ghi nhận nhu cầu và phản hồi trong 1-2 ngày. Quý khách có thể để lại số điện thoại qua biểu mẫu báo giá.';
+      let reply = 'Cảm ơn Quý khách đã quan tâm. Quý khách có thể gọi hoặc nhắn Zalo trực tiếp cho nhân viên kinh doanh APEX để trao đổi nhanh.';
       const lower = query.toLowerCase();
 
       if (lower.includes('ei70') || lower.includes('ei90') || lower.includes('tiêu chuẩn')) {
@@ -119,7 +119,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
 
         {/* Notice strip */}
         <div className="bg-neutral-100 px-3 py-1.5 text-[11px] text-slate-600 border-b border-neutral-200 flex items-center justify-between">
-          <span className="truncate">Cung cấp báo giá & hồ sơ thẩm duyệt PCCC dự án</span>
+          <span className="truncate">Kết nối trực tiếp với nhân viên kinh doanh</span>
           <button
             onClick={() => {
               onClose();
@@ -127,7 +127,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
             }}
             className="text-red-600 font-bold hover:underline shrink-0 ml-2"
           >
-            Tính giá nhanh
+            Liên hệ ngay
           </button>
         </div>
 

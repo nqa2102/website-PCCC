@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Phone, FileText, Search, Menu, X, ChevronDown, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Phone, Search, Menu, X, ChevronDown, ChevronRight, ShieldCheck } from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
 
 interface HeaderProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  onOpenQuote: () => void;
   onOpenSearch: () => void;
   onSelectProductCategory?: (category: string) => void;
   onSelectSolution?: (solutionId: string) => void;
@@ -14,7 +13,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   setActiveTab,
-  onOpenQuote,
   onOpenSearch,
   onSelectProductCategory,
   onSelectSolution
@@ -117,15 +115,6 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
             </a>
-
-            {/* Quote Button (Desktop & Tablet) */}
-            <button
-              onClick={onOpenQuote}
-              className="hidden sm:flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-semibold text-xs px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg shadow-sm hover:shadow transition-all whitespace-nowrap active:scale-95"
-            >
-              <FileText className="w-4 h-4" />
-              <span>Nhận báo giá</span>
-            </button>
 
             {/* Mobile menu trigger */}
             <button
@@ -415,22 +404,12 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Mobile CTAs */}
           <div className="pt-2 flex flex-col gap-2">
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                onOpenQuote();
-              }}
-              className="w-full flex items-center justify-center gap-2 bg-red-600 text-white font-bold text-xs sm:text-sm py-3 rounded-xl shadow-sm"
-            >
-              <FileText className="w-4 h-4" />
-              <span>Yêu cầu dự toán & báo giá nhanh</span>
-            </button>
             <a
               href={COMPANY_INFO.hotlineHref}
-              className="w-full flex items-center justify-center gap-2 bg-neutral-100 text-slate-800 font-semibold text-xs sm:text-sm py-2.5 rounded-xl border border-neutral-200"
+              className="w-full flex items-center justify-center gap-2 bg-red-600 text-white font-bold text-xs sm:text-sm py-3 rounded-xl"
             >
-              <Phone className="w-4 h-4 text-red-600" />
-              <span>Hotline: {COMPANY_INFO.hotlineDisplay}</span>
+              <Phone className="w-4 h-4" />
+              <span>Gọi tư vấn: {COMPANY_INFO.hotlineDisplay}</span>
             </a>
           </div>
 

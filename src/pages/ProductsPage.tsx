@@ -159,7 +159,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                       onClick={() => onOpenQuote(product.category)}
                       className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-lg transition-colors shadow-xs"
                     >
-                      Báo giá
+                      Liên hệ
                     </button>
                   </div>
                 </div>
@@ -322,7 +322,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                   }}
                   className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg shadow-sm"
                 >
-                  Nhận báo giá sản phẩm này
+                  Gọi hoặc nhắn kinh doanh
                 </button>
               </div>
             </div>

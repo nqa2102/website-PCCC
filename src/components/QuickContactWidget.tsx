@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, MessageSquare, FileText, ArrowUp, X, Sparkles } from 'lucide-react';
+import { Phone, MessageSquare, ArrowUp, X } from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
 
 interface QuickContactWidgetProps {
-  onOpenQuote: () => void;
   onOpenChat: () => void;
 }
 
 export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
-  onOpenQuote,
   onOpenChat
 }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -74,18 +72,18 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
           </span>
         </button>
 
-        {/* 4. Yêu cầu báo giá */}
-        <button
-          onClick={onOpenQuote}
-          aria-label="Yêu cầu gửi báo giá"
+        {/* 4. Gọi nhân viên kinh doanh */}
+        <a
+          href={COMPANY_INFO.hotlineHref}
+          aria-label="Gọi nhân viên kinh doanh"
           className="group relative flex items-center justify-center w-11 h-11 rounded bg-red-700 text-white border border-red-700 shadow-md hover:bg-red-800 transition-colors"
         >
-          <FileText className="w-4 h-4" />
+          <Phone className="w-4 h-4" />
           {/* Tooltip */}
           <span className="absolute right-14 whitespace-nowrap bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-md">
-            Nhận dự toán & báo giá
+            Gọi nhân viên kinh doanh
           </span>
-        </button>
+        </a>
 
         {/* 5. Scroll to top */}
         {showScrollTop && (
@@ -139,14 +137,14 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
           <span className="text-[10px] font-bold">Tư vấn</span>
         </button>
 
-        {/* Primary CTA: Nhận báo giá */}
-        <button
-          onClick={onOpenQuote}
+        {/* Primary CTA: Gọi tư vấn */}
+        <a
+          href={COMPANY_INFO.hotlineHref}
           className="flex items-center gap-1.5 bg-red-600 active:bg-red-700 text-white font-bold text-xs py-2 px-3.5 rounded-full shadow-md active:scale-95 transition-transform"
         >
-          <FileText className="w-3.5 h-3.5" />
-          <span>Nhận báo giá</span>
-        </button>
+          <Phone className="w-3.5 h-3.5" />
+          <span>Gọi tư vấn</span>
+        </a>
       </nav>
 
       {/* Mobile Scroll-to-top floating button (Above the bottom bar) */}
@@ -179,33 +177,10 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
               Kết nối Zalo Kỹ thuật APEX
             </h3>
             <p className="text-xs text-slate-600 mt-1 mb-4">
-              Quét mã QR hoặc nhắn trực tiếp đến số điện thoại phòng giải pháp kỹ thuật để nhận file CAD và bảng giá đại lý.
+              Nhắn trực tiếp đến số điện thoại kinh doanh để trao đổi nhu cầu sản phẩm và công trình.
             </p>
-            
-            {/* Mock QR Code Graphic */}
-            <div className="bg-neutral-100 p-4 rounded-xl inline-block border border-neutral-200 mb-4">
-              <div className="w-40 h-40 bg-white border border-neutral-300 rounded-lg flex flex-col items-center justify-center p-2 mx-auto">
-                <div className="grid grid-cols-4 gap-1 w-full h-full p-2">
-                  <div className="bg-slate-900 rounded-xs"></div>
-                  <div className="bg-slate-200"></div>
-                  <div className="bg-slate-900 rounded-xs"></div>
-                  <div className="bg-blue-600 rounded-xs"></div>
-                  <div className="bg-slate-200"></div>
-                  <div className="bg-slate-900"></div>
-                  <div className="bg-slate-200"></div>
-                  <div className="bg-slate-900"></div>
-                  <div className="bg-slate-900 rounded-xs"></div>
-                  <div className="bg-slate-200"></div>
-                  <div className="bg-slate-900"></div>
-                  <div className="bg-slate-200"></div>
-                  <div className="bg-blue-600 rounded-xs"></div>
-                  <div className="bg-slate-900"></div>
-                  <div className="bg-slate-200"></div>
-                  <div className="bg-slate-900 rounded-xs"></div>
-                </div>
-              </div>
-              <p className="text-[11px] font-bold text-slate-700 mt-2">Zalo: {COMPANY_INFO.hotlineDisplay}</p>
-            </div>
+
+            <p className="mb-4 border-y border-neutral-200 py-4 text-lg font-bold text-slate-900">Zalo {COMPANY_INFO.hotlineDisplay}</p>
 
             <div className="flex gap-2">
               <a
