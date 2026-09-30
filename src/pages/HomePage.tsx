@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  ArrowRight, ArrowUpRight, Award, Building, Building2, ChevronLeft,
-  ChevronRight, Factory, FileCheck2, Hotel, MapPin,
+  ArrowRight, ArrowUpRight, Award, Building, Building2,
+  Factory, FileCheck2, Hotel,
   MessageSquare, School, ShieldCheck, Store, Wrench,
 } from 'lucide-react';
 import {
-  HERO_IMAGE, NEWS_ARTICLES, PARTNER_LOGOS, PRODUCTS, PROJECTS, SOLUTIONS,
+  HERO_IMAGE, PRODUCTS, SOLUTIONS,
 } from '../data/mockData';
 
 interface HomePageProps {
@@ -16,9 +16,9 @@ interface HomePageProps {
 
 const trustPoints = [
   { value: 'EI60-EI120', label: 'Dải giới hạn chịu lửa' },
-  { value: '36 tháng', label: 'Bảo hành cơ khí' },
-  { value: '24/7', label: 'Hỗ trợ kỹ thuật' },
-  { value: 'QCVN 06', label: 'Đáp ứng quy chuẩn' },
+  { value: '12-24 tháng', label: 'Bảo hành theo sản phẩm' },
+  { value: '1-2 ngày', label: 'Thời gian phản hồi' },
+  { value: 'Toàn quốc', label: 'Phạm vi cung ứng' },
 ];
 
 const coreValues = [
@@ -29,9 +29,6 @@ const coreValues = [
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onOpenChat }) => {
-  const [projectIndex, setProjectIndex] = useState(0);
-  const activeProject = PROJECTS[projectIndex];
-
   const solutionIcons: Record<string, React.ElementType> = {
     'chung-cu-can-ho': Building2,
     'van-phong-toa-nha': Building,
@@ -41,18 +38,14 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
     'khach-san-resort': Hotel,
   };
 
-  const changeProject = (direction: number) => {
-    setProjectIndex((current) => (current + direction + PROJECTS.length) % PROJECTS.length);
-  };
-
   return (
     <div className="w-full bg-neutral-50">
-      <section className="relative min-h-[620px] overflow-hidden bg-[#102b21] text-white lg:min-h-[700px]">
+      <section className="relative min-h-[520px] overflow-hidden bg-[#102b21] text-white sm:min-h-[540px]">
         <img src={HERO_IMAGE} alt="Cửa chống cháy APEX tại công trình" className="absolute inset-0 h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,43,33,0.97)_0%,rgba(16,43,33,0.84)_48%,rgba(39,36,31,0.16)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#102b21]/75 to-transparent" />
 
-        <div className="relative mx-auto flex min-h-[620px] max-w-7xl flex-col justify-center px-5 py-20 sm:px-8 lg:min-h-[700px] lg:px-10">
+        <div className="relative mx-auto flex min-h-[520px] max-w-7xl flex-col justify-center px-5 py-12 sm:min-h-[540px] sm:px-8 lg:px-10">
           <div className="max-w-3xl">
             <p className="mb-6 flex items-center gap-3 text-xs font-semibold text-red-300">
               <span className="h-px w-10 bg-red-400" />
@@ -62,7 +55,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
               Bảo vệ công trình bằng giải pháp được kiểm chứng.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg sm:leading-8">
-              APEX Việt Nam thiết kế, sản xuất và thi công cửa chống cháy, cửa cuốn và rèm ngăn cháy theo đúng yêu cầu kỹ thuật của từng dự án.
+              APEX cung cấp giải pháp ngăn cháy toàn diện cho nhà ở và công trình, từ cửa thép, cửa kính đến cửa cuốn và rèm ngăn cháy.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <button onClick={() => onNavigate('products')} className="flex min-h-12 items-center gap-2 bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700">
@@ -74,7 +67,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
             </div>
           </div>
 
-          <div className="mt-14 grid max-w-3xl grid-cols-2 border-y border-white/20 sm:grid-cols-4">
+          <div className="mt-14 hidden max-w-3xl grid-cols-2 border-y border-white/20 sm:grid sm:grid-cols-4">
             {trustPoints.map((item) => (
               <div key={item.label} className="border-white/20 px-3 py-5 first:pl-0 sm:border-r sm:px-5">
                 <strong className="block text-lg font-semibold text-white">{item.value}</strong>
@@ -155,30 +148,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <span className="section-kicker">Dự án tiêu biểu</span>
-              <h2 className="section-title max-w-2xl">Kinh nghiệm được xây dựng từ công trường</h2>
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => changeProject(-1)} className="flex h-10 w-10 items-center justify-center border border-slate-300 bg-white text-slate-700 hover:border-slate-900" aria-label="Dự án trước"><ChevronLeft className="h-4 w-4" /></button>
-              <button onClick={() => changeProject(1)} className="flex h-10 w-10 items-center justify-center border border-slate-300 bg-white text-slate-700 hover:border-slate-900" aria-label="Dự án tiếp theo"><ChevronRight className="h-4 w-4" /></button>
+              <span className="section-kicker">Hồ sơ dự án</span>
+              <h2 className="section-title max-w-2xl">Dự án thực tế đang được hoàn thiện hồ sơ</h2>
             </div>
           </div>
 
-          <article className="mt-12 grid overflow-hidden bg-white lg:grid-cols-[1.35fr_0.65fr]">
-            <div className="h-80 overflow-hidden lg:h-[520px]"><img src={activeProject.image} alt={activeProject.title} className="h-full w-full object-cover" /></div>
-            <div className="flex flex-col justify-between p-6 sm:p-9 lg:p-10">
-              <div>
-                <p className="text-xs font-semibold text-red-700">{activeProject.categoryLabel}</p>
-                <h3 className="mt-3 text-2xl font-semibold leading-8 text-slate-900">{activeProject.title}</h3>
-                <p className="mt-5 text-sm leading-7 text-slate-600">{activeProject.description}</p>
-                <dl className="mt-8 space-y-4 border-t border-slate-200 pt-6 text-sm">
-                  <div className="flex gap-3"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-red-700" /><div><dt className="text-xs text-slate-500">Địa điểm</dt><dd className="mt-1 font-medium text-slate-800">{activeProject.location}</dd></div></div>
-                  <div className="flex gap-3"><Award className="mt-0.5 h-4 w-4 shrink-0 text-red-700" /><div><dt className="text-xs text-slate-500">Phạm vi cung cấp</dt><dd className="mt-1 font-medium leading-6 text-slate-800">{activeProject.itemsSupplied}</dd></div></div>
-                </dl>
-              </div>
-              <button onClick={() => onNavigate('projects', activeProject.id)} className="mt-10 flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-red-700">Xem hồ sơ dự án <ArrowRight className="h-4 w-4" /></button>
-            </div>
-          </article>
+          <div className="mt-12 border-y border-slate-200 bg-white px-6 py-12 sm:px-10">
+            <p className="max-w-2xl text-sm leading-7 text-slate-600">APEX đang hoàn thiện thông tin, hình ảnh và quyền sử dụng tư liệu dự án trước khi công bố. Liên hệ để được tư vấn theo nhu cầu công trình hiện tại.</p>
+            <button onClick={() => onNavigate('contact')} className="mt-6 flex items-center gap-2 text-sm font-semibold text-red-700">Trao đổi nhu cầu công trình <ArrowRight className="h-4 w-4" /></button>
+          </div>
         </div>
       </section>
 
@@ -189,7 +167,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
               <span className="section-kicker">Giá trị cốt lõi</span>
               <h2 className="section-title">Bốn cam kết định hình APEX</h2>
               <p className="mt-5 max-w-md text-sm leading-7 text-slate-600">Tên gọi APEX là lời cam kết xuyên suốt từ tư vấn, thiết kế đến sản xuất, lắp đặt và đồng hành sau bàn giao.</p>
-              <p className="mt-6 border-l-2 border-red-700 pl-4 text-sm font-semibold leading-6 text-slate-900">Vững chuẩn an toàn,<br />trọn niềm an tâm.</p>
             </div>
             <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
               {coreValues.map(({ letter, icon: Icon, english, vietnamese, description }) => (
@@ -203,39 +180,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-y border-slate-200 bg-neutral-50 py-14">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-          <p className="text-xs font-semibold text-slate-500">Đối tác và thương hiệu đồng hành</p>
-          <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6">
-            {PARTNER_LOGOS.map((partner) => (
-              <div key={partner.name} className="border-l-2 border-slate-300 pl-3">
-                <strong className="block text-sm font-semibold text-slate-800">{partner.name}</strong>
-                <span className="mt-1 block text-[10px] leading-4 text-slate-500">{partner.tag}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="flex items-end justify-between gap-6">
-            <div><span className="section-kicker">Tài liệu chuyên môn</span><h2 className="section-title">Kiến thức PCCC từ thực tế triển khai</h2></div>
-            <button onClick={() => onNavigate('news')} className="hidden items-center gap-2 text-sm font-semibold text-slate-900 hover:text-red-700 sm:flex">Xem tất cả <ArrowRight className="h-4 w-4" /></button>
-          </div>
-          <div className="mt-12 grid gap-10 border-t border-slate-200 pt-8 md:grid-cols-3">
-            {NEWS_ARTICLES.map((article) => (
-              <article key={article.id} className="group cursor-pointer" onClick={() => onNavigate('news', article.id)}>
-                <div className="aspect-[16/10] overflow-hidden bg-slate-100"><img src={article.image} alt={article.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" /></div>
-                <div className="mt-5 flex items-center gap-2 text-[11px] text-slate-500"><span className="font-semibold text-red-700">{article.category}</span><span>•</span><span>{article.date}</span></div>
-                <h3 className="mt-3 text-lg font-semibold leading-7 text-slate-900 transition-colors group-hover:text-red-700">{article.title}</h3>
-                <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-600">{article.summary}</p>
-              </article>
-            ))}
           </div>
         </div>
       </section>

@@ -40,14 +40,12 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
 
   // Price calculations in VND
   const basePricePerM2: Record<string, Record<string, number>> = {
-    'steel-door': { EI60: 1850000, EI90: 2150000, EI120: 2450000 },
-    'roller-shutter': { EI60: 2450000, EI90: 2850000, EI120: 3300000 },
-    'fire-curtain': { EI60: 3100000, EI90: 3600000, EI120: 4200000 },
-    'glass-door': { EI60: 4800000, EI90: 5900000, EI120: 7200000 },
+    'steel-door': { EI70: 1750000, EI90: 1750000, EI120: 1750000 },
   };
 
   const areaPerDoor = (width / 1000) * (height / 1000);
-  const selectedTypePrice = basePricePerM2[productType]?.[fireRating] || 2150000;
+  const hasPublicPrice = productType === 'steel-door';
+  const selectedTypePrice = basePricePerM2[productType]?.[fireRating] || 0;
   let doorLeafMultiplier = 1;
   if (leafType === '2-leaf-equal') doorLeafMultiplier = 1.05;
   if (leafType === '2-leaf-unequal') doorLeafMultiplier = 1.08;
@@ -62,7 +60,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   if (hasSmokeSeal) accessoryTotalPerDoor += 150000; // Gioăng cao su ngăn khói
 
   const pricePerUnit = baseDoorTotal + accessoryTotalPerDoor;
-  const grandTotal = pricePerUnit * quantity;
+  const grandTotal = hasPublicPrice ? pricePerUnit * quantity : 0;
 
   const formatVND = (val: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
@@ -100,7 +98,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
                 Bảng Tính Dự Toán & Báo Giá Nhanh APEX
               </h2>
               <p className="text-[11px] sm:text-xs text-slate-300">
-                Nhận đơn giá chi tiết, hồ sơ kỹ thuật & tem kiểm định PCCC
+                Gửi cấu hình để nhận báo giá và tài liệu phù hợp
               </p>
             </div>
           </div>
@@ -123,7 +121,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
             </h3>
             <p className="text-sm text-slate-600 max-w-md mx-auto">
               Mã dự toán của bạn là <strong className="text-red-600 font-mono text-base">{quoteCode}</strong>.
-              Đội ngũ kỹ sư giải pháp APEX Việt Nam sẽ liên hệ qua số điện thoại <strong className="text-slate-900">{phone}</strong> trong vòng 15 phút để gửi bảng báo giá chính thức kèm bản vẽ chi tiết.
+              APEX sẽ liên hệ qua số điện thoại <strong className="text-slate-900">{phone}</strong> trong vòng 1-2 ngày để xác nhận cấu hình và gửi báo giá.
             </p>
 
             {/* Summary card */}
@@ -140,11 +138,11 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Tổng giá trị tạm tính:</span>
-                <span className="font-bold text-red-600 text-sm">{formatVND(grandTotal)}</span>
+                <span className="font-bold text-red-600 text-sm">{hasPublicPrice ? formatVND(grandTotal) : 'Liên hệ xác nhận cấu hình'}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Kiểm định PCCC:</span>
-                <span className="text-emerald-700 font-medium">Bao gồm hồ sơ Cục PCCC</span>
+                <span className="text-emerald-700 font-medium">Xác nhận theo hồ sơ sản phẩm</span>
               </div>
             </div>
 
@@ -200,7 +198,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
               {/* Fire rating selection */}
               <div className="flex flex-wrap items-center gap-2 mt-3">
                 <span className="text-xs text-slate-600 font-medium">Giới hạn chịu lửa:</span>
-                {['EI60', 'EI90', 'EI120'].map((rating) => (
+                {['EI70', 'EI90', 'EI120'].map((rating) => (
                   <button
                     key={rating}
                     type="button"
@@ -211,7 +209,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
                         : 'bg-neutral-100 text-slate-700 hover:bg-neutral-200'
                     }`}
                   >
-                    {rating} ({rating === 'EI60' ? '60 phút' : rating === 'EI90' ? '90 phút' : '120 phút'})
+                    {rating} ({rating === 'EI70' ? '70 phút' : rating === 'EI90' ? '90 phút' : '120 phút'})
                   </button>
                 ))}
               </div>
@@ -360,14 +358,14 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
             <div className="bg-red-50 border border-red-100 rounded-xl p-3.5 flex flex-col sm:flex-row items-center justify-between gap-2">
               <div>
                 <span className="text-xs text-red-950 block">Dự toán kinh phí tạm tính ({quantity} bộ):</span>
-                <span className="text-lg font-extrabold text-red-600">{formatVND(grandTotal)}</span>
+                <span className="text-lg font-extrabold text-red-600">{hasPublicPrice ? formatVND(grandTotal) : 'Liên hệ để nhận báo giá'}</span>
                 <span className="text-[11px] text-slate-500 ml-2">
                   (~{formatVND(pricePerUnit)} / bộ, diện tích {areaPerDoor.toFixed(2)} m²)
                 </span>
               </div>
               <div className="flex items-center gap-1.5 text-xs text-emerald-700 bg-white px-2.5 py-1 rounded-md border border-emerald-200 font-medium">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>Đã gồm hồ sơ kiểm định lô</span>
+                <span>Giá cửa thép tham khảo từ 1.750.000đ/m²</span>
               </div>
             </div>
 
@@ -433,7 +431,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
             <div className="flex items-center justify-between pt-2">
               <p className="text-[11px] text-slate-500 flex items-center gap-1">
                 <PhoneCall className="w-3.5 h-3.5 text-red-600" />
-                <span>Cam kết phản hồi trong 15 phút làm việc</span>
+                <span>Phản hồi trong 1-2 ngày</span>
               </p>
               <div className="flex gap-2">
                 <button

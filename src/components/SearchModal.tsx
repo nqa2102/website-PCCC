@@ -72,7 +72,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
           <input
             type="text"
             autoFocus
-            placeholder="Tìm kiếm: Cửa thép chống cháy, QCVN 06, rèm ngăn cháy, Vincom..."
+            placeholder="Tìm kiếm: Cửa thép, QCVN 06, rèm ngăn cháy..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full text-sm text-slate-900 placeholder:text-slate-400 focus:outline-hidden"

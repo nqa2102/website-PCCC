@@ -1,6 +1,7 @@
 import React from 'react';
-import { ShieldCheck, Award, Wrench, CheckCircle2, FileCheck, ArrowRight, Phone } from 'lucide-react';
-import { HERO_IMAGE, STEEL_DOOR_IMAGE } from '../data/mockData';
+import { ShieldCheck, Award, Wrench, CheckCircle2, FileCheck } from 'lucide-react';
+import { STEEL_DOOR_IMAGE } from '../data/mockData';
+import { COMPANY_INFO } from '../data/companyData';
 
 interface AboutPageProps {
   onOpenQuote: () => void;
@@ -25,13 +26,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
             VỀ CHÚNG TÔI
           </span>
           <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white font-serif">
-            CÔNG TY TNHH APEX VIỆT NAM
+            {COMPANY_INFO.legalNameUpper}
           </h1>
-          <p className="mt-3 text-sm font-semibold text-red-300 sm:text-base">
-            Vững chuẩn an toàn, trọn niềm an tâm.
-          </p>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-3 leading-relaxed">
-            Tiên phong trong lĩnh vực nghiên cứu, chế tạo và cung ứng giải pháp cửa chống cháy, cửa cuốn ngăn cháy siêu trường và rèm ngăn khói theo quy chuẩn an toàn PCCC cao nhất tại Việt Nam.
+            Cung cấp giải pháp ngăn cháy toàn diện cho nhà ở và công trình trên phạm vi toàn quốc.
           </p>
         </div>
       </div>
@@ -46,25 +44,25 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
               <span>LỊCH SỬ HÌNH THÀNH & PHÁT TRIỂN</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">
-              Kiến tạo giải pháp ngăn cháy thụ động bền vững cho hàng triệu công trình
+              Giải pháp ngăn cháy được cấu hình theo nhu cầu thực tế
             </h2>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Thành lập từ năm 2015, APEX Việt Nam khởi đầu từ khát vọng giải quyết bài toán cấp bách về an toàn thoát hiểm và ngăn cháy lan trong các công trình cao tầng. Với việc đầu tư bài bản vào dây chuyền cơ khí chính xác CNC và hợp tác cùng các viện nghiên cứu vật liệu chống cháy, APEX nhanh chóng trở thành một trong những nhà cung cấp giải pháp PCCC uy tín hàng đầu.
+              Thành lập năm {COMPANY_INFO.foundedYear}, {COMPANY_INFO.legalName} tập trung vào bốn nhóm sản phẩm: cửa thép ngăn cháy, cửa kính ngăn cháy, cửa cuốn ngăn cháy và rèm ngăn cháy.
             </p>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Mỗi sản phẩm cửa thép chống cháy, cửa cuốn hay rèm ngăn cháy của APEX đều trải qua quy trình kiểm soát chất lượng nghiêm ngặt ISO 9001:2015, được đốt mẫu thử nghiệm thực tế tại Viện IBST và cấp chứng chỉ kiểm định hợp quy bởi Cục Cảnh sát PCCC & CNCH (Bộ Công an).
+              Sản phẩm được lựa chọn theo hồ sơ thiết kế, kích thước và phụ kiện thực tế. Cửa thép ngăn cháy có cấu hình EI70, EI90 và EI120; các nhóm còn lại được tư vấn theo yêu cầu từng công trình.
             </p>
 
             <div className="grid grid-cols-2 gap-4 pt-3">
               <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200">
-                <span className="text-2xl font-extrabold text-red-600 block">25.000 m²</span>
-                <span className="text-xs font-semibold text-slate-800">Quy mô nhà máy hiện đại</span>
-                <p className="text-[11px] text-slate-500 mt-0.5">KCN Quang Minh, Mê Linh, Hà Nội</p>
+                <span className="text-2xl font-extrabold text-red-600 block">02</span>
+                <span className="text-xs font-semibold text-slate-800">Địa điểm nhà máy</span>
+                <p className="text-[11px] text-slate-500 mt-0.5">Thạch Thất và Đông Anh, Hà Nội</p>
               </div>
               <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200">
-                <span className="text-2xl font-extrabold text-red-600 block">1.500+</span>
-                <span className="text-xs font-semibold text-slate-800">Dự án hoàn thành</span>
-                <p className="text-[11px] text-slate-500 mt-0.5">Chung cư, TTTM, KCN trên cả nước</p>
+                <span className="text-2xl font-extrabold text-red-600 block">Toàn quốc</span>
+                <span className="text-xs font-semibold text-slate-800">Phạm vi cung ứng</span>
+                <p className="text-[11px] text-slate-500 mt-0.5">Tiếp nhận nhu cầu không giới hạn khu vực</p>
               </div>
             </div>
           </div>
@@ -79,8 +77,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
               <div className="absolute bottom-4 left-4 right-4 text-white">
-                <span className="text-xs font-bold block">Dây chuyền sản xuất tự động công nghệ Nhật Bản</span>
-                <span className="text-[10px] text-slate-300">Đảm bảo độ phẳng, độ khít và khả năng chịu nhiệt tới 1200°C</span>
+                <span className="text-xs font-bold block">Sản xuất theo cấu hình thực tế</span>
+                <span className="text-[10px] text-slate-300">Kích thước, màu sơn và phụ kiện được xác nhận theo lựa chọn của khách hàng</span>
               </div>
             </div>
           </div>
@@ -124,27 +122,27 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
             
             <div className="space-y-4">
               <span className="text-xs font-bold text-red-400 uppercase tracking-widest">
-                NĂNG LỰC SẢN XUẤT & KIỂM ĐỊNH
+                NĂNG LỰC CUNG ỨNG
               </span>
               <h2 className="text-2xl sm:text-3xl font-black uppercase text-white font-serif">
-                Quy trình thử nghiệm đốt mẫu thực tế tại Viện IBST
+                Sản phẩm theo yêu cầu từng công trình
               </h2>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Khác biệt lớn nhất của APEX là tính minh bạch và chuẩn mực pháp lý. Mỗi thiết kế cửa đều được chế tạo mẫu gửi tới Viện Khoa học Công nghệ Xây dựng (IBST) để thử lửa trực tiếp trong lò nung ở nhiệt độ trên 1.000°C theo TCVN 9383:2012.
+                APEX tiếp nhận thông tin thiết kế, tư vấn cấu hình và sản xuất theo kích thước thực tế. Hồ sơ kiểm định và tài liệu năng lực sẽ được công bố sau khi hoàn tất.
               </p>
 
               <div className="space-y-2 pt-2 text-xs">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Đạt chỉ số toàn vẹn (E) không biến dạng thủng trong 60 - 120 phút</span>
+                  <span>Cửa thép ngăn cháy EI70, EI90 và EI120</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Đạt chỉ số cách nhiệt (I) mặt sau không vượt quá 140°C</span>
+                  <span>Kích thước tiêu chuẩn 900 x 2200 mm hoặc theo yêu cầu</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>Được Cục CS PCCC & CNCH cấp tem kiểm định phương tiện PCCC</span>
+                  <span>Phụ kiện và màu sơn Jotun theo lựa chọn khách hàng</span>
                 </div>
               </div>
 
@@ -154,7 +152,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
                   className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-2"
                 >
                   <FileCheck className="w-4 h-4" />
-                  <span>Xem chứng chỉ kiểm định PCCC</span>
+                   <span>Yêu cầu tài liệu kỹ thuật</span>
                 </button>
                 <button
                   onClick={onOpenQuote}
@@ -167,24 +165,24 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
 
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-2">
-                <span className="text-3xl font-extrabold text-red-500 font-mono">10.000+</span>
-                <p className="text-xs font-bold text-white">Bộ cửa xuất xưởng/tháng</p>
-                <p className="text-[11px] text-slate-400">Đáp ứng tiến độ các đại dự án nghìn tỷ</p>
+                <span className="text-3xl font-extrabold text-red-500 font-mono">EI70-EI120</span>
+                <p className="text-xs font-bold text-white">Cấu hình cửa thép</p>
+                <p className="text-[11px] text-slate-400">Lựa chọn theo yêu cầu kỹ thuật</p>
               </div>
               <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-2">
-                <span className="text-3xl font-extrabold text-red-500 font-mono">100%</span>
-                <p className="text-xs font-bold text-white">Thép mạ kẽm tiêu chuẩn</p>
-                <p className="text-[11px] text-slate-400">Chống rỉ sét, chịu lực va đập cơ học</p>
+                <span className="text-3xl font-extrabold text-red-500 font-mono">02</span>
+                <p className="text-xs font-bold text-white">Nhà máy tại Hà Nội</p>
+                <p className="text-[11px] text-slate-400">Thạch Thất và Đông Anh</p>
               </div>
               <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-2">
-                <span className="text-3xl font-extrabold text-red-500 font-mono">36</span>
-                <p className="text-xs font-bold text-white">Tháng bảo hành chính hãng</p>
-                <p className="text-[11px] text-slate-400">Cam kết chất lượng dài lâu</p>
+                <span className="text-3xl font-extrabold text-red-500 font-mono">12-24</span>
+                <p className="text-xs font-bold text-white">Tháng bảo hành</p>
+                <p className="text-[11px] text-slate-400">Tùy theo từng sản phẩm</p>
               </div>
               <div className="bg-slate-800/80 p-5 rounded-2xl border border-slate-700 space-y-2">
-                <span className="text-3xl font-extrabold text-red-500 font-mono">24/7</span>
-                <p className="text-xs font-bold text-white">Hỗ trợ kỹ thuật tại chỗ</p>
-                <p className="text-[11px] text-slate-400">Khảo sát & tư vấn công trình miễn phí</p>
+                <span className="text-3xl font-extrabold text-red-500 font-mono">1-2 ngày</span>
+                <p className="text-xs font-bold text-white">Thời gian phản hồi</p>
+                <p className="text-[11px] text-slate-400">Tiếp nhận hỗ trợ cả ngày</p>
               </div>
             </div>
 

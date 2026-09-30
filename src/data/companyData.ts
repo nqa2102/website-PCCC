@@ -1,0 +1,27 @@
+export const COMPANY_INFO = {
+  legalName: 'Công ty TNHH Apex VN',
+  legalNameUpper: 'CÔNG TY TNHH APEX VN',
+  englishName: 'Apex VietNam Company Limited',
+  representative: 'Nguyễn Thị Ngọc Anh',
+  representativeTitle: 'Giám đốc',
+  foundedYear: '2026',
+  serviceArea: 'Toàn quốc',
+  hotlineDisplay: '0566 38 5555',
+  hotlineHref: 'tel:0566385555',
+  zaloHref: 'https://zalo.me/0566385555',
+  workingHours: 'Hỗ trợ cả ngày',
+  responseTime: 'Phản hồi trong 1-2 ngày',
+  addresses: [
+    { label: 'Trụ sở 1', value: 'Số 10 ngõ 25, Sơn Đồng, Hà Nội' },
+    { label: 'Trụ sở 2', value: '11 Trần Thái Tông, Cầu Giấy, Hà Nội' },
+    { label: 'Nhà máy 1', value: 'Hương Ngải, Thạch Thất, Hà Nội' },
+    { label: 'Nhà máy 2', value: 'Đông Anh, Hà Nội' },
+  ],
+  standards: [
+    'QCVN 06:2022/BXD và Sửa đổi 1:2023',
+    'QCVN 03:2023/BCA',
+    'TCVN 2622:1995',
+    'TCVN 9383:2012',
+    'TCVN 6160:1996',
+  ],
+} as const;

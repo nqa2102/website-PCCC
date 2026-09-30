@@ -3,7 +3,7 @@ export interface Product {
   name: string;
   category: 'steel-door' | 'roller-shutter' | 'fire-curtain' | 'accessories' | 'glass-door';
   categoryName: string;
-  fireRating: 'EI60' | 'EI90' | 'EI120' | 'EI150' | 'Tất cả';
+  fireRating: string;
   description: string;
   longDescription: string;
   specs: {

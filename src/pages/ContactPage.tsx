@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { MapPin, Phone, Send, CheckCircle2, ShieldCheck, UserRound } from 'lucide-react';
+import { COMPANY_INFO } from '../data/companyData';
 
 interface ContactPageProps {
   onOpenQuote: () => void;
@@ -36,7 +37,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
             KẾT NỐI VỚI APEX VIỆT NAM
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-            Đội ngũ chuyên viên và kỹ sư PCCC APEX luôn sẵn sàng lắng nghe, khảo sát thực địa và giải đáp mọi yêu cầu kỹ thuật của Quý khách.
+            Gửi nhu cầu sản phẩm, kích thước hoặc địa điểm công trình. APEX sẽ tiếp nhận và phản hồi trong 1-2 ngày.
           </p>
         </div>
 
@@ -55,55 +56,31 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
                   <Phone className="w-6 h-6" />
                 </div>
                 <div>
-                  <a href="tel:0901234567" className="text-2xl font-black tracking-tight hover:underline">
-                    0901 234 567
+                  <a href={COMPANY_INFO.hotlineHref} className="text-2xl font-black tracking-tight hover:underline">
+                    {COMPANY_INFO.hotlineDisplay}
                   </a>
-                  <p className="text-xs text-red-100">Hỗ trợ khẩn cấp 24/7 toàn quốc</p>
+                  <p className="text-xs text-red-100">{COMPANY_INFO.workingHours} · Phục vụ toàn quốc</p>
                 </div>
               </div>
             </div>
 
             {/* Offices & Factory */}
             <div className="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs space-y-5 text-xs">
-              <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Trụ sở chính (Hà Nội)</h4>
-                  <p className="text-slate-600 mt-0.5">
-                    Tầng 8, Tòa nhà Apex Tower, Đường Phạm Hùng, Q. Nam Từ Liêm, TP. Hà Nội
-                  </p>
-                  <p className="text-slate-500 mt-0.5">Điện thoại: 024 3999 8888</p>
+              {COMPANY_INFO.addresses.map((item, index) => (
+                <div key={item.label} className={`${index > 0 ? 'border-t border-neutral-100 pt-4 ' : ''}flex items-start gap-3`}>
+                  <MapPin className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-bold text-slate-900 text-sm">{item.label}</h4>
+                    <p className="text-slate-600 mt-0.5">{item.value}</p>
+                  </div>
                 </div>
-              </div>
+              ))}
 
               <div className="border-t border-neutral-100 pt-4 flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                <UserRound className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Chi nhánh Miền Nam (TP.HCM)</h4>
-                  <p className="text-slate-600 mt-0.5">
-                    Số 128 Đường Điện Biên Phủ, Phường Đa Kao, Quận 1, TP. Hồ Chí Minh
-                  </p>
-                  <p className="text-slate-500 mt-0.5">Điện thoại: 028 3888 6666</p>
-                </div>
-              </div>
-
-              <div className="border-t border-neutral-100 pt-4 flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Nhà máy sản xuất cửa chống cháy</h4>
-                  <p className="text-slate-600 mt-0.5">
-                    Lô C2, KCN Quang Minh, Huyện Mê Linh, TP. Hà Nội
-                  </p>
-                  <p className="text-slate-500 mt-0.5">Quy mô: 25.000 m² sàn chế tạo</p>
-                </div>
-              </div>
-
-              <div className="border-t border-neutral-100 pt-4 flex items-start gap-3">
-                <Mail className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Email liên hệ công việc</h4>
-                  <p className="text-slate-600 mt-0.5">contact@apexvietnam.vn</p>
-                  <p className="text-slate-600">kinhdoanh@apexvietnam.vn</p>
+                  <h4 className="font-bold text-slate-900 text-sm">Người đại diện pháp luật</h4>
+                  <p className="text-slate-600 mt-0.5">{COMPANY_INFO.representative} - {COMPANY_INFO.representativeTitle}</p>
                 </div>
               </div>
             </div>
@@ -126,7 +103,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
                   Cảm Ơn Quý Khách Đã Gửi Liên Hệ!
                 </h3>
                 <p className="text-xs text-emerald-800 max-w-md mx-auto">
-                  Thông tin yêu cầu của Quý khách đã được chuyển tới Trưởng phòng Kỹ thuật APEX. Chúng tôi sẽ gọi lại cho số điện thoại <strong>{phone}</strong> trong ít phút tới.
+                  APEX đã ghi nhận yêu cầu và sẽ liên hệ số <strong>{phone}</strong> trong vòng 1-2 ngày.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
@@ -216,26 +193,14 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
               </form>
             )}
 
-            {/* Simulated Interactive Map */}
+            {/* Location summary */}
             <div className="mt-8 border-t border-neutral-100 pt-6">
-              <h3 className="font-bold text-slate-900 text-xs mb-3">Vị trí trên bản đồ trụ sở APEX</h3>
-              <div className="h-44 rounded-xl bg-slate-100 border border-neutral-200 relative overflow-hidden flex items-center justify-center">
-                <div className="absolute inset-0 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:12px_12px] opacity-40"></div>
-                <div className="relative text-center p-4">
-                  <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center mx-auto mb-2 shadow-md animate-bounce">
-                    <MapPin className="w-5 h-5" />
-                  </div>
-                  <span className="font-bold text-slate-900 text-xs block">
-                    APEX Tower - Đường Phạm Hùng, Q. Nam Từ Liêm, Hà Nội
-                  </span>
-                  <a
-                    href="https://maps.google.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[11px] text-red-600 font-semibold hover:underline mt-1 inline-block"
-                  >
-                    Mở trong Google Maps →
-                  </a>
+              <h3 className="font-bold text-slate-900 text-xs mb-3">Phạm vi tiếp nhận yêu cầu</h3>
+              <div className="rounded-xl bg-slate-50 border border-neutral-200 p-5 flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
+                <div>
+                  <p className="font-bold text-slate-900 text-sm">Tư vấn và cung ứng toàn quốc</p>
+                  <p className="text-xs text-slate-600 mt-1">Báo giá có hiệu lực 60 ngày. Màu sắc, phụ kiện và kích thước được xác nhận theo lựa chọn của khách hàng.</p>
                 </div>
               </div>
             </div>

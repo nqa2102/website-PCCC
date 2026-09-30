@@ -3,7 +3,7 @@ import {
   ShieldCheck, 
   ArrowRight, 
   FileText, 
-  Download, 
+  MessageSquareText,
   Check, 
   Filter, 
   Calculator, 
@@ -26,7 +26,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   initialProductId
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
-  const [selectedRating, setSelectedRating] = useState<string>('all');
   const [detailProduct, setDetailProduct] = useState<Product | null>(
     initialProductId ? (PRODUCTS.find(p => p.id === initialProductId) || null) : null
   );
@@ -37,23 +36,14 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     { id: 'roller-shutter', label: 'Cửa cuốn ngăn cháy' },
     { id: 'fire-curtain', label: 'Rèm ngăn cháy/khói' },
     { id: 'glass-door', label: 'Cửa & Vách kính PCCC' },
-    { id: 'accessories', label: 'Thang máy & Cáp điện' },
-  ];
-
-  const ratings = [
-    { id: 'all', label: 'Tất cả cấp độ' },
-    { id: 'EI60', label: 'EI60 (60 phút)' },
-    { id: 'EI90', label: 'EI90 (90 phút)' },
-    { id: 'EI120', label: 'EI120 (120 phút)' },
   ];
 
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter((item) => {
       const matchCat = selectedCategory === 'all' || item.category === selectedCategory;
-      const matchRating = selectedRating === 'all' || item.fireRating === selectedRating;
-      return matchCat && matchRating;
+      return matchCat;
     });
-  }, [selectedCategory, selectedRating]);
+  }, [selectedCategory]);
 
   return (
     <div className="w-full bg-neutral-50 min-h-screen py-10">
@@ -69,7 +59,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
             DANH MỤC CỬA CHỐNG CHÁY & THIẾT BỊ PCCC ĐỒNG BỘ
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl">
-            Sản xuất theo tiêu chuẩn kiểm định thực tế QCVN 06:2022/BXD và TCVN 9383:2012, chứng nhận cấp tem phương tiện PCCC từ Cục Cảnh sát PCCC & CNCH.
+            Bốn nhóm sản phẩm chính được cấu hình theo hồ sơ thiết kế, kích thước thực tế và yêu cầu của từng công trình.
           </p>
         </div>
 
@@ -98,26 +88,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
             </div>
           </div>
 
-          {/* Fire Rating Filter */}
-          <div className="border-t border-neutral-100 pt-3 flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-2">
-              Giới hạn chịu lửa:
-            </span>
-            {ratings.map((rate) => (
-              <button
-                key={rate.id}
-                onClick={() => setSelectedRating(rate.id)}
-                className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-                  selectedRating === rate.id
-                    ? 'bg-red-600 text-white font-bold'
-                    : 'bg-neutral-100 text-slate-600 hover:bg-neutral-200'
-                }`}
-              >
-                {rate.label}
-              </button>
-            ))}
-          </div>
-
         </div>
 
         {/* Products Grid */}
@@ -141,7 +111,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                   </span>
                   {product.popular && (
                     <span className="bg-red-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
-                      Bán chạy
+                      Sản phẩm chủ lực
                     </span>
                   )}
                 </div>
@@ -205,7 +175,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
             <button
               onClick={() => {
                 setSelectedCategory('all');
-                setSelectedRating('all');
               }}
               className="mt-3 px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg"
             >
@@ -264,7 +233,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                     <span className="text-[10px] text-slate-500 block">Đơn giá sản xuất:</span>
                     <span className="text-base font-extrabold text-red-600">{detailProduct.priceEstimate}</span>
                     <span className="text-[10px] text-slate-400 block mt-0.5">
-                      Đã bao gồm chi phí kiểm định theo lô & tem Cục CS PCCC
+                      Giá tham khảo; báo giá có hiệu lực 60 ngày và được xác nhận theo cấu hình thực tế.
                     </span>
                   </div>
                 </div>
@@ -328,12 +297,14 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
             <div className="p-4 bg-neutral-50 border-t border-neutral-200 flex items-center justify-between">
               <button
                 onClick={() => {
-                  alert(`Đang tải file Catalogue & Bản vẽ CAD của [${detailProduct.name}] (.DWG/.PDF)`);
+                  const cat = detailProduct.category;
+                  setDetailProduct(null);
+                  onOpenQuote(cat);
                 }}
                 className="flex items-center gap-1.5 text-xs text-slate-700 hover:text-red-600 font-semibold"
               >
-                <Download className="w-4 h-4" />
-                <span>Tải thông số CAD & Catalogue</span>
+                <MessageSquareText className="w-4 h-4" />
+                <span>Yêu cầu tài liệu kỹ thuật</span>
               </button>
 
               <div className="flex gap-2">

@@ -73,12 +73,12 @@ export const TechnicalDocsPage: React.FC<TechnicalDocsPageProps> = ({
             TÀI LIỆU KỸ THUẬT, BẢN VẼ CAD & GIẤY KIỂM ĐỊNH
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-            Tải về đầy đủ hồ sơ pháp lý, bản vẽ chi tiết CAD phục vụ bóc tách thiết kế MEP và quy chuẩn nghiệm thu PCCC mới nhất.
+            Catalogue, bản vẽ CAD và hồ sơ kiểm định sẽ được công bố sau khi APEX hoàn tất tài liệu chính thức.
           </p>
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        {TECHNICAL_DOCS.length > 0 && <div className="flex flex-wrap gap-2 mb-8">
           {categories.map((cat) => (
             <button
               key={cat.id}
@@ -92,7 +92,7 @@ export const TechnicalDocsPage: React.FC<TechnicalDocsPageProps> = ({
               {cat.label}
             </button>
           ))}
-        </div>
+        </div>}
 
         {/* Documents List */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -165,6 +165,15 @@ export const TechnicalDocsPage: React.FC<TechnicalDocsPageProps> = ({
           ))}
         </div>
 
+        {TECHNICAL_DOCS.length === 0 && (
+          <div className="border-y border-neutral-200 bg-white px-6 py-14 sm:px-10">
+            <FileText className="w-8 h-8 text-red-600" />
+            <h2 className="mt-4 text-xl font-bold text-slate-900">Tài liệu kỹ thuật đang được cập nhật</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">Vui lòng gửi nhu cầu cụ thể. APEX sẽ tiếp nhận yêu cầu về catalogue, bản vẽ và hồ sơ kỹ thuật theo từng sản phẩm.</p>
+            <button onClick={onOpenQuote} className="mt-6 bg-red-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-red-700">Yêu cầu tài liệu</button>
+          </div>
+        )}
+
         {/* Support Section for Custom CAD & Project files */}
         <div className="mt-12 bg-slate-900 text-white rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
@@ -172,7 +181,7 @@ export const TechnicalDocsPage: React.FC<TechnicalDocsPageProps> = ({
               Cần Thư Viện Bản Vẽ Kỹ Thuật Riêng Theo Dự Án?
             </h3>
             <p className="text-xs text-slate-300 mt-1 max-w-xl">
-              Phòng Thiết kế & R&D APEX Việt Nam hỗ trợ xuất bản vẽ CAD chi tiết chiết tính khung bao, bản vẽ phối cảnh 3D và hồ sơ tính toán chịu lực miễn phí cho các đơn vị tư vấn thiết kế.
+              Gửi thông tin sản phẩm, kích thước và yêu cầu công trình để APEX tiếp nhận nhu cầu tài liệu phù hợp.
             </p>
           </div>
           <button

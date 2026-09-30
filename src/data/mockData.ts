@@ -13,55 +13,80 @@ export const VINCOM_IMAGE = vincomImage;
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'cua-thep-ngan-chay-ei60-ei120',
+    id: 'cua-thep-ngan-chay-ei70-ei120',
     name: 'Cửa Thép Ngăn Cháy',
     category: 'steel-door',
     categoryName: 'Cửa thép ngăn cháy',
-    fireRating: 'EI120',
-    description: 'Đa dạng mẫu mã, đạt tiêu chuẩn EI60 – EI120, phù hợp mọi công trình dân dụng và công nghiệp.',
-    longDescription: 'Cửa thép ngăn cháy APEX được sản xuất trên dây chuyền dập chấn CNC tự động công nghệ Nhật Bản. Cánh cửa cấu tạo bởi 2 lớp thép mạ điện dày 1.0mm - 1.2mm, lõi cách nhiệt Magie Oxit (MgO) hoặc bông khoáng Rockwool tỷ trọng cao chống cháy và cách âm vượt trội, đạt chuẩn kiểm định theo QCVN 06:2022/BXD.',
+    fireRating: 'EI70-EI120',
+    description: 'Giải pháp ngăn cháy, ngăn khói phổ biến với độ bền cơ học cao và chi phí hợp lý.',
+    longDescription: 'Cửa thép ngăn cháy được làm từ thép kết hợp lõi vật liệu cách nhiệt như bông gốm, MGO hoặc bông thủy tinh, giúp hạn chế sự lan truyền của lửa và khói giữa các khu vực khi xảy ra hỏa hoạn.',
     specs: {
-      material: 'Thép mạ kẽm/mạ điện cao cấp (SECC/SGCC)',
-      thickness: 'Độ dày cánh 50mm, khung bao dày 1.2 - 1.5mm',
-      insulation: 'Lõi tấm MGO (Magie Oxit) tỷ trọng 350kg/m³ hoặc Bông gốm ceramic',
-      finish: 'Sơn tĩnh điện bột ngoài trời Jotun/KCC kháng hóa chất, chịu nhiệt',
-      standard: 'QCVN 06:2022/BXD, TCVN 9383:2012, chứng nhận Cục CS PCCC & CNCH',
-      warranty: 'Bảo hành chính hãng 36 tháng đối với kết cấu cơ khí, 12 tháng phụ kiện'
+      material: 'Thép kết hợp lõi bông gốm, MGO hoặc bông thủy tinh',
+      thickness: 'Kích thước tiêu chuẩn 900 x 2.200 mm; nhận sản xuất theo kích thước thực tế',
+      insulation: 'Bông gốm, MGO hoặc bông thủy tinh theo cấu hình sản phẩm',
+      finish: 'Màu hoàn thiện theo bảng màu Jotun',
+      standard: 'EI70, EI90, EI120; kiểm định theo hồ sơ sản phẩm',
+      warranty: '12 tháng'
     },
     features: [
-      'Giới hạn chịu lửa EI60, EI90, EI120 theo tiêu chuẩn kiểm định thực tế',
-      'Gioăng cao su ngăn khói tự nở khi nhiệt độ vượt 150°C',
-      'Tùy chọn ô kính chống cháy cách nhiệt Borosilicate chịu lửa',
-      'Tích hợp tay co thủy lực Hafele, khóa thanh đẩy panic bar thoát hiểm'
+      'Các cấu hình chịu lửa EI70, EI90 và EI120',
+      'Tùy chọn khóa tay gạt, khóa thanh đẩy, ô kính và tay co',
+      'Màu sắc theo bảng màu Jotun',
+      'Sản xuất theo kích thước thực tế của công trình'
     ],
     image: STEEL_DOOR_IMAGE,
-    priceEstimate: 'Từ 1.850.000 đ/m²',
+    priceEstimate: 'Từ 1.750.000 đ/m²',
     popular: true
+  },
+  {
+    id: 'cua-kinh-ngan-chay',
+    name: 'Cửa Kính Ngăn Cháy',
+    category: 'glass-door',
+    categoryName: 'Cửa kính ngăn cháy',
+    fireRating: 'Theo cấu hình',
+    description: 'Kết hợp khả năng ngăn cháy, cách nhiệt và tính thẩm mỹ, đồng thời giữ ánh sáng tự nhiên cho không gian.',
+    longDescription: 'Cửa kính ngăn cháy phù hợp với các vị trí cần mở rộng tầm nhìn và lấy sáng tự nhiên nhưng vẫn phải đáp ứng yêu cầu phân khoang cháy của công trình.',
+    specs: {
+      material: 'Kính ngăn cháy kết hợp hệ khung theo thiết kế',
+      thickness: 'Sản xuất theo kích thước khảo sát thực tế',
+      insulation: 'Cấu hình kính lựa chọn theo yêu cầu chịu lửa',
+      finish: 'Màu và hoàn thiện theo lựa chọn của khách hàng',
+      standard: 'Áp dụng theo hồ sơ thiết kế và hồ sơ kiểm định sản phẩm',
+      warranty: '12-24 tháng tùy loại sản phẩm'
+    },
+    features: [
+      'Hỗ trợ lấy sáng tự nhiên và mở rộng tầm nhìn',
+      'Phù hợp công trình yêu cầu cao về thẩm mỹ',
+      'Cấu hình theo vị trí lắp đặt thực tế',
+      'Tư vấn chi tiết sau khi tiếp nhận bản vẽ'
+    ],
+    image: STEEL_DOOR_IMAGE,
+    priceEstimate: 'Liên hệ'
   },
   {
     id: 'cua-cuon-ngan-chay',
     name: 'Cửa Cuốn Ngăn Cháy',
     category: 'roller-shutter',
     categoryName: 'Cửa cuốn ngăn cháy',
-    fireRating: 'EI120',
-    description: 'Giải pháp ngăn cháy cho không gian lớn, nhà xưởng, trung tâm thương mại và hầm gửi xe.',
-    longDescription: 'Hệ thống cửa cuốn chống cháy siêu trường APEX với nan thép 2 lớp cách nhiệt, tích hợp motor chống cháy chịu nhiệt 300°C và hộp điều khiển tự động đóng sập 2 cấp khi nhận tín hiệu báo cháy từ trung tâm PCCC tòa nhà.',
+    fireRating: 'Theo cấu hình',
+    description: 'Giải pháp che chắn các khoảng mở lớn mà cửa mở quay thông thường khó đáp ứng.',
+    longDescription: 'Cửa cuốn ngăn cháy có khả năng che chắn các khoảng mở diện tích lớn, phù hợp nhà xưởng, kho vận và các không gian cần duy trì khẩu độ sử dụng khi vận hành bình thường.',
     specs: {
-      material: 'Thép hợp kim mạ kẽm cường độ cao, nan kép dập định hình',
-      thickness: 'Độ dày nan thép 1.2mm - 1.4mm, lót sợi gốm cách nhiệt',
-      insulation: 'Sợi thủy tinh silicat và bông gốm chịu nhiệt 1200°C',
-      finish: 'Sơn tĩnh điện chống cháy chất lượng cao chống ăn mòn',
-      standard: 'QCVN 06:2022/BXD, BS EN 1634-1, TCVN 9383:2012',
-      warranty: 'Bảo hành 24 tháng cho toàn bộ motor và hệ thống điều khiển'
+      material: 'Vật liệu và cơ cấu cuốn theo cấu hình được duyệt',
+      thickness: 'Sản xuất theo kích thước khoảng mở thực tế',
+      insulation: 'Lựa chọn theo yêu cầu chịu lửa của công trình',
+      finish: 'Màu hoàn thiện theo lựa chọn của khách hàng',
+      standard: 'Áp dụng theo hồ sơ thiết kế và hồ sơ kiểm định sản phẩm',
+      warranty: '12-24 tháng tùy loại sản phẩm'
     },
     features: [
-      'Khổ rộng nhịp lớn lên tới 12m phù hợp nhà xưởng, kho bãi',
-      'Cơ chế tự hạ trọng lực khi mất nguồn điện hoàn toàn',
-      'Động cơ chuyên dụng PCCC với rơ-le nhiệt tự ngắt thông minh',
-      'Tích hợp nút nhấn khẩn cấp 2 bên cửa và cảm biến chống kẹt'
+      'Phù hợp các khoảng mở có diện tích lớn',
+      'Giải pháp cho nhà xưởng, kho và không gian thương mại',
+      'Cấu hình theo kích thước khảo sát thực tế',
+      'Tư vấn chi tiết sau khi tiếp nhận bản vẽ'
     ],
     image: ROLLER_SHUTTER_IMAGE,
-    priceEstimate: 'Từ 2.450.000 đ/m²',
+    priceEstimate: 'Liên hệ',
     popular: true
   },
   {
@@ -69,102 +94,26 @@ export const PRODUCTS: Product[] = [
     name: 'Rèm Ngăn Cháy',
     category: 'fire-curtain',
     categoryName: 'Rèm ngăn cháy & khói',
-    fireRating: 'EI60',
-    description: 'Ngăn lửa, ngăn khói hiệu quả, thiết kế linh hoạt âm trần thẩm mỹ cao cho sảnh và thông tầng.',
-    longDescription: 'Rèm ngăn cháy tự động APEX giải quyết bài toán phân khoang ngăn cháy cho các không gian kiến trúc mở hiện đại như giếng trời, sảnh thông tầng TTTM, khu vực cầu thang cuốn. Rèm cuốn gọn gàng bên trong hộp kỹ thuật âm trần khi ở trạng thái bình thường.',
+    fireRating: 'Theo cấu hình',
+    description: 'Giải pháp ngăn cháy linh hoạt, trọng lượng nhẹ và có thể giấu kín trên trần khi cuộn lại.',
+    longDescription: 'Rèm ngăn cháy phù hợp các không gian cần giải pháp ngăn cháy linh hoạt và ưu tiên tính thẩm mỹ. Khi cuộn lại, hệ rèm có thể được giấu trên trần để hạn chế ảnh hưởng tới kiến trúc.',
     specs: {
-      material: 'Vải dệt sợi thủy tinh cốt dây inox không gỉ gia cường phủ polymer',
-      thickness: 'Độ dày vải rèm 0.65mm - 1.0mm chịu nhiệt độ tới 1000°C',
-      insulation: 'Vải phủ lớp ngăn bức xạ nhiệt cách nhiệt intumescent',
-      finish: 'Hộp che và thanh đáy thép sơn tĩnh điện đồng màu trần',
-      standard: 'BS EN 12101-1, UL 10D, QCVN 06:2022/BXD',
-      warranty: 'Bảo hành 36 tháng cơ cấu thả rèm tự do Fail-Safe'
+      material: 'Vật liệu rèm và hệ cuốn theo cấu hình được duyệt',
+      thickness: 'Sản xuất theo kích thước khảo sát thực tế',
+      insulation: 'Lựa chọn theo yêu cầu chịu lửa của công trình',
+      finish: 'Hộp rèm và chi tiết hoàn thiện theo thiết kế',
+      standard: 'Áp dụng theo hồ sơ thiết kế và hồ sơ kiểm định sản phẩm',
+      warranty: '12-24 tháng tùy loại sản phẩm'
     },
     features: [
-      'Thiết kế giấu trần 100% không ảnh hưởng cảnh quan kiến trúc',
-      'Cơ cấu hạ tự do kiểm soát tốc độ (Gravity Fail-Safe)',
-      'Hệ thống xịt nước làm mát sprinkler gia tăng thời gian chịu lửa',
-      'Kết nối trực tiếp tủ trung tâm báo cháy địa chỉ'
+      'Trọng lượng nhẹ và linh hoạt trong bố trí',
+      'Có thể giấu kín trên trần khi cuộn lại',
+      'Phù hợp sảnh, thông tầng và không gian mở',
+      'Tư vấn chi tiết sau khi tiếp nhận bản vẽ'
     ],
     image: FIRE_CURTAIN_IMAGE,
-    priceEstimate: 'Từ 3.100.000 đ/m²',
+    priceEstimate: 'Liên hệ',
     popular: true
-  },
-  {
-    id: 'thang-may-cap-tu-dien',
-    name: 'Thang Máy & Cáp Tự Điện',
-    category: 'accessories',
-    categoryName: 'Thang máy & Cáp điện PCCC',
-    fireRating: 'EI120',
-    description: 'Giải pháp thang máy chữa cháy, cáp điện chống cháy FR, tủ điện đồng bộ, an toàn và hiện đại.',
-    longDescription: 'Cung cấp đồng bộ cửa tầng thang máy cứu nạn chuyên dụng cho lính cứu hỏa đạt chuẩn EI120, cáp điện chịu lửa bọc vỏ LSZH ít khói không halogen và tủ điện phân phối hạ thế chuẩn IP54 đáp ứng vận hành an toàn trong sự cố hỏa hoạn.',
-    specs: {
-      material: 'Thép không gỉ Inox 304 xước / Thép tấm sơn tĩnh điện PCCC',
-      thickness: 'Cánh cửa thang 1.5mm, khung giằng hộp chịu va đập cơ học',
-      insulation: 'Tấm cách nhiệt ceramic cách nhiệt khoang thang máy',
-      finish: 'Mạ PVD titan vàng, đồng hoặc xước hairline cao cấp',
-      standard: 'TCVN 6396-72 (Thang máy chữa cháy), IEC 60331 (Cáp chịu lửa)',
-      warranty: 'Bảo hành hệ thống 24 tháng theo tiêu chuẩn nhà sản xuất'
-    },
-    features: [
-      'Cửa thang máy cứu hộ ưu tiên vận hành nguồn điện sự cố cấp 1',
-      'Cáp chống cháy duy trì nguồn điện 120 phút ở 950°C',
-      'Tủ điện điều khiển PCCC tự động chuyển nguồn ATS thông minh',
-      'Tương thích đồng bộ mọi thương hiệu thang máy Mitsubishi, Hitachi, Otis'
-    ],
-    image: HERO_IMAGE,
-    priceEstimate: 'Liên hệ khảo sát',
-    popular: false
-  },
-  {
-    id: 'vach-kinh-chong-chay-ei60-ei90',
-    name: 'Cửa & Vách Kính Chống Cháy',
-    category: 'glass-door',
-    categoryName: 'Cửa & Vách kính ngăn cháy',
-    fireRating: 'EI90',
-    description: 'Kính trong suốt nhiều lớp gel cách nhiệt intumescent, sang trọng và an toàn tuyệt đối.',
-    longDescription: 'Giải pháp cửa kính và vách kính ngăn cháy cách nhiệt APEX mang đến độ truyền sáng quang học cao tới 88%, đồng thời ngăn chặn hoàn toàn khói lửa và bức xạ nhiệt trong 60 - 90 phút nhờ lớp gel nano phồng nở đặc biệt.',
-    specs: {
-      material: 'Kính chống cháy nhiều lớp ghép nano cách nhiệt + Khung thép mạ định hình',
-      thickness: 'Độ dày kính 19mm (EI60) đến 28mm (EI90)',
-      insulation: 'Hợp chất gel ngăn bức xạ nhiệt cách nhiệt Pyrostop',
-      finish: 'Khung inox 304 xước mờ hoặc thép sơn tĩnh điện màu tùy chọn',
-      standard: 'BS EN 1364-1, QCVN 06:2022/BXD',
-      warranty: 'Bảo hành quang học chống ố vàng 5 năm'
-    },
-    features: [
-      'Độ trong suốt tuyệt đối không hạn chế tầm nhìn sảnh tòa nhà',
-      'Khả năng cách âm lên tới 42dB',
-      'Đạt đầy đủ tiêu chuẩn E (Tính toàn vẹn) và I (Tính cách nhiệt)',
-      'Phù hợp phân chia phòng họp VIP, hành lang văn phòng hạng A'
-    ],
-    image: STEEL_DOOR_IMAGE,
-    priceEstimate: 'Từ 4.800.000 đ/m²'
-  },
-  {
-    id: 'phu-kien-pccc-chinh-hang',
-    name: 'Phụ Kiện Cửa Chống Cháy Đồng Bộ',
-    category: 'accessories',
-    categoryName: 'Phụ kiện PCCC',
-    fireRating: 'Tất cả',
-    description: 'Tay co thủy lực chống cháy, thanh khóa panic thoát hiểm, bản lề inox chịu tải trọng cao.',
-    longDescription: 'Trọn bộ phụ kiện cửa chống cháy chính hãng từ Hafele, Dorma, NewEra, APEX Hardware. Mọi phụ kiện đều được thử nghiệm đồng bộ trong buồng đốt kiểm định cùng cửa để đảm bảo cấp tem kiểm định hợp quy.',
-    specs: {
-      material: 'Inox SUS304 đúc nguyên khối, hợp kim kẽm siêu bền',
-      thickness: 'Bản lề cối 3.5mm chịu tải cánh nặng tới 160kg',
-      insulation: 'Ron ngăn khói tự phồng nở trương nở gấp 10 lần thể tích',
-      finish: 'Xước satin chống xước, chống oxy hóa muối biển',
-      standard: 'EN 1154 (Tay co), EN 1125 (Thanh thoát hiểm), UL listed',
-      warranty: 'Bảo hành đổi mới 24 tháng đối với lỗi kỹ thuật'
-    },
-    features: [
-      'Thanh đẩy panic đơn và đôi thoát hiểm khẩn cấp 1 chạm',
-      'Tay co thủy lực có tính năng đóng tự động khi có còi báo cháy',
-      'Khóa thẻ từ và khóa cơ PCCC ruột đồng chống cạy phá',
-      'Chốt âm tự động cho cánh phụ cửa 2 cánh'
-    ],
-    image: HERO_IMAGE,
-    priceEstimate: 'Giá niêm yết'
   }
 ];
 
@@ -187,7 +136,7 @@ export const SOLUTIONS: Solution[] = [
       'Hệ thống tay co tự đóng giữ kín khoang thang không để khói xâm nhập'
     ],
     standards: ['QCVN 06:2022/BXD Bảng 4', 'TCVN 3890:2023', 'Thông tư 149/2020/TT-BCA'],
-    caseStudy: 'Dự án The Peak Midtown Phú Mỹ Hưng - 1.850 bộ cửa chống cháy EI90'
+    caseStudy: 'Hồ sơ dự án đang được cập nhật.'
   },
   {
     id: 'van-phong-toa-nha',
@@ -207,7 +156,7 @@ export const SOLUTIONS: Solution[] = [
       'Khóa thoát hiểm panic bar điện từ liên động hệ thống kiểm soát ra vào Access Control'
     ],
     standards: ['TCVN 9383:2012', 'QCVN 06:2022/BXD Mục 3.2', 'TCVN 5738:2021'],
-    caseStudy: 'Tòa nhà văn phòng TechnoPark Tower - Đồng bộ hệ thống kiểm soát cửa PCCC'
+    caseStudy: 'Hồ sơ dự án đang được cập nhật.'
   },
   {
     id: 'trung-tam-thuong-mai',
@@ -227,7 +176,7 @@ export const SOLUTIONS: Solution[] = [
       'Cửa thép 2 cánh thoát hiểm bản rộng thoát nạn số đông'
     ],
     standards: ['QCVN 06:2022/BXD Mục 4.14', 'NFPA 80', 'BS EN 1634-1'],
-    caseStudy: 'Vincom Mega Mall Smart City - Hệ thống rèm ngăn khói giếng trời 1.200m²'
+    caseStudy: 'Hồ sơ dự án đang được cập nhật.'
   },
   {
     id: 'nha-xuong-khu-cong-nghiep',
@@ -247,7 +196,7 @@ export const SOLUTIONS: Solution[] = [
       'Cửa chống cháy tự đóng liên kết rơ-le nhiệt khi nguồn điện bị cắt'
     ],
     standards: ['QCVN 06:2022/BXD', 'TCVN 2622:1995', 'FM Global Standards'],
-    caseStudy: 'Tổ hợp nhà máy Pegatron KCN Đình Vũ Hải Phòng - 68 bộ cửa cuốn PCCC'
+    caseStudy: 'Hồ sơ dự án đang được cập nhật.'
   },
   {
     id: 'benh-vien-truong-hoc',
@@ -267,7 +216,7 @@ export const SOLUTIONS: Solution[] = [
       'Cửa trượt tự động ngăn khói phòng mổ áp lực dương'
     ],
     standards: ['TCVN 4470:2012', 'QCVN 06:2022/BXD', 'TCVN 9383:2012'],
-    caseStudy: 'Bệnh viện Đa khoa Quốc tế Vinmec Central Park - Hệ thống cửa PCCC chuyên dụng'
+    caseStudy: 'Hồ sơ dự án đang được cập nhật.'
   },
   {
     id: 'khach-san-resort',
@@ -287,11 +236,11 @@ export const SOLUTIONS: Solution[] = [
       'Cửa thoát nạn sảnh tiệc hội nghị vách kính chịu nhiệt'
     ],
     standards: ['TCVN 4391:2015', 'QCVN 06:2022/BXD', 'TCVN 9383:2012'],
-    caseStudy: 'Khách sạn JW Marriott Hanoi - Cung cấp cửa thoát nạn chịu lửa hành lang phòng hội nghị'
+    caseStudy: 'Hồ sơ dự án đang được cập nhật.'
   }
 ];
 
-export const PROJECTS: Project[] = [
+const PROJECT_SAMPLES: Project[] = [
   {
     id: 'the-peak-midtown',
     title: 'Khu căn hộ cao cấp The Peak',
@@ -346,7 +295,9 @@ export const PROJECTS: Project[] = [
   }
 ];
 
-export const TECHNICAL_DOCS: TechnicalDoc[] = [
+export const PROJECTS: Project[] = [];
+
+const TECHNICAL_DOC_SAMPLES: TechnicalDoc[] = [
   {
     id: 'qcvn-06-2022-bxd',
     title: 'Quy chuẩn kỹ thuật quốc gia QCVN 06:2022/BXD về An toàn cháy cho nhà và công trình',
@@ -393,7 +344,9 @@ export const TECHNICAL_DOCS: TechnicalDoc[] = [
   }
 ];
 
-export const NEWS_ARTICLES: NewsArticle[] = [
+export const TECHNICAL_DOCS: TechnicalDoc[] = [];
+
+const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
   {
     id: 'cap-nhat-tieu-chuan-cua-chong-chay-moi-nhat-2024',
     title: 'Cập nhật tiêu chuẩn cửa chống cháy mới nhất 2024 theo QCVN 06:2022/BXD',
@@ -441,7 +394,9 @@ export const NEWS_ARTICLES: NewsArticle[] = [
   }
 ];
 
-export const PARTNER_LOGOS = [
+export const NEWS_ARTICLES: NewsArticle[] = [];
+
+const PARTNER_LOGO_SAMPLES = [
   { name: '3CElectric', tag: 'Switch on your world' },
   { name: 'ANKO', tag: 'Fire Resistant Doors & Curtains' },
   { name: 'MITSUBISHI ELECTRIC', tag: 'Changes for the Better' },
@@ -449,3 +404,5 @@ export const PARTNER_LOGOS = [
   { name: 'LS ELECTRIC', tag: 'Futuring Smart Energy' },
   { name: 'CADIVI', tag: 'Dây Cáp Điện Hàng Đầu' }
 ];
+
+export const PARTNER_LOGOS: { name: string; tag: string }[] = [];

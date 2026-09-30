@@ -44,7 +44,7 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onOpenQuote, initialArticleI
         </div>
 
         {/* Filter Categories */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        {NEWS_ARTICLES.length > 0 && <div className="flex flex-wrap gap-2 mb-8">
           {categories.map((c) => (
             <button
               key={c.id}
@@ -58,7 +58,7 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onOpenQuote, initialArticleI
               {c.label}
             </button>
           ))}
-        </div>
+        </div>}
 
         {/* News Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -107,6 +107,15 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onOpenQuote, initialArticleI
             </div>
           ))}
         </div>
+
+        {NEWS_ARTICLES.length === 0 && (
+          <div className="border-y border-neutral-200 bg-white px-6 py-14 sm:px-10">
+            <Bookmark className="w-8 h-8 text-red-600" />
+            <h2 className="mt-4 text-xl font-bold text-slate-900">Nội dung chuyên môn đang được cập nhật</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">APEX sẽ công bố bài viết sau khi nội dung kỹ thuật và nguồn tham chiếu được rà soát. Hiện tại, bạn có thể gửi câu hỏi trực tiếp để được tiếp nhận tư vấn.</p>
+            <button onClick={onOpenQuote} className="mt-6 bg-red-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-red-700">Gửi yêu cầu tư vấn</button>
+          </div>
+        )}
 
       </div>
 

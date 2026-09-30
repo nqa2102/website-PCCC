@@ -23,7 +23,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
     {
       id: '1',
       sender: 'agent',
-      text: 'Kính chào Quý khách! Tôi là Kỹ sư Nguyễn Thành Long - Trưởng bộ phận Tư vấn Kỹ thuật PCCC APEX Việt Nam. Quý khách đang cần tư vấn cho công trình dân dụng hay nhà xưởng công nghiệp ạ?',
+      text: 'Kính chào Quý khách! APEX có thể tiếp nhận nhu cầu về cửa thép, cửa kính, cửa cuốn và rèm ngăn cháy. Quý khách đang cần tư vấn sản phẩm nào?',
       timestamp: 'Vừa xong'
     }
   ]);
@@ -32,10 +32,10 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickPrompts = [
-    'Quy định tiêu chuẩn EI60 vs EI90 theo QCVN 06:2022',
-    'Báo giá cửa cuốn ngăn cháy siêu trường cho nhà xưởng',
-    'Hồ sơ cấp tem kiểm định PCCC của Cục CS PCCC',
-    'Tư vấn rèm ngăn cháy giếng trời TTTM'
+    'Cửa thép EI70, EI90 và EI120 khác nhau thế nào?',
+    'Báo giá cửa thép ngăn cháy',
+    'Yêu cầu hồ sơ kỹ thuật sản phẩm',
+    'Tư vấn cửa cuốn hoặc rèm ngăn cháy'
   ];
 
   useEffect(() => {
@@ -61,19 +61,19 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
 
     // Simulate engineer response
     setTimeout(() => {
-      let reply = 'Cảm ơn Quý khách đã quan tâm. Sản phẩm của APEX Việt Nam đều được đốt mẫu thực nghiệm tại Viện IBST và được Cục Cảnh sát PCCC & CNCH cấp tem kiểm định hợp quy.';
+      let reply = 'Cảm ơn Quý khách đã quan tâm. APEX sẽ ghi nhận nhu cầu và phản hồi trong 1-2 ngày. Quý khách có thể để lại số điện thoại qua biểu mẫu báo giá.';
       const lower = query.toLowerCase();
 
-      if (lower.includes('ei60') || lower.includes('ei90') || lower.includes('tiêu chuẩn')) {
-        reply = 'Theo QCVN 06:2022/BXD, cửa chống cháy bắt buộc phải thỏa mãn đồng thời 2 chỉ số: E (Tính toàn vẹn - không nứt vỡ cho lửa xuyên qua) và I (Tính cách nhiệt - nhiệt độ mặt sau dưới 140°C). Cửa EI60 thường dùng cho buồng thang chung cư dưới 50m, còn EI90/EI120 dùng cho nhà cao tầng trên 50m và các phòng kỹ thuật điện.';
+      if (lower.includes('ei70') || lower.includes('ei90') || lower.includes('tiêu chuẩn')) {
+        reply = 'Cửa thép APEX có các cấu hình EI70, EI90 và EI120. Cấu hình phù hợp cần được đối chiếu với hồ sơ thiết kế và yêu cầu của từng vị trí lắp đặt.';
       } else if (lower.includes('giá') || lower.includes('báo giá') || lower.includes('chi phí')) {
-        reply = 'Đơn giá cửa thép chống cháy APEX dao động từ 1.850.000đ/m² đối với dòng EI60 đến 2.450.000đ/m² đối với dòng EI120 (đã gồm khung, cánh, sơn tĩnh điện Jotun và phụ kiện chuẩn). Bạn có thể bấm nút "Nhận báo giá nhanh" để tạo bảng dự toán tự động ngay trên màn hình!';
+        reply = 'Giá tham khảo cửa thép ngăn cháy từ 1.750.000đ/m². Màu sơn, phụ kiện và kích thước được xác nhận theo lựa chọn thực tế; báo giá có hiệu lực 60 ngày.';
       } else if (lower.includes('cuốn') || lower.includes('nhà xưởng')) {
-        reply = 'Đối với nhà xưởng công nghiệp, cửa cuốn ngăn cháy APEX sử dụng nan thép kép 1.4mm nhồi bông gốm chịu nhiệt 1200°C, motor chịu nhiệt 300°C và cơ chế tự hạ trọng lực Fail-Safe khi mất điện hoàn toàn. Khẩu độ tối đa đạt tới 12 mét chiều rộng.';
+        reply = 'APEX có cung cấp cửa cuốn ngăn cháy. Thông số và đơn giá sẽ được tư vấn theo kích thước, cấu hình và yêu cầu thực tế của công trình.';
       } else if (lower.includes('rèm') || lower.includes('giếng trời')) {
-        reply = 'Rèm ngăn cháy APEX thiết kế âm trần thẩm mỹ tuyệt đối, vải sợi thủy tinh cốt inox gia cường chịu nhiệt 1000°C, đáp ứng tiêu chuẩn BS EN 12101-1, chuyên dùng cho sảnh thông tầng TTTM và giếng trời khách sạn.';
+        reply = 'APEX có cung cấp rèm ngăn cháy. Vui lòng gửi kích thước và vị trí lắp đặt để được tư vấn cấu hình phù hợp.';
       } else if (lower.includes('tem') || lower.includes('kiểm định') || lower.includes('cục')) {
-        reply = 'APEX Việt Nam cung cấp đầy đủ: Giấy chứng nhận kiểm định phương tiện PCCC của Cục Cảnh sát PCCC & CNCH, biên bản đốt mẫu tại Viện IBST và dán tem kiểm định điện tử QR code trên từng bộ cửa xuất xưởng.';
+        reply = 'Hồ sơ kiểm định và tài liệu kỹ thuật đang được APEX hoàn thiện. Quý khách có thể gửi yêu cầu để được cập nhật theo từng sản phẩm.';
       }
 
       const botMsg: Message = {
@@ -106,7 +106,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
                 <span className="text-xs font-bold text-white">Tư Vấn Kỹ Thuật PCCC APEX</span>
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
               </div>
-              <span className="text-[10px] text-slate-400">Trực tuyến · Sẵn sàng hỗ trợ 24/7</span>
+              <span className="text-[10px] text-slate-400">Tiếp nhận cả ngày · Phản hồi trong 1-2 ngày</span>
             </div>
           </div>
           <button

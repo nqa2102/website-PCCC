@@ -51,15 +51,15 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
             <span>HỒ SƠ NĂNG LỰC DỰ ÁN</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 uppercase tracking-tight">
-            CÁC DỰ ÁN TIÊU BIỂU APEX VIỆT NAM ĐÃ ĐỒNG HÀNH
+            HỒ SƠ DỰ ÁN APEX VIỆT NAM
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-            Tự hào là đối tác cung cấp và thi công hệ thống cửa chống cháy, cửa cuốn ngăn cháy và rèm ngăn khói cho hàng trăm dự án trọng điểm quốc gia.
+            Thông tin và hình ảnh dự án sẽ được công bố sau khi hoàn tất hồ sơ và quyền sử dụng tư liệu.
           </p>
         </div>
 
         {/* Filter Bar */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        {PROJECTS.length > 0 && <div className="flex flex-wrap gap-2 mb-8">
           {filters.map((f) => (
             <button
               key={f.id}
@@ -73,7 +73,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
               {f.label}
             </button>
           ))}
-        </div>
+        </div>}
 
         {/* Project Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -143,6 +143,17 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
             </div>
           ))}
         </div>
+
+        {PROJECTS.length === 0 && (
+          <div className="border-y border-neutral-200 bg-white px-6 py-14 sm:px-10">
+            <ShieldCheck className="w-8 h-8 text-emerald-600" />
+            <h2 className="mt-4 text-xl font-bold text-slate-900">Hồ sơ dự án đang được cập nhật</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">APEX chỉ công bố dự án sau khi thông tin, hình ảnh và phạm vi cung cấp đã được xác nhận. Bạn vẫn có thể gửi yêu cầu để nhận phương án phù hợp với công trình hiện tại.</p>
+            <button onClick={onOpenQuote} className="mt-6 inline-flex items-center gap-2 bg-red-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-red-700">
+              Gửi yêu cầu tư vấn <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
 
       </div>
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Phone, FileText, Search, Menu, X, ChevronDown, ChevronRight, ShieldCheck } from 'lucide-react';
+import { COMPANY_INFO } from '../data/companyData';
 
 interface HeaderProps {
   activeTab: string;
@@ -36,11 +37,10 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   const productCategories = [
-    { id: 'steel-door', name: 'Cửa thép ngăn cháy EI60 - EI120' },
-    { id: 'roller-shutter', name: 'Cửa cuốn ngăn cháy siêu trường' },
-    { id: 'fire-curtain', name: 'Rèm ngăn cháy & khói tự động' },
-    { id: 'glass-door', name: 'Cửa & Vách kính ngăn cháy cách nhiệt' },
-    { id: 'accessories', name: 'Thang máy & Cáp điện PCCC' },
+    { id: 'steel-door', name: 'Cửa thép ngăn cháy EI70 - EI120' },
+    { id: 'glass-door', name: 'Cửa kính ngăn cháy' },
+    { id: 'roller-shutter', name: 'Cửa cuốn ngăn cháy' },
+    { id: 'fire-curtain', name: 'Rèm ngăn cháy' },
   ];
 
   const solutionList = [
@@ -71,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div className="hidden sm:block border-l border-neutral-300 pl-2.5">
               <p className="text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider">
-                CÔNG TY TNHH APEX VIỆT NAM
+                {COMPANY_INFO.legalNameUpper}
               </p>
               <p className="text-[9px] sm:text-[10px] text-slate-500">
                 Vững chuẩn an toàn, trọn niềm an tâm
@@ -104,7 +104,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Hotline */}
             <a 
-              href="tel:0901234567" 
+              href={COMPANY_INFO.hotlineHref}
               className="flex items-center gap-2 text-left group"
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors">
@@ -113,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="hidden lg:block">
                 <span className="text-[10px] text-slate-500 block leading-tight">Hotline tư vấn</span>
                 <span className="text-xs sm:text-sm font-bold text-red-600 group-hover:text-red-700 tracking-tight">
-                  0901 234 567
+                  {COMPANY_INFO.hotlineDisplay}
                 </span>
               </div>
             </a>
@@ -274,7 +274,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Right Mini Trust Badge */}
             <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Đạt kiểm định QCVN 06:2022/BXD</span>
+              <span>Áp dụng QCVN 06:2022/BXD và Sửa đổi 1:2023</span>
             </div>
           </nav>
         </div>
@@ -426,11 +426,11 @@ export const Header: React.FC<HeaderProps> = ({
               <span>Yêu cầu dự toán & báo giá nhanh</span>
             </button>
             <a
-              href="tel:0901234567"
+              href={COMPANY_INFO.hotlineHref}
               className="w-full flex items-center justify-center gap-2 bg-neutral-100 text-slate-800 font-semibold text-xs sm:text-sm py-2.5 rounded-xl border border-neutral-200"
             >
               <Phone className="w-4 h-4 text-red-600" />
-              <span>Hotline 24/7: 0901 234 567</span>
+              <span>Hotline: {COMPANY_INFO.hotlineDisplay}</span>
             </a>
           </div>
 
