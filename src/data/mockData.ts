@@ -35,7 +35,7 @@ export const PRODUCTS: Product[] = [
       'Sản xuất theo kích thước thực tế của công trình'
     ],
     image: STEEL_DOOR_IMAGE,
-    priceEstimate: 'Từ 1.750.000 đ/m²',
+    priceEstimate: 'Liên hệ',
     popular: true
   },
   {

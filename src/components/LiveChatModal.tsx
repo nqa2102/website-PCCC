@@ -67,7 +67,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
       if (lower.includes('ei70') || lower.includes('ei90') || lower.includes('tiêu chuẩn')) {
         reply = 'Cửa thép APEX có các cấu hình EI70, EI90 và EI120. Cấu hình phù hợp cần được đối chiếu với hồ sơ thiết kế và yêu cầu của từng vị trí lắp đặt.';
       } else if (lower.includes('giá') || lower.includes('báo giá') || lower.includes('chi phí')) {
-        reply = 'Giá tham khảo cửa thép ngăn cháy từ 1.750.000đ/m². Màu sơn, phụ kiện và kích thước được xác nhận theo lựa chọn thực tế; báo giá có hiệu lực 60 ngày.';
+        reply = 'Đơn giá được xác nhận theo kích thước, màu sơn, phụ kiện và cấu hình thực tế. Quý khách vui lòng gọi hoặc nhắn Zalo để nhân viên kinh doanh tư vấn trực tiếp.';
       } else if (lower.includes('cuốn') || lower.includes('nhà xưởng')) {
         reply = 'APEX có cung cấp cửa cuốn ngăn cháy. Thông số và đơn giá sẽ được tư vấn theo kích thước, cấu hình và yêu cầu thực tế của công trình.';
       } else if (lower.includes('rèm') || lower.includes('giếng trời')) {

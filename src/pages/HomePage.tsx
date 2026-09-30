@@ -101,7 +101,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
                   <h3 className="text-base font-semibold leading-6 text-slate-900">{product.name}</h3>
                   <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{product.description}</p>
                   <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
-                    <span className="text-xs font-semibold text-red-700">{product.priceEstimate}</span>
+                    <span className="text-xs font-semibold uppercase text-red-700">Liên hệ</span>
                     <button onClick={() => onOpenQuote(product.category)} className="text-xs font-semibold text-slate-700 hover:text-red-700">Liên hệ kinh doanh</button>
                   </div>
                 </div>
