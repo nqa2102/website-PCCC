@@ -128,7 +128,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
                 Sản phẩm theo yêu cầu từng công trình
               </h2>
               <p className="text-xs text-slate-300 leading-relaxed">
-                APEX tiếp nhận thông tin thiết kế, tư vấn cấu hình và sản xuất theo kích thước thực tế. Hồ sơ kiểm định và tài liệu năng lực sẽ được công bố sau khi hoàn tất.
+                APEX tiếp nhận thông tin thiết kế, tư vấn cấu hình và sản xuất theo kích thước thực tế. Hồ sơ kiểm định và kết quả thử nghiệm được đối chiếu theo loại cửa, số cánh và yêu cầu chịu lửa của từng công trình.
               </p>
 
               <div className="space-y-2 pt-2 text-xs">

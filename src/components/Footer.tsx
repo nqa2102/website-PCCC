@@ -190,7 +190,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
           </div>
           <div className="flex items-center gap-4">
             <button onClick={() => onNavigate('documents')} className="hover:text-neutral-300">
-              Tải tài liệu kỹ thuật
+              Xem hồ sơ kỹ thuật
             </button>
             <span>·</span>
             <button onClick={() => onNavigate('about')} className="hover:text-neutral-300">

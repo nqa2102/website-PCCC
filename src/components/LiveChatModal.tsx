@@ -73,7 +73,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
       } else if (lower.includes('rèm') || lower.includes('giếng trời')) {
         reply = 'APEX có cung cấp rèm ngăn cháy. Vui lòng gửi kích thước và vị trí lắp đặt để được tư vấn cấu hình phù hợp.';
       } else if (lower.includes('tem') || lower.includes('kiểm định') || lower.includes('cục')) {
-        reply = 'Hồ sơ kiểm định và tài liệu kỹ thuật đang được APEX hoàn thiện. Quý khách có thể gửi yêu cầu để được cập nhật theo từng sản phẩm.';
+        reply = 'APEX đã phân loại hồ sơ tham chiếu cho cửa thép EI70, EI90, EI120 và hệ cửa cuốn, rèm ngăn cháy EI60-EI92. Vui lòng cho biết loại sản phẩm, số cánh và yêu cầu EI để nhân viên gửi đúng bộ hồ sơ áp dụng.';
       }
 
       const botMsg: Message = {

@@ -196,7 +196,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                           {doc.title}
                         </div>
                         <div className="text-[11px] text-slate-500">
-                          {doc.code} · {doc.fileSize}
+                          {doc.code} · {doc.categoryLabel}
                         </div>
                       </div>
                     </div>

@@ -53,10 +53,13 @@ export interface TechnicalDoc {
   code: string;
   category: 'regulation' | 'catalog' | 'cad' | 'certificate';
   categoryLabel: string;
-  fileSize: string;
   updatedDate: string;
-  downloadCount: number;
   description: string;
+  productGroup?: 'steel-door' | 'roller-shutter' | 'fire-curtain';
+  standard?: string;
+  sourceOwner?: string;
+  documentType?: string;
+  scope?: string;
 }
 
 export interface NewsArticle {

@@ -68,7 +68,7 @@ export const PRODUCTS: Product[] = [
     name: 'Cửa Cuốn Ngăn Cháy',
     category: 'roller-shutter',
     categoryName: 'Cửa cuốn ngăn cháy',
-    fireRating: 'Theo cấu hình',
+    fireRating: 'EI70-EI92',
     description: 'Giải pháp che chắn các khoảng mở lớn mà cửa mở quay thông thường khó đáp ứng.',
     longDescription: 'Cửa cuốn ngăn cháy có khả năng che chắn các khoảng mở diện tích lớn, phù hợp nhà xưởng, kho vận và các không gian cần duy trì khẩu độ sử dụng khi vận hành bình thường.',
     specs: {
@@ -76,13 +76,13 @@ export const PRODUCTS: Product[] = [
       thickness: 'Sản xuất theo kích thước khoảng mở thực tế',
       insulation: 'Lựa chọn theo yêu cầu chịu lửa của công trình',
       finish: 'Màu hoàn thiện theo lựa chọn của khách hàng',
-      standard: 'Áp dụng theo hồ sơ thiết kế và hồ sơ kiểm định sản phẩm',
+      standard: 'TCVN 9383:2012; đối chiếu hồ sơ thử nghiệm theo cấu hình AKS',
       warranty: '12-24 tháng tùy loại sản phẩm'
     },
     features: [
       'Phù hợp các khoảng mở có diện tích lớn',
       'Giải pháp cho nhà xưởng, kho và không gian thương mại',
-      'Cấu hình theo kích thước khảo sát thực tế',
+      'Có cấu hình tham chiếu hồ sơ thử nghiệm EI70 và EI92',
       'Tư vấn chi tiết sau khi tiếp nhận bản vẽ'
     ],
     image: ROLLER_SHUTTER_IMAGE,
@@ -94,7 +94,7 @@ export const PRODUCTS: Product[] = [
     name: 'Rèm Ngăn Cháy',
     category: 'fire-curtain',
     categoryName: 'Rèm ngăn cháy & khói',
-    fireRating: 'Theo cấu hình',
+    fireRating: 'EI60-EI91',
     description: 'Giải pháp ngăn cháy linh hoạt, trọng lượng nhẹ và có thể giấu kín trên trần khi cuộn lại.',
     longDescription: 'Rèm ngăn cháy phù hợp các không gian cần giải pháp ngăn cháy linh hoạt và ưu tiên tính thẩm mỹ. Khi cuộn lại, hệ rèm có thể được giấu trên trần để hạn chế ảnh hưởng tới kiến trúc.',
     specs: {
@@ -102,13 +102,13 @@ export const PRODUCTS: Product[] = [
       thickness: 'Sản xuất theo kích thước khảo sát thực tế',
       insulation: 'Lựa chọn theo yêu cầu chịu lửa của công trình',
       finish: 'Hộp rèm và chi tiết hoàn thiện theo thiết kế',
-      standard: 'Áp dụng theo hồ sơ thiết kế và hồ sơ kiểm định sản phẩm',
+      standard: 'TCVN 9383:2012; đối chiếu hồ sơ thử nghiệm theo cấu hình AKF',
       warranty: '12-24 tháng tùy loại sản phẩm'
     },
     features: [
       'Trọng lượng nhẹ và linh hoạt trong bố trí',
       'Có thể giấu kín trên trần khi cuộn lại',
-      'Phù hợp sảnh, thông tầng và không gian mở',
+      'Có cấu hình tham chiếu hồ sơ thử nghiệm EI60 và EI91',
       'Tư vấn chi tiết sau khi tiếp nhận bản vẽ'
     ],
     image: FIRE_CURTAIN_IMAGE,
@@ -297,54 +297,120 @@ const PROJECT_SAMPLES: Project[] = [
 
 export const PROJECTS: Project[] = [];
 
-const TECHNICAL_DOC_SAMPLES: TechnicalDoc[] = [
+export const TECHNICAL_DOCS: TechnicalDoc[] = [
   {
-    id: 'qcvn-06-2022-bxd',
-    title: 'Quy chuẩn kỹ thuật quốc gia QCVN 06:2022/BXD về An toàn cháy cho nhà và công trình',
-    code: 'QCVN 06:2022/BXD',
-    category: 'regulation',
-    categoryLabel: 'Quy chuẩn & Pháp lý',
-    fileSize: '4.8 MB',
-    updatedDate: '16/01/2024',
-    downloadCount: 4210,
-    description: 'Toàn văn quy chuẩn kỹ thuật bắt buộc áp dụng khi thẩm duyệt và nghiệm thu PCCC các công trình xây dựng tại Việt Nam, cập nhật thông tư sửa đổi mới nhất.'
-  },
-  {
-    id: 'catalogue-cua-chong-chay-apex-2024',
-    title: 'Catalogue Kỹ Thuật Tổng Hợp Cửa Chống Cháy & Thiết Bị PCCC APEX Việt Nam',
-    code: 'CAT-APEX-2024',
-    category: 'catalog',
-    categoryLabel: 'Catalogue & Thông số',
-    fileSize: '12.5 MB',
-    updatedDate: '20/05/2024',
-    downloadCount: 8930,
-    description: 'Bản catalogue chi tiết kích thước tiêu chuẩn, cấu tạo vật liệu, phụ kiện đồng bộ, bảng màu sơn tĩnh điện và hướng dẫn lựa chọn cho kỹ sư thiết kế.'
-  },
-  {
-    id: 'ban-ve-cad-cua-thep-ei60-ei120',
-    title: 'Bộ Thư Viện Bản Vẽ CAD Chi Tiết Cửa Thép Chống Cháy 1 Cánh & 2 Cánh (.DWG)',
-    code: 'DWG-APEX-DOOR',
-    category: 'cad',
-    categoryLabel: 'Bản vẽ kỹ thuật CAD',
-    fileSize: '8.2 MB',
-    updatedDate: '10/06/2024',
-    downloadCount: 6540,
-    description: 'Hồ sơ bản vẽ CAD mặt cắt khung bao, chi tiết cánh cửa, ô kính và chôn nở gia cố tường xây sẵn sàng chèn vào đồ án thiết kế kiến trúc MEP.'
-  },
-  {
-    id: 'giay-chung-nhan-kiem-dinh-pccc',
-    title: 'Giấy chứng nhận kết quả thử nghiệm chịu lửa mẫu cửa EI60, EI90, EI120 - Cục CS PCCC & CNCH',
-    code: 'CERT-FIRE-2024',
+    id: 'kiem-dinh-cua-thep-ei70-1-canh-1803',
+    title: 'Cửa thép ngăn cháy 1 cánh EI70',
+    code: '1803/KD-PCCC-P7',
     category: 'certificate',
-    categoryLabel: 'Chứng chỉ kiểm định',
-    fileSize: '3.1 MB',
-    updatedDate: '02/04/2024',
-    downloadCount: 3820,
-    description: 'Biên bản thử nghiệm đốt mẫu thực tế tại Viện Khoa học Công nghệ Xây dựng (IBST) và tem chứng nhận hợp quy của Bộ Công an.'
+    categoryLabel: 'Giấy chứng nhận kiểm định',
+    updatedDate: '15/05/2023',
+    description: 'Hồ sơ kiểm định mẫu cửa thép bản lề mở một phía, có cấu hình khóa thoát hiểm, khóa tay gạt và tay co thủy lực.',
+    productGroup: 'steel-door',
+    standard: 'Hồ sơ kiểm định phương tiện PCCC',
+    sourceOwner: 'Công ty TNHH Điện - Điện tử 3C',
+    documentType: 'Chứng nhận kiểm định',
+    scope: 'Mã 3C-EI70-1C, mẫu 1 cánh, giới hạn chịu lửa EI70'
+  },
+  {
+    id: 'kiem-dinh-cua-thep-ei90-1-canh-1786',
+    title: 'Cửa thép ngăn cháy 1 cánh EI90',
+    code: '1786/KD-PCCC-P7',
+    category: 'certificate',
+    categoryLabel: 'Giấy chứng nhận kiểm định',
+    updatedDate: '12/05/2023',
+    description: 'Hồ sơ kiểm định mẫu cửa thép 1 cánh, kích thước mẫu tổng thể 1.220 x 2.440 x 50 mm.',
+    productGroup: 'steel-door',
+    standard: 'Hồ sơ kiểm định phương tiện PCCC',
+    sourceOwner: 'Công ty TNHH Điện - Điện tử 3C',
+    documentType: 'Chứng nhận kiểm định',
+    scope: 'Mã 3C-EI90-1C, mẫu 1 cánh, giới hạn chịu lửa EI90'
+  },
+  {
+    id: 'kiem-dinh-cua-thep-ei90-2-canh-2736',
+    title: 'Cửa thép ngăn cháy 2 cánh EI90',
+    code: '2736/KD-PCCC-P7',
+    category: 'certificate',
+    categoryLabel: 'Giấy chứng nhận kiểm định',
+    updatedDate: '06/07/2023',
+    description: 'Hồ sơ kiểm định mẫu cửa thép 2 cánh, khung bao tham chiếu 2.300 x 2.400 mm.',
+    productGroup: 'steel-door',
+    standard: 'Hồ sơ kiểm định phương tiện PCCC',
+    sourceOwner: 'Công ty TNHH Điện - Điện tử 3C',
+    documentType: 'Chứng nhận kiểm định',
+    scope: 'Mã 3C-EI90-2C, mẫu 2 cánh, giới hạn chịu lửa EI90'
+  },
+  {
+    id: 'kiem-dinh-cua-thep-ei120-2-canh-2225',
+    title: 'Cửa thép ngăn cháy 2 cánh EI120',
+    code: '2225/KD-PCCC-P7',
+    category: 'certificate',
+    categoryLabel: 'Giấy chứng nhận kiểm định',
+    updatedDate: '08/06/2023',
+    description: 'Hồ sơ kiểm định mẫu cửa thép 2 cánh, kích thước mẫu tổng thể 1.800 x 2.400 x 50 mm.',
+    productGroup: 'steel-door',
+    standard: 'Hồ sơ kiểm định phương tiện PCCC',
+    sourceOwner: 'Công ty TNHH Điện - Điện tử 3C',
+    documentType: 'Chứng nhận kiểm định',
+    scope: 'Mã 3C-EI120-2C, mẫu 2 cánh, giới hạn chịu lửa EI120'
+  },
+  {
+    id: 'thu-nghiem-cua-cuon-aks-ei70-0378',
+    title: 'Cửa cuốn ngăn cháy, cách nhiệt AKS - EI70',
+    code: '0378-2024/TNCL',
+    category: 'certificate',
+    categoryLabel: 'Công bố kết quả thử nghiệm',
+    updatedDate: '12/07/2024',
+    description: 'Công bố kết quả thử nghiệm mẫu cụm cửa cuốn ngăn cháy, cách nhiệt mã hiệu AKS theo TCVN 9383:2012.',
+    productGroup: 'roller-shutter',
+    standard: 'TCVN 9383:2012',
+    sourceOwner: 'Công ty TNHH Đầu tư và Phát triển ANKO Việt Nam',
+    documentType: 'Kết quả thử nghiệm',
+    scope: 'Mẫu AKS, giới hạn chịu lửa EI70'
+  },
+  {
+    id: 'thu-nghiem-cua-cuon-aks-ei92-0040',
+    title: 'Cửa cuốn ngăn cháy, cách nhiệt AKS - EI92',
+    code: '0040-2024/TNCL-TT2',
+    category: 'certificate',
+    categoryLabel: 'Công bố kết quả thử nghiệm',
+    updatedDate: '10/08/2024',
+    description: 'Công bố kết quả thử nghiệm mẫu cụm cửa cuốn ngăn cháy, cách nhiệt mã hiệu AKS theo TCVN 9383:2012.',
+    productGroup: 'roller-shutter',
+    standard: 'TCVN 9383:2012',
+    sourceOwner: 'Công ty TNHH Đầu tư và Phát triển ANKO Việt Nam',
+    documentType: 'Kết quả thử nghiệm',
+    scope: 'Mẫu AKS, giới hạn chịu lửa EI92'
+  },
+  {
+    id: 'thu-nghiem-rem-akf-ei60-0250',
+    title: 'Rèm ngăn cháy, cách nhiệt AKF - EI60',
+    code: '0250-2023/TNCL',
+    category: 'certificate',
+    categoryLabel: 'Công bố kết quả thử nghiệm',
+    updatedDate: '24/05/2023',
+    description: 'Công bố kết quả thử nghiệm mẫu cụm màn cuốn ngăn cháy, cách nhiệt mã hiệu AKF theo TCVN 9383:2012.',
+    productGroup: 'fire-curtain',
+    standard: 'TCVN 9383:2012',
+    sourceOwner: 'Công ty TNHH Đầu tư và Phát triển ANKO Việt Nam',
+    documentType: 'Kết quả thử nghiệm',
+    scope: 'Mẫu AKF, giới hạn chịu lửa EI60'
+  },
+  {
+    id: 'thu-nghiem-rem-akf-ei91-0174',
+    title: 'Rèm ngăn cháy, cách nhiệt AKF - EI91',
+    code: '0174-2024/TNCL',
+    category: 'certificate',
+    categoryLabel: 'Công bố kết quả thử nghiệm',
+    updatedDate: '27/03/2024',
+    description: 'Công bố kết quả thử nghiệm mẫu cụm màn ngăn cháy, cách nhiệt mã hiệu AKF theo TCVN 9383:2012.',
+    productGroup: 'fire-curtain',
+    standard: 'TCVN 9383:2012',
+    sourceOwner: 'Công ty TNHH Đầu tư và Phát triển ANKO Việt Nam',
+    documentType: 'Kết quả thử nghiệm',
+    scope: 'Mẫu AKF, giới hạn chịu lửa EI91'
   }
 ];
-
-export const TECHNICAL_DOCS: TechnicalDoc[] = [];
 
 const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
   {
@@ -359,7 +425,7 @@ const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
     content: [
       'Theo QCVN 06:2022/BXD và Thông tư sửa đổi 1:2023/BXD, các yêu cầu đối với cửa chống cháy đã được siết chặt nhằm đảm bảo cả tính toàn vẹn (E) và tính cách nhiệt (I).',
       'Trước đây, nhiều đơn vị chỉ chú trọng đến khả năng không bị cháy thủng của cửa. Tuy nhiên, tiêu chí I (Insulation) yêu cầu nhiệt độ mặt không tiếp xúc với lửa không được vượt quá mức quy định (trung bình 140°C), tránh gây cháy lan các vật liệu bên trong hành lang thoát hiểm.',
-      'APEX Việt Nam tự hào là đơn vị tiên phong áp dụng lõi vật liệu Magie Oxit (MgO) và bông gốm Ceramic thế hệ mới, vượt qua toàn bộ các bài thử nghiệm đốt mẫu gắt gao tại IBST và được Cục CS PCCC & CNCH cấp chứng nhận kiểm định chính thức cho các dòng EI60, EI90 và EI120.'
+      'Hồ sơ chịu lửa phải được đối chiếu theo đúng loại cửa, số cánh, kích thước và cấu hình vật liệu. APEX tư vấn lựa chọn sản phẩm trên cơ sở hồ sơ kiểm định hoặc kết quả thử nghiệm phù hợp với yêu cầu của từng công trình.'
     ]
   },
   {
