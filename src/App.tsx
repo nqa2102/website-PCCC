@@ -1,20 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { QuickContactWidget } from './components/QuickContactWidget';
-import { QuoteModal } from './components/QuoteModal';
-import { LiveChatModal } from './components/LiveChatModal';
-import { SearchModal } from './components/SearchModal';
 
 import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/AboutPage';
-import { ProductsPage } from './pages/ProductsPage';
-import { SolutionsPage } from './pages/SolutionsPage';
-import { ProjectsPage } from './pages/ProjectsPage';
-import { TechnicalDocsPage } from './pages/TechnicalDocsPage';
-import { NewsPage } from './pages/NewsPage';
-import { ContactPage } from './pages/ContactPage';
-import { AdminApp } from './admin/AdminApp';
+
+const AboutPage = lazy(() => import('./pages/AboutPage').then((module) => ({ default: module.AboutPage })));
+const ProductsPage = lazy(() => import('./pages/ProductsPage').then((module) => ({ default: module.ProductsPage })));
+const SolutionsPage = lazy(() => import('./pages/SolutionsPage').then((module) => ({ default: module.SolutionsPage })));
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage').then((module) => ({ default: module.ProjectsPage })));
+const TechnicalDocsPage = lazy(() => import('./pages/TechnicalDocsPage').then((module) => ({ default: module.TechnicalDocsPage })));
+const NewsPage = lazy(() => import('./pages/NewsPage').then((module) => ({ default: module.NewsPage })));
+const ContactPage = lazy(() => import('./pages/ContactPage').then((module) => ({ default: module.ContactPage })));
+const QuoteModal = lazy(() => import('./components/QuoteModal').then((module) => ({ default: module.QuoteModal })));
+const LiveChatModal = lazy(() => import('./components/LiveChatModal').then((module) => ({ default: module.LiveChatModal })));
+const SearchModal = lazy(() => import('./components/SearchModal').then((module) => ({ default: module.SearchModal })));
+const AdminApp = lazy(() => import('./admin/AdminApp').then((module) => ({ default: module.AdminApp })));
+
+const PageFallback = () => (
+  <div className="flex min-h-[45vh] items-center justify-center bg-neutral-50" role="status">
+    <span className="h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-red-700" />
+    <span className="sr-only">Đang tải nội dung</span>
+  </div>
+);
 
 export default function App() {
   const [isAdmin, setIsAdmin] = useState(() => window.location.hash === '#/admin');
@@ -72,7 +80,7 @@ export default function App() {
   };
 
   if (isAdmin) {
-    return <AdminApp onExit={() => { window.location.hash = ''; }} />;
+    return <Suspense fallback={<PageFallback />}><AdminApp onExit={() => { window.location.hash = ''; }} /></Suspense>;
   }
 
   return (
@@ -100,6 +108,7 @@ export default function App() {
 
       {/* Main Page Content */}
       <main className="flex-1 pb-16 sm:pb-0">
+        <Suspense fallback={<PageFallback />}>
         {activeTab === 'home' && (
           <HomePage
             onNavigate={handleNavigate}
@@ -157,6 +166,7 @@ export default function App() {
             onOpenQuote={() => handleOpenQuote()}
           />
         )}
+        </Suspense>
       </main>
 
       {/* Corporate Footer */}
@@ -171,26 +181,28 @@ export default function App() {
       />
 
       {/* Interactive Modals */}
-      <QuoteModal
-        isOpen={quoteModalOpen}
-        onClose={() => setQuoteModalOpen(false)}
-        preselectedProduct={quotePreselectedProduct}
-      />
+      <Suspense fallback={null}>
+        {quoteModalOpen && <QuoteModal
+          isOpen
+          onClose={() => setQuoteModalOpen(false)}
+          preselectedProduct={quotePreselectedProduct}
+        />}
 
-      <LiveChatModal
-        isOpen={chatModalOpen}
-        onClose={() => setChatModalOpen(false)}
-        onOpenQuote={() => {
-          setChatModalOpen(false);
-          handleOpenQuote();
-        }}
-      />
+        {chatModalOpen && <LiveChatModal
+          isOpen
+          onClose={() => setChatModalOpen(false)}
+          onOpenQuote={() => {
+            setChatModalOpen(false);
+            handleOpenQuote();
+          }}
+        />}
 
-      <SearchModal
-        isOpen={searchModalOpen}
-        onClose={() => setSearchModalOpen(false)}
-        onNavigate={handleNavigate}
-      />
+        {searchModalOpen && <SearchModal
+          isOpen
+          onClose={() => setSearchModalOpen(false)}
+          onNavigate={handleNavigate}
+        />}
+      </Suspense>
     </div>
   );
 }

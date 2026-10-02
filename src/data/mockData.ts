@@ -1,15 +1,13 @@
 import { Product, Solution, Project, TechnicalDoc, NewsArticle } from '../types';
-import heroImage from '../assets/images/hero_fire_door_apex_1790648819738.jpg';
-import steelDoorImage from '../assets/images/product_steel_fire_door_1790648833826.jpg';
-import rollerShutterImage from '../assets/images/product_fire_roller_shutter_1790648844563.jpg';
-import fireCurtainImage from '../assets/images/product_fire_curtain_1790648858516.jpg';
-import vincomImage from '../assets/images/project_vincom_facade_1790648869674.jpg';
+import heroImage from '../assets/images/hero_fire_door_apex_1790648819738.webp';
+import steelDoorImage from '../assets/images/product_steel_fire_door_1790648833826.webp';
+import rollerShutterImage from '../assets/images/product_fire_roller_shutter_1790648844563.webp';
+import fireCurtainImage from '../assets/images/product_fire_curtain_1790648858516.webp';
 
 export const HERO_IMAGE = heroImage;
 export const STEEL_DOOR_IMAGE = steelDoorImage;
 export const ROLLER_SHUTTER_IMAGE = rollerShutterImage;
 export const FIRE_CURTAIN_IMAGE = fireCurtainImage;
-export const VINCOM_IMAGE = vincomImage;
 
 export const PRODUCTS: Product[] = [
   {
@@ -276,7 +274,7 @@ const PROJECT_SAMPLES: Project[] = [
     scale: 'Tổng diện tích 68.000 m²',
     itemsSupplied: 'Cửa chống cháy, thang máy, tủ điện',
     year: '2022 - 2023',
-    image: VINCOM_IMAGE,
+    image: HERO_IMAGE,
     description: 'Cung cấp giải pháp phân khoang ngăn cháy tổng thể gồm 24 bộ rèm ngăn khói thông tầng, 320 bộ cửa thép chống cháy EI120 và hệ thống cửa tầng thang máy cứu nạn chuyên dụng.',
     client: 'Tập đoàn Vingroup'
   },

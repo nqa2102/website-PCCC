@@ -41,7 +41,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
   return (
     <div className="w-full bg-neutral-50">
       <section className="relative min-h-[520px] overflow-hidden bg-[#102b21] text-white sm:min-h-[540px]">
-        <img src={HERO_IMAGE} alt="Cửa chống cháy APEX tại công trình" className="absolute inset-0 h-full w-full object-cover object-center" />
+        <img src={HERO_IMAGE} alt="Cửa chống cháy APEX tại công trình" width="1376" height="768" loading="eager" fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-center" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,43,33,0.97)_0%,rgba(16,43,33,0.84)_48%,rgba(39,36,31,0.16)_100%)]" />
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#102b21]/75 to-transparent" />
 
@@ -94,7 +94,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
             {PRODUCTS.slice(0, 4).map((product) => (
               <article key={product.id} className="group flex min-w-0 flex-col bg-white">
                 <button onClick={() => onNavigate('products', product.id)} className="relative block h-56 overflow-hidden bg-slate-100 text-left" aria-label={`Xem ${product.name}`}>
-                  <img src={product.image} alt={product.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+                  <img src={product.image} alt={product.name} width="1200" height="896" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
                   <span className="absolute left-4 top-4 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm">{product.fireRating}</span>
                 </button>
                 <div className="flex flex-1 flex-col p-5">

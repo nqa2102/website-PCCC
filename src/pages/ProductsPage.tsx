@@ -88,6 +88,10 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                 <img
                   src={product.image}
                   alt={product.name}
+                  width="1200"
+                  height="896"
+                  loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   referrerPolicy="no-referrer"
                 />
@@ -204,6 +208,9 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                   <img
                     src={detailProduct.image}
                     alt={detailProduct.name}
+                    width="1200"
+                    height="896"
+                    decoding="async"
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
                   />

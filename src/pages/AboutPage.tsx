@@ -71,6 +71,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
             <div className="relative rounded-2xl overflow-hidden shadow-xl border border-neutral-200">
               <img
                 src={STEEL_DOOR_IMAGE}
+                width="1200"
+                height="896"
+                loading="lazy"
+                decoding="async"
                 alt="Nhà máy APEX Việt Nam"
                 className="w-full h-80 sm:h-96 object-cover"
                 referrerPolicy="no-referrer"
