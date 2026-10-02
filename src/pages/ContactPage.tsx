@@ -16,15 +16,26 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
   const [message, setMessage] = useState('');
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [website, setWebsite] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName || !phone || !consent) {
       alert('Vui lòng nhập họ tên, số điện thoại và xác nhận đồng ý xử lý thông tin.');
       return;
     }
-    appendWebsiteLead({ fullName, phone, email, topic, message, consent });
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError('');
+    try {
+      await appendWebsiteLead({ fullName, phone, email, topic, message, consent, website });
+      setSubmitted(true);
+    } catch {
+      setSubmitError('Chưa thể gửi yêu cầu lúc này. Vui lòng gọi hoặc nhắn Zalo để được hỗ trợ ngay.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -117,7 +128,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+              <form onSubmit={handleSubmit} className="relative space-y-4 text-xs">
+                <label className="absolute -left-[9999px]" aria-hidden="true">Website<input tabIndex={-1} autoComplete="off" value={website} onChange={(event) => setWebsite(event.target.value)} /></label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="font-semibold text-slate-700 block mb-1">Họ và tên *</label>
@@ -186,6 +198,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
                   <span>Tôi đồng ý để APEX sử dụng thông tin đã nhập nhằm liên hệ và xử lý yêu cầu này. Tôi đã đọc <button type="button" onClick={() => onNavigate('privacy')} className="font-semibold text-red-700 underline">Chính sách bảo mật</button>.</span>
                 </label>
 
+                {submitError && <p role="alert" className="border border-red-200 bg-red-50 p-3 text-xs leading-5 text-red-800">{submitError}</p>}
+
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-1.5 text-slate-500">
                     <ShieldCheck className="w-4 h-4 text-emerald-600" />
@@ -193,10 +207,11 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
                   </div>
                   <button
                     type="submit"
-                    className="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow-sm transition-all active:scale-95"
+                    disabled={submitting}
+                    className="flex items-center gap-2 px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg shadow-sm transition-all active:scale-95 disabled:cursor-wait disabled:opacity-60"
                   >
                     <Send className="w-4 h-4" />
-                    <span>Gửi tin nhắn</span>
+                    <span>{submitting ? 'Đang gửi...' : 'Gửi tin nhắn'}</span>
                   </button>
                 </div>
               </form>

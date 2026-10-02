@@ -17,7 +17,7 @@ const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((module) => ({
 const QuoteModal = lazy(() => import('./components/QuoteModal').then((module) => ({ default: module.QuoteModal })));
 const LiveChatModal = lazy(() => import('./components/LiveChatModal').then((module) => ({ default: module.LiveChatModal })));
 const SearchModal = lazy(() => import('./components/SearchModal').then((module) => ({ default: module.SearchModal })));
-const AdminApp = lazy(() => import('./admin/AdminApp').then((module) => ({ default: module.AdminApp })));
+const AdminPortal = lazy(() => import('./admin/AdminPortal').then((module) => ({ default: module.AdminPortal })));
 
 const PageFallback = () => (
   <div className="flex min-h-[45vh] items-center justify-center bg-neutral-50" role="status">
@@ -109,7 +109,7 @@ export default function App() {
   };
 
   if (isAdmin) {
-    return <Suspense fallback={<PageFallback />}><AdminApp onExit={() => handleNavigate('home')} /></Suspense>;
+    return <Suspense fallback={<PageFallback />}><AdminPortal onExit={() => handleNavigate('home')} /></Suspense>;
   }
 
   return (

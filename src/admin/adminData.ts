@@ -1,6 +1,7 @@
 import { COMPANY_INFO } from '../data/companyData';
 import { PRODUCTS, TECHNICAL_DOCS } from '../data/mockData';
 import type { AdminLead, AdminState, WebsiteLeadInput } from './adminTypes';
+import { supabase } from '../lib/supabase';
 
 export const ADMIN_STORAGE_KEY = 'apex-admin-state-v1';
 
@@ -182,7 +183,21 @@ export const saveAdminState = (state: AdminState) => {
   window.localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(state));
 };
 
-export const appendWebsiteLead = (input: WebsiteLeadInput) => {
+export const appendWebsiteLead = async (input: WebsiteLeadInput) => {
+  if (supabase) {
+    const { error } = await supabase.rpc('submit_lead', {
+      p_full_name: input.fullName,
+      p_phone: input.phone,
+      p_email: input.email || null,
+      p_topic: input.topic,
+      p_message: input.message || null,
+      p_consent: input.consent,
+      p_website: input.website || '',
+    });
+    if (error) throw error;
+    return;
+  }
+
   const state = loadAdminState();
   const now = new Date();
   const lead: AdminLead = {

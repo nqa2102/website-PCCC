@@ -115,4 +115,5 @@ export interface WebsiteLeadInput {
   topic: string;
   message?: string;
   consent: boolean;
+  website?: string;
 }

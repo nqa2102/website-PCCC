@@ -14,6 +14,8 @@ import {
   Flame,
   FolderKanban,
   LayoutDashboard,
+  LoaderCircle,
+  LogOut,
   Menu,
   Package,
   PhoneCall,
@@ -27,6 +29,7 @@ import {
   X,
 } from 'lucide-react';
 import { createSeedState, loadAdminState, saveAdminState } from './adminData';
+import { loadRemoteAdminState, saveRemoteAdminState, type AdminSaveScope } from './adminRepository';
 import type {
   AdminContent,
   AdminDocument,
@@ -47,6 +50,10 @@ type EditorState =
 
 interface AdminAppProps {
   onExit: () => void;
+  dataMode?: 'local' | 'remote';
+  userEmail?: string;
+  userRole?: string;
+  onSignOut?: () => void;
 }
 
 const NAV_ITEMS: { id: AdminView; label: string; icon: React.ElementType }[] = [
@@ -100,20 +107,44 @@ const EmptyState = ({ label }: { label: string }) => (
   <div className="px-6 py-14 text-center text-sm text-slate-500">Không tìm thấy {label} phù hợp.</div>
 );
 
-export const AdminApp: React.FC<AdminAppProps> = ({ onExit }) => {
-  const [state, setState] = useState<AdminState>(() => loadAdminState());
+export const AdminApp: React.FC<AdminAppProps> = ({ onExit, dataMode = 'local', userEmail = '', userRole = 'admin', onSignOut }) => {
+  const [state, setState] = useState<AdminState>(() => dataMode === 'local' ? loadAdminState() : createSeedState());
   const [view, setView] = useState<AdminView>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [editor, setEditor] = useState<EditorState>(null);
   const [toast, setToast] = useState('');
+  const [remoteLoading, setRemoteLoading] = useState(dataMode === 'remote');
+  const [remoteError, setRemoteError] = useState('');
+  const permittedViews: Record<string, AdminView[]> = {
+    admin: ['dashboard', 'leads', 'products', 'documents', 'content', 'settings'],
+    sales: ['dashboard', 'leads'],
+    editor: ['dashboard', 'products', 'content'],
+    technical: ['dashboard', 'products', 'documents'],
+  };
+  const availableViews = dataMode === 'local' ? permittedViews.admin : (permittedViews[userRole] || ['dashboard']);
+  const availableNavItems = NAV_ITEMS.filter((item) => availableViews.includes(item.id));
+  const navigateView = (next: AdminView) => {
+    if (availableViews.includes(next)) setView(next);
+  };
 
   useEffect(() => {
+    if (dataMode !== 'local') return;
     const refresh = () => setState(loadAdminState());
     window.addEventListener('apex-admin-data-change', refresh);
     return () => window.removeEventListener('apex-admin-data-change', refresh);
-  }, []);
+  }, [dataMode]);
+
+  useEffect(() => {
+    if (dataMode !== 'remote') return;
+    let active = true;
+    loadRemoteAdminState()
+      .then((next) => { if (active) setState(next); })
+      .catch(() => { if (active) setRemoteError('Không thể tải dữ liệu Supabase. Hãy kiểm tra migration và quyền tài khoản.'); })
+      .finally(() => { if (active) setRemoteLoading(false); });
+    return () => { active = false; };
+  }, [dataMode]);
 
   useEffect(() => {
     setSearch('');
@@ -127,37 +158,43 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit }) => {
     return () => window.clearTimeout(timeout);
   }, [toast]);
 
-  const persist = (next: AdminState, action?: string, target?: string) => {
+  const persist = async (next: AdminState, action?: string, target?: string, scope: AdminSaveScope = 'all') => {
     let finalState = next;
     if (action && target) {
       finalState = {
         ...next,
         activities: [
-          { id: `activity-${Date.now()}`, at: new Date().toISOString().slice(0, 16), actor: 'Quản trị viên', action, target },
+          { id: `activity-${Date.now()}`, at: new Date().toISOString().slice(0, 16), actor: userEmail || 'Quản trị viên', action, target },
           ...next.activities,
         ].slice(0, 30),
       };
     }
-    setState(finalState);
-    saveAdminState(finalState);
+    try {
+      if (dataMode === 'remote') await saveRemoteAdminState(finalState, scope);
+      else saveAdminState(finalState);
+      setState(finalState);
+    } catch {
+      setRemoteError('Không thể lưu thay đổi. Tài khoản có thể chưa được cấp đúng vai trò.');
+      throw new Error('Save failed');
+    }
   };
 
-  const saveEditor = () => {
+  const saveEditor = async () => {
     if (!editor) return;
     const now = new Date().toISOString().slice(0, 16);
     if (editor.type === 'lead') {
-      persist({ ...state, leads: state.leads.some((item) => item.id === editor.data.id) ? state.leads.map((item) => item.id === editor.data.id ? editor.data : item) : [editor.data, ...state.leads] }, 'Cập nhật khách hàng', editor.data.fullName);
+      await persist({ ...state, leads: state.leads.some((item) => item.id === editor.data.id) ? state.leads.map((item) => item.id === editor.data.id ? editor.data : item) : [editor.data, ...state.leads] }, 'Cập nhật khách hàng', editor.data.fullName, 'lead');
     }
     if (editor.type === 'product') {
       const data = { ...editor.data, updatedAt: now };
-      persist({ ...state, products: state.products.some((item) => item.id === data.id) ? state.products.map((item) => item.id === data.id ? data : item) : [...state.products, data] }, 'Cập nhật sản phẩm', data.name);
+      await persist({ ...state, products: state.products.some((item) => item.id === data.id) ? state.products.map((item) => item.id === data.id ? data : item) : [...state.products, data] }, 'Cập nhật sản phẩm', data.name, 'product');
     }
     if (editor.type === 'document') {
-      persist({ ...state, documents: state.documents.some((item) => item.id === editor.data.id) ? state.documents.map((item) => item.id === editor.data.id ? editor.data : item) : [editor.data, ...state.documents] }, 'Cập nhật hồ sơ', editor.data.title);
+      await persist({ ...state, documents: state.documents.some((item) => item.id === editor.data.id) ? state.documents.map((item) => item.id === editor.data.id ? editor.data : item) : [editor.data, ...state.documents] }, 'Cập nhật hồ sơ', editor.data.title, 'document');
     }
     if (editor.type === 'content') {
       const data = { ...editor.data, updatedAt: now };
-      persist({ ...state, contents: state.contents.some((item) => item.id === data.id) ? state.contents.map((item) => item.id === data.id ? data : item) : [data, ...state.contents] }, 'Cập nhật nội dung', data.title);
+      await persist({ ...state, contents: state.contents.some((item) => item.id === data.id) ? state.contents.map((item) => item.id === data.id ? data : item) : [data, ...state.contents] }, 'Cập nhật nội dung', data.title, 'content');
     }
     setEditor(null);
     setToast('Đã lưu thay đổi vào dữ liệu quản trị.');
@@ -185,6 +222,8 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit }) => {
     return matchesSearch && (statusFilter === 'all' || content.status === statusFilter);
   }), [search, state.contents, statusFilter]);
 
+  if (remoteLoading) return <div className="flex min-h-screen items-center justify-center gap-3 bg-[#f3f5f4] text-sm font-semibold text-slate-700"><LoaderCircle className="h-5 w-5 animate-spin text-red-700" />Đang tải trung tâm dữ liệu APEX...</div>;
+
   return (
     <div className="min-h-screen bg-[#f5f6f7] font-sans text-slate-900 selection:bg-red-600 selection:text-white">
       <aside className={`fixed inset-y-0 left-0 z-40 w-72 border-r border-white/10 bg-[#102b21] text-white transition-transform duration-200 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -199,11 +238,11 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit }) => {
         <nav className="px-3 py-5" aria-label="Điều hướng quản trị">
           <p className="px-3 pb-2 text-[10px] font-bold uppercase text-emerald-100/50">Điều hành</p>
           <div className="space-y-1">
-            {NAV_ITEMS.map((item) => {
+            {availableNavItems.map((item) => {
               const Icon = item.icon;
               const active = view === item.id;
               return (
-                <button key={item.id} onClick={() => setView(item.id)} className={`flex min-h-11 w-full items-center gap-3 px-3 text-left text-sm transition-colors ${active ? 'bg-white text-slate-950' : 'text-emerald-50/80 hover:bg-white/10 hover:text-white'}`}>
+                <button key={item.id} onClick={() => navigateView(item.id)} className={`flex min-h-11 w-full items-center gap-3 px-3 text-left text-sm transition-colors ${active ? 'bg-white text-slate-950' : 'text-emerald-50/80 hover:bg-white/10 hover:text-white'}`}>
                   <Icon className={`h-4 w-4 ${active ? 'text-red-600' : ''}`} />
                   <span className="font-medium">{item.label}</span>
                   {item.id === 'leads' && state.leads.filter((lead) => lead.status === 'new').length > 0 && <span className="ml-auto bg-red-600 px-2 py-0.5 text-[10px] font-bold text-white">{state.leads.filter((lead) => lead.status === 'new').length}</span>}
@@ -216,8 +255,9 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit }) => {
         <div className="absolute inset-x-0 bottom-0 border-t border-white/10 p-4">
           <div className="mb-3 flex items-center gap-3 px-2">
             <span className="flex h-9 w-9 items-center justify-center border border-white/15 bg-white/5"><CircleUserRound className="h-4 w-4" /></span>
-            <span className="min-w-0"><strong className="block truncate text-xs">Quản trị viên APEX</strong><span className="text-[10px] text-emerald-100/60">Phiên bản dữ liệu cục bộ</span></span>
+            <span className="min-w-0"><strong className="block truncate text-xs">{userEmail || 'Quản trị viên APEX'}</strong><span className="text-[10px] text-emerald-100/60">{dataMode === 'remote' ? `Dữ liệu Supabase · ${userRole}` : 'Bản mô phỏng cục bộ'}</span></span>
           </div>
+          {onSignOut && <button onClick={onSignOut} className="mb-2 flex min-h-10 w-full items-center justify-center gap-2 border border-white/15 text-xs font-semibold text-white transition-colors hover:bg-white/10"><LogOut className="h-4 w-4" />Đăng xuất</button>}
           <button onClick={onExit} className="flex min-h-10 w-full items-center justify-center gap-2 border border-white/15 text-xs font-semibold text-white transition-colors hover:bg-white/10"><ArrowLeft className="h-4 w-4" />Xem website khách hàng</button>
         </div>
       </aside>
@@ -231,13 +271,14 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit }) => {
             <div><p className="text-[10px] font-bold uppercase text-red-700">Không gian nội bộ</p><h1 className="text-sm font-bold text-slate-950 sm:text-base">{navLabel}</h1></div>
           </div>
           <div className="flex items-center gap-2">
-            <span className="hidden items-center gap-2 border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900 md:flex"><AlertTriangle className="h-4 w-4" />Dữ liệu mẫu trên trình duyệt</span>
+            <span className={`hidden items-center gap-2 border px-3 py-2 text-xs font-medium md:flex ${dataMode === 'remote' ? 'border-emerald-200 bg-emerald-50 text-emerald-900' : 'border-amber-200 bg-amber-50 text-amber-900'}`}>{dataMode === 'remote' ? <ShieldCheck className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}{dataMode === 'remote' ? 'Đã kết nối dữ liệu máy chủ' : 'Dữ liệu mô phỏng trên trình duyệt'}</span>
             <button onClick={onExit} className="hidden min-h-10 items-center gap-2 border border-neutral-300 bg-white px-3 text-xs font-semibold text-slate-800 hover:bg-neutral-50 sm:flex">Xem website<ChevronRight className="h-4 w-4" /></button>
           </div>
         </header>
 
         <main className="mx-auto max-w-[1500px] p-4 sm:p-6">
-          {view === 'dashboard' && <Dashboard state={state} onNavigate={setView} onEditLead={(data) => setEditor({ type: 'lead', data })} />}
+          {remoteError && <div role="alert" className="mb-4 border border-red-200 bg-red-50 p-4 text-xs leading-5 text-red-800">{remoteError}</div>}
+          {view === 'dashboard' && <Dashboard state={state} dataMode={dataMode} onNavigate={navigateView} onEditLead={(data) => setEditor({ type: 'lead', data })} />}
           {view === 'leads' && (
             <DataSection title="Khách cần tư vấn" description="Tiếp nhận, phân công và theo dõi xuyên suốt từ yêu cầu mới đến khi hoàn tất." search={search} onSearch={setSearch} statusFilter={statusFilter} onStatusFilter={setStatusFilter} statusOptions={Object.entries(LEAD_STATUS).map(([value, item]) => ({ value, label: item.label }))} onAdd={() => setEditor({ type: 'lead', data: newLead() })}>
               <LeadsTable leads={filteredLeads} onEdit={(data) => setEditor({ type: 'lead', data })} />
@@ -258,7 +299,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit }) => {
               <ContentTable contents={filteredContents} onEdit={(data) => setEditor({ type: 'content', data })} />
             </DataSection>
           )}
-          {view === 'settings' && <SettingsView state={state} onChange={setState} onSave={() => { persist(state, 'Cập nhật cấu hình', 'Thông tin doanh nghiệp'); setToast('Đã lưu thông tin doanh nghiệp.'); }} onReset={() => { const next = createSeedState(); persist(next, 'Khôi phục dữ liệu mẫu', 'Toàn bộ hệ thống'); setToast('Đã khôi phục dữ liệu mẫu.'); }} />}
+          {view === 'settings' && <SettingsView state={state} dataMode={dataMode} onChange={setState} onSave={async () => { await persist(state, 'Cập nhật cấu hình', 'Thông tin doanh nghiệp', 'company'); setToast('Đã lưu thông tin doanh nghiệp.'); }} onReset={async () => { const next = createSeedState(); await persist(next, 'Khôi phục dữ liệu mẫu', 'Toàn bộ hệ thống', 'all'); setToast('Đã khôi phục dữ liệu mẫu.'); }} />}
         </main>
       </div>
 
@@ -268,7 +309,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit }) => {
   );
 };
 
-const Dashboard = ({ state, onNavigate, onEditLead }: { state: AdminState; onNavigate: (view: AdminView) => void; onEditLead: (lead: AdminLead) => void }) => {
+const Dashboard = ({ state, dataMode, onNavigate, onEditLead }: { state: AdminState; dataMode: 'local' | 'remote'; onNavigate: (view: AdminView) => void; onEditLead: (lead: AdminLead) => void }) => {
   const metrics = [
     { label: 'Yêu cầu mới', value: state.leads.filter((item) => item.status === 'new').length, detail: 'Cần phản hồi và phân công', icon: PhoneCall, color: 'text-red-700 bg-red-50' },
     { label: 'Đang theo dõi', value: state.leads.filter((item) => ['contacted', 'qualified'].includes(item.status)).length, detail: 'Có lịch sử xử lý', icon: ClipboardList, color: 'text-blue-700 bg-blue-50' },
@@ -279,8 +320,8 @@ const Dashboard = ({ state, onNavigate, onEditLead }: { state: AdminState; onNav
 
   return (
     <div className="space-y-5">
-      <div className="border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-950 sm:flex sm:items-center sm:justify-between">
-        <span><strong>Bản vận hành thử:</strong> dữ liệu được lưu trên trình duyệt này. Trước khi dùng thật cần đăng nhập, cơ sở dữ liệu và phân quyền máy chủ.</span>
+      <div className={`border px-4 py-3 text-xs leading-5 sm:flex sm:items-center sm:justify-between ${dataMode === 'remote' ? 'border-emerald-200 bg-emerald-50 text-emerald-950' : 'border-amber-200 bg-amber-50 text-amber-950'}`}>
+        <span><strong>{dataMode === 'remote' ? 'Đang vận hành thật:' : 'Bản mô phỏng:'}</strong> {dataMode === 'remote' ? 'dữ liệu được lưu tập trung, có đăng nhập và phân quyền tại Supabase.' : 'dữ liệu chỉ được lưu trên trình duyệt này.'}</span>
         <button onClick={() => onNavigate('settings')} className="mt-2 font-bold text-amber-950 underline sm:mt-0">Xem lộ trình vận hành</button>
       </div>
       <div className="grid gap-px overflow-hidden border border-neutral-200 bg-neutral-200 sm:grid-cols-2 xl:grid-cols-4">
@@ -353,14 +394,14 @@ const ContentTable = ({ contents, onEdit }: { contents: AdminContent[]; onEdit: 
   <div className="overflow-x-auto"><table className="w-full min-w-[820px] text-left text-xs"><thead><tr className="border-b border-neutral-200 bg-neutral-50 text-[10px] uppercase text-slate-500"><th className="px-6 py-3">Nội dung</th><th className="px-4 py-3">Loại</th><th className="px-4 py-3">Phụ trách</th><th className="px-4 py-3">Quyền sử dụng</th><th className="px-4 py-3">Trạng thái</th><th className="px-4 py-3"></th></tr></thead><tbody className="divide-y divide-neutral-100">{contents.map((content) => <tr key={content.id} className="hover:bg-neutral-50"><td className="max-w-[350px] px-6 py-3"><strong className="block text-slate-950">{content.title}</strong><span className="mt-0.5 block truncate text-slate-500">{content.summary}</span></td><td className="px-4 py-3 text-slate-600">{content.type === 'project' ? 'Dự án' : content.type === 'article' ? 'Bài viết' : 'Trang tĩnh'}</td><td className="px-4 py-3 text-slate-600">{content.owner}</td><td className="px-4 py-3"><span className={content.mediaApproved && content.clientApproved ? 'text-emerald-700' : 'text-amber-700'}>{content.mediaApproved && content.clientApproved ? 'Đầy đủ' : 'Cần bổ sung'}</span></td><td className="px-4 py-3"><Badge {...PUBLISH_STATUS[content.status]} /></td><td className="px-4 py-3"><button onClick={() => onEdit(content)} className="min-h-9 font-bold text-red-700 hover:underline">Chỉnh sửa</button></td></tr>)}</tbody></table></div>
 ) : <EmptyState label="nội dung" />;
 
-const SettingsView = ({ state, onChange, onSave, onReset }: { state: AdminState; onChange: (state: AdminState) => void; onSave: () => void; onReset: () => void }) => {
+const SettingsView = ({ state, dataMode, onChange, onSave, onReset }: { state: AdminState; dataMode: 'local' | 'remote'; onChange: (state: AdminState) => void; onSave: () => void; onReset: () => void }) => {
   const setCompany = (field: keyof AdminState['company'], value: string | string[]) => onChange({ ...state, company: { ...state.company, [field]: value } });
   const missingInformation = [
     !state.company.taxCode && 'Mã số thuế / mã số doanh nghiệp',
     !state.company.email && 'Email doanh nghiệp chính thức',
     !state.contents.some((item) => item.type === 'project' && item.status === 'published') && 'Dự án đã được khách hàng cho phép công bố',
     'Logo đối tác và văn bản xác nhận quyền sử dụng',
-    'Tài khoản máy chủ để lưu khách hàng và đăng nhập quản trị',
+    dataMode === 'local' && 'Tài khoản máy chủ để lưu khách hàng và đăng nhập quản trị',
   ].filter(Boolean) as string[];
   const roles = [
     ['Quản trị hệ thống', 'Toàn bộ dữ liệu, cấu hình, phân quyền', 'Duyệt và công bố'],
