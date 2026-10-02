@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Send, CheckCircle2, ShieldCheck, UserRound } from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
+import { appendWebsiteLead } from '../admin/adminData';
 
 interface ContactPageProps {
   onOpenQuote: () => void;
@@ -20,6 +21,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
       alert('Vui lòng nhập họ tên và số điện thoại!');
       return;
     }
+    appendWebsiteLead({ fullName, phone, email, topic, message });
     setSubmitted(true);
   };
 
@@ -180,7 +182,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-1.5 text-slate-500">
                     <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                    <span>Bảo mật thông tin khách hàng tuyệt đối</span>
+                    <span>Thông tin chỉ dùng để phản hồi yêu cầu</span>
                   </div>
                   <button
                     type="submit"

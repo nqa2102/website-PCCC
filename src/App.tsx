@@ -14,8 +14,10 @@ import { ProjectsPage } from './pages/ProjectsPage';
 import { TechnicalDocsPage } from './pages/TechnicalDocsPage';
 import { NewsPage } from './pages/NewsPage';
 import { ContactPage } from './pages/ContactPage';
+import { AdminApp } from './admin/AdminApp';
 
 export default function App() {
+  const [isAdmin, setIsAdmin] = useState(() => window.location.hash === '#/admin');
   const [activeTab, setActiveTab] = useState<string>('home');
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [quotePreselectedProduct, setQuotePreselectedProduct] = useState<string | undefined>();
@@ -28,6 +30,18 @@ export default function App() {
   const [targetSolutionId, setTargetSolutionId] = useState<string | undefined>();
   const [targetDocId, setTargetDocId] = useState<string | undefined>();
   const [targetArticleId, setTargetArticleId] = useState<string | undefined>();
+
+  useEffect(() => {
+    const handleHashChange = () => setIsAdmin(window.location.hash === '#/admin');
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  useEffect(() => {
+    document.title = isAdmin
+      ? 'APEX Admin - Trung tâm vận hành website'
+      : 'APEX Việt Nam - Cửa Chống Cháy & Giải Pháp PCCC Toàn Diện';
+  }, [isAdmin]);
 
   // Scroll to top when changing tabs
   useEffect(() => {
@@ -56,6 +70,10 @@ export default function App() {
       setTargetArticleId(itemId);
     }
   };
+
+  if (isAdmin) {
+    return <AdminApp onExit={() => { window.location.hash = ''; }} />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-neutral-50 text-slate-900 font-sans selection:bg-red-600 selection:text-white">
