@@ -5,23 +5,25 @@ import { appendWebsiteLead } from '../admin/adminData';
 
 interface ContactPageProps {
   onOpenQuote: () => void;
+  onNavigate: (tab: string) => void;
 }
 
-export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
+export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigate }) => {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [topic, setTopic] = useState('Báo giá dự án');
+  const [topic, setTopic] = useState('Tư vấn lựa chọn sản phẩm');
   const [message, setMessage] = useState('');
+  const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName || !phone) {
-      alert('Vui lòng nhập họ tên và số điện thoại!');
+    if (!fullName || !phone || !consent) {
+      alert('Vui lòng nhập họ tên, số điện thoại và xác nhận đồng ý xử lý thông tin.');
       return;
     }
-    appendWebsiteLead({ fullName, phone, email, topic, message });
+    appendWebsiteLead({ fullName, phone, email, topic, message, consent });
     setSubmitted(true);
   };
 
@@ -159,7 +161,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
                       onChange={(e) => setTopic(e.target.value)}
                       className="w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-hidden focus:border-red-500 bg-white"
                     >
-                      <option value="Báo giá dự án">Báo giá cửa chống cháy dự án</option>
+                      <option value="Tư vấn lựa chọn sản phẩm">Tư vấn lựa chọn sản phẩm</option>
                       <option value="Tư vấn tiêu chuẩn">Tư vấn tiêu chuẩn QCVN 06 & Nghiệm thu</option>
                       <option value="Khảo sát hiện trường">Yêu cầu kỹ sư khảo sát hiện trường</option>
                       <option value="Bản vẽ CAD">Xin file CAD & Thư viện kỹ thuật</option>
@@ -178,6 +180,11 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
                     className="w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-hidden focus:border-red-500 resize-none"
                   />
                 </div>
+
+                <label className="flex items-start gap-3 border border-neutral-200 bg-neutral-50 p-3 text-xs leading-5 text-slate-700">
+                  <input type="checkbox" required checked={consent} onChange={(event) => setConsent(event.target.checked)} className="mt-1 h-4 w-4 accent-red-700" />
+                  <span>Tôi đồng ý để APEX sử dụng thông tin đã nhập nhằm liên hệ và xử lý yêu cầu này. Tôi đã đọc <button type="button" onClick={() => onNavigate('privacy')} className="font-semibold text-red-700 underline">Chính sách bảo mật</button>.</span>
+                </label>
 
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-1.5 text-slate-500">
@@ -202,7 +209,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote }) => {
                 <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
                 <div>
                   <p className="font-bold text-slate-900 text-sm">Tư vấn và cung ứng toàn quốc</p>
-                  <p className="text-xs text-slate-600 mt-1">Báo giá có hiệu lực 60 ngày. Màu sắc, phụ kiện và kích thước được xác nhận theo lựa chọn của khách hàng.</p>
+                  <p className="text-xs text-slate-600 mt-1">Nhân viên kinh doanh sẽ xác nhận kích thước, cấu hình, phụ kiện và hiện trạng công trình trước khi gửi báo giá trực tiếp.</p>
                 </div>
               </div>
             </div>

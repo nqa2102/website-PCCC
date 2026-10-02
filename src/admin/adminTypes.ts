@@ -77,6 +77,7 @@ export interface AdminContent {
 
 export interface AdminCompany {
   legalName: string;
+  taxCode: string;
   brandName: string;
   representative: string;
   representativeTitle: string;
@@ -113,4 +114,5 @@ export interface WebsiteLeadInput {
   email?: string;
   topic: string;
   message?: string;
+  consent: boolean;
 }

@@ -28,6 +28,15 @@ const coreValues = [
   { letter: 'X', icon: Award, english: 'eXcellence', vietnamese: 'Vượt trội', description: 'Liên tục nâng chuẩn sản phẩm, tiến độ và dịch vụ để tạo ra giá trị bền vững cho mỗi dự án.' },
 ];
 
+const projectProcess = [
+  ['Tiếp nhận yêu cầu', 'Bản vẽ, vị trí lắp đặt, số lượng và tiến độ dự kiến.'],
+  ['Rà soát kỹ thuật', 'Đối chiếu công năng, lối thoát nạn và yêu cầu hồ sơ.'],
+  ['Khảo sát hiện trường', 'Xác nhận kích thước, chiều mở và điều kiện lắp đặt.'],
+  ['Chốt cấu hình', 'Thống nhất vật liệu, phụ kiện, màu và phạm vi cung cấp.'],
+  ['Sản xuất & lắp đặt', 'Triển khai theo cấu hình và kích thước đã được xác nhận.'],
+  ['Bàn giao', 'Đối chiếu hạng mục, hồ sơ liên quan và chính sách bảo hành.'],
+];
+
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onOpenChat }) => {
   const solutionIcons: Record<string, React.ElementType> = {
     'chung-cu-can-ho': Building2,
@@ -111,6 +120,28 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
           <button onClick={() => onNavigate('products')} className="mt-8 flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-red-700">
             Xem toàn bộ danh mục <ArrowRight className="h-4 w-4" />
           </button>
+        </div>
+      </section>
+
+      <section className="border-y border-slate-200 bg-white py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
+            <div>
+              <span className="section-kicker">Quy trình phối hợp dự án</span>
+              <h2 className="section-title max-w-lg">Khóa đúng dữ liệu trước khi sản xuất.</h2>
+              <p className="mt-5 max-w-lg text-sm leading-7 text-slate-600">Quy trình được bắt đầu từ bản vẽ và điều kiện thực tế, giúp hạn chế sai khác giữa cấu hình sản phẩm, vị trí lắp đặt và hồ sơ công trình.</p>
+              <button onClick={() => onNavigate('contact')} className="mt-7 flex min-h-11 items-center gap-2 bg-red-700 px-5 text-sm font-semibold text-white hover:bg-red-800">Gửi yêu cầu khảo sát <ArrowRight className="h-4 w-4" /></button>
+            </div>
+            <ol className="grid border-l border-t border-slate-200 sm:grid-cols-2 xl:grid-cols-3">
+              {projectProcess.map(([title, description], index) => (
+                <li key={title} className="min-h-44 border-b border-r border-slate-200 p-5">
+                  <span className="font-mono text-xs font-semibold text-red-700">0{index + 1}</span>
+                  <h3 className="mt-5 text-sm font-semibold text-slate-950">{title}</h3>
+                  <p className="mt-2 text-xs leading-5 text-slate-600">{description}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </section>
 

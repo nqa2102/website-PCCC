@@ -200,6 +200,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
             <button onClick={() => onNavigate('contact')} className="hover:text-neutral-300">
               Liên hệ hợp tác
             </button>
+            <span>·</span>
+            <button onClick={() => onNavigate('privacy')} className="hover:text-neutral-300">
+              Chính sách bảo mật
+            </button>
           </div>
         </div>
       </div>

@@ -148,12 +148,13 @@ export const createSeedState = (): AdminState => ({
   ],
   company: {
     legalName: COMPANY_INFO.legalName,
+    taxCode: '',
     brandName: 'APEX',
     representative: COMPANY_INFO.representative,
     representativeTitle: COMPANY_INFO.representativeTitle,
     hotline: COMPANY_INFO.hotlineDisplay,
     zalo: COMPANY_INFO.hotlineDisplay,
-    email: 'contact@apex-vn.vn',
+    email: '',
     responseTime: COMPANY_INFO.responseTime,
     serviceArea: COMPANY_INFO.serviceArea,
     addresses: COMPANY_INFO.addresses.map((item) => `${item.label}: ${item.value}`),
@@ -202,7 +203,7 @@ export const appendWebsiteLead = (input: WebsiteLeadInput) => {
     assignee: 'Chưa phân công',
     nextFollowUpAt: '',
     notes: '',
-    consent: true,
+    consent: input.consent,
   };
   state.leads.unshift(lead);
   state.activities.unshift({

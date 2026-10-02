@@ -355,6 +355,13 @@ const ContentTable = ({ contents, onEdit }: { contents: AdminContent[]; onEdit: 
 
 const SettingsView = ({ state, onChange, onSave, onReset }: { state: AdminState; onChange: (state: AdminState) => void; onSave: () => void; onReset: () => void }) => {
   const setCompany = (field: keyof AdminState['company'], value: string | string[]) => onChange({ ...state, company: { ...state.company, [field]: value } });
+  const missingInformation = [
+    !state.company.taxCode && 'Mã số thuế / mã số doanh nghiệp',
+    !state.company.email && 'Email doanh nghiệp chính thức',
+    !state.contents.some((item) => item.type === 'project' && item.status === 'published') && 'Dự án đã được khách hàng cho phép công bố',
+    'Logo đối tác và văn bản xác nhận quyền sử dụng',
+    'Tài khoản máy chủ để lưu khách hàng và đăng nhập quản trị',
+  ].filter(Boolean) as string[];
   const roles = [
     ['Quản trị hệ thống', 'Toàn bộ dữ liệu, cấu hình, phân quyền', 'Duyệt và công bố'],
     ['Kinh doanh', 'Khách hàng, lịch hẹn, ghi chú', 'Không sửa hồ sơ kỹ thuật'],
@@ -367,12 +374,13 @@ const SettingsView = ({ state, onChange, onSave, onReset }: { state: AdminState;
         <SectionHeading title="Thông tin doanh nghiệp" description="Nguồn dữ liệu chuẩn dùng cho chân trang, liên hệ, SEO và thông tin pháp lý." action={<button onClick={onSave} className="flex min-h-10 items-center gap-2 bg-red-700 px-4 text-xs font-bold text-white hover:bg-red-800"><Save className="h-4 w-4" />Lưu cấu hình</button>} />
         <div className="grid gap-4 p-4 sm:grid-cols-2 sm:p-6">
           <Field label="Tên pháp lý"><input className={fieldClass} value={state.company.legalName} onChange={(e) => setCompany('legalName', e.target.value)} /></Field>
+          <Field label="Mã số thuế"><input className={fieldClass} value={state.company.taxCode || ''} onChange={(e) => setCompany('taxCode', e.target.value)} placeholder="Chờ APEX xác nhận" /></Field>
           <Field label="Tên thương hiệu"><input className={fieldClass} value={state.company.brandName} onChange={(e) => setCompany('brandName', e.target.value)} /></Field>
           <Field label="Người đại diện"><input className={fieldClass} value={state.company.representative} onChange={(e) => setCompany('representative', e.target.value)} /></Field>
           <Field label="Chức danh"><input className={fieldClass} value={state.company.representativeTitle} onChange={(e) => setCompany('representativeTitle', e.target.value)} /></Field>
           <Field label="Hotline"><input className={fieldClass} value={state.company.hotline} onChange={(e) => setCompany('hotline', e.target.value)} /></Field>
           <Field label="Zalo"><input className={fieldClass} value={state.company.zalo} onChange={(e) => setCompany('zalo', e.target.value)} /></Field>
-          <Field label="Email"><input type="email" className={fieldClass} value={state.company.email} onChange={(e) => setCompany('email', e.target.value)} /></Field>
+          <Field label="Email"><input type="email" className={fieldClass} value={state.company.email || ''} onChange={(e) => setCompany('email', e.target.value)} placeholder="Chờ APEX xác nhận" /></Field>
           <Field label="Thời gian phản hồi"><input className={fieldClass} value={state.company.responseTime} onChange={(e) => setCompany('responseTime', e.target.value)} /></Field>
           <Field label="Tiêu đề SEO mặc định" wide><input className={fieldClass} value={state.company.defaultSeoTitle} onChange={(e) => setCompany('defaultSeoTitle', e.target.value)} /></Field>
           <Field label="Mô tả SEO mặc định" wide><textarea className={textareaClass} value={state.company.defaultSeoDescription} onChange={(e) => setCompany('defaultSeoDescription', e.target.value)} /></Field>
@@ -380,6 +388,10 @@ const SettingsView = ({ state, onChange, onSave, onReset }: { state: AdminState;
         </div>
       </section>
       <div className="space-y-5">
+        <section className="border border-amber-200 bg-white">
+          <div className="border-b border-amber-100 bg-amber-50 p-4"><h3 className="text-sm font-bold text-amber-950">Dữ liệu cần APEX bổ sung</h3><p className="mt-1 text-[11px] leading-5 text-amber-900">Các mục này đang được giữ trống để tránh công bố thông tin chưa xác thực.</p></div>
+          <ul className="divide-y divide-neutral-100">{missingInformation.map((item) => <li key={item} className="flex gap-2 p-4 text-xs leading-5 text-slate-700"><span className="mt-1 h-2 w-2 shrink-0 bg-amber-500" />{item}</li>)}</ul>
+        </section>
         <section className="border border-neutral-200 bg-white">
           <SectionHeading title="Vai trò đề xuất" description="Phân quyền theo trách nhiệm, không dùng chung tài khoản." />
           <div className="divide-y divide-neutral-100">{roles.map(([role, access, control]) => <div key={role} className="p-4"><strong className="text-xs text-slate-950">{role}</strong><p className="mt-1 text-[11px] leading-5 text-slate-600">{access}</p><p className="text-[11px] font-medium text-emerald-700">{control}</p></div>)}</div>

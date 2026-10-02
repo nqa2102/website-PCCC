@@ -1,4 +1,16 @@
 {
+  "rewrites": [
+    { "source": "/gioi-thieu", "destination": "/index.html" },
+    { "source": "/san-pham", "destination": "/index.html" },
+    { "source": "/san-pham/:path*", "destination": "/index.html" },
+    { "source": "/giai-phap/:path*", "destination": "/index.html" },
+    { "source": "/du-an/:path*", "destination": "/index.html" },
+    { "source": "/tai-lieu-ky-thuat/:path*", "destination": "/index.html" },
+    { "source": "/tin-tuc/:path*", "destination": "/index.html" },
+    { "source": "/lien-he", "destination": "/index.html" },
+    { "source": "/chinh-sach-bao-mat", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
