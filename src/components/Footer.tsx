@@ -1,6 +1,6 @@
 import React from 'react';
 import { Phone, MapPin, ShieldCheck, ChevronRight, FileCheck } from 'lucide-react';
-import { COMPANY_INFO } from '../data/companyData';
+import { useLiveData } from '../admin/adminData';
 
 interface FooterProps {
   onNavigate: (tab: string) => void;
@@ -8,6 +8,7 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
+  const { company } = useLiveData();
   return (
     <footer className="bg-[#102b21] text-neutral-300 border-t border-white/10 text-xs">
       {/* Main Footer Links & Info */}
@@ -26,11 +27,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
               </span>
             </div>
             <p className="text-xs text-neutral-400 leading-relaxed pr-4">
-              {COMPANY_INFO.legalName} cung cấp giải pháp ngăn cháy toàn diện cho nhà ở và công trình, với sản phẩm được cấu hình theo yêu cầu thực tế.
+              {company.legalName} cung cấp giải pháp ngăn cháy toàn diện cho nhà ở và công trình, với sản phẩm được cấu hình theo yêu cầu thực tế.
             </p>
 
             <div className="space-y-2 pt-2 text-neutral-300">
-              {COMPANY_INFO.addresses.map((item) => (
+              {company.addresses.map((item) => (
                 <div key={item.label} className="flex items-start gap-2.5">
                   <MapPin className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                   <span><strong>{item.label}:</strong> {item.value}</span>
@@ -38,7 +39,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
               ))}
               <div className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-red-500 shrink-0" />
-                <a href={COMPANY_INFO.hotlineHref}>Hotline: {COMPANY_INFO.hotlineDisplay}</a>
+                <a href={company.hotlineHref}>Hotline: {company.hotlineDisplay}</a>
               </div>
             </div>
           </div>
@@ -186,7 +187,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-neutral-400 text-[11px]">
           <div>
-            © {new Date().getFullYear()} {COMPANY_INFO.legalNameUpper}. Đại diện: {COMPANY_INFO.representative} - {COMPANY_INFO.representativeTitle}.
+            © {new Date().getFullYear()} {company.legalNameUpper}. Đại diện: {company.representative} - {company.representativeTitle}.
           </div>
           <div className="flex items-center gap-4">
             <button onClick={() => onNavigate('documents')} className="hover:text-neutral-300">

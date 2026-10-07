@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Send, CheckCircle2, ShieldCheck, UserRound } from 'lucide-react';
-import { COMPANY_INFO } from '../data/companyData';
-import { appendWebsiteLead } from '../admin/adminData';
+import { appendWebsiteLead, useLiveData } from '../admin/adminData';
 
 interface ContactPageProps {
   onOpenQuote: () => void;
@@ -9,6 +8,7 @@ interface ContactPageProps {
 }
 
 export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigate }) => {
+  const { company } = useLiveData();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -71,17 +71,17 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
                   <Phone className="w-6 h-6" />
                 </div>
                 <div>
-                  <a href={COMPANY_INFO.hotlineHref} className="text-2xl font-black tracking-tight hover:underline">
-                    {COMPANY_INFO.hotlineDisplay}
+                  <a href={company.hotlineHref} className="text-2xl font-black tracking-tight hover:underline">
+                    {company.hotlineDisplay}
                   </a>
-                  <p className="text-xs text-red-100">{COMPANY_INFO.workingHours} · Phục vụ toàn quốc</p>
+                  <p className="text-xs text-red-100">{company.workingHours} · Phục vụ toàn quốc</p>
                 </div>
               </div>
             </div>
 
             {/* Offices & Factory */}
             <div className="bg-white p-6 rounded-2xl border border-neutral-200 shadow-xs space-y-5 text-xs">
-              {COMPANY_INFO.addresses.map((item, index) => (
+              {company.addresses.map((item, index) => (
                 <div key={item.label} className={`${index > 0 ? 'border-t border-neutral-100 pt-4 ' : ''}flex items-start gap-3`}>
                   <MapPin className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                   <div>
@@ -95,7 +95,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
                 <UserRound className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-bold text-slate-900 text-sm">Người đại diện pháp luật</h4>
-                  <p className="text-slate-600 mt-0.5">{COMPANY_INFO.representative} - {COMPANY_INFO.representativeTitle}</p>
+                  <p className="text-slate-600 mt-0.5">{company.representative} - {company.representativeTitle}</p>
                 </div>
               </div>
             </div>

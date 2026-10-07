@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Bot, ShieldCheck, Flame, User, CheckCheck, Phone, Calculator, MessageCircle } from 'lucide-react';
-import { COMPANY_INFO } from '../data/companyData';
+import { useLiveData } from '../admin/adminData';
 
 interface LiveChatModalProps {
   isOpen: boolean;
@@ -26,6 +26,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
   onClose,
   onOpenQuote
 }) => {
+  const { company } = useLiveData();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -61,9 +62,9 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
       onClose();
       onOpenQuote();
     } else if (action.type === 'call') {
-      window.location.href = COMPANY_INFO.hotlineHref;
+      window.location.href = company.hotlineHref;
     } else if (action.type === 'zalo') {
-      window.open(COMPANY_INFO.zaloHref, '_blank');
+      window.open(company.zaloHref, '_blank');
     }
   };
 
@@ -87,7 +88,7 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
       let reply = 'Cảm ơn Quý khách đã quan tâm. Quý khách có thể yêu cầu bảng báo giá dự toán trực tiếp hoặc gọi hotline để kỹ sư APEX trao đổi nhanh về bản vẽ công trình.';
       let actions: MessageAction[] = [
         { label: 'Điền form nhận báo giá', type: 'quote' },
-        { label: `Gọi ${COMPANY_INFO.hotlineDisplay}`, type: 'call' }
+        { label: `Gọi ${company.hotlineDisplay}`, type: 'call' }
       ];
 
       const lower = query.toLowerCase();

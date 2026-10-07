@@ -5,8 +5,9 @@ import {
   MapPin, MessageSquare, School, ShieldCheck, Store, Wrench,
 } from 'lucide-react';
 import {
-  HERO_IMAGE, PARTNER_LOGOS, PRODUCTS, PROJECTS, SOLUTIONS,
+  HERO_IMAGE, PARTNER_LOGOS, PROJECTS, SOLUTIONS,
 } from '../data/mockData';
+import { useLiveData } from '../admin/adminData';
 
 interface HomePageProps {
   onNavigate: (tab: string, itemId?: string) => void;
@@ -38,6 +39,7 @@ const projectProcess = [
 ];
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onOpenChat }) => {
+  const { products } = useLiveData();
   const solutionIcons: Record<string, React.ElementType> = {
     'chung-cu-can-ho': Building2,
     'van-phong-toa-nha': Building,
@@ -100,7 +102,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
           </div>
 
           <div className="mt-12 grid gap-px overflow-hidden border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
-            {PRODUCTS.slice(0, 4).map((product) => (
+            {products.slice(0, 4).map((product) => (
               <article key={product.id} className="group flex min-w-0 flex-col bg-white">
                 <button onClick={() => onNavigate('products', product.id)} className="relative block h-56 overflow-hidden bg-slate-100 text-left" aria-label={`Xem ${product.name}`}>
                   <img src={product.image} alt={product.name} width="1200" height="896" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />

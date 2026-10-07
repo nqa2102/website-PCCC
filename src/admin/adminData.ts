@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { COMPANY_INFO } from '../data/companyData';
 import { PRODUCTS, TECHNICAL_DOCS } from '../data/mockData';
+import type { Product, TechnicalDoc } from '../types';
 import type { AdminLead, AdminState, WebsiteLeadInput } from './adminTypes';
 import { supabase } from '../lib/supabase';
 
@@ -180,7 +182,154 @@ export const loadAdminState = (): AdminState => {
 };
 
 export const saveAdminState = (state: AdminState) => {
-  window.localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(state));
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(state));
+    window.dispatchEvent(new Event('apex-admin-data-change'));
+  }
+};
+
+export const getLiveCompanyInfo = () => {
+  const state = loadAdminState();
+  const comp = state.company;
+
+  const parsedAddresses = (comp?.addresses && comp.addresses.length > 0)
+    ? comp.addresses.map((item, idx) => {
+        const colonIdx = item.indexOf(':');
+        if (colonIdx > -1) {
+          return {
+            label: item.slice(0, colonIdx).trim(),
+            value: item.slice(colonIdx + 1).trim(),
+          };
+        }
+        return {
+          label: `Địa điểm ${idx + 1}`,
+          value: item.trim(),
+        };
+      })
+    : COMPANY_INFO.addresses;
+
+  const rawHotline = comp?.hotline || COMPANY_INFO.hotlineDisplay;
+  const hotlineClean = rawHotline.replace(/[^\d+]/g, '');
+
+  return {
+    ...COMPANY_INFO,
+    legalName: comp?.legalName || COMPANY_INFO.legalName,
+    legalNameUpper: (comp?.legalName || COMPANY_INFO.legalName).toUpperCase(),
+    brandName: comp?.brandName || 'APEX',
+    taxCode: comp?.taxCode || '',
+    representative: comp?.representative || COMPANY_INFO.representative,
+    representativeTitle: comp?.representativeTitle || COMPANY_INFO.representativeTitle,
+    hotlineDisplay: rawHotline,
+    hotlineHref: `tel:${hotlineClean}`,
+    zaloHref: comp?.zalo ? (comp.zalo.startsWith('http') ? comp.zalo : `https://zalo.me/${comp.zalo.replace(/[^\d+]/g, '')}`) : `https://zalo.me/${hotlineClean}`,
+    responseTime: comp?.responseTime || COMPANY_INFO.responseTime,
+    serviceArea: comp?.serviceArea || COMPANY_INFO.serviceArea,
+    email: comp?.email || '',
+    addresses: parsedAddresses,
+    defaultSeoTitle: comp?.defaultSeoTitle,
+    defaultSeoDescription: comp?.defaultSeoDescription,
+  };
+};
+
+export const getLiveProducts = (): Product[] => {
+  const state = loadAdminState();
+  const publishedAdminProducts = state.products
+    .filter((p) => p.status === 'published')
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+
+  return publishedAdminProducts.map((ap) => {
+    const orig = PRODUCTS.find((p) => p.id === ap.id || p.id === ap.slug);
+    if (orig) {
+      return {
+        ...orig,
+        name: ap.name,
+        category: ap.category as Product['category'],
+        categoryName: ap.categoryName,
+        fireRating: ap.fireRating,
+        description: ap.shortDescription || orig.description,
+        popular: ap.featured,
+        specs: {
+          ...orig.specs,
+          material: ap.material || orig.specs.material,
+          standard: ap.standard || orig.specs.standard,
+          warranty: ap.warranty || orig.specs.warranty,
+        },
+      };
+    }
+    return {
+      id: ap.id,
+      name: ap.name,
+      category: ap.category as Product['category'],
+      categoryName: ap.categoryName || 'Sản phẩm PCCC',
+      fireRating: ap.fireRating || 'EI60-EI120',
+      description: ap.shortDescription,
+      longDescription: ap.shortDescription,
+      specs: {
+        material: ap.material || 'Thép mạ kẽm chất lượng cao',
+        thickness: 'Theo hồ sơ công trình',
+        insulation: 'Lõi chống cháy chuyên dụng',
+        finish: 'Sơn tĩnh điện Jotun theo yêu cầu',
+        standard: ap.standard || 'TCVN 9383:2012 / QCVN 06:2022',
+        warranty: ap.warranty || '12-24 tháng',
+      },
+      features: ['Sản xuất theo kích thước khảo sát', 'Hồ sơ kiểm định PCCC đầy đủ', 'Bảo hành chính hãng APEX'],
+      image: PRODUCTS[0]?.image || '',
+      priceEstimate: 'Liên hệ',
+      popular: ap.featured,
+    };
+  });
+};
+
+export const getLiveTechnicalDocs = (): TechnicalDoc[] => {
+  const state = loadAdminState();
+  const publishedDocs = state.documents.filter((d) => d.status === 'published');
+  return publishedDocs.map((ad) => {
+    const orig = TECHNICAL_DOCS.find((td) => td.id === ad.id);
+    if (orig) {
+      return {
+        ...orig,
+        title: ad.title,
+        code: ad.code,
+        standard: ad.standard || orig.standard,
+        sourceOwner: ad.owner || orig.sourceOwner,
+        scope: ad.scope || orig.scope,
+      };
+    }
+    return {
+      id: ad.id,
+      title: ad.title,
+      code: ad.code,
+      category: 'certificate' as const,
+      categoryLabel: ad.documentType || 'Chứng nhận kiểm định',
+      updatedDate: ad.issuedDate || '2026',
+      description: ad.notes || ad.scope || 'Hồ sơ kỹ thuật và kiểm định phòng cháy chữa cháy APEX.',
+      standard: ad.standard,
+      sourceOwner: ad.owner,
+      scope: ad.scope,
+    };
+  });
+};
+
+export const useLiveData = () => {
+  const [data, setData] = useState(() => ({
+    company: getLiveCompanyInfo(),
+    products: getLiveProducts(),
+    documents: getLiveTechnicalDocs(),
+  }));
+
+  useEffect(() => {
+    const refresh = () => {
+      setData({
+        company: getLiveCompanyInfo(),
+        products: getLiveProducts(),
+        documents: getLiveTechnicalDocs(),
+      });
+    };
+    window.addEventListener('apex-admin-data-change', refresh);
+    return () => window.removeEventListener('apex-admin-data-change', refresh);
+  }, []);
+
+  return data;
 };
 
 export const appendWebsiteLead = async (input: WebsiteLeadInput) => {

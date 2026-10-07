@@ -11,8 +11,7 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
-import { appendWebsiteLead } from '../admin/adminData';
-import { COMPANY_INFO } from '../data/companyData';
+import { appendWebsiteLead, useLiveData } from '../admin/adminData';
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -37,6 +36,7 @@ const LEAF_TYPES = [
 ];
 
 export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, preselectedProduct }) => {
+  const { company } = useLiveData();
   const [activeTab, setActiveTab] = useState<'form' | 'direct'>('form');
 
   const initialProduct = PRODUCT_OPTIONS.find((p) => p.id === preselectedProduct) || PRODUCT_OPTIONS[0];
@@ -174,7 +174,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
               Quý khách cần trao đổi gấp về kích thước đặc thù, hồ sơ nghiệm thu hoặc tiến độ sản xuất, vui lòng liên hệ trực tiếp:
             </p>
             <a
-              href={COMPANY_INFO.hotlineHref}
+              href={company.hotlineHref}
               className="group flex min-h-20 items-center gap-4 border border-red-200 bg-red-50 p-4 transition-colors hover:border-red-600 hover:bg-red-100 rounded-xl"
             >
               <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-red-600 text-white">
@@ -182,7 +182,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block text-xs font-semibold uppercase text-red-700">Gọi Hotline kỹ thuật</span>
-                <strong className="mt-0.5 block text-xl text-slate-950 font-bold">{COMPANY_INFO.hotlineDisplay}</strong>
+                <strong className="mt-0.5 block text-xl text-slate-950 font-bold">{company.hotlineDisplay}</strong>
               </span>
               <span className="text-xs font-bold text-red-700 bg-white px-3 py-1.5 rounded-md border border-red-200">
                 Gọi ngay
@@ -190,7 +190,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
             </a>
 
             <a
-              href={COMPANY_INFO.zaloHref}
+              href={company.zaloHref}
               target="_blank"
               rel="noopener noreferrer"
               className="group flex min-h-20 items-center gap-4 border border-blue-200 bg-blue-50/60 p-4 transition-colors hover:border-blue-500 hover:bg-blue-100/70 rounded-xl"
@@ -200,7 +200,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block text-xs font-semibold uppercase text-blue-700">Nhắn Zalo kinh doanh</span>
-                <strong className="mt-0.5 block text-base text-slate-950 font-bold">Zalo: {COMPANY_INFO.hotlineDisplay}</strong>
+                <strong className="mt-0.5 block text-base text-slate-950 font-bold">Zalo: {company.hotlineDisplay}</strong>
               </span>
               <span className="text-xs font-bold text-blue-700 bg-white px-3 py-1.5 rounded-md border border-blue-200">
                 Mở Zalo
@@ -210,11 +210,11 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 border-t border-slate-200 pt-5 text-xs text-slate-600">
               <div className="flex items-center gap-2">
                 <Clock3 className="h-4 w-4 text-red-600 shrink-0" />
-                <span>{COMPANY_INFO.workingHours}</span>
+                <span>{company.workingHours}</span>
               </div>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-                <span>{COMPANY_INFO.responseTime}</span>
+                <span>{company.responseTime}</span>
               </div>
             </div>
           </div>
@@ -235,7 +235,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
                 Đóng
               </button>
               <a
-                href={COMPANY_INFO.hotlineHref}
+                href={company.hotlineHref}
                 className="inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition-colors"
               >
                 <Phone className="h-3.5 w-3.5" />

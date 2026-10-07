@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, MessageSquare, ArrowUp, X, Calculator } from 'lucide-react';
-import { COMPANY_INFO } from '../data/companyData';
+import { useLiveData } from '../admin/adminData';
 
 interface QuickContactWidgetProps {
   onOpenChat: () => void;
@@ -11,6 +11,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
   onOpenChat,
   onOpenQuote
 }) => {
+  const { company } = useLiveData();
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showZaloModal, setShowZaloModal] = useState(false);
 
@@ -52,14 +53,14 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
 
         {/* 2. Gọi ngay */}
         <a
-          href={COMPANY_INFO.hotlineHref}
-          aria-label={`Gọi ngay hotline ${COMPANY_INFO.hotlineDisplay}`}
+          href={company.hotlineHref}
+          aria-label={`Gọi ngay hotline ${company.hotlineDisplay}`}
           className="group relative flex items-center justify-center w-11 h-11 rounded bg-white text-red-700 border border-slate-200 shadow-md hover:border-red-300 transition-colors"
         >
           <Phone className="w-5 h-5" />
           {/* Tooltip */}
           <span className="absolute right-14 whitespace-nowrap bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-md">
-            Hotline: {COMPANY_INFO.hotlineDisplay}
+            Hotline: {company.hotlineDisplay}
           </span>
         </a>
 
@@ -110,7 +111,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
       >
         {/* Call Hotline */}
         <a
-          href={COMPANY_INFO.hotlineHref}
+          href={company.hotlineHref}
           className="flex flex-col items-center justify-center py-1 px-2 text-slate-700 hover:text-red-600 active:scale-95 transition-transform"
         >
           <div className="w-7 h-7 rounded-full bg-red-100 text-red-600 flex items-center justify-center mb-0.5">
@@ -152,7 +153,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
           </button>
         ) : (
           <a
-            href={COMPANY_INFO.hotlineHref}
+            href={company.hotlineHref}
             className="flex items-center gap-1.5 bg-red-600 active:bg-red-700 text-white font-bold text-xs py-2 px-3.5 rounded-full shadow-md active:scale-95 transition-transform"
           >
             <Phone className="w-3.5 h-3.5" />
@@ -194,11 +195,11 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
               Nhắn trực tiếp đến số điện thoại kinh doanh để trao đổi nhu cầu sản phẩm và công trình.
             </p>
 
-            <p className="mb-4 border-y border-neutral-200 py-4 text-lg font-bold text-slate-900">Zalo {COMPANY_INFO.hotlineDisplay}</p>
+            <p className="mb-4 border-y border-neutral-200 py-4 text-lg font-bold text-slate-900">Zalo {company.hotlineDisplay}</p>
 
             <div className="flex gap-2">
               <a
-                href={COMPANY_INFO.zaloHref}
+                href={company.zaloHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center"
@@ -207,8 +208,8 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
               </a>
               <button
                 onClick={() => {
-                  navigator.clipboard.writeText('0566385555');
-                  alert(`Đã sao chép số Zalo: ${COMPANY_INFO.hotlineDisplay}`);
+                  navigator.clipboard.writeText(company.hotlineDisplay.replace(/[^\d+]/g, ''));
+                  alert(`Đã sao chép số Zalo: ${company.hotlineDisplay}`);
                 }}
                 className="px-3 py-2.5 border border-neutral-200 text-slate-700 text-xs font-medium rounded-lg hover:bg-neutral-50"
               >

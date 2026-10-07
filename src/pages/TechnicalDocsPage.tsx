@@ -9,7 +9,7 @@ import {
   Scale,
   ShieldCheck,
 } from 'lucide-react';
-import { TECHNICAL_DOCS } from '../data/mockData';
+import { useLiveData } from '../admin/adminData';
 
 interface TechnicalDocsPageProps {
   onOpenQuote: () => void;
@@ -27,23 +27,24 @@ export const TechnicalDocsPage: React.FC<TechnicalDocsPageProps> = ({
   onOpenQuote,
   initialDocId,
 }) => {
+  const { documents } = useLiveData();
   const [selectedGroup, setSelectedGroup] = useState('all');
 
   const filteredDocs = useMemo(
     () => selectedGroup === 'all'
-      ? TECHNICAL_DOCS
-      : TECHNICAL_DOCS.filter((doc) => doc.productGroup === selectedGroup),
-    [selectedGroup],
+      ? documents
+      : documents.filter((doc) => doc.productGroup === selectedGroup),
+    [documents, selectedGroup],
   );
 
   useEffect(() => {
     if (!initialDocId) return;
-    const selectedDoc = TECHNICAL_DOCS.find((doc) => doc.id === initialDocId);
+    const selectedDoc = documents.find((doc) => doc.id === initialDocId);
     if (selectedDoc?.productGroup) setSelectedGroup(selectedDoc.productGroup);
     window.setTimeout(() => {
       document.getElementById(`doc-${initialDocId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 120);
-  }, [initialDocId]);
+  }, [documents, initialDocId]);
 
   return (
     <div className="min-h-screen bg-[#f4f4f1]">

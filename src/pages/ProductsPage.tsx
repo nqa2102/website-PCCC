@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   ArrowRight,
   Calculator,
@@ -13,7 +13,7 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
-import { PRODUCTS } from '../data/mockData';
+import { useLiveData } from '../admin/adminData';
 import { Product } from '../types';
 
 interface ProductsPageProps {
@@ -99,10 +99,17 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   initialCategory,
   initialProductId
 }) => {
+  const { products } = useLiveData();
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
   const [detailProduct, setDetailProduct] = useState<Product | null>(
-    initialProductId ? (PRODUCTS.find(p => p.id === initialProductId) || null) : null
+    initialProductId ? (products.find(p => p.id === initialProductId) || null) : null
   );
+
+  useEffect(() => {
+    if (initialProductId) {
+      setDetailProduct(products.find(p => p.id === initialProductId) || null);
+    }
+  }, [initialProductId, products]);
 
   const categories = [
     { id: 'all', label: 'Tất cả sản phẩm' },
@@ -113,11 +120,11 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   ];
 
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((item) => {
+    return products.filter((item) => {
       const matchCat = selectedCategory === 'all' || item.category === selectedCategory;
       return matchCat;
     });
-  }, [selectedCategory]);
+  }, [products, selectedCategory]);
 
   return (
     <div className="min-h-screen w-full bg-[#f4f4f1] pb-20">

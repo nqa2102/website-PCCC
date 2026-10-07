@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Phone, Search, Menu, X, ChevronDown, ChevronRight, ShieldCheck, Calculator, Download } from 'lucide-react';
-import { COMPANY_INFO } from '../data/companyData';
+import { useLiveData } from '../admin/adminData';
 
 interface HeaderProps {
   activeTab: string;
@@ -19,6 +19,7 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectProductCategory,
   onSelectSolution
 }) => {
+  const { company } = useLiveData();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const [solutionDropdownOpen, setSolutionDropdownOpen] = useState(false);
@@ -71,7 +72,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div className="hidden sm:block border-l border-neutral-300 pl-2.5">
               <p className="text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider">
-                {COMPANY_INFO.legalNameUpper}
+                {company.legalNameUpper}
               </p>
               <p className="text-[9px] sm:text-[10px] text-slate-500">
                 Vững chuẩn an toàn, trọn niềm an tâm
@@ -104,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Hotline */}
             <a 
-              href={COMPANY_INFO.hotlineHref}
+              href={company.hotlineHref}
               className="flex items-center gap-2 text-left group"
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors">
@@ -113,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="hidden lg:block">
                 <span className="text-[10px] text-slate-500 block leading-tight">Hotline tư vấn</span>
                 <span className="text-xs sm:text-sm font-bold text-red-600 group-hover:text-red-700 tracking-tight">
-                  {COMPANY_INFO.hotlineDisplay}
+                  {company.hotlineDisplay}
                 </span>
               </div>
             </a>
@@ -432,11 +433,11 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Mobile CTAs */}
           <div className="pt-2 flex flex-col gap-2">
             <a
-              href={COMPANY_INFO.hotlineHref}
+              href={company.hotlineHref}
               className="w-full flex items-center justify-center gap-2 bg-red-600 text-white font-bold text-xs sm:text-sm py-3 rounded-xl"
             >
               <Phone className="w-4 h-4" />
-              <span>Gọi tư vấn: {COMPANY_INFO.hotlineDisplay}</span>
+              <span>Gọi tư vấn: {company.hotlineDisplay}</span>
             </a>
           </div>
 
