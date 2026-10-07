@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Phone, Search, Menu, X, ChevronDown, ChevronRight, ShieldCheck } from 'lucide-react';
+import { Phone, Search, Menu, X, ChevronDown, ChevronRight, ShieldCheck, Calculator, Download } from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
 
 interface HeaderProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onOpenSearch: () => void;
+  onOpenQuote?: () => void;
   onSelectProductCategory?: (category: string) => void;
   onSelectSolution?: (solutionId: string) => void;
 }
@@ -14,6 +15,7 @@ export const Header: React.FC<HeaderProps> = ({
   activeTab,
   setActiveTab,
   onOpenSearch,
+  onOpenQuote,
   onSelectProductCategory,
   onSelectSolution
 }) => {
@@ -115,6 +117,17 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
             </a>
+
+            {/* Primary Quote CTA Button */}
+            {onOpenQuote && (
+              <button
+                onClick={onOpenQuote}
+                className="hidden sm:inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 active:scale-95 text-white font-bold px-3.5 py-2 rounded-lg text-xs transition-all shadow-xs"
+              >
+                <Calculator className="w-3.5 h-3.5" />
+                <span>Báo giá dự toán</span>
+              </button>
+            )}
 
             {/* Mobile menu trigger */}
             <button
@@ -286,6 +299,20 @@ export const Header: React.FC<HeaderProps> = ({
               <Search className="w-4 h-4 text-slate-400" />
             </button>
           </div>
+
+          {/* Mobile Quick Action Quote Button */}
+          {onOpenQuote && (
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenQuote();
+              }}
+              className="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs shadow-sm transition-colors"
+            >
+              <Calculator className="w-4 h-4" />
+              <span>Yêu cầu báo giá dự toán ngay</span>
+            </button>
+          )}
 
           {/* Nav links */}
           <div className="space-y-1">

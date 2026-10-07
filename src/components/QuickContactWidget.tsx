@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, MessageSquare, ArrowUp, X } from 'lucide-react';
+import { Phone, MessageSquare, ArrowUp, X, Calculator } from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
 
 interface QuickContactWidgetProps {
   onOpenChat: () => void;
+  onOpenQuote?: () => void;
 }
 
 export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
-  onOpenChat
+  onOpenChat,
+  onOpenQuote
 }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [showZaloModal, setShowZaloModal] = useState(false);
@@ -33,7 +35,22 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
         aria-label="Kênh liên hệ nhanh desktop" 
         className="hidden md:flex fixed right-4 bottom-6 z-40 flex-col items-center gap-2"
       >
-        {/* 1. Gọi ngay */}
+        {/* 1. Báo giá nhanh */}
+        {onOpenQuote && (
+          <button
+            onClick={onOpenQuote}
+            aria-label="Nhận báo giá dự toán PCCC"
+            className="group relative flex items-center justify-center w-11 h-11 rounded bg-red-600 text-white border border-red-600 shadow-md hover:bg-red-700 transition-colors animate-pulse"
+          >
+            <Calculator className="w-5 h-5" />
+            {/* Tooltip */}
+            <span className="absolute right-14 whitespace-nowrap bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-md">
+              Dự toán & Báo giá nhanh
+            </span>
+          </button>
+        )}
+
+        {/* 2. Gọi ngay */}
         <a
           href={COMPANY_INFO.hotlineHref}
           aria-label={`Gọi ngay hotline ${COMPANY_INFO.hotlineDisplay}`}
@@ -46,7 +63,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
           </span>
         </a>
 
-        {/* 2. Zalo */}
+        {/* 3. Zalo */}
         <button
           onClick={() => setShowZaloModal(true)}
           aria-label="Liên hệ qua Zalo"
@@ -59,7 +76,7 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
           </span>
         </button>
 
-        {/* 3. Chat tư vấn */}
+        {/* 4. Chat tư vấn */}
         <button
           onClick={onOpenChat}
           aria-label="Chat tư vấn kỹ thuật PCCC"
@@ -71,19 +88,6 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
             Tư vấn kỹ thuật PCCC trực tuyến
           </span>
         </button>
-
-        {/* 4. Gọi nhân viên kinh doanh */}
-        <a
-          href={COMPANY_INFO.hotlineHref}
-          aria-label="Gọi nhân viên kinh doanh"
-          className="group relative flex items-center justify-center w-11 h-11 rounded bg-red-700 text-white border border-red-700 shadow-md hover:bg-red-800 transition-colors"
-        >
-          <Phone className="w-4 h-4" />
-          {/* Tooltip */}
-          <span className="absolute right-14 whitespace-nowrap bg-slate-900 text-white text-xs px-2.5 py-1 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity shadow-md">
-            Gọi nhân viên kinh doanh
-          </span>
-        </a>
 
         {/* 5. Scroll to top */}
         {showScrollTop && (
@@ -137,14 +141,24 @@ export const QuickContactWidget: React.FC<QuickContactWidgetProps> = ({
           <span className="text-[10px] font-bold">Tư vấn</span>
         </button>
 
-        {/* Primary CTA: Gọi tư vấn */}
-        <a
-          href={COMPANY_INFO.hotlineHref}
-          className="flex items-center gap-1.5 bg-red-600 active:bg-red-700 text-white font-bold text-xs py-2 px-3.5 rounded-full shadow-md active:scale-95 transition-transform"
-        >
-          <Phone className="w-3.5 h-3.5" />
-          <span>Gọi tư vấn</span>
-        </a>
+        {/* Primary CTA: Báo giá ngay */}
+        {onOpenQuote ? (
+          <button
+            onClick={onOpenQuote}
+            className="flex items-center gap-1.5 bg-red-600 active:bg-red-700 text-white font-bold text-xs py-2 px-3.5 rounded-full shadow-md active:scale-95 transition-transform"
+          >
+            <Calculator className="w-3.5 h-3.5" />
+            <span>Báo giá ngay</span>
+          </button>
+        ) : (
+          <a
+            href={COMPANY_INFO.hotlineHref}
+            className="flex items-center gap-1.5 bg-red-600 active:bg-red-700 text-white font-bold text-xs py-2 px-3.5 rounded-full shadow-md active:scale-95 transition-transform"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            <span>Gọi tư vấn</span>
+          </a>
+        )}
       </nav>
 
       {/* Mobile Scroll-to-top floating button (Above the bottom bar) */}

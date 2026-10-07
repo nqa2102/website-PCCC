@@ -121,6 +121,7 @@ export default function App() {
           handleNavigate(tab);
         }}
         onOpenSearch={() => setSearchModalOpen(true)}
+        onOpenQuote={() => handleOpenQuote()}
         onSelectProductCategory={(catId) => {
           handleNavigate('products', catId);
         }}
@@ -211,6 +212,7 @@ export default function App() {
       {/* Floating Action Dock Widget (Right edge: Call, Zalo, Chat, Quote, ScrollTop) */}
       <QuickContactWidget
         onOpenChat={() => setChatModalOpen(true)}
+        onOpenQuote={() => handleOpenQuote()}
       />
 
       {/* Interactive Modals */}
