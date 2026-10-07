@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   AlertTriangle, ArrowRight, ArrowUpRight, Award, Building, Building2,
-  CheckCircle2, Factory, FileCheck2, Flame, Hotel,
-  MessageSquare, School, ShieldCheck, Store, Wrench,
+  Calendar, CheckCircle2, Factory, FileCheck2, Flame, Hotel,
+  MapPin, MessageSquare, School, ShieldCheck, Store, Wrench,
 } from 'lucide-react';
 import {
-  HERO_IMAGE, PRODUCTS, SOLUTIONS,
+  HERO_IMAGE, PARTNER_LOGOS, PRODUCTS, PROJECTS, SOLUTIONS,
 } from '../data/mockData';
 
 interface HomePageProps {
@@ -193,19 +193,58 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
-      <section className="bg-neutral-50 py-20 sm:py-24">
+      <section className="border-b border-slate-200 bg-neutral-50 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
             <div>
-              <span className="section-kicker">Hồ sơ dự án</span>
-              <h2 className="section-title max-w-2xl">Dự án thực tế đang được hoàn thiện hồ sơ</h2>
+              <span className="section-kicker">Hồ sơ dự án tiêu biểu</span>
+              <h2 className="section-title max-w-2xl">Công trình thực tế ứng dụng giải pháp APEX</h2>
             </div>
+            <button onClick={() => onNavigate('projects')} className="flex items-center gap-2 text-sm font-semibold text-red-700 hover:text-red-800">
+              Xem toàn bộ dự án <ArrowRight className="h-4 w-4" />
+            </button>
           </div>
 
-          <div className="mt-12 border-y border-slate-200 bg-white px-6 py-12 sm:px-10">
-            <p className="max-w-2xl text-sm leading-7 text-slate-600">APEX đang hoàn thiện thông tin, hình ảnh và quyền sử dụng tư liệu dự án trước khi công bố. Liên hệ để được tư vấn theo nhu cầu công trình hiện tại.</p>
-            <button onClick={() => onNavigate('contact')} className="mt-6 flex items-center gap-2 text-sm font-semibold text-red-700">Trao đổi nhu cầu công trình <ArrowRight className="h-4 w-4" /></button>
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {PROJECTS.slice(0, 3).map((project) => (
+              <article key={project.id} className="group flex flex-col border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
+                <div className="relative h-52 overflow-hidden bg-slate-100">
+                  <img src={project.image} alt={project.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <span className="absolute left-3 top-3 bg-red-600 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
+                    {project.categoryLabel}
+                  </span>
+                </div>
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+                    <MapPin className="h-3.5 w-3.5 text-red-600" />
+                    <span>{project.location}</span>
+                  </div>
+                  <h3 className="line-clamp-1 text-base font-bold text-slate-900 transition-colors group-hover:text-red-700">{project.title}</h3>
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate-600">{project.description}</p>
+                  <div className="mt-4 border-t border-slate-100 pt-3 text-xs text-slate-700">
+                    <span className="font-semibold text-slate-900">Hạng mục: </span>
+                    <span className="font-medium text-red-700">{project.itemsSupplied}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
           </div>
+
+          {PARTNER_LOGOS.length > 0 && (
+            <div className="mt-16 border-t border-slate-200 pt-10">
+              <p className="text-center text-xs font-semibold uppercase tracking-wider text-slate-400">
+                Hệ thống thương hiệu thiết bị & đối tác kỹ thuật
+              </p>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-6 sm:gap-12">
+                {PARTNER_LOGOS.map((partner) => (
+                  <div key={partner.name} className="flex flex-col items-center px-3 py-1 opacity-80 transition-opacity hover:opacity-100">
+                    <span className="text-sm font-extrabold tracking-tight text-slate-800 sm:text-base">{partner.name}</span>
+                    <span className="text-[10px] text-slate-500">{partner.tag}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

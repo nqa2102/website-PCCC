@@ -293,7 +293,7 @@ const PROJECT_SAMPLES: Project[] = [
   }
 ];
 
-export const PROJECTS: Project[] = [];
+export const PROJECTS: Project[] = PROJECT_SAMPLES;
 
 export const TECHNICAL_DOCS: TechnicalDoc[] = [
   {
@@ -458,7 +458,7 @@ const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
   }
 ];
 
-export const NEWS_ARTICLES: NewsArticle[] = [];
+export const NEWS_ARTICLES: NewsArticle[] = NEWS_ARTICLE_SAMPLES;
 
 const PARTNER_LOGO_SAMPLES = [
   { name: '3CElectric', tag: 'Switch on your world' },
@@ -469,4 +469,4 @@ const PARTNER_LOGO_SAMPLES = [
   { name: 'CADIVI', tag: 'Dây Cáp Điện Hàng Đầu' }
 ];
 
-export const PARTNER_LOGOS: { name: string; tag: string }[] = [];
+export const PARTNER_LOGOS: { name: string; tag: string }[] = PARTNER_LOGO_SAMPLES;

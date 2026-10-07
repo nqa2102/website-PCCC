@@ -147,9 +147,9 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                     </button>
                     <button
                       onClick={() => onOpenQuote(product.category)}
-                      className="flex min-h-10 items-center gap-1.5 bg-red-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-red-700"
+                      className="flex min-h-10 items-center gap-1.5 bg-red-600 px-3.5 py-2 text-xs font-bold text-white transition-colors hover:bg-red-700 shadow-xs"
                     >
-                      <Phone className="h-3.5 w-3.5" /> Liên hệ
+                      Báo giá dự toán
                     </button>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                   }}
                   className="min-h-10 bg-red-600 px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-red-700"
                 >
-                  Gọi hoặc nhắn kinh doanh
+                  Nhận báo giá dự toán
                 </button>
               </div>
             </div>
