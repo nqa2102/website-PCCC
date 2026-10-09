@@ -60,6 +60,7 @@ export interface TechnicalDoc {
   sourceOwner?: string;
   documentType?: string;
   scope?: string;
+  fileUrl?: string;
 }
 
 export interface NewsArticle {

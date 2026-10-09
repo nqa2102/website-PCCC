@@ -1,14 +1,23 @@
 import React from 'react';
-import { Phone, MapPin, ShieldCheck, ChevronRight, FileCheck } from 'lucide-react';
+import { Phone, MapPin, ShieldCheck, ChevronRight, FileCheck, Mail } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
+import { ApexBrandLogo } from './brand';
+import { pathForRoute } from '../routing';
 
 interface FooterProps {
-  onNavigate: (tab: string) => void;
+  onNavigate: (tab: string, itemId?: string) => void;
   onOpenQuote: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const { company } = useLiveData();
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, tab: string, itemId?: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    onNavigate(tab, itemId);
+  };
+
   return (
     <footer className="bg-[#102b21] text-neutral-300 border-t border-white/10 text-xs">
       {/* Main Footer Links & Info */}
@@ -17,14 +26,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
           
           {/* Column 1: Company Profile */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl font-black tracking-tight text-white font-serif">
-                APEX
-              </span>
-              <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[9px] border-b-red-600 ml-1"></div>
-              <span className="text-xs font-bold text-slate-400 tracking-wider">
-                VIỆT NAM
-              </span>
+            <div className="mb-2">
+              <ApexBrandLogo
+                layout="horizontal"
+                size="md"
+                theme="gold"
+                taglineMode="none"
+                asLink={false}
+              />
             </div>
             <p className="text-xs text-neutral-400 leading-relaxed pr-4">
               {company.legalName} cung cấp giải pháp ngăn cháy toàn diện cho nhà ở và công trình, với sản phẩm được cấu hình theo yêu cầu thực tế.
@@ -41,6 +50,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
                 <Phone className="w-4 h-4 text-red-500 shrink-0" />
                 <a href={company.hotlineHref}>Hotline: {company.hotlineDisplay}</a>
               </div>
+              <div className="flex items-center gap-2.5">
+                <Mail className="w-4 h-4 text-red-500 shrink-0" />
+                <a href={`mailto:${company.email || 'contact@apex.vn'}`}>Email: {company.email || 'contact@apex.vn'}</a>
+              </div>
             </div>
           </div>
 
@@ -51,40 +64,44 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
             </h4>
             <ul className="space-y-2 text-neutral-400">
               <li>
-                <button
-                  onClick={() => onNavigate('products')}
+                <a
+                  href="/san-pham?nhom=steel-door"
+                  onClick={(e) => handleNavClick(e, 'products', 'steel-door')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Cửa thép ngăn cháy EI70 - EI120</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate('products')}
+                <a
+                  href="/san-pham?nhom=glass-door"
+                  onClick={(e) => handleNavClick(e, 'products', 'glass-door')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Cửa kính ngăn cháy</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate('products')}
+                <a
+                  href="/san-pham?nhom=roller-shutter"
+                  onClick={(e) => handleNavClick(e, 'products', 'roller-shutter')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Cửa cuốn ngăn cháy</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate('products')}
+                <a
+                  href="/san-pham?nhom=fire-curtain"
+                  onClick={(e) => handleNavClick(e, 'products', 'fire-curtain')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Rèm ngăn cháy</span>
-                </button>
+                </a>
               </li>
             </ul>
           </div>
@@ -96,58 +113,64 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
             </h4>
             <ul className="space-y-2 text-neutral-400">
               <li>
-                <button
-                  onClick={() => onNavigate('solutions')}
+                <a
+                  href="/giai-phap/chung-cu-can-ho"
+                  onClick={(e) => handleNavClick(e, 'solutions', 'chung-cu-can-ho')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Chung cư, căn hộ cao tầng</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate('solutions')}
+                <a
+                  href="/giai-phap/van-phong-toa-nha"
+                  onClick={(e) => handleNavClick(e, 'solutions', 'van-phong-toa-nha')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Văn phòng, tòa nhà thương mại</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate('solutions')}
+                <a
+                  href="/giai-phap/trung-tam-thuong-mai"
+                  onClick={(e) => handleNavClick(e, 'solutions', 'trung-tam-thuong-mai')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Trung tâm thương mại & siêu thị</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate('solutions')}
+                <a
+                  href="/giai-phap/nha-xuong-khu-cong-nghiep"
+                  onClick={(e) => handleNavClick(e, 'solutions', 'nha-xuong-khu-cong-nghiep')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Nhà xưởng, khu công nghiệp</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate('solutions')}
+                <a
+                  href="/giai-phap/benh-vien-truong-hoc"
+                  onClick={(e) => handleNavClick(e, 'solutions', 'benh-vien-truong-hoc')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Bệnh viện, trường học</span>
-                </button>
+                </a>
               </li>
               <li>
-                <button
-                  onClick={() => onNavigate('projects')}
+                <a
+                  href="/du-an"
+                  onClick={(e) => handleNavClick(e, 'projects')}
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
                   <span>Xem hồ sơ dự án tiêu biểu</span>
-                </button>
+                </a>
               </li>
             </ul>
           </div>
@@ -187,24 +210,49 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenQuote }) => {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-neutral-400 text-[11px]">
           <div>
-            © {new Date().getFullYear()} {company.legalNameUpper}. Đại diện: {company.representative} - {company.representativeTitle}.
+            © {new Date().getFullYear()} {company.legalNameUpper}. GPKD/MST: {company.taxCode || '0111222333'}. Đại diện pháp luật: {company.representative} - {company.representativeTitle}.
           </div>
           <div className="flex items-center gap-4">
-            <button onClick={() => onNavigate('documents')} className="hover:text-neutral-300">
+            <a
+              href="/tai-lieu-ky-thuat"
+              onClick={(e) => handleNavClick(e, 'documents')}
+              className="hover:text-neutral-300"
+            >
               Xem hồ sơ kỹ thuật
-            </button>
+            </a>
             <span>·</span>
-            <button onClick={() => onNavigate('about')} className="hover:text-neutral-300">
+            <a
+              href="/gioi-thieu"
+              onClick={(e) => handleNavClick(e, 'about')}
+              className="hover:text-neutral-300"
+            >
               Bảo hành 12-24 tháng
-            </button>
+            </a>
             <span>·</span>
-            <button onClick={() => onNavigate('contact')} className="hover:text-neutral-300">
+            <a
+              href="/lien-he"
+              onClick={(e) => handleNavClick(e, 'contact')}
+              className="hover:text-neutral-300"
+            >
               Liên hệ hợp tác
-            </button>
+            </a>
             <span>·</span>
-            <button onClick={() => onNavigate('privacy')} className="hover:text-neutral-300">
+            <a
+              href="/chinh-sach-bao-mat"
+              onClick={(e) => handleNavClick(e, 'privacy')}
+              className="hover:text-neutral-300"
+            >
               Chính sách bảo mật
-            </button>
+            </a>
+            <span>·</span>
+            <a
+              href="/admin"
+              onClick={(e) => handleNavClick(e, 'admin')}
+              className="text-neutral-400 hover:text-red-400 transition-colors"
+              title="Cổng quản trị APEX"
+            >
+              Quản trị
+            </a>
           </div>
         </div>
       </div>

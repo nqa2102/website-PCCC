@@ -12,6 +12,7 @@ import {
   X,
 } from 'lucide-react';
 import { appendWebsiteLead, useLiveData } from '../admin/adminData';
+import { ApexMark } from './brand';
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -141,7 +142,10 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
             <Calculator className="h-4 w-4" />
             <span>Tư vấn & Dự toán ngân sách PCCC</span>
           </div>
-          <h2 className="mt-1 text-xl sm:text-2xl font-bold text-white">Yêu cầu bảng báo giá kỹ thuật</h2>
+          <div className="mt-1 flex items-center gap-2.5">
+            <ApexMark size={24} variant="faceted-gold" />
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Yêu cầu bảng báo giá kỹ thuật</h2>
+          </div>
           <p className="mt-1 text-xs text-slate-300">
             Cung cấp cấu hình thực tế để nhận phương án báo giá và hồ sơ kiểm định tương ứng.
           </p>

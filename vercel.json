@@ -1,17 +1,22 @@
 {
   "rewrites": [
-    { "source": "/gioi-thieu", "destination": "/index.html" },
-    { "source": "/san-pham", "destination": "/index.html" },
-    { "source": "/san-pham/:path*", "destination": "/index.html" },
-    { "source": "/giai-phap/:path*", "destination": "/index.html" },
-    { "source": "/du-an/:path*", "destination": "/index.html" },
-    { "source": "/tai-lieu-ky-thuat/:path*", "destination": "/index.html" },
-    { "source": "/tin-tuc/:path*", "destination": "/index.html" },
-    { "source": "/lien-he", "destination": "/index.html" },
-    { "source": "/chinh-sach-bao-mat", "destination": "/index.html" },
-    { "source": "/admin", "destination": "/index.html" }
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://vercel.com https://*.vercel-storage.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+        },
+        { "key": "Strict-Transport-Security", "value": "max-age=63072000; includeSubDomains" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=()" }
+      ]
+    },
     {
       "source": "/assets/(.*)",
       "headers": [

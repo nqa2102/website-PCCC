@@ -99,7 +99,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   initialCategory,
   initialProductId
 }) => {
-  const { products } = useLiveData();
+  const { products, company } = useLiveData();
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
   const [detailProduct, setDetailProduct] = useState<Product | null>(
     initialProductId ? (products.find(p => p.id === initialProductId) || null) : null
@@ -227,7 +227,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                 <div className="flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
                   <div>
                     <span className="block text-[10px] font-semibold uppercase text-slate-500">Thông tin giá</span>
-                    <span className="text-sm font-bold uppercase text-red-700">Liên hệ</span>
+                    <span className="text-sm font-bold uppercase text-red-700">{product.priceEstimate || 'Liên hệ'}</span>
                   </div>
 
                   <div className="flex gap-2">
@@ -405,11 +405,11 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                 <span>Yêu cầu gửi E-Catalogue (PDF)</span>
               </button>
               <a
-                href="tel:0566385555"
+                href={company.hotlineHref}
                 className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-3.5 px-6 rounded-xl text-xs backdrop-blur-sm border border-white/20 transition-colors"
               >
                 <Phone className="w-4 h-4 text-red-400" />
-                <span>Hotline Kỹ sư: 0566 38 5555</span>
+                <span>Hotline Kỹ sư: {company.hotlineDisplay}</span>
               </a>
             </div>
           </div>

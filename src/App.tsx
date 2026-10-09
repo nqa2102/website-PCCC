@@ -14,6 +14,7 @@ const TechnicalDocsPage = lazy(() => import('./pages/TechnicalDocsPage').then((m
 const NewsPage = lazy(() => import('./pages/NewsPage').then((module) => ({ default: module.NewsPage })));
 const ContactPage = lazy(() => import('./pages/ContactPage').then((module) => ({ default: module.ContactPage })));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((module) => ({ default: module.PrivacyPage })));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })));
 const QuoteModal = lazy(() => import('./components/QuoteModal').then((module) => ({ default: module.QuoteModal })));
 const LiveChatModal = lazy(() => import('./components/LiveChatModal').then((module) => ({ default: module.LiveChatModal })));
 const SearchModal = lazy(() => import('./components/SearchModal').then((module) => ({ default: module.SearchModal })));
@@ -199,6 +200,10 @@ export default function App() {
 
         {activeTab === 'privacy' && (
           <PrivacyPage onNavigate={handleNavigate} />
+        )}
+
+        {activeTab === 'not-found' && (
+          <NotFoundPage onNavigate={handleNavigate} />
         )}
         </Suspense>
       </main>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, User, Clock, ArrowRight, X, Share2, Bookmark } from 'lucide-react';
-import { NEWS_ARTICLES } from '../data/mockData';
+import { useLiveData } from '../admin/adminData';
 import { NewsArticle } from '../types';
 
 interface NewsPageProps {
@@ -9,9 +9,10 @@ interface NewsPageProps {
 }
 
 export const NewsPage: React.FC<NewsPageProps> = ({ onOpenQuote, initialArticleId }) => {
+  const { news } = useLiveData();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [readingArticle, setReadingArticle] = useState<NewsArticle | null>(
-    initialArticleId ? (NEWS_ARTICLES.find(a => a.id === initialArticleId) || null) : null
+    initialArticleId ? (news.find(a => a.id === initialArticleId) || null) : null
   );
 
   const categories = [
@@ -22,8 +23,8 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onOpenQuote, initialArticleI
   ];
 
   const filteredNews = selectedCategory === 'all'
-    ? NEWS_ARTICLES
-    : NEWS_ARTICLES.filter(a => a.category === selectedCategory);
+    ? news
+    : news.filter(a => a.category === selectedCategory);
 
   return (
     <div className="w-full bg-neutral-50 min-h-screen py-10">
@@ -44,7 +45,7 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onOpenQuote, initialArticleI
         </div>
 
         {/* Filter Categories */}
-        {NEWS_ARTICLES.length > 0 && <div className="flex flex-wrap gap-2 mb-8">
+        {news.length > 0 && <div className="flex flex-wrap gap-2 mb-8">
           {categories.map((c) => (
             <button
               key={c.id}
@@ -108,7 +109,7 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onOpenQuote, initialArticleI
           ))}
         </div>
 
-        {NEWS_ARTICLES.length === 0 && (
+        {news.length === 0 && (
           <div className="border-y border-neutral-200 bg-white px-6 py-14 sm:px-10">
             <Bookmark className="w-8 h-8 text-red-600" />
             <h2 className="mt-4 text-xl font-bold text-slate-900">Nội dung chuyên môn đang được cập nhật</h2>

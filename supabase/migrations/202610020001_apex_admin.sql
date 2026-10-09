@@ -170,7 +170,7 @@ alter table public.activities enable row level security;
 
 revoke all on table public.profiles, public.leads, public.products, public.documents, public.contents, public.company_settings, public.activities from anon, authenticated;
 grant select on table public.profiles to authenticated;
-grant select, insert, update on table public.leads, public.products, public.documents, public.contents, public.company_settings, public.activities to authenticated;
+grant select, insert, update, delete on table public.leads, public.products, public.documents, public.contents, public.company_settings, public.activities to authenticated;
 
 create policy "staff read own profile" on public.profiles for select to authenticated
 using (id = (select auth.uid()) or public.current_apex_role() = 'admin');
@@ -178,18 +178,22 @@ using (id = (select auth.uid()) or public.current_apex_role() = 'admin');
 create policy "sales read leads" on public.leads for select to authenticated using (public.current_apex_role() in ('admin', 'sales'));
 create policy "sales manage leads insert" on public.leads for insert to authenticated with check (public.current_apex_role() in ('admin', 'sales'));
 create policy "sales manage leads update" on public.leads for update to authenticated using (public.current_apex_role() in ('admin', 'sales')) with check (public.current_apex_role() in ('admin', 'sales'));
+create policy "admin delete leads" on public.leads for delete to authenticated using (public.current_apex_role() = 'admin');
 
 create policy "staff read products" on public.products for select to authenticated using (public.is_apex_staff());
 create policy "content roles insert products" on public.products for insert to authenticated with check (public.current_apex_role() in ('admin', 'editor', 'technical'));
 create policy "content roles update products" on public.products for update to authenticated using (public.current_apex_role() in ('admin', 'editor', 'technical')) with check (public.current_apex_role() in ('admin', 'editor', 'technical'));
+create policy "admin delete products" on public.products for delete to authenticated using (public.current_apex_role() in ('admin', 'editor'));
 
 create policy "staff read documents" on public.documents for select to authenticated using (public.is_apex_staff());
 create policy "technical roles insert documents" on public.documents for insert to authenticated with check (public.current_apex_role() in ('admin', 'technical'));
 create policy "technical roles update documents" on public.documents for update to authenticated using (public.current_apex_role() in ('admin', 'technical')) with check (public.current_apex_role() in ('admin', 'technical'));
+create policy "admin delete documents" on public.documents for delete to authenticated using (public.current_apex_role() in ('admin', 'technical'));
 
 create policy "staff read contents" on public.contents for select to authenticated using (public.is_apex_staff());
 create policy "editor roles insert contents" on public.contents for insert to authenticated with check (public.current_apex_role() in ('admin', 'editor'));
 create policy "editor roles update contents" on public.contents for update to authenticated using (public.current_apex_role() in ('admin', 'editor')) with check (public.current_apex_role() in ('admin', 'editor'));
+create policy "admin delete contents" on public.contents for delete to authenticated using (public.current_apex_role() in ('admin', 'editor'));
 
 create policy "staff read company" on public.company_settings for select to authenticated using (public.is_apex_staff());
 create policy "admin insert company" on public.company_settings for insert to authenticated with check (public.current_apex_role() = 'admin');

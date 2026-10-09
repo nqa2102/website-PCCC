@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Phone, Search, Menu, X, ChevronDown, ChevronRight, ShieldCheck, Calculator, Download } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
+import { ApexBrandLogo } from './brand';
+import { pathForRoute } from '../routing';
 
 interface HeaderProps {
   activeTab: string;
@@ -25,6 +27,21 @@ export const Header: React.FC<HeaderProps> = ({
   const [solutionDropdownOpen, setSolutionDropdownOpen] = useState(false);
   const [mobileProductExpanded, setMobileProductExpanded] = useState(false);
   const [mobileSolutionExpanded, setMobileSolutionExpanded] = useState(false);
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, tab: string, itemId?: string) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    e.preventDefault();
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+    setProductDropdownOpen(false);
+    setSolutionDropdownOpen(false);
+    if (tab === 'products' && itemId && onSelectProductCategory) {
+      onSelectProductCategory(itemId);
+    }
+    if (tab === 'solutions' && itemId && onSelectSolution) {
+      onSelectSolution(itemId);
+    }
+  };
 
   const navItems = [
     { id: 'home', label: 'Trang chủ' },
@@ -59,26 +76,15 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-2.5 sm:py-3.5 gap-2 sm:gap-4">
           
-          {/* Logo Brand */}
-          <button 
+          {/* Logo Brand APEX VN */}
+          <ApexBrandLogo
             onClick={() => setActiveTab('home')}
-            className="flex items-center gap-2 sm:gap-3 text-left focus:outline-hidden group shrink-0"
-          >
-            <div className="relative flex items-center justify-center">
-              <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 group-hover:text-red-600 transition-colors font-serif">
-                APEX
-              </span>
-              <div className="w-0 h-0 border-l-[5px] sm:border-l-[6px] border-l-transparent border-r-[5px] sm:border-r-[6px] border-r-transparent border-b-[8px] sm:border-b-[10px] border-b-red-600 ml-1 -mt-2"></div>
-            </div>
-            <div className="hidden sm:block border-l border-neutral-300 pl-2.5">
-              <p className="text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider">
-                {company.legalNameUpper}
-              </p>
-              <p className="text-[9px] sm:text-[10px] text-slate-500">
-                Vững chuẩn an toàn, trọn niềm an tâm
-              </p>
-            </div>
-          </button>
+            layout="horizontal"
+            size="auto"
+            theme="light"
+            corporateName={company.legalNameUpper}
+            slogan="Vững chuẩn an toàn, trọn niềm an tâm"
+          />
 
           {/* Quick Search Bar (Desktop) */}
           <div className="hidden md:flex flex-1 max-w-md mx-4">
@@ -159,11 +165,9 @@ export const Header: React.FC<HeaderProps> = ({
                       onMouseEnter={() => setProductDropdownOpen(true)}
                       onMouseLeave={() => setProductDropdownOpen(false)}
                     >
-                      <button
-                        onClick={() => {
-                          setActiveTab('products');
-                          setProductDropdownOpen(false);
-                        }}
+                      <a
+                        href="/san-pham"
+                        onClick={(e) => handleNavClick(e, 'products')}
                         className={`flex items-center gap-1 py-3 px-3 border-b-2 transition-colors ${
                           isActive 
                             ? 'text-red-600 border-red-600' 
@@ -172,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
                       >
                         <span>{item.label}</span>
                         <ChevronDown className="w-3.5 h-3.5" />
-                      </button>
+                      </a>
 
                       {productDropdownOpen && (
                         <div className="absolute top-full left-0 w-72 bg-white border border-neutral-200 shadow-xl rounded-b-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
@@ -180,29 +184,24 @@ export const Header: React.FC<HeaderProps> = ({
                             Danh mục sản phẩm PCCC
                           </div>
                           {productCategories.map((cat) => (
-                            <button
+                            <a
                               key={cat.id}
-                              onClick={() => {
-                                setActiveTab('products');
-                                if (onSelectProductCategory) onSelectProductCategory(cat.id);
-                                setProductDropdownOpen(false);
-                              }}
+                              href={`/san-pham?nhom=${cat.id}`}
+                              onClick={(e) => handleNavClick(e, 'products', cat.id)}
                               className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-neutral-50 hover:text-red-600 flex items-center justify-between"
                             >
                               <span>{cat.name}</span>
                               <ChevronRight className="w-3 h-3 text-slate-400" />
-                            </button>
+                            </a>
                           ))}
                           <div className="border-t border-neutral-100 mt-1 pt-1.5 px-3">
-                            <button
-                              onClick={() => {
-                                setActiveTab('products');
-                                setProductDropdownOpen(false);
-                              }}
+                            <a
+                              href="/san-pham"
+                              onClick={(e) => handleNavClick(e, 'products')}
                               className="text-xs font-bold text-red-600 hover:underline py-1 block"
                             >
                               Xem toàn bộ danh mục sản phẩm →
-                            </button>
+                            </a>
                           </div>
                         </div>
                       )}
@@ -218,11 +217,9 @@ export const Header: React.FC<HeaderProps> = ({
                       onMouseEnter={() => setSolutionDropdownOpen(true)}
                       onMouseLeave={() => setSolutionDropdownOpen(false)}
                     >
-                      <button
-                        onClick={() => {
-                          setActiveTab('solutions');
-                          setSolutionDropdownOpen(false);
-                        }}
+                      <a
+                        href="/giai-phap"
+                        onClick={(e) => handleNavClick(e, 'solutions')}
                         className={`flex items-center gap-1 py-3 px-3 border-b-2 transition-colors ${
                           isActive 
                             ? 'text-red-600 border-red-600' 
@@ -231,7 +228,7 @@ export const Header: React.FC<HeaderProps> = ({
                       >
                         <span>{item.label}</span>
                         <ChevronDown className="w-3.5 h-3.5" />
-                      </button>
+                      </a>
 
                       {solutionDropdownOpen && (
                         <div className="absolute top-full left-0 w-80 bg-white border border-neutral-200 shadow-xl rounded-b-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
@@ -239,18 +236,15 @@ export const Header: React.FC<HeaderProps> = ({
                             Giải pháp theo loại công trình
                           </div>
                           {solutionList.map((sol) => (
-                            <button
+                            <a
                               key={sol.id}
-                              onClick={() => {
-                                setActiveTab('solutions');
-                                if (onSelectSolution) onSelectSolution(sol.id);
-                                setSolutionDropdownOpen(false);
-                              }}
+                              href={`/giai-phap/${sol.id}`}
+                              onClick={(e) => handleNavClick(e, 'solutions', sol.id)}
                               className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-neutral-50 hover:text-red-600 flex items-center justify-between"
                             >
                               <span>{sol.name}</span>
                               <ChevronRight className="w-3 h-3 text-slate-400" />
-                            </button>
+                            </a>
                           ))}
                         </div>
                       )}
@@ -259,9 +253,10 @@ export const Header: React.FC<HeaderProps> = ({
                 }
 
                 return (
-                  <button
+                  <a
                     key={item.id}
-                    onClick={() => setActiveTab(item.id)}
+                    href={pathForRoute(item.id)}
+                    onClick={(e) => handleNavClick(e, item.id)}
                     className={`py-3 px-3 border-b-2 transition-colors ${
                       isActive 
                         ? 'text-red-600 border-red-600' 
@@ -269,7 +264,7 @@ export const Header: React.FC<HeaderProps> = ({
                     }`}
                   >
                     {item.label}
-                  </button>
+                  </a>
                 );
               })}
             </div>
@@ -322,17 +317,15 @@ export const Header: React.FC<HeaderProps> = ({
                 return (
                   <div key={item.id} className="border-b border-neutral-100 pb-1">
                     <div className="flex items-center justify-between">
-                      <button
-                        onClick={() => {
-                          setActiveTab('products');
-                          setMobileMenuOpen(false);
-                        }}
+                      <a
+                        href="/san-pham"
+                        onClick={(e) => handleNavClick(e, 'products')}
                         className={`text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex-1 ${
                           activeTab === 'products' ? 'text-red-600 bg-red-50' : 'text-slate-800'
                         }`}
                       >
                         Sản phẩm PCCC
-                      </button>
+                      </a>
                       <button
                         onClick={() => setMobileProductExpanded(!mobileProductExpanded)}
                         className="p-2 text-slate-500 hover:text-slate-800"
@@ -345,18 +338,15 @@ export const Header: React.FC<HeaderProps> = ({
                     {mobileProductExpanded && (
                       <div className="pl-4 pr-2 py-1 space-y-1 bg-neutral-50 rounded-lg my-1">
                         {productCategories.map((cat) => (
-                          <button
+                          <a
                             key={cat.id}
-                            onClick={() => {
-                              setActiveTab('products');
-                              if (onSelectProductCategory) onSelectProductCategory(cat.id);
-                              setMobileMenuOpen(false);
-                            }}
+                            href={`/san-pham?nhom=${cat.id}`}
+                            onClick={(e) => handleNavClick(e, 'products', cat.id)}
                             className="w-full text-left py-2 px-2 text-xs text-slate-700 hover:text-red-600 flex items-center justify-between"
                           >
                             <span>{cat.name}</span>
                             <ChevronRight className="w-3 h-3 text-slate-400" />
-                          </button>
+                          </a>
                         ))}
                       </div>
                     )}
@@ -368,17 +358,15 @@ export const Header: React.FC<HeaderProps> = ({
                 return (
                   <div key={item.id} className="border-b border-neutral-100 pb-1">
                     <div className="flex items-center justify-between">
-                      <button
-                        onClick={() => {
-                          setActiveTab('solutions');
-                          setMobileMenuOpen(false);
-                        }}
+                      <a
+                        href="/giai-phap"
+                        onClick={(e) => handleNavClick(e, 'solutions')}
                         className={`text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex-1 ${
                           activeTab === 'solutions' ? 'text-red-600 bg-red-50' : 'text-slate-800'
                         }`}
                       >
                         Giải pháp công trình
-                      </button>
+                      </a>
                       <button
                         onClick={() => setMobileSolutionExpanded(!mobileSolutionExpanded)}
                         className="p-2 text-slate-500 hover:text-slate-800"
@@ -391,18 +379,15 @@ export const Header: React.FC<HeaderProps> = ({
                     {mobileSolutionExpanded && (
                       <div className="pl-4 pr-2 py-1 space-y-1 bg-neutral-50 rounded-lg my-1">
                         {solutionList.map((sol) => (
-                          <button
+                          <a
                             key={sol.id}
-                            onClick={() => {
-                              setActiveTab('solutions');
-                              if (onSelectSolution) onSelectSolution(sol.id);
-                              setMobileMenuOpen(false);
-                            }}
+                            href={`/giai-phap/${sol.id}`}
+                            onClick={(e) => handleNavClick(e, 'solutions', sol.id)}
                             className="w-full text-left py-2 px-2 text-xs text-slate-700 hover:text-red-600 flex items-center justify-between"
                           >
                             <span>{sol.name}</span>
                             <ChevronRight className="w-3 h-3 text-slate-400" />
-                          </button>
+                          </a>
                         ))}
                       </div>
                     )}
@@ -411,12 +396,10 @@ export const Header: React.FC<HeaderProps> = ({
               }
 
               return (
-                <button
+                <a
                   key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    setMobileMenuOpen(false);
-                  }}
+                  href={pathForRoute(item.id)}
+                  onClick={(e) => handleNavClick(e, item.id)}
                   className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-between border-b border-neutral-100 last:border-0 ${
                     activeTab === item.id 
                       ? 'bg-red-50 text-red-600' 
@@ -425,7 +408,7 @@ export const Header: React.FC<HeaderProps> = ({
                 >
                   <span>{item.label}</span>
                   <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                </button>
+                </a>
               );
             })}
           </div>

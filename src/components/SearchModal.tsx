@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { X, Search, FileText, ArrowRight, ShieldCheck, Box, Building } from 'lucide-react';
-import { SOLUTIONS, PROJECTS, NEWS_ARTICLES } from '../data/mockData';
+import { SOLUTIONS } from '../data/mockData';
 import { useLiveData } from '../admin/adminData';
 
 interface SearchModalProps {
@@ -14,7 +14,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   onClose,
   onNavigate
 }) => {
-  const { products, documents } = useLiveData();
+  const { products, documents, projects } = useLiveData();
   const [searchTerm, setSearchTerm] = useState('');
 
   const searchResults = useMemo(() => {
@@ -47,7 +47,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
            d.description.toLowerCase().includes(query)
     );
 
-    const matchedProjects = PROJECTS.filter(
+    const matchedProjects = projects.filter(
       p => p.title.toLowerCase().includes(query) ||
            p.itemsSupplied.toLowerCase().includes(query) ||
            p.location.toLowerCase().includes(query)
@@ -60,7 +60,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       projects: matchedProjects,
       isDefault: false
     };
-  }, [searchTerm, products, documents]);
+  }, [searchTerm, products, documents, projects]);
 
   if (!isOpen) return null;
 

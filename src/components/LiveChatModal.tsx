@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Bot, ShieldCheck, Flame, User, CheckCheck, Phone, Calculator, MessageCircle } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
+import { ApexAvatar } from './brand';
 
 interface LiveChatModalProps {
   isOpen: boolean;
@@ -158,10 +159,8 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
         <div className="bg-slate-900 text-white p-3.5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-2.5">
             <div className="relative">
-              <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center font-bold text-xs">
-                APEX
-              </div>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+              <ApexAvatar size={36} theme="dark-gold" />
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
