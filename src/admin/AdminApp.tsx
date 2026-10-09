@@ -19,6 +19,7 @@ import {
   FolderKanban,
   LayoutDashboard,
   LoaderCircle,
+  KeyRound,
   LogOut,
   Menu,
   Package,
@@ -195,6 +196,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [editor, setEditor] = useState<EditorState>(null);
   const [toast, setToast] = useState('');
+  const [changingPassword, setChangingPassword] = useState(false);
   const [remoteLoading, setRemoteLoading] = useState(true);
   const [remoteError, setRemoteError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -522,6 +524,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
             </span>
           </div>
 
+          <button onClick={() => setChangingPassword(true)} className="mb-2 flex min-h-10 w-full items-center justify-center gap-2 border border-white/15 text-xs font-semibold text-white transition-colors hover:bg-white/10"><KeyRound className="h-4 w-4" />Đổi mật khẩu</button>
           {onSignOut && <button onClick={onSignOut} className="mb-2 flex min-h-10 w-full items-center justify-center gap-2 border border-white/15 text-xs font-semibold text-white transition-colors hover:bg-white/10"><LogOut className="h-4 w-4" />Đăng xuất</button>}
           <button onClick={onExit} className="flex min-h-10 w-full items-center justify-center gap-2 border border-white/15 text-xs font-semibold text-white transition-colors hover:bg-white/10"><ArrowLeft className="h-4 w-4" />Xem website khách hàng</button>
         </div>
@@ -741,6 +744,16 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
         </div>
       )}
 
+      {changingPassword && (
+        <ChangePasswordDialog
+          onClose={() => setChangingPassword(false)}
+          onDone={() => {
+            setChangingPassword(false);
+            setToast('Đã đổi mật khẩu. Lần đăng nhập sau dùng mật khẩu mới.');
+          }}
+        />
+      )}
+
       {/* Toast notification */}
       {toast && (
         <div className="fixed bottom-5 right-5 z-[90] flex max-w-sm items-center gap-3 border border-emerald-300 bg-white px-4 py-3 text-xs sm:text-sm font-semibold text-emerald-900 shadow-2xl rounded-md animate-fade-in">
@@ -748,6 +761,66 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
           <span>{toast}</span>
         </div>
       )}
+    </div>
+  );
+};
+
+/* --- ĐỔI MẬT KHẨU --- */
+const ChangePasswordDialog = ({ onClose, onDone }: { onClose: () => void; onDone: () => void }) => {
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    if (newPassword.length < 12) return setError('Mật khẩu mới phải có ít nhất 12 ký tự.');
+    if (newPassword !== confirmPassword) return setError('Hai lần nhập mật khẩu mới không khớp.');
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/admin/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.message || 'Không thể đổi mật khẩu.');
+        return;
+      }
+      onDone();
+    } catch {
+      setError('Không thể kết nối máy chủ. Vui lòng thử lại.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[85] flex items-center justify-center bg-slate-950/60 p-4" role="dialog" aria-modal="true" aria-label="Đổi mật khẩu">
+      <form onSubmit={submit} className="w-full max-w-sm border border-neutral-200 bg-white p-5 shadow-2xl">
+        <h2 className="flex items-center gap-2 text-sm font-bold text-slate-950"><KeyRound className="h-4 w-4 text-red-700" />Đổi mật khẩu</h2>
+        <div className="mt-4 space-y-3">
+          <Field label="Mật khẩu hiện tại">
+            <input type="password" autoComplete="current-password" className={fieldClass} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required />
+          </Field>
+          <Field label="Mật khẩu mới (tối thiểu 12 ký tự)">
+            <input type="password" autoComplete="new-password" className={fieldClass} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required />
+          </Field>
+          <Field label="Nhập lại mật khẩu mới">
+            <input type="password" autoComplete="new-password" className={fieldClass} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+          </Field>
+        </div>
+        {error && <p role="alert" className="mt-3 text-xs text-red-700">{error}</p>}
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={onClose} className="min-h-10 border border-neutral-300 bg-white px-4 text-xs font-bold hover:bg-neutral-50">Hủy</button>
+          <button type="submit" disabled={submitting} className="min-h-10 bg-red-700 px-4 text-xs font-bold text-white hover:bg-red-800 disabled:opacity-60">
+            {submitting ? 'Đang lưu...' : 'Đổi mật khẩu'}
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
