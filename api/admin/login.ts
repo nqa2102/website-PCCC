@@ -1,4 +1,4 @@
-import { getDb, verifyPassword, createSessionToken, hashPassword } from '../_db';
+import { getDb, verifyPassword, createSessionToken, hashPassword } from '../_db.js';
 
 // Giới hạn đăng nhập sai trong cửa sổ 15 phút
 const WINDOW_MINUTES = 15;

@@ -1,4 +1,4 @@
-import { getDb, requireAdminRole, canPublish, ROLE_ACCESS } from '../_db';
+import { getDb, requireAdminRole, canPublish, ROLE_ACCESS } from '../_db.js';
 
 export default async function handler(req: any, res: any) {
   // GET: Lấy danh sách hồ sơ kiểm định & tài liệu kỹ thuật

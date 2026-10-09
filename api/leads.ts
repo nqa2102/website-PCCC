@@ -1,4 +1,4 @@
-import { getDb, requireAdminRole, ROLE_ACCESS } from './_db';
+import { getDb, requireAdminRole, ROLE_ACCESS } from './_db.js';
 
 const LEAD_STATUSES = ['new', 'contacted', 'qualified', 'closed', 'lost'];
 const LEAD_PRIORITIES = ['high', 'medium', 'low'];

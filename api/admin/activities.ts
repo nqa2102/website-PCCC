@@ -1,4 +1,4 @@
-import { getDb, requireAdminRole, ALL_ROLES } from '../_db';
+import { getDb, requireAdminRole, ALL_ROLES } from '../_db.js';
 
 export default async function handler(req: any, res: any) {
   const user = await requireAdminRole(req, res, ALL_ROLES);

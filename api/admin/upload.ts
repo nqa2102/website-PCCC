@@ -1,5 +1,5 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
-import { requireAdminRole, ROLE_ACCESS } from '../_db';
+import { requireAdminRole, ROLE_ACCESS } from '../_db.js';
 
 // Cấu hình theo loại tệp: ảnh hiển thị trên website và PDF hồ sơ/chứng nhận để tải về
 const UPLOAD_RULES = {

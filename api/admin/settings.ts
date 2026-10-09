@@ -1,4 +1,4 @@
-import { getDb, requireAdminRole, ROLE_ACCESS } from '../_db';
+import { getDb, requireAdminRole, ROLE_ACCESS } from '../_db.js';
 
 export default async function handler(req: any, res: any) {
   // GET: Lấy thông tin công ty / cấu hình

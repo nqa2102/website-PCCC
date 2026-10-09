@@ -1,4 +1,4 @@
-import { requireAdminRole, ALL_ROLES } from '../_db';
+import { requireAdminRole, ALL_ROLES } from '../_db.js';
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'GET') {

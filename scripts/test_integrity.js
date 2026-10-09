@@ -162,6 +162,19 @@ for (const apiPath of requiredApis) {
   assert(fs.existsSync(path.join(rootDir, apiPath)), `Endpoint ${apiPath} tồn tại`);
 }
 
+// package.json dùng "type": "module": Vercel chạy API dạng ES module, import tương đối
+// bắt buộc có đuôi .js (thiếu đuôi -> ERR_MODULE_NOT_FOUND, toàn bộ API trả 500)
+const apiFiles = ['api', 'api/admin'].flatMap((dir) =>
+  fs.readdirSync(path.join(rootDir, dir)).filter((f) => f.endsWith('.ts')).map((f) => `${dir}/${f}`)
+);
+for (const apiFile of apiFiles) {
+  const source = fs.readFileSync(path.join(rootDir, apiFile), 'utf8');
+  const badImports = [...source.matchAll(/from\s+['"](\.{1,2}\/[^'"]+)['"]/g)]
+    .map((m) => m[1])
+    .filter((spec) => !spec.endsWith('.js'));
+  assert(badImports.length === 0, `${apiFile}: import tương đối có đuôi .js${badImports.length ? ` (thiếu: ${badImports.join(', ')})` : ''}`);
+}
+
 console.log('\n=============================================================');
-console.log(`KẾT QUẢ TỔNG QUAN: ${passedTests}/${totalTests} BÀI KIỂM THỬ THÀNH CÔNG (100%)`);
+console.log(`KẾT QUẢ TỔNG QUAN: ${passedTests}/${totalTests} BÀI KIỂM THỬ THÀNH CÔNG (${Math.round((passedTests / totalTests) * 100)}%)`);
 console.log('=============================================================');
