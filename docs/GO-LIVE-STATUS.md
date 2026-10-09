@@ -152,6 +152,13 @@
 - Trình duyệt: bản build phục vụ kèm đúng header CSP → trang chủ hiển thị bình thường, **0 lỗi console**. Admin với vai trò editor chỉ thấy Tổng quan/Sản phẩm/Nội dung; "Đã công bố" bị khóa; không có nút xóa; có ô tải ảnh.
 - **Chưa kiểm thử với Neon và Vercel Blob thật.**
 
+### Hạ tầng Vercel/Neon & lỗi API trên Vercel (09/10/2026)
+- Vercel: `ADMIN_SESSION_SECRET` (ẩn, 3 môi trường), Blob store `apex-pccc-media` (public, sin1), Neon `apex-pccc-db` (Singapore) đã kết nối (Production + Preview), tên miền `apexdoor.net` + `www` (308) đã gắn, chờ DNS.
+- Neon: đã chạy `sql/neon_schema.sql` (8 bảng, MST `0111651857`, website `https://apexdoor.net`); đã tạo tài khoản admin đầu tiên.
+- **Lỗi nghiêm trọng đã sửa:** mọi `/api/*` trên Vercel trả 500 (`ERR_MODULE_NOT_FOUND`) vì `"type": "module"` yêu cầu import tương đối có đuôi `.js`. Đã thêm đuôi `.js` và kiểm tra tự động trong `scripts/test_integrity.js` (55/55).
+- Kiểm thử trên preview với Neon thật: `/api/public-content` → `isDatabaseLive: true`, MST đọc từ Neon; `/api/admin/products`, `/api/leads`, `/api/admin/me` → 401 khi chưa đăng nhập; đăng nhập sai → 401, bảng `login_attempts` hoạt động.
+- Lưu ý: Preview và Production đang dùng **chung một database Neon**.
+
 ### Việc còn lại (chưa làm)
 - Xác minh chứng nhận kiểm định và danh sách "đối tác" (`PARTNER_LOGOS`: Mitsubishi, Hitachi...).
 - Gắn `apexdoor.net` trên Vercel + DNS Mắt Bão (code đã cập nhật sitemap, robots, canonical, og, JSON-LD).
