@@ -85,6 +85,8 @@ export default async function handler(req: any, res: any) {
     `;
 
     if (!users || users.length === 0) {
+      // Chỉ ghi log phía máy chủ (không ghi mật khẩu); phản hồi cho trình duyệt giữ nguyên để không lộ email hợp lệ
+      console.warn(`Đăng nhập thất bại: không tìm thấy tài khoản đang hoạt động cho ${cleanEmail}`);
       verifyPassword(cleanPassword, DUMMY_HASH);
       await recordAttempt(false);
       return res.status(401).json({ error: 'InvalidCredentials', message: 'Email hoặc mật khẩu không chính xác.' });
@@ -93,6 +95,11 @@ export default async function handler(req: any, res: any) {
     const admin = users[0];
     const isMatch = verifyPassword(cleanPassword, admin.password_hash);
     if (!isMatch) {
+      const storedHash = String(admin.password_hash || '');
+      console.warn(
+        `Đăng nhập thất bại: sai mật khẩu cho ${cleanEmail} (độ dài mật khẩu nhận: ${cleanPassword.length}, ` +
+          `định dạng hash: ${/^[0-9a-f]{32}:[0-9a-f]{128}$/.test(storedHash) ? 'hợp lệ' : `KHÔNG hợp lệ, dài ${storedHash.length}`})`
+      );
       await recordAttempt(false);
       return res.status(401).json({ error: 'InvalidCredentials', message: 'Email hoặc mật khẩu không chính xác.' });
     }
