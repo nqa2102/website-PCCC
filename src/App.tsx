@@ -2,6 +2,8 @@ import React, { lazy, Suspense, useState, useEffect, useRef } from 'react';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { QuickContactWidget } from './components/QuickContactWidget';
+import { CookieConsent } from './components/CookieConsent';
+import { installContactClickTracking, loadTracking, trackPageView } from './lib/tracking';
 
 import { HomePage } from './pages/HomePage';
 import { applySeo, isProductCategory, pathForRoute, readRoute, type AppRoute } from './routing';
@@ -20,8 +22,9 @@ const LiveChatModal = lazy(() => import('./components/LiveChatModal').then((modu
 const SearchModal = lazy(() => import('./components/SearchModal').then((module) => ({ default: module.SearchModal })));
 const AdminPortal = lazy(() => import('./admin/AdminPortal').then((module) => ({ default: module.AdminPortal })));
 
+// Chiếm trọn màn hình khi trang đang tải để chân trang không nhảy xuống (giảm CLS)
 const PageFallback = () => (
-  <div className="flex min-h-[45vh] items-center justify-center bg-neutral-50" role="status">
+  <div className="flex min-h-svh items-center justify-center bg-neutral-50" role="status">
     <span className="h-8 w-8 animate-spin rounded-full border-2 border-slate-200 border-t-red-700" />
     <span className="sr-only">Đang tải nội dung</span>
   </div>
@@ -58,7 +61,16 @@ export default function App() {
 
   useEffect(() => {
     applySeo(isAdmin ? 'admin' : activeTab);
+    // Không đo lường trang quản trị
+    if (!isAdmin) trackPageView();
   }, [activeTab, isAdmin, targetProductId, targetSolutionId, targetProjectId, targetDocId, targetArticleId]);
+
+  // Tải mã đo lường nếu khách đã đồng ý từ lần trước; ghi nhận bấm gọi / Zalo
+  useEffect(() => {
+    if (isAdmin) return;
+    loadTracking();
+    return installContactClickTracking();
+  }, [isAdmin]);
 
   // Scroll to top when changing tabs
   useEffect(() => {
@@ -219,6 +231,8 @@ export default function App() {
         onOpenChat={() => setChatModalOpen(true)}
         onOpenQuote={() => handleOpenQuote()}
       />
+
+      <CookieConsent onNavigatePrivacy={() => handleNavigate('privacy')} />
 
       {/* Interactive Modals */}
       <Suspense fallback={null}>

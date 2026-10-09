@@ -129,4 +129,5 @@ export interface WebsiteLeadInput {
   message?: string;
   consent: boolean;
   website?: string;
+  formName?: 'quote' | 'contact';
 }

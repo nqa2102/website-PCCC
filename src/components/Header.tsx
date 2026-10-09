@@ -113,6 +113,7 @@ export const Header: React.FC<HeaderProps> = ({
             <a 
               href={company.hotlineHref}
               className="flex items-center gap-2 text-left group"
+              aria-label={`Gọi hotline ${company.hotlineDisplay}`}
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-red-50 flex items-center justify-center text-red-600 group-hover:bg-red-600 group-hover:text-white transition-colors">
                 <Phone className="w-4 h-4" />

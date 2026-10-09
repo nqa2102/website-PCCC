@@ -111,6 +111,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
         topic: `Yêu cầu báo giá: ${currentProd}`,
         message: composedMessage,
         consent: true,
+        formName: 'quote',
       });
       setSubmitted(true);
     } catch {

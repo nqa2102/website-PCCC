@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Bot, ShieldCheck, Flame, User, CheckCheck, Phone, Calculator, MessageCircle } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
 import { ApexAvatar } from './brand';
+import { trackContactClick } from '../lib/tracking';
 
 interface LiveChatModalProps {
   isOpen: boolean;
@@ -63,8 +64,10 @@ export const LiveChatModal: React.FC<LiveChatModalProps> = ({
       onClose();
       onOpenQuote();
     } else if (action.type === 'call') {
+      trackContactClick('phone');
       window.location.href = company.hotlineHref;
     } else if (action.type === 'zalo') {
+      trackContactClick('zalo');
       window.open(company.zaloHref, '_blank');
     }
   };

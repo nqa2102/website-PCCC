@@ -3,6 +3,7 @@ import { Phone, MapPin, ShieldCheck, ChevronRight, FileCheck, Mail } from 'lucid
 import { useLiveData } from '../admin/adminData';
 import { ApexBrandLogo } from './brand';
 import { pathForRoute } from '../routing';
+import { OPEN_COOKIE_SETTINGS_EVENT, trackingConfigured } from '../lib/tracking';
 
 interface FooterProps {
   onNavigate: (tab: string, itemId?: string) => void;
@@ -244,6 +245,18 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             >
               Chính sách bảo mật
             </a>
+            {trackingConfigured && (
+              <>
+                <span>·</span>
+                <button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new Event(OPEN_COOKIE_SETTINGS_EVENT))}
+                  className="hover:text-neutral-300"
+                >
+                  Cài đặt cookie
+                </button>
+              </>
+            )}
             <span>·</span>
             <a
               href="/admin"
