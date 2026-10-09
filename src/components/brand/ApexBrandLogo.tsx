@@ -302,7 +302,7 @@ export const ApexBrandLogo: React.FC<ApexBrandLogoProps> = ({
         href={href}
         onClick={handleAnchorClick}
         className="group inline-flex items-center text-left focus:outline-hidden hover:opacity-95 transition-opacity cursor-pointer"
-        aria-label="Về trang chủ APEX"
+        title="Về trang chủ APEX"
       >
         {horizontalContent}
       </a>

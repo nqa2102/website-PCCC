@@ -118,10 +118,14 @@ export default async function handler(req: any, res: any) {
       `;
 
       // 4. Gửi email thông báo nội bộ qua Resend nếu có cấu hình API Key
-      if (process.env.RESEND_API_KEY) {
+      // NOTIFICATION_EMAIL: một hoặc nhiều địa chỉ nhận, phân tách bằng dấu phẩy
+      const notifyTo = (process.env.NOTIFICATION_EMAIL || '').split(',').map((item) => item.trim()).filter(Boolean);
+      if (!process.env.RESEND_API_KEY || notifyTo.length === 0) {
+        console.warn('Chưa gửi email báo lead mới: thiếu RESEND_API_KEY hoặc NOTIFICATION_EMAIL.');
+      } else {
         try {
-          const notifyTo = process.env.NOTIFICATION_EMAIL || 'contact@apexdoor.net';
-          await fetch('https://api.resend.com/emails', {
+          const cleanEmail = email ? String(email).trim() : '';
+          const mailRes = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
@@ -130,7 +134,9 @@ export default async function handler(req: any, res: any) {
             body: JSON.stringify({
               // Đặt RESEND_FROM (vd: "APEX Website <thongbao@apexdoor.net>") sau khi xác thực tên miền trên Resend
               from: process.env.RESEND_FROM || 'APEX Website <onboarding@resend.dev>',
-              to: [notifyTo],
+              to: notifyTo,
+              // Bấm "Trả lời" trong email là trả lời thẳng cho khách (nếu khách để lại email)
+              ...(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) ? { reply_to: cleanEmail } : {}),
               subject: `[APEX PCCC] Khách hàng mới: ${String(fullName).trim()} - ${String(phone).trim()}`,
               html: `
                 <h2>Có yêu cầu tư vấn mới từ website APEX VN</h2>
@@ -146,6 +152,10 @@ export default async function handler(req: any, res: any) {
               `,
             }),
           });
+          if (!mailRes.ok) {
+            // Lead vẫn đã lưu trong Neon; chỉ ghi log để kiểm tra cấu hình Resend
+            console.error('Resend từ chối gửi email báo lead:', mailRes.status, await mailRes.text().catch(() => ''));
+          }
         } catch (mailErr) {
           console.error('Lỗi gửi email thông báo qua Resend:', mailErr);
         }

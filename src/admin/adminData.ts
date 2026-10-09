@@ -3,6 +3,7 @@ import { COMPANY_INFO } from '../data/companyData';
 import { PRODUCTS, TECHNICAL_DOCS, NEWS_ARTICLES, HERO_IMAGE } from '../data/mockData';
 import type { Product, TechnicalDoc, Project, NewsArticle } from '../types';
 import type { AdminCompany, AdminContent, AdminDocument, AdminProduct, WebsiteLeadInput } from './adminTypes';
+import { trackLead } from '../lib/tracking';
 
 // Thông tin doanh nghiệp đã xác minh theo giấy chứng nhận ĐKDN, dùng để điền sẵn khi Neon chưa có bản ghi cấu hình.
 export const createDefaultAdminCompany = (): AdminCompany => ({
@@ -333,4 +334,6 @@ export const appendWebsiteLead = async (input: WebsiteLeadInput) => {
     const data = await res.json().catch(() => ({}));
     throw new Error(data.message || 'Không thể gửi yêu cầu lúc này.');
   }
+  // Chỉ ghi chuyển đổi khi máy chủ đã lưu lead thành công (không gửi dữ liệu khách cho bên đo lường)
+  trackLead(input.formName || 'contact');
 };

@@ -17,7 +17,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => (
     <div className="mx-auto max-w-5xl px-5 sm:px-8">
       <p className="section-kicker">Dữ liệu khách hàng</p>
       <h1 className="mt-4 max-w-3xl text-3xl font-semibold leading-tight text-slate-950 sm:text-5xl">Chính sách bảo mật và sử dụng thông tin</h1>
-      <p className="mt-5 max-w-3xl text-sm leading-7 text-slate-600">Cập nhật ngày 02/10/2026. Chính sách này áp dụng cho thông tin khách hàng chủ động gửi qua website APEX Việt Nam.</p>
+      <p className="mt-5 max-w-3xl text-sm leading-7 text-slate-600">Cập nhật ngày 09/10/2026. Chính sách này áp dụng cho thông tin khách hàng chủ động gửi qua website APEX Việt Nam.</p>
 
       <div className="mt-10 grid gap-5 lg:grid-cols-[1.4fr_0.7fr]">
         <article className="border border-slate-200 bg-white p-6 sm:p-9">
@@ -27,7 +27,8 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => (
             <section><h2 className="text-lg font-semibold text-slate-950">3. Mục đích sử dụng</h2><p className="mt-2">Tiếp nhận yêu cầu tư vấn, liên hệ lại, sắp xếp khảo sát và theo dõi chất lượng phục vụ. APEX không công bố hoặc bán thông tin khách hàng cho mục đích quảng cáo của bên khác.</p></section>
             <section><h2 className="text-lg font-semibold text-slate-950">4. Thời gian và nơi lưu trữ</h2><p className="mt-2">Dữ liệu được lưu trữ bảo mật trên hệ thống máy chủ cơ sở dữ liệu được mã hóa do APEX quản lý. Chỉ nhân sự được phân quyền quản trị mới có thể tiếp cận để xử lý hồ sơ. Thông tin được lưu trong thời gian cần thiết để chăm sóc khách hàng hoặc theo quy định pháp luật; khách hàng có quyền yêu cầu xóa bất kỳ lúc nào.</p></section>
             <section><h2 className="text-lg font-semibold text-slate-950">5. Phạm vi chia sẻ</h2><p className="mt-2">Thông tin chỉ được chuyển cho nhân sự phụ trách kinh doanh, kỹ thuật hoặc quản lý của APEX khi cần xử lý yêu cầu. Việc chuyển cho nhà cung cấp hạ tầng chỉ thực hiện trong phạm vi cần thiết và có kiểm soát.</p></section>
-            <section><h2 className="text-lg font-semibold text-slate-950">6. Liên hệ về dữ liệu</h2><p className="mt-2">Khách hàng có thể gọi Hotline {COMPANY_INFO.hotlineDisplay} hoặc gửi email tới {COMPANY_INFO.email} để yêu cầu kiểm tra, chỉnh sửa, hạn chế hoặc xóa thông tin đã gửi.</p></section>
+            <section><h2 className="text-lg font-semibold text-slate-950">6. Cookie và công cụ đo lường</h2><p className="mt-2">Khi khách hàng bấm "Đồng ý" trên thông báo cookie, website sử dụng Google Analytics, Google Ads và Meta Pixel để đo lượt truy cập, nguồn truy cập và hiệu quả quảng cáo (số lượt gửi yêu cầu, bấm gọi, bấm Zalo). Các công cụ này không nhận họ tên, số điện thoại hay nội dung khách hàng nhập vào biểu mẫu. Nếu chọn "Từ chối", các công cụ này không được tải. Khách hàng có thể đổi lựa chọn bất kỳ lúc nào qua liên kết "Cài đặt cookie" ở chân trang.</p></section>
+            <section><h2 className="text-lg font-semibold text-slate-950">7. Liên hệ về dữ liệu</h2><p className="mt-2">Khách hàng có thể gọi Hotline {COMPANY_INFO.hotlineDisplay} hoặc gửi email tới {COMPANY_INFO.email} để yêu cầu kiểm tra, chỉnh sửa, hạn chế hoặc xóa thông tin đã gửi.</p></section>
           </div>
         </article>
 

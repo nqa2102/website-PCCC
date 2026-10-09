@@ -29,7 +29,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
     setSubmitting(true);
     setSubmitError('');
     try {
-      await appendWebsiteLead({ fullName, phone, email, topic, message, consent, website });
+      await appendWebsiteLead({ fullName, phone, email, topic, message, consent, website, formName: 'contact' });
       setSubmitted(true);
     } catch {
       setSubmitError('Chưa thể gửi yêu cầu lúc này. Vui lòng gọi hoặc nhắn Zalo để được hỗ trợ ngay.');
@@ -85,7 +85,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
                 <div key={item.label} className={`${index > 0 ? 'border-t border-neutral-100 pt-4 ' : ''}flex items-start gap-3`}>
                   <MapPin className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm">{item.label}</h4>
+                    <h3 className="font-bold text-slate-900 text-sm">{item.label}</h3>
                     <p className="text-slate-600 mt-0.5">{item.value}</p>
                   </div>
                 </div>
@@ -94,7 +94,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
               <div className="border-t border-neutral-100 pt-4 flex items-start gap-3">
                 <UserRound className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm">Người đại diện pháp luật</h4>
+                  <h3 className="font-bold text-slate-900 text-sm">Người đại diện pháp luật</h3>
                   <p className="text-slate-600 mt-0.5">{company.representative} - {company.representativeTitle}</p>
                 </div>
               </div>
@@ -167,8 +167,9 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenQuote, onNavigat
                     />
                   </div>
                   <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Nhu cầu cần hỗ trợ</label>
+                    <label htmlFor="contact-topic" className="font-semibold text-slate-700 block mb-1">Nhu cầu cần hỗ trợ</label>
                     <select
+                      id="contact-topic"
                       value={topic}
                       onChange={(e) => setTopic(e.target.value)}
                       className="w-full px-3 py-2 border border-neutral-200 rounded-lg focus:outline-hidden focus:border-red-500 bg-white"
