@@ -100,6 +100,9 @@ const SEO: Record<string, { title: string; description: string }> = {
   },
 };
 
+// Tên miền chính thức: canonical/og luôn trỏ về đây, kể cả khi truy cập qua www hoặc *.vercel.app
+export const SITE_URL = 'https://apexdoor.net';
+
 const setMeta = (selector: string, attribute: string, value: string) => {
   const element = document.querySelector<HTMLMetaElement>(selector);
   element?.setAttribute(attribute, value);
@@ -112,9 +115,12 @@ export const applySeo = (tab: string, itemName?: string) => {
   setMeta('meta[name="description"]', 'content', base.description);
   setMeta('meta[property="og:title"]', 'content', title);
   setMeta('meta[property="og:description"]', 'content', base.description);
-  setMeta('meta[property="og:url"]', 'content', window.location.href.split('#')[0]);
-  setMeta('meta[property="og:image"]', 'content', `${window.location.origin}/og-image.png`);
-  setMeta('meta[name="twitter:image"]', 'content', `${window.location.origin}/og-image.png`);
+  // Chỉ giữ tham số nhóm sản phẩm (đã khai báo trong sitemap), bỏ utm_* và tham số theo dõi khác
+  const group = new URLSearchParams(window.location.search).get('nhom');
+  const pageUrl = `${SITE_URL}${window.location.pathname}${group ? `?nhom=${encodeURIComponent(group)}` : ''}`;
+  setMeta('meta[property="og:url"]', 'content', pageUrl);
+  setMeta('meta[property="og:image"]', 'content', `${SITE_URL}/og-image.png`);
+  setMeta('meta[name="twitter:image"]', 'content', `${SITE_URL}/og-image.png`);
 
   let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonical) {
@@ -122,5 +128,5 @@ export const applySeo = (tab: string, itemName?: string) => {
     canonical.rel = 'canonical';
     document.head.appendChild(canonical);
   }
-  canonical.href = `${window.location.origin}${window.location.pathname}`;
+  canonical.href = pageUrl;
 };

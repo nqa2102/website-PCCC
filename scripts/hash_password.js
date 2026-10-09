@@ -1,5 +1,5 @@
 // Công cụ hỗ trợ tạo chuỗi băm mật khẩu cho tài khoản quản trị APEX (Neon PostgreSQL)
-// Cách dùng: node scripts/hash_password.js "mat_khau_moi_cua_ban" "email_quan_tri@apex.vn"
+// Cách dùng: node scripts/hash_password.js "mat_khau_moi_cua_ban" "email_quan_tri@apexdoor.net"
 
 import crypto from 'crypto';
 
@@ -10,7 +10,7 @@ function hashPassword(password) {
 }
 
 const password = process.argv[2] || 'ApexSafe@2026!';
-const email = (process.argv[3] || 'admin@apex.vn').toLowerCase().trim();
+const email = (process.argv[3] || 'admin@apexdoor.net').toLowerCase().trim();
 const hash = hashPassword(password);
 const id = 'usr-' + Date.now();
 

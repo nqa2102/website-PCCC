@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://website-pccc.vercel.app/sitemap.xml
+Sitemap: https://apexdoor.net/sitemap.xml

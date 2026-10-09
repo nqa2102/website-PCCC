@@ -51,7 +51,7 @@ assert(verifyPassword('WrongPassword123', storedHash) === false, 'Từ chối m�
 
 // Test HMAC Session
 const mockSecret = 'test-secret-32-chars-long-123456';
-const payload = { id: 'usr-001', email: 'admin@apex.vn', role: 'admin', fullName: 'Admin' };
+const payload = { id: 'usr-001', email: 'admin@apexdoor.net', role: 'admin', fullName: 'Admin' };
 const data = Buffer.from(JSON.stringify({ ...payload, exp: Date.now() + 60000 })).toString('base64url');
 const sig = crypto.createHmac('sha256', mockSecret).update(data).digest('base64url');
 const token = `${data}.${sig}`;
@@ -104,11 +104,11 @@ const indexPath = path.join(rootDir, 'index.html');
 assert(fs.existsSync(robotsPath), 'public/robots.txt tồn tại');
 const robotsContent = fs.readFileSync(robotsPath, 'utf8');
 assert(robotsContent.includes('Disallow: /admin'), 'robots.txt chặn bot lập chỉ mục /admin');
-assert(robotsContent.includes('Sitemap: https://website-pccc.vercel.app/sitemap.xml'), 'robots.txt khai báo sitemap');
+assert(robotsContent.includes('Sitemap: https://apexdoor.net/sitemap.xml'), 'robots.txt khai báo sitemap');
 
 assert(fs.existsSync(sitemapPath), 'public/sitemap.xml tồn tại');
 const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
-assert(sitemapContent.includes('<loc>https://website-pccc.vercel.app/</loc>'), 'sitemap.xml có URL trang chủ');
+assert(sitemapContent.includes('<loc>https://apexdoor.net/</loc>'), 'sitemap.xml có URL trang chủ');
 assert(!sitemapContent.includes('/admin'), 'sitemap.xml không chứa đường dẫn /admin');
 
 assert(fs.existsSync(ogImagePath), 'public/og-image.png tồn tại');

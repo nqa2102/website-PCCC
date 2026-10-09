@@ -1241,7 +1241,7 @@ const SettingsView = ({
           <Field label="Chức danh"><input className={fieldClass} value={state.company.representativeTitle} onChange={(e) => setCompany('representativeTitle', e.target.value)} /></Field>
           <Field label="Hotline"><input className={fieldClass} value={state.company.hotline} onChange={(e) => setCompany('hotline', e.target.value)} /></Field>
           <Field label="Zalo liên hệ"><input className={fieldClass} value={state.company.zalo} onChange={(e) => setCompany('zalo', e.target.value)} /></Field>
-          <Field label="Email chính thức"><input type="email" className={fieldClass} value={state.company.email || ''} onChange={(e) => setCompany('email', e.target.value)} placeholder="contact@apex.vn" /></Field>
+          <Field label="Email chính thức"><input type="email" className={fieldClass} value={state.company.email || ''} onChange={(e) => setCompany('email', e.target.value)} placeholder="contact@apexdoor.net" /></Field>
           <Field label="Thời gian phản hồi"><input className={fieldClass} value={state.company.responseTime} onChange={(e) => setCompany('responseTime', e.target.value)} /></Field>
           <Field label="Khu vực phục vụ"><input className={fieldClass} value={state.company.serviceArea} onChange={(e) => setCompany('serviceArea', e.target.value)} /></Field>
           <Field label="Tiêu đề SEO mặc định" wide><input className={fieldClass} value={state.company.defaultSeoTitle} onChange={(e) => setCompany('defaultSeoTitle', e.target.value)} /></Field>

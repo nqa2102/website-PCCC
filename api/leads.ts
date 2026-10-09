@@ -120,7 +120,7 @@ export default async function handler(req: any, res: any) {
       // 4. Gửi email thông báo nội bộ qua Resend nếu có cấu hình API Key
       if (process.env.RESEND_API_KEY) {
         try {
-          const notifyTo = process.env.NOTIFICATION_EMAIL || 'contact@apex.vn';
+          const notifyTo = process.env.NOTIFICATION_EMAIL || 'contact@apexdoor.net';
           await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
@@ -128,7 +128,8 @@ export default async function handler(req: any, res: any) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              from: 'APEX Website <onboarding@resend.dev>',
+              // Đặt RESEND_FROM (vd: "APEX Website <thongbao@apexdoor.net>") sau khi xác thực tên miền trên Resend
+              from: process.env.RESEND_FROM || 'APEX Website <onboarding@resend.dev>',
               to: [notifyTo],
               subject: `[APEX PCCC] Khách hàng mới: ${String(fullName).trim()} - ${String(phone).trim()}`,
               html: `

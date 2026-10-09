@@ -7,6 +7,8 @@ export const COMPANY_INFO = {
   taxCode: '0111651857',
   registeredDate: '06/10/2026',
   headOffice: 'Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, Thành phố Hà Nội',
+  website: 'https://apexdoor.net',
+  email: 'contact@apexdoor.net',
   representative: 'Nguyễn Thị Ngọc Anh',
   representativeTitle: 'Giám đốc',
   foundedYear: '2026',

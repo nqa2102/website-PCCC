@@ -52,7 +52,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-red-500 shrink-0" />
-                <a href={`mailto:${company.email || 'contact@apex.vn'}`}>Email: {company.email || 'contact@apex.vn'}</a>
+                <a href={`mailto:${company.email}`}>Email: {company.email}</a>
               </div>
             </div>
           </div>
