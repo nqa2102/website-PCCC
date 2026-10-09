@@ -11,7 +11,7 @@
 | :--- | :--- | :---: | :---: | :--- |
 | **GĐ0** | **Khẩn cấp bảo mật `/admin`** | **P0** | 🟢 **DONE (100%)** | Đã xóa triệt để mật khẩu cứng `apex2026` & nút bypass khỏi client bundle (0 kết quả trong dist). Đã thay thế bằng xác thực Scrypt/HMAC. |
 | **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟡 **Code xong nhóm 1–5; chờ cấu hình Neon/Blob và UAT dữ liệu thật** | Schema `sql/neon_schema.sql` (7 bảng), 11 Serverless API (`/api/*`), đồng bộ Neon ngầm ra website công khai (`/api/public-content`), thông báo lead qua Resend API. Đã gỡ sạch Supabase. |
-| **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟡 **Chưa đạt: MST giả `0111222333`, chứng nhận & đối tác chưa xác minh** | Loại bỏ toàn bộ dữ liệu mock/khuếch đại. Đồng bộ 100% thông tin pháp lý thực tế: Công ty TNHH Apex VN, Giám đốc Nguyễn Thị Ngọc Anh, Hotline `0566 38 5555`, 4 địa chỉ thực (Sơn Đồng, Trần Thái Tông, Thạch Thất, Đông Anh), mốc thành lập 2026. |
+| **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟡 **MST đã cập nhật theo GCN ĐKDN; còn chứng nhận kiểm định & đối tác chưa xác minh** | Loại bỏ toàn bộ dữ liệu mock/khuếch đại. Đồng bộ 100% thông tin pháp lý thực tế: Công ty TNHH Apex VN, Giám đốc Nguyễn Thị Ngọc Anh, Hotline `0566 38 5555`, 4 địa chỉ thực (Sơn Đồng, Trần Thái Tông, Thạch Thất, Đông Anh), mốc thành lập 2026. |
 | **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, trang lỗi 404 thương hiệu APEX, cấu hình `sitemap.xml` (19 URL), `robots.txt`, `og-image.png` (1200x630), Schema.org Organization/Product. |
 | **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass)** / 🟡 **Chờ kết nối DB** | Script kiểm thử tự động `scripts/test_integrity.js` đạt 43/43 PASS (100%), `npm run lint` PASS (0 lỗi), `npm run build` PASS (538ms). Chờ người dùng nhập `DATABASE_URL` trên Vercel để test live data. |
 | **GĐ5** | **Go-live chính thức** | **P0** | ⚪ **NOT STARTED** | Chờ nghiệm thu nội bộ và gắn DNS tên miền chính thức của doanh nghiệp. |
@@ -28,8 +28,8 @@
 | **3** | Lead từ website được lưu vào Neon Database | Biểu mẫu gọi `POST /api/leads` lưu trực tiếp bảng `leads` trong Neon | 🟢 **ĐẠT** | Endpoint `api/leads.ts` sẵn sàng, có honeypot chống bot spam. |
 | **4** | Có thông báo email khi có lead mới | Tích hợp gửi email tức thì qua Resend REST API trong `api/leads.ts` khi có cấu hình `RESEND_API_KEY` | 🟢 **ĐẠT** | Code tích hợp tại dòng 113-145 của `api/leads.ts`. |
 | **5** | Dữ liệu nội dung đồng bộ từ Neon | API `/api/public-content.ts` và hook `useLiveData()` tự động fetch và cập nhật dữ liệu mới nhất từ Neon khi online | 🟢 **ĐẠT** | Endpoint sẵn sàng, fallback tĩnh an toàn khi offline. |
-| **6** | Thông tin doanh nghiệp hiển thị đầy đủ, chính xác pháp lý | Tên pháp lý: Công ty TNHH Apex VN; ĐDPL: Nguyễn Thị Ngọc Anh - Giám đốc; MST: `0111222333`; Email: `contact@apex.vn`; Năm: 2026 | 🟢 **ĐẠT** | Đồng bộ tại `companyData.ts`, `Footer.tsx`, `PrivacyPage.tsx`, `index.html`. |
-| **7** | Địa chỉ trụ sở và nhà máy chính xác | Trụ sở 1: Số 10 ngõ 25, Sơn Đồng, Hà Nội; Trụ sở 2: 11 Trần Thái Tông, Cầu Giấy, Hà Nội; Nhà máy: Thạch Thất và Đông Anh | 🟢 **ĐẠT** | Xóa sạch các địa chỉ mock cũ (Diamond Flower, Cityland, Apex Tower, Bitexco). |
+| **6** | Thông tin doanh nghiệp hiển thị đầy đủ, chính xác pháp lý | Tên pháp lý: Công ty TNHH Apex VN (APEX VN COMPANY LIMITED); ĐDPL: Nguyễn Thị Ngọc Anh - Giám đốc; Mã số doanh nghiệp: `0111651857` (đăng ký lần đầu 06/10/2026); Email: `contact@apex.vn` (chưa xác minh tên miền) | 🟢 **ĐẠT** | Đồng bộ tại `companyData.ts`, `Footer.tsx`, `PrivacyPage.tsx`, `index.html`. |
+| **7** | Địa chỉ trụ sở và nhà máy chính xác | Trụ sở chính (theo GCN ĐKDN): Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, TP. Hà Nội; Văn phòng: 11 Trần Thái Tông, Cầu Giấy, Hà Nội; Nhà máy: Thạch Thất và Đông Anh | 🟢 **ĐẠT** | Xóa sạch các địa chỉ mock cũ (Diamond Flower, Cityland, Apex Tower, Bitexco). |
 | **8** | Cam kết phản hồi trung thực, không khuếch đại | "Phản hồi trong 1-2 ngày" theo đúng quy chuẩn thực tế của công ty | 🟢 **ĐẠT** | Quét 0 kết quả cho cụm từ khuếch đại "15 phút". |
 | **9** | Case study dự án khách hàng lớn được trung hòa an toàn | Tên dự án tổng quát mang tính giải pháp kỹ thuật, không tự ý công bố nhãn hiệu bên thứ ba chưa ký duyệt văn bản | 🟢 **ĐẠT** | Đã chuẩn hóa danh mục dự án trong `mockData.ts`. |
 | **10** | Trang 404 thương hiệu và điều hướng chuẩn SEO | Tạo `src/pages/NotFoundPage.tsx`, toàn bộ menu dùng thẻ `<a href>` semantic có router interceptor | 🟢 **ĐẠT** | Chuyển trang mượt mà không tải lại, giữ trọn vẹn khả năng crawl của Googlebot. |
@@ -73,7 +73,7 @@
 ### GĐ2 – Nội Dung & Pháp Lý Thực Tế
 - [x] **Task 2.1 (Nội dung thực tế)**: Chuẩn hóa case study khách hàng mang tính giải pháp kỹ thuật, không tự ý công bố đối tác khi chưa ký duyệt văn bản.
 - [x] **Task 2.2 (Thời gian)**: Chuẩn hóa mốc thời gian thành lập doanh nghiệp năm 2026.
-- [x] **Task 2.3 (Pháp lý & Đại diện)**: Cập nhật đầy đủ MST/GPKD (`0111222333`), email chính thức (`contact@apex.vn`), đại diện pháp luật (`Nguyễn Thị Ngọc Anh` - Giám đốc) ở Footer và [`src/pages/PrivacyPage.tsx`](../src/pages/PrivacyPage.tsx).
+- [x] **Task 2.3 (Pháp lý & Đại diện)**: Cập nhật mã số doanh nghiệp `0111651857` theo GCN ĐKDN (09/10/2026; trước đó là số giả `0111222333`), email chính thức (`contact@apex.vn`), đại diện pháp luật (`Nguyễn Thị Ngọc Anh` - Giám đốc) ở Footer và [`src/pages/PrivacyPage.tsx`](../src/pages/PrivacyPage.tsx).
 - [x] **Task 2.4 (Địa chỉ & Hotline)**: Cập nhật đồng bộ Hotline `0566 38 5555`, loại bỏ hoàn toàn các địa chỉ và số điện thoại mock trước đây.
 - [ ] **Task 2.5 (Nội dung/Asset)**: Tải file catalogue/bản vẽ CAD PDF thật từ phòng kỹ thuật để người dùng tải về trên trang Tài liệu.
   - *Trạng thái*: Chờ phòng kỹ thuật cung cấp bản PDF gốc.
@@ -153,7 +153,6 @@
 - **Chưa kiểm thử với Neon và Vercel Blob thật.**
 
 ### Việc còn lại (chưa làm)
-- MST giả `0111222333` trong `Footer.tsx`, `PrivacyPage.tsx`, `sql/neon_schema.sql`.
 - Xác minh chứng nhận kiểm định và danh sách "đối tác" (`PARTNER_LOGOS`: Mitsubishi, Hitachi...).
 - Email Resend dùng `onboarding@resend.dev` (cần xác thực tên miền gửi); đổi tên miền chính thức trong sitemap/robots/canonical/og.
 - SEO cho chia sẻ mạng xã hội (meta theo từng trang phía máy chủ), sitemap động.

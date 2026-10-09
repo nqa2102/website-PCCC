@@ -210,7 +210,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         {/* Bottom Bar */}
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-neutral-400 text-[11px]">
           <div>
-            © {new Date().getFullYear()} {company.legalNameUpper}. GPKD/MST: {company.taxCode || '0111222333'}. Đại diện pháp luật: {company.representative} - {company.representativeTitle}.
+            © {new Date().getFullYear()} {company.legalNameUpper}. Mã số doanh nghiệp: {company.taxCode} do Sở Tài chính TP. Hà Nội cấp ngày {company.registeredDate}. Đại diện pháp luật: {company.representative} - {company.representativeTitle}.
           </div>
           <div className="flex items-center gap-4">
             <a

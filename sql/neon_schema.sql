@@ -178,7 +178,7 @@ INSERT INTO company_settings (
 ) VALUES (
   'apex',
   'Công ty TNHH Apex VN',
-  '0111222333',
+  '0111651857',
   'APEX Việt Nam',
   'Nguyễn Thị Ngọc Anh',
   'Giám đốc',
@@ -190,13 +190,13 @@ INSERT INTO company_settings (
   'contact@apex.vn',
   'https://website-pccc.vercel.app',
   'Hương Ngải, Thạch Thất, Hà Nội; Đông Anh, Hà Nội',
-  'Số 10 ngõ 25, Sơn Đồng, Hà Nội',
+  'Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, Thành phố Hà Nội',
   '11 Trần Thái Tông, Cầu Giấy, Hà Nội',
   '2026',
   'Hỗ trợ cả ngày',
   'Phản hồi trong 1-2 ngày',
   'Toàn quốc',
-  '["Trụ sở 1: Số 10 ngõ 25, Sơn Đồng, Hà Nội", "Trụ sở 2: 11 Trần Thái Tông, Cầu Giấy, Hà Nội", "Nhà máy 1: Hương Ngải, Thạch Thất, Hà Nội", "Nhà máy 2: Đông Anh, Hà Nội"]'::jsonb,
+  '["Trụ sở chính: Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, Thành phố Hà Nội", "Văn phòng: 11 Trần Thái Tông, Cầu Giấy, Hà Nội", "Nhà máy 1: Hương Ngải, Thạch Thất, Hà Nội", "Nhà máy 2: Đông Anh, Hà Nội"]'::jsonb,
   'APEX Việt Nam - Cửa Ngăn Cháy & Giải Pháp PCCC Toàn Diện',
   'Cung cấp và thi công cửa chống cháy, cửa cuốn ngăn cháy, rèm ngăn cháy đạt chuẩn QCVN 06:2022/BXD.'
 ) ON CONFLICT (id) DO NOTHING;

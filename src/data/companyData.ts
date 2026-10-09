@@ -1,7 +1,12 @@
+// Theo Giấy chứng nhận đăng ký doanh nghiệp (đăng ký lần đầu 06/10/2026,
+// Phòng Đăng ký kinh doanh và Tài chính doanh nghiệp - Sở Tài chính TP. Hà Nội)
 export const COMPANY_INFO = {
   legalName: 'Công ty TNHH Apex VN',
   legalNameUpper: 'CÔNG TY TNHH APEX VN',
-  englishName: 'Apex VietNam Company Limited',
+  englishName: 'APEX VN COMPANY LIMITED',
+  taxCode: '0111651857',
+  registeredDate: '06/10/2026',
+  headOffice: 'Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, Thành phố Hà Nội',
   representative: 'Nguyễn Thị Ngọc Anh',
   representativeTitle: 'Giám đốc',
   foundedYear: '2026',
@@ -12,8 +17,8 @@ export const COMPANY_INFO = {
   workingHours: 'Hỗ trợ cả ngày',
   responseTime: 'Phản hồi trong 1-2 ngày',
   addresses: [
-    { label: 'Trụ sở 1', value: 'Số 10 ngõ 25, Sơn Đồng, Hà Nội' },
-    { label: 'Trụ sở 2', value: '11 Trần Thái Tông, Cầu Giấy, Hà Nội' },
+    { label: 'Trụ sở chính', value: 'Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, Thành phố Hà Nội' },
+    { label: 'Văn phòng', value: '11 Trần Thái Tông, Cầu Giấy, Hà Nội' },
     { label: 'Nhà máy 1', value: 'Hương Ngải, Thạch Thất, Hà Nội' },
     { label: 'Nhà máy 2', value: 'Đông Anh, Hà Nội' },
   ],

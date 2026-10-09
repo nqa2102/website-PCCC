@@ -1251,7 +1251,7 @@ const SettingsView = ({
               className={textareaClass}
               value={state.company.addresses.join('\n')}
               onChange={(e) => setCompany('addresses', e.target.value.split('\n'))}
-              placeholder="Trụ sở 1: Số 10 ngõ 25, Sơn Đồng, Hà Nội&#10;Nhà máy: Thạch Thất, Hà Nội"
+              placeholder="Trụ sở chính: Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, Thành phố Hà Nội&#10;Nhà máy: Thạch Thất, Hà Nội"
             />
           </Field>
         </div>

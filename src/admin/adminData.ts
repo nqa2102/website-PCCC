@@ -4,11 +4,10 @@ import { PRODUCTS, TECHNICAL_DOCS, NEWS_ARTICLES, HERO_IMAGE } from '../data/moc
 import type { Product, TechnicalDoc, Project, NewsArticle } from '../types';
 import type { AdminCompany, AdminContent, AdminDocument, AdminProduct, WebsiteLeadInput } from './adminTypes';
 
-// Thông tin doanh nghiệp đã xác minh (GĐ2), dùng để điền sẵn khi Neon chưa có bản ghi cấu hình.
-// Mã số thuế để trống: chỉ nhập khi có giấy chứng nhận đăng ký doanh nghiệp.
+// Thông tin doanh nghiệp đã xác minh theo giấy chứng nhận ĐKDN, dùng để điền sẵn khi Neon chưa có bản ghi cấu hình.
 export const createDefaultAdminCompany = (): AdminCompany => ({
   legalName: COMPANY_INFO.legalName,
-  taxCode: '',
+  taxCode: COMPANY_INFO.taxCode,
   brandName: 'APEX',
   representative: COMPANY_INFO.representative,
   representativeTitle: COMPANY_INFO.representativeTitle,
@@ -115,7 +114,7 @@ const mapCompany = (comp?: Partial<AdminCompany> | null) => {
     legalName: comp?.legalName || COMPANY_INFO.legalName,
     legalNameUpper: (comp?.legalName || COMPANY_INFO.legalName).toUpperCase(),
     brandName: comp?.brandName || 'APEX',
-    taxCode: comp?.taxCode || '',
+    taxCode: comp?.taxCode || COMPANY_INFO.taxCode,
     representative: comp?.representative || COMPANY_INFO.representative,
     representativeTitle: comp?.representativeTitle || COMPANY_INFO.representativeTitle,
     hotlineDisplay: rawHotline,
