@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { X, Search, FileText, ArrowRight, ShieldCheck, Box, Building } from 'lucide-react';
-import { PRODUCTS, SOLUTIONS, PROJECTS, TECHNICAL_DOCS, NEWS_ARTICLES } from '../data/mockData';
+import { SOLUTIONS } from '../data/mockData';
+import { useLiveData } from '../admin/adminData';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -13,21 +14,22 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   onClose,
   onNavigate
 }) => {
+  const { products, documents, projects } = useLiveData();
   const [searchTerm, setSearchTerm] = useState('');
 
   const searchResults = useMemo(() => {
     if (!searchTerm.trim()) {
       return {
-        products: PRODUCTS.slice(0, 3),
+        products: products.slice(0, 3),
         solutions: SOLUTIONS.slice(0, 3),
-        docs: TECHNICAL_DOCS.slice(0, 2),
+        docs: documents.slice(0, 2),
         isDefault: true
       };
     }
 
     const query = searchTerm.toLowerCase().trim();
 
-    const matchedProducts = PRODUCTS.filter(
+    const matchedProducts = products.filter(
       p => p.name.toLowerCase().includes(query) || 
            p.description.toLowerCase().includes(query) ||
            p.fireRating.toLowerCase().includes(query)
@@ -39,13 +41,13 @@ export const SearchModal: React.FC<SearchModalProps> = ({
            s.recommendedProducts.some(r => r.toLowerCase().includes(query))
     );
 
-    const matchedDocs = TECHNICAL_DOCS.filter(
+    const matchedDocs = documents.filter(
       d => d.title.toLowerCase().includes(query) ||
            d.code.toLowerCase().includes(query) ||
            d.description.toLowerCase().includes(query)
     );
 
-    const matchedProjects = PROJECTS.filter(
+    const matchedProjects = projects.filter(
       p => p.title.toLowerCase().includes(query) ||
            p.itemsSupplied.toLowerCase().includes(query) ||
            p.location.toLowerCase().includes(query)
@@ -58,7 +60,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
       projects: matchedProjects,
       isDefault: false
     };
-  }, [searchTerm]);
+  }, [searchTerm, products, documents, projects]);
 
   if (!isOpen) return null;
 

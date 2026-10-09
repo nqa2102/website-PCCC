@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Award, Wrench, CheckCircle2, FileCheck } from 'lucide-react';
 import { STEEL_DOOR_IMAGE } from '../data/mockData';
-import { COMPANY_INFO } from '../data/companyData';
+import { useLiveData } from '../admin/adminData';
 
 interface AboutPageProps {
   onOpenQuote: () => void;
@@ -9,6 +9,7 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate }) => {
+  const { company } = useLiveData();
   const coreValues = [
     { letter: 'A', icon: FileCheck, english: 'Assurance', vietnamese: 'An tâm', description: 'Cam kết minh bạch về tiêu chuẩn, hồ sơ và chất lượng trong toàn bộ quá trình triển khai.' },
     { letter: 'P', icon: ShieldCheck, english: 'Protection', vietnamese: 'Bảo vệ', description: 'Đặt sự an toàn của con người, tài sản và công trình làm mục tiêu cao nhất.' },
@@ -26,7 +27,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
             VỀ CHÚNG TÔI
           </span>
           <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white font-serif">
-            {COMPANY_INFO.legalNameUpper}
+            {company.legalNameUpper}
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mt-3 leading-relaxed">
             Cung cấp giải pháp ngăn cháy toàn diện cho nhà ở và công trình trên phạm vi toàn quốc.
@@ -47,7 +48,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
               Giải pháp ngăn cháy được cấu hình theo nhu cầu thực tế
             </h2>
             <p className="text-xs text-slate-600 leading-relaxed">
-              Thành lập năm {COMPANY_INFO.foundedYear}, {COMPANY_INFO.legalName} tập trung vào bốn nhóm sản phẩm: cửa thép ngăn cháy, cửa kính ngăn cháy, cửa cuốn ngăn cháy và rèm ngăn cháy.
+              Thành lập năm {company.foundedYear}, {company.legalName} tập trung vào bốn nhóm sản phẩm: cửa thép ngăn cháy, cửa kính ngăn cháy, cửa cuốn ngăn cháy và rèm ngăn cháy.
             </p>
             <p className="text-xs text-slate-600 leading-relaxed">
               Sản phẩm được lựa chọn theo hồ sơ thiết kế, kích thước và phụ kiện thực tế. Cửa thép ngăn cháy có cấu hình EI70, EI90 và EI120; các nhóm còn lại được tư vấn theo yêu cầu từng công trình.

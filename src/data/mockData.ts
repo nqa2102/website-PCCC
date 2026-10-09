@@ -247,36 +247,36 @@ const PROJECT_SAMPLES: Project[] = [
     location: 'Quận 7, TP. Hồ Chí Minh',
     scale: '2 tòa tháp 30 tầng - 980 căn hộ',
     itemsSupplied: 'Cung cấp cửa chống cháy, rèm ngăn cháy',
-    year: '2023 - 2024',
+    year: '2026',
     image: HERO_IMAGE,
     description: 'Cung cấp và lắp đặt trọn gói 1.850 bộ cửa thép chống cháy EI90 cho buồng thang thoát hiểm, 16 bộ rèm ngăn cháy tự động giếng trời và cửa kỹ thuật điện các tầng.',
-    client: 'Công ty TNHH Phát triển Phú Mỹ Hưng'
+    client: 'Đơn vị Phát triển Đô thị Nam Sài Gòn'
   },
   {
     id: 'nha-may-san-xuat-cong-nghiep',
-    title: 'Nhà máy sản xuất công nghiệp Pegatron',
+    title: 'Nhà máy sản xuất công nghiệp FDI Hải Phòng',
     category: 'industrial',
     categoryLabel: 'Nhà xưởng công nghiệp',
     location: 'KCN Deep C 2, Hải Phòng',
     scale: 'Khuôn viên 100.000 m² sàn',
     itemsSupplied: 'Cửa cuốn ngăn cháy, hệ thống PCCC',
-    year: '2023',
+    year: '2026',
     image: ROLLER_SHUTTER_IMAGE,
     description: 'Thi công 48 bộ cửa cuốn ngăn cháy siêu trường EI120 kích thước 8m x 6m, 120 bộ cửa thoát hiểm chống cháy có thanh đẩy panic cho toàn bộ 4 xưởng sản xuất linh kiện vi điện tử.',
-    client: 'Pegatron Technology Vietnam'
+    client: 'Tập đoàn Sản xuất Điện tử Quốc tế'
   },
   {
     id: 'trung-tam-thuong-mai-vincom',
-    title: 'Trung tâm thương mại Vincom Mega Mall',
+    title: 'Trung tâm thương mại & Dịch vụ Đô thị',
     category: 'commercial',
     categoryLabel: 'Thương mại dịch vụ',
     location: 'Nam Từ Liêm, Hà Nội',
     scale: 'Tổng diện tích 68.000 m²',
     itemsSupplied: 'Cửa chống cháy, thang máy, tủ điện',
-    year: '2022 - 2023',
+    year: '2026',
     image: HERO_IMAGE,
     description: 'Cung cấp giải pháp phân khoang ngăn cháy tổng thể gồm 24 bộ rèm ngăn khói thông tầng, 320 bộ cửa thép chống cháy EI120 và hệ thống cửa tầng thang máy cứu nạn chuyên dụng.',
-    client: 'Tập đoàn Vingroup'
+    client: 'Tập đoàn Bất động sản & Bán lẻ Đô thị'
   },
   {
     id: 'benh-vien-da-khoa-tinh',
@@ -286,14 +286,14 @@ const PROJECT_SAMPLES: Project[] = [
     location: 'Thủ Dầu Một, Bình Dương',
     scale: 'Quy mô 1.000 giường bệnh',
     itemsSupplied: 'Rèm ngăn cháy, cửa chống cháy',
-    year: '2024',
+    year: '2026',
     image: STEEL_DOOR_IMAGE,
     description: 'Trang bị 450 bộ cửa chống cháy EI60 có ô kính cách nhiệt chuyên dụng phòng mổ, kho dược, buồng cấp cứu và phân luồng thoát hiểm khẩn cấp theo tiêu chuẩn an toàn y tế quốc tế.',
-    client: 'Sở Y tế & Ban Quản lý Dự án'
+    client: 'Ban Quản lý Dự án Y tế'
   }
 ];
 
-export const PROJECTS: Project[] = [];
+export const PROJECTS: Project[] = PROJECT_SAMPLES;
 
 export const TECHNICAL_DOCS: TechnicalDoc[] = [
   {
@@ -413,8 +413,8 @@ export const TECHNICAL_DOCS: TechnicalDoc[] = [
 const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
   {
     id: 'cap-nhat-tieu-chuan-cua-chong-chay-moi-nhat-2024',
-    title: 'Cập nhật tiêu chuẩn cửa chống cháy mới nhất 2024 theo QCVN 06:2022/BXD',
-    date: '12/06/2024',
+    title: 'Cập nhật tiêu chuẩn cửa chống cháy mới nhất theo QCVN 06:2022/BXD',
+    date: '12/06/2026',
     author: 'Ks. Nguyễn Thành Long - Trưởng phòng Kỹ thuật APEX',
     category: 'Tiêu chuẩn & Quy chuẩn',
     summary: 'Phân tích những điểm mới quan trọng về giới hạn chịu lửa EI, tiêu chí thử nghiệm đốt mẫu thực tế và quy trình cấp tem kiểm định phương tiện PCCC theo quy định hiện hành.',
@@ -429,7 +429,7 @@ const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
   {
     id: 'ung-dung-cua-cuon-ngan-chay-trong-nha-xuong-hien-dai',
     title: 'Ứng dụng cửa cuốn ngăn cháy trong nhà xưởng hiện đại và kho logistics',
-    date: '10/06/2024',
+    date: '10/06/2026',
     author: 'Kỹ sư Giải pháp Công nghiệp',
     category: 'Giải pháp thi công',
     summary: 'Giải pháp phân khoang chống cháy tối ưu diện tích sàn sản xuất, cơ chế ngắt tự động Fail-Safe an toàn tuyệt đối khi xảy ra sự cố chập cháy điện.',
@@ -444,7 +444,7 @@ const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
   {
     id: 'rem-ngan-chay-giai-phap-an-toan-cho-cong-trinh-lon',
     title: 'Rèm ngăn cháy – Giải pháp an toàn kiến trúc cho công trình lớn',
-    date: '08/06/2024',
+    date: '08/06/2026',
     author: 'Ban Tư vấn Dự án',
     category: 'Xu hướng kiến trúc',
     summary: 'Khắc phục hoàn toàn nhược điểm cồng kềnh của cửa truyền thống, rèm ngăn cháy tự động mang lại vẻ đẹp thanh thoát cho giếng trời và trung tâm thương mại.',
@@ -458,7 +458,7 @@ const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
   }
 ];
 
-export const NEWS_ARTICLES: NewsArticle[] = [];
+export const NEWS_ARTICLES: NewsArticle[] = NEWS_ARTICLE_SAMPLES;
 
 const PARTNER_LOGO_SAMPLES = [
   { name: '3CElectric', tag: 'Switch on your world' },
@@ -469,4 +469,4 @@ const PARTNER_LOGO_SAMPLES = [
   { name: 'CADIVI', tag: 'Dây Cáp Điện Hàng Đầu' }
 ];
 
-export const PARTNER_LOGOS: { name: string; tag: string }[] = [];
+export const PARTNER_LOGOS: { name: string; tag: string }[] = PARTNER_LOGO_SAMPLES;

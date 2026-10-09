@@ -40,6 +40,8 @@ export interface AdminProduct {
   seoTitle: string;
   seoDescription: string;
   imageAlt: string;
+  image?: string;
+  priceEstimate?: string;
   updatedAt: string;
 }
 
@@ -59,6 +61,7 @@ export interface AdminDocument {
   verifiedBy: string;
   verifiedAt: string;
   notes: string;
+  fileUrl?: string;
 }
 
 export interface AdminContent {
@@ -73,6 +76,16 @@ export interface AdminContent {
   mediaApproved: boolean;
   clientApproved: boolean;
   updatedAt: string;
+  category?: string;
+  location?: string;
+  scale?: string;
+  itemsSupplied?: string;
+  year?: string;
+  client?: string;
+  image?: string;
+  author?: string;
+  readTime?: string;
+  content?: string[];
 }
 
 export interface AdminCompany {

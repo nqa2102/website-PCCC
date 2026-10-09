@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   CalendarDays,
   CheckCircle2,
+  Download,
   Factory,
   FileCheck2,
   MessageSquareText,
@@ -9,7 +10,7 @@ import {
   Scale,
   ShieldCheck,
 } from 'lucide-react';
-import { TECHNICAL_DOCS } from '../data/mockData';
+import { useLiveData } from '../admin/adminData';
 
 interface TechnicalDocsPageProps {
   onOpenQuote: () => void;
@@ -27,23 +28,24 @@ export const TechnicalDocsPage: React.FC<TechnicalDocsPageProps> = ({
   onOpenQuote,
   initialDocId,
 }) => {
+  const { documents, company } = useLiveData();
   const [selectedGroup, setSelectedGroup] = useState('all');
 
   const filteredDocs = useMemo(
     () => selectedGroup === 'all'
-      ? TECHNICAL_DOCS
-      : TECHNICAL_DOCS.filter((doc) => doc.productGroup === selectedGroup),
-    [selectedGroup],
+      ? documents
+      : documents.filter((doc) => doc.productGroup === selectedGroup),
+    [documents, selectedGroup],
   );
 
   useEffect(() => {
     if (!initialDocId) return;
-    const selectedDoc = TECHNICAL_DOCS.find((doc) => doc.id === initialDocId);
+    const selectedDoc = documents.find((doc) => doc.id === initialDocId);
     if (selectedDoc?.productGroup) setSelectedGroup(selectedDoc.productGroup);
     window.setTimeout(() => {
       document.getElementById(`doc-${initialDocId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 120);
-  }, [initialDocId]);
+  }, [documents, initialDocId]);
 
   return (
     <div className="min-h-screen bg-[#f4f4f1]">
@@ -177,7 +179,18 @@ export const TechnicalDocsPage: React.FC<TechnicalDocsPageProps> = ({
               </dl>
 
               <div className="mt-5 flex items-center justify-between gap-4 border-t border-slate-200 pt-4">
-                <span className="text-xs leading-5 text-slate-500">Cung cấp bản đối chiếu theo yêu cầu công trình</span>
+                {doc.fileUrl ? (
+                  <a
+                    href={doc.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-bold text-red-700 hover:text-red-800"
+                  >
+                    <Download className="h-4 w-4" /> Tải hồ sơ (PDF)
+                  </a>
+                ) : (
+                  <span className="text-xs leading-5 text-slate-500">Cung cấp bản đối chiếu theo yêu cầu công trình</span>
+                )}
                 <button
                   onClick={onOpenQuote}
                   className="shrink-0 text-sm font-bold text-red-700 hover:text-red-800"
@@ -201,10 +214,10 @@ export const TechnicalDocsPage: React.FC<TechnicalDocsPageProps> = ({
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
             <a
-              href="tel:0566385555"
+              href={company.hotlineHref}
               className="flex min-h-11 items-center justify-center gap-2 bg-red-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-red-700"
             >
-              <Phone className="h-4 w-4" /> Gọi 0566 38 5555
+              <Phone className="h-4 w-4" /> Gọi {company.hotlineDisplay}
             </a>
             <button
               onClick={onOpenQuote}

@@ -63,7 +63,10 @@ export const SolutionsPage: React.FC<SolutionsPageProps> = ({
           {SOLUTIONS.map((sol) => (
             <button
               key={sol.id}
-              onClick={() => setActiveSolutionId(sol.id)}
+              onClick={() => {
+                setActiveSolutionId(sol.id);
+                onNavigate('solutions', sol.id);
+              }}
               className={`p-3 rounded-xl border text-xs font-bold flex flex-col items-center gap-2 text-center transition-all ${
                 activeSolutionId === sol.id
                   ? 'bg-slate-900 text-white border-slate-900 shadow-md'

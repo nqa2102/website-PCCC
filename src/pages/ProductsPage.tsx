@@ -1,6 +1,19 @@
-import React, { useState, useMemo } from 'react';
-import { Check, MessageSquareText, Phone, X } from 'lucide-react';
-import { PRODUCTS } from '../data/mockData';
+import React, { useState, useMemo, useEffect } from 'react';
+import {
+  ArrowRight,
+  Calculator,
+  Check,
+  CheckCircle2,
+  Download,
+  FileCheck,
+  Layers,
+  MessageSquareText,
+  Phone,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from 'lucide-react';
+import { useLiveData } from '../admin/adminData';
 import { Product } from '../types';
 
 interface ProductsPageProps {
@@ -9,15 +22,94 @@ interface ProductsPageProps {
   initialProductId?: string;
 }
 
+const EI_MATRIX = [
+  {
+    rating: 'EI60',
+    title: 'Giới hạn chịu lửa 60 phút',
+    thickness: 'Cánh 0.8mm / Khung 1.2mm',
+    core: 'Bông gốm Ceramic hoặc Magie Oxit (MGO) 120kg/m³',
+    application: 'Cửa phòng căn hộ, cửa hành lang các tầng, lối thoát nạn văn phòng tiêu chuẩn.',
+    standard: 'QCVN 06:2022/BXD Bảng 4, TCVN 9383:2012',
+    popular: false,
+  },
+  {
+    rating: 'EI70',
+    title: 'Giới hạn chịu lửa 70 phút',
+    thickness: 'Cánh 0.8 - 1.0mm / Khung 1.2 - 1.4mm',
+    core: 'Bông gốm Ceramic cách nhiệt kết hợp ron trương nở ngăn khói độc',
+    application: 'Buồng thang bộ thoát hiểm N1/N2/N3, sảnh thang máy tòa nhà cao tầng, khu công cộng.',
+    standard: 'QCVN 06:2022/BXD và Sửa đổi 1:2023 (Mã 1803/KD-PCCC-P7)',
+    popular: true,
+  },
+  {
+    rating: 'EI90',
+    title: 'Giới hạn chịu lửa 90 phút',
+    thickness: 'Cánh 1.0mm / Khung 1.4mm',
+    core: 'Lõi composite đa tầng chống cháy chịu nhiệt > 1.100°C',
+    application: 'Phòng kỹ thuật điện, phòng máy chủ server, trạm biến áp phụ tải, kho hồ sơ.',
+    standard: 'TCVN 9383:2012 (Mã 1786 & 2736/KD-PCCC-P7)',
+    popular: false,
+  },
+  {
+    rating: 'EI120',
+    title: 'Giới hạn chịu lửa 120 phút',
+    thickness: 'Cánh 1.0 - 1.2mm / Khung 1.4 - 1.6mm',
+    core: 'Lõi bông gốm Ceramic mật độ cao 128kg/m³ siêu cách nhiệt',
+    application: 'Phòng máy biến áp chính, trạm bơm PCCC, phân khoang cháy nhà xưởng công nghiệp nặng.',
+    standard: 'QCVN 06:2022/BXD (Mã 2225/KD-PCCC-P7)',
+    popular: true,
+  },
+];
+
+const DOOR_LAYERS = [
+  {
+    step: '01',
+    name: 'Khung bao thép định hình',
+    spec: 'Thép cán nguội mạ kẽm dày 1.2 - 1.6mm',
+    desc: 'Chấn gấp CNC độ chính xác cao, tăng cứng chịu lực tại bản lề & lỗ khóa, gioăng rãnh chìm chuyên dụng.',
+  },
+  {
+    step: '02',
+    name: 'Tấm thép bề mặt cánh cửa',
+    spec: 'Thép mạ điện dày 0.8 - 1.2mm',
+    desc: 'Phủ sơn tĩnh điện bột Jotun cao cấp, chống trầy xước, chịu va đập cơ học lớn, chống oxy hóa.',
+  },
+  {
+    step: '03',
+    name: 'Lõi cách nhiệt chịu lửa đa tầng',
+    spec: 'Bông gốm Ceramic / Magie Oxit (MGO)',
+    desc: 'Vật liệu vô cơ chống cháy tuyệt đối, không sinh khói độc, giữ nhiệt độ mặt không cháy dưới 140°C.',
+  },
+  {
+    step: '04',
+    name: 'Hệ gioăng kép ngăn khói độc',
+    spec: 'Gioăng EPDM + Gioăng Intumescent',
+    desc: 'Gioăng giảm chấn khi đóng mở; gioăng trương nở tự động phồng nở khi nhiệt độ > 150°C để bịt kín khe hở.',
+  },
+  {
+    step: '05',
+    name: 'Phụ kiện cơ khí đồng bộ',
+    spec: 'Inox 304 chuẩn chịu lửa',
+    desc: 'Bản lề cối chịu lực, tay co thủy lực tự đóng đạt 500.000 chu kỳ, thanh panic và khóa liên kết ngầm.',
+  },
+];
+
 export const ProductsPage: React.FC<ProductsPageProps> = ({
   onOpenQuote,
   initialCategory,
   initialProductId
 }) => {
+  const { products, company } = useLiveData();
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
   const [detailProduct, setDetailProduct] = useState<Product | null>(
-    initialProductId ? (PRODUCTS.find(p => p.id === initialProductId) || null) : null
+    initialProductId ? (products.find(p => p.id === initialProductId) || null) : null
   );
+
+  useEffect(() => {
+    if (initialProductId) {
+      setDetailProduct(products.find(p => p.id === initialProductId) || null);
+    }
+  }, [initialProductId, products]);
 
   const categories = [
     { id: 'all', label: 'Tất cả sản phẩm' },
@@ -28,11 +120,11 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   ];
 
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((item) => {
+    return products.filter((item) => {
       const matchCat = selectedCategory === 'all' || item.category === selectedCategory;
       return matchCat;
     });
-  }, [selectedCategory]);
+  }, [products, selectedCategory]);
 
   return (
     <div className="min-h-screen w-full bg-[#f4f4f1] pb-20">
@@ -135,7 +227,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                 <div className="flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
                   <div>
                     <span className="block text-[10px] font-semibold uppercase text-slate-500">Thông tin giá</span>
-                    <span className="text-sm font-bold uppercase text-red-700">Liên hệ</span>
+                    <span className="text-sm font-bold uppercase text-red-700">{product.priceEstimate || 'Liên hệ'}</span>
                   </div>
 
                   <div className="flex gap-2">
@@ -147,9 +239,9 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                     </button>
                     <button
                       onClick={() => onOpenQuote(product.category)}
-                      className="flex min-h-10 items-center gap-1.5 bg-red-600 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-red-700"
+                      className="flex min-h-10 items-center gap-1.5 bg-red-600 px-3.5 py-2 text-xs font-bold text-white transition-colors hover:bg-red-700 shadow-xs"
                     >
-                      <Phone className="h-3.5 w-3.5" /> Liên hệ
+                      Báo giá dự toán
                     </button>
                   </div>
                 </div>
@@ -172,6 +264,156 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
             </button>
           </div>
         )}
+
+        {/* ========================================================
+            TECHNICAL SECTION 1: EI MATRIX COMPARISON
+           ======================================================== */}
+        <section className="mt-20 border-t border-slate-300 pt-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+            <div>
+              <span className="section-kicker">Quy chuẩn QCVN 06:2022/BXD</span>
+              <h2 className="section-title">Ma trận đối chiếu cấp độ chịu lửa EI</h2>
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 max-w-2xl">
+                Bảng phân tích kỹ thuật giúp chủ đầu tư và tư vấn thiết kế lựa chọn chính xác cấu hình cửa theo vị trí ngăn cháy và kiểm định thực tế.
+              </p>
+            </div>
+            <button
+              onClick={() => onOpenQuote()}
+              className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-lg text-xs self-start md:self-end transition-colors"
+            >
+              <Calculator className="w-4 h-4 text-red-400" />
+              <span>Dự toán cấu hình theo công trình</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {EI_MATRIX.map((item) => (
+              <div
+                key={item.rating}
+                className={`relative flex flex-col justify-between bg-white border rounded-xl p-5 shadow-xs transition-all hover:shadow-md ${
+                  item.popular ? 'border-red-600 ring-1 ring-red-600' : 'border-slate-200'
+                }`}
+              >
+                {item.popular && (
+                  <span className="absolute -top-3 right-4 bg-red-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
+                    Phổ biến nhất
+                  </span>
+                )}
+                <div className="space-y-3">
+                  <div className="flex items-baseline justify-between border-b border-slate-100 pb-3">
+                    <span className="text-2xl font-black text-slate-900 font-serif">{item.rating}</span>
+                    <span className="text-[11px] font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded">
+                      {item.title}
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="block text-[10px] font-bold uppercase text-slate-400">Độ dày thép</span>
+                    <p className="text-xs font-semibold text-slate-800 mt-0.5">{item.thickness}</p>
+                  </div>
+
+                  <div>
+                    <span className="block text-[10px] font-bold uppercase text-slate-400">Lõi cách nhiệt</span>
+                    <p className="text-xs text-slate-700 mt-0.5 leading-relaxed">{item.core}</p>
+                  </div>
+
+                  <div>
+                    <span className="block text-[10px] font-bold uppercase text-slate-400">Vị trí lắp đặt khuyến nghị</span>
+                    <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">{item.application}</p>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 text-[11px] text-emerald-700 flex items-start gap-1.5">
+                    <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
+                    <span>{item.standard}</span>
+                  </div>
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-slate-100">
+                  <button
+                    onClick={() => onOpenQuote('steel-door')}
+                    className="w-full inline-flex items-center justify-center gap-1.5 bg-neutral-100 hover:bg-red-600 hover:text-white text-slate-800 font-bold py-2 px-3 rounded-lg text-xs transition-colors"
+                  >
+                    <Calculator className="w-3.5 h-3.5" />
+                    <span>Báo giá {item.rating}</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ========================================================
+            TECHNICAL SECTION 2: 5-LAYER EXPLODED VIEW
+           ======================================================== */}
+        <section className="mt-20 border-t border-slate-300 pt-16">
+          <div className="max-w-2xl mb-8">
+            <span className="section-kicker">Tiêu chuẩn gia công cơ khí</span>
+            <h2 className="section-title">Cấu tạo mặt cắt 5 lớp cửa ngăn cháy APEX</h2>
+            <p className="mt-2 text-xs sm:text-sm text-slate-600">
+              Được nghiên cứu và thử nghiệm đốt mẫu thực tế, mỗi lớp vật liệu đóng vai trò quyết định trong việc ngăn lửa, chặn khói độc và duy trì lối thoát hiểm an toàn.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            {DOOR_LAYERS.map((layer) => (
+              <div
+                key={layer.step}
+                className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col justify-between shadow-xs hover:border-red-300 transition-colors"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-2xl font-black text-red-600">Lớp {layer.step}</span>
+                    <Layers className="w-5 h-5 text-slate-400" />
+                  </div>
+                  <h3 className="text-sm font-bold text-slate-900 leading-snug">{layer.name}</h3>
+                  <div className="mt-2 bg-red-50 text-red-700 text-[11px] font-bold p-1.5 rounded">
+                    {layer.spec}
+                  </div>
+                  <p className="mt-3 text-xs text-slate-600 leading-relaxed">
+                    {layer.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ========================================================
+            TECHNICAL SECTION 3: CATALOGUE & PROFILE DOWNLOAD CTA
+           ======================================================== */}
+        <section className="mt-20 rounded-2xl bg-gradient-to-r from-slate-950 via-[#102b21] to-slate-950 p-8 sm:p-12 text-white shadow-xl relative overflow-hidden">
+          <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:16px_16px]"></div>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div className="lg:col-span-8 space-y-3">
+              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase text-red-400 tracking-wider">
+                <FileCheck className="w-4 h-4" />
+                <span>Hồ sơ năng lực & Tài liệu kỹ thuật 2026</span>
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                Tải E-Catalogue & Hồ sơ năng lực APEX Việt Nam
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
+                Tài liệu đầy đủ bao gồm thông số kỹ thuật, bản vẽ cấu tạo chi tiết, chứng nhận kiểm định của Cục PCCC và hướng dẫn lựa chọn giải pháp phân khoang cháy theo QCVN 06:2022/BXD.
+              </p>
+            </div>
+            <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3">
+              <button
+                onClick={() => onOpenQuote()}
+                className="inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl text-xs transition-colors shadow-lg shadow-red-900/30"
+              >
+                <Download className="w-4 h-4" />
+                <span>Yêu cầu gửi E-Catalogue (PDF)</span>
+              </button>
+              <a
+                href={company.hotlineHref}
+                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold py-3.5 px-6 rounded-xl text-xs backdrop-blur-sm border border-white/20 transition-colors"
+              >
+                <Phone className="w-4 h-4 text-red-400" />
+                <span>Hotline Kỹ sư: {company.hotlineDisplay}</span>
+              </a>
+            </div>
+          </div>
+        </section>
 
       </div>
 
@@ -313,7 +555,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                   }}
                   className="min-h-10 bg-red-600 px-5 py-2 text-xs font-bold text-white shadow-sm hover:bg-red-700"
                 >
-                  Gọi hoặc nhắn kinh doanh
+                  Nhận báo giá dự toán
                 </button>
               </div>
             </div>

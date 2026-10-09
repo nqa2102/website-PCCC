@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   CheckCircle2
 } from 'lucide-react';
-import { PROJECTS } from '../data/mockData';
+import { useLiveData } from '../admin/adminData';
 import { Project } from '../types';
 
 interface ProjectsPageProps {
@@ -22,9 +22,10 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
   onOpenQuote,
   initialProjectId
 }) => {
+  const { projects } = useLiveData();
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [activeProject, setActiveProject] = useState<Project | null>(
-    initialProjectId ? (PROJECTS.find(p => p.id === initialProjectId) || null) : null
+    initialProjectId ? (projects.find(p => p.id === initialProjectId) || null) : null
   );
 
   const filters = [
@@ -36,9 +37,9 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
   ];
 
   const filteredProjects = useMemo(() => {
-    if (selectedFilter === 'all') return PROJECTS;
-    return PROJECTS.filter(p => p.category === selectedFilter);
-  }, [selectedFilter]);
+    if (selectedFilter === 'all') return projects;
+    return projects.filter(p => p.category === selectedFilter);
+  }, [projects, selectedFilter]);
 
   return (
     <div className="w-full bg-neutral-50 min-h-screen py-10">
@@ -59,7 +60,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
         </div>
 
         {/* Filter Bar */}
-        {PROJECTS.length > 0 && <div className="flex flex-wrap gap-2 mb-8">
+        {projects.length > 0 && <div className="flex flex-wrap gap-2 mb-8">
           {filters.map((f) => (
             <button
               key={f.id}
@@ -144,7 +145,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
           ))}
         </div>
 
-        {PROJECTS.length === 0 && (
+        {projects.length === 0 && (
           <div className="border-y border-neutral-200 bg-white px-6 py-14 sm:px-10">
             <ShieldCheck className="w-8 h-8 text-emerald-600" />
             <h2 className="mt-4 text-xl font-bold text-slate-900">Hồ sơ dự án đang được cập nhật</h2>

@@ -3,30 +3,148 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>APEX Việt Nam - Cửa Chống Cháy & Giải Pháp PCCC Toàn Diện</title>
     <meta name="description" content="Công ty TNHH APEX Việt Nam - Giải pháp cửa chống cháy, cửa cuốn ngăn cháy, rèm ngăn cháy và thiết bị PCCC đồng bộ cho mọi công trình." />
+    
+    <!-- Open Graph / Facebook / Zalo -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://apexdoor.net/" />
     <meta property="og:title" content="APEX Việt Nam - Cửa Chống Cháy & Giải Pháp PCCC Toàn Diện" />
     <meta property="og:description" content="Công ty TNHH APEX Việt Nam - Giải pháp cửa chống cháy, cửa cuốn ngăn cháy, rèm ngăn cháy và thiết bị PCCC đồng bộ cho mọi công trình." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://website-pccc.vercel.app/" />
+    <meta property="og:image" content="https://apexdoor.net/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="APEX Việt Nam - Cửa và Giải pháp ngăn cháy PCCC" />
+    <meta property="og:locale" content="vi_VN" />
+
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="canonical" href="https://website-pccc.vercel.app/" />
+    <meta name="twitter:title" content="APEX Việt Nam - Cửa Chống Cháy & Giải Pháp PCCC Toàn Diện" />
+    <meta name="twitter:description" content="Công ty TNHH APEX Việt Nam - Giải pháp cửa chống cháy, cửa cuốn ngăn cháy, rèm ngăn cháy và thiết bị PCCC đồng bộ cho mọi công trình." />
+    <meta name="twitter:image" content="https://apexdoor.net/og-image.png" />
+
+    <link rel="canonical" href="https://apexdoor.net/" />
+
+    <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Công ty TNHH APEX Việt Nam",
-        "alternateName": "APEX",
-        "url": "https://website-pccc.vercel.app/",
-        "telephone": "+84912755075",
-        "areaServed": "VN"
+        "@graph": [
+          {
+            "@type": ["Organization", "LocalBusiness"],
+            "@id": "https://apexdoor.net/#organization",
+            "name": "Công ty TNHH Apex VN",
+            "legalName": "CÔNG TY TNHH APEX VN",
+            "alternateName": ["APEX", "APEX VN COMPANY LIMITED"],
+            "url": "https://apexdoor.net/",
+            "logo": "https://apexdoor.net/og-image.png",
+            "image": "https://apexdoor.net/og-image.png",
+            "telephone": "+84566385555",
+            "email": "contact@apexdoor.net",
+            "taxID": "0111651857",
+            "foundingDate": "2026-10-06",
+            "priceRange": "$$",
+            "areaServed": "VN",
+            "address": [
+              {
+                "@type": "PostalAddress",
+                "streetAddress": "Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng",
+                "addressLocality": "Hà Nội",
+                "addressCountry": "VN"
+              },
+              {
+                "@type": "PostalAddress",
+                "streetAddress": "11 Trần Thái Tông, Dịch Vọng Hậu, Cầu Giấy",
+                "addressLocality": "Hà Nội",
+                "addressCountry": "VN"
+              }
+            ],
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "telephone": "+84566385555",
+              "contactType": "customer service",
+              "availableLanguage": ["Vietnamese", "English"]
+            }
+          },
+          {
+            "@type": "Product",
+            "@id": "https://apexdoor.net/san-pham#cua-thep-ngan-chay",
+            "name": "Cửa thép ngăn cháy EI70 - EI120",
+            "description": "Cửa thép chống cháy tiêu chuẩn EI70 - EI120 theo QCVN 06:2022/BXD và Sửa đổi 1:2023, ứng dụng cho buồng thang bộ, lối thoát nạn và phòng kỹ thuật.",
+            "brand": {
+              "@type": "Brand",
+              "name": "APEX"
+            },
+            "category": "Cửa chống cháy",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "VND",
+              "price": "2450000",
+              "availability": "https://schema.org/InStock",
+              "url": "https://apexdoor.net/san-pham?nhom=steel-door"
+            }
+          },
+          {
+            "@type": "Product",
+            "@id": "https://apexdoor.net/san-pham#cua-kinh-ngan-chay",
+            "name": "Cửa kính ngăn cháy EI60 - EI90",
+            "description": "Cửa kính chống cháy kết hợp khung thép hoặc inox cao cấp, đảm bảo tầm nhìn và giới hạn chịu lửa theo QCVN 06:2022/BXD.",
+            "brand": {
+              "@type": "Brand",
+              "name": "APEX"
+            },
+            "category": "Cửa kính chống cháy",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "VND",
+              "price": "5800000",
+              "availability": "https://schema.org/InStock",
+              "url": "https://apexdoor.net/san-pham?nhom=glass-door"
+            }
+          },
+          {
+            "@type": "Product",
+            "@id": "https://apexdoor.net/san-pham#cua-cuon-ngan-chay",
+            "name": "Cửa cuốn ngăn cháy EI60 - EI120",
+            "description": "Cửa cuốn chống cháy siêu trường ngăn khoang cháy lớn tại tầng hầm, trung tâm thương mại và nhà xưởng công nghiệp.",
+            "brand": {
+              "@type": "Brand",
+              "name": "APEX"
+            },
+            "category": "Cửa cuốn chống cháy",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "VND",
+              "price": "3200000",
+              "availability": "https://schema.org/InStock",
+              "url": "https://apexdoor.net/san-pham?nhom=roller-shutter"
+            }
+          },
+          {
+            "@type": "Product",
+            "@id": "https://apexdoor.net/san-pham#rem-ngan-chay",
+            "name": "Rèm ngăn cháy & ngăn khói tự động",
+            "description": "Màn cuốn ngăn cháy linh hoạt che giấu âm trần, tự động hạ xuống khi có tín hiệu báo cháy kết nối BMS.",
+            "brand": {
+              "@type": "Brand",
+              "name": "APEX"
+            },
+            "category": "Rèm ngăn cháy",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "VND",
+              "price": "2900000",
+              "availability": "https://schema.org/InStock",
+              "url": "https://apexdoor.net/san-pham?nhom=fire-curtain"
+            }
+          }
+        ]
       }
     </script>
-    <link rel="preload" as="image" href="/src/assets/images/hero_fire_door_apex_1790648819738.webp" type="image/webp" fetchpriority="high" />
   </head>
   <body class="bg-neutral-50 text-slate-900 font-sans antialiased selection:bg-red-600 selection:text-white">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

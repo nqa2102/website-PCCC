@@ -17,6 +17,7 @@ const TAB_PATHS: Record<string, string> = {
   contact: '/lien-he',
   privacy: '/chinh-sach-bao-mat',
   admin: '/admin',
+  'not-found': '/404',
 };
 
 export const readRoute = (): AppRoute => {
@@ -26,6 +27,7 @@ export const readRoute = (): AppRoute => {
   const root = segments[0] || '';
   const itemId = segments[1] ? decodeURIComponent(segments.slice(1).join('/')) : undefined;
 
+  if (root === '') return { tab: 'home' };
   if (root === 'gioi-thieu') return { tab: 'about' };
   if (root === 'san-pham') {
     const category = new URLSearchParams(window.location.search).get('nhom') || undefined;
@@ -37,7 +39,8 @@ export const readRoute = (): AppRoute => {
   if (root === 'tin-tuc') return { tab: 'news', itemId };
   if (root === 'lien-he') return { tab: 'contact' };
   if (root === 'chinh-sach-bao-mat') return { tab: 'privacy' };
-  return { tab: 'home' };
+  if (root === '404') return { tab: 'not-found' };
+  return { tab: 'not-found' };
 };
 
 export const pathForRoute = (tab: string, itemId?: string) => {
@@ -91,7 +94,14 @@ const SEO: Record<string, { title: string; description: string }> = {
     title: 'APEX Admin - Trung tâm vận hành website',
     description: 'Không gian quản trị nội bộ APEX.',
   },
+  'not-found': {
+    title: '404 - Không tìm thấy trang | APEX Việt Nam',
+    description: 'Trang bạn yêu cầu không tồn tại hoặc đã được di chuyển trên hệ thống website APEX Việt Nam.',
+  },
 };
+
+// Tên miền chính thức: canonical/og luôn trỏ về đây, kể cả khi truy cập qua www hoặc *.vercel.app
+export const SITE_URL = 'https://apexdoor.net';
 
 const setMeta = (selector: string, attribute: string, value: string) => {
   const element = document.querySelector<HTMLMetaElement>(selector);
@@ -105,7 +115,12 @@ export const applySeo = (tab: string, itemName?: string) => {
   setMeta('meta[name="description"]', 'content', base.description);
   setMeta('meta[property="og:title"]', 'content', title);
   setMeta('meta[property="og:description"]', 'content', base.description);
-  setMeta('meta[property="og:url"]', 'content', window.location.href.split('#')[0]);
+  // Chỉ giữ tham số nhóm sản phẩm (đã khai báo trong sitemap), bỏ utm_* và tham số theo dõi khác
+  const group = new URLSearchParams(window.location.search).get('nhom');
+  const pageUrl = `${SITE_URL}${window.location.pathname}${group ? `?nhom=${encodeURIComponent(group)}` : ''}`;
+  setMeta('meta[property="og:url"]', 'content', pageUrl);
+  setMeta('meta[property="og:image"]', 'content', `${SITE_URL}/og-image.png`);
+  setMeta('meta[name="twitter:image"]', 'content', `${SITE_URL}/og-image.png`);
 
   let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonical) {
@@ -113,5 +128,5 @@ export const applySeo = (tab: string, itemName?: string) => {
     canonical.rel = 'canonical';
     document.head.appendChild(canonical);
   }
-  canonical.href = `${window.location.origin}${window.location.pathname}`;
+  canonical.href = pageUrl;
 };
