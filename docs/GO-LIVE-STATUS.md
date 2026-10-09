@@ -28,7 +28,7 @@
 | **3** | Lead từ website được lưu vào Neon Database | Biểu mẫu gọi `POST /api/leads` lưu trực tiếp bảng `leads` trong Neon | 🟢 **ĐẠT** | Endpoint `api/leads.ts` sẵn sàng, có honeypot chống bot spam. |
 | **4** | Có thông báo email khi có lead mới | Tích hợp gửi email tức thì qua Resend REST API trong `api/leads.ts` khi có cấu hình `RESEND_API_KEY` | 🟢 **ĐẠT** | Code tích hợp tại dòng 113-145 của `api/leads.ts`. |
 | **5** | Dữ liệu nội dung đồng bộ từ Neon | API `/api/public-content.ts` và hook `useLiveData()` tự động fetch và cập nhật dữ liệu mới nhất từ Neon khi online | 🟢 **ĐẠT** | Endpoint sẵn sàng, fallback tĩnh an toàn khi offline. |
-| **6** | Thông tin doanh nghiệp hiển thị đầy đủ, chính xác pháp lý | Tên pháp lý: Công ty TNHH Apex VN (APEX VN COMPANY LIMITED); ĐDPL: Nguyễn Thị Ngọc Anh - Giám đốc; Mã số doanh nghiệp: `0111651857` (đăng ký lần đầu 06/10/2026); Email: `contact@apex.vn` (chưa xác minh tên miền) | 🟢 **ĐẠT** | Đồng bộ tại `companyData.ts`, `Footer.tsx`, `PrivacyPage.tsx`, `index.html`. |
+| **6** | Thông tin doanh nghiệp hiển thị đầy đủ, chính xác pháp lý | Tên pháp lý: Công ty TNHH Apex VN (APEX VN COMPANY LIMITED); ĐDPL: Nguyễn Thị Ngọc Anh - Giám đốc; Mã số doanh nghiệp: `0111651857` (đăng ký lần đầu 06/10/2026); Website: `https://apexdoor.net`; Email: `contact@apexdoor.net` (cần tạo hộp thư) | 🟢 **ĐẠT** | Đồng bộ tại `companyData.ts`, `Footer.tsx`, `PrivacyPage.tsx`, `index.html`. |
 | **7** | Địa chỉ trụ sở và nhà máy chính xác | Trụ sở chính (theo GCN ĐKDN): Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, TP. Hà Nội; Văn phòng: 11 Trần Thái Tông, Cầu Giấy, Hà Nội; Nhà máy: Thạch Thất và Đông Anh | 🟢 **ĐẠT** | Xóa sạch các địa chỉ mock cũ (Diamond Flower, Cityland, Apex Tower, Bitexco). |
 | **8** | Cam kết phản hồi trung thực, không khuếch đại | "Phản hồi trong 1-2 ngày" theo đúng quy chuẩn thực tế của công ty | 🟢 **ĐẠT** | Quét 0 kết quả cho cụm từ khuếch đại "15 phút". |
 | **9** | Case study dự án khách hàng lớn được trung hòa an toàn | Tên dự án tổng quát mang tính giải pháp kỹ thuật, không tự ý công bố nhãn hiệu bên thứ ba chưa ký duyệt văn bản | 🟢 **ĐẠT** | Đã chuẩn hóa danh mục dự án trong `mockData.ts`. |
@@ -73,7 +73,7 @@
 ### GĐ2 – Nội Dung & Pháp Lý Thực Tế
 - [x] **Task 2.1 (Nội dung thực tế)**: Chuẩn hóa case study khách hàng mang tính giải pháp kỹ thuật, không tự ý công bố đối tác khi chưa ký duyệt văn bản.
 - [x] **Task 2.2 (Thời gian)**: Chuẩn hóa mốc thời gian thành lập doanh nghiệp năm 2026.
-- [x] **Task 2.3 (Pháp lý & Đại diện)**: Cập nhật mã số doanh nghiệp `0111651857` theo GCN ĐKDN (09/10/2026; trước đó là số giả `0111222333`), email chính thức (`contact@apex.vn`), đại diện pháp luật (`Nguyễn Thị Ngọc Anh` - Giám đốc) ở Footer và [`src/pages/PrivacyPage.tsx`](../src/pages/PrivacyPage.tsx).
+- [x] **Task 2.3 (Pháp lý & Đại diện)**: Cập nhật mã số doanh nghiệp `0111651857` theo GCN ĐKDN (09/10/2026; trước đó là số giả `0111222333`), email chính thức (`contact@apexdoor.net`), đại diện pháp luật (`Nguyễn Thị Ngọc Anh` - Giám đốc) ở Footer và [`src/pages/PrivacyPage.tsx`](../src/pages/PrivacyPage.tsx).
 - [x] **Task 2.4 (Địa chỉ & Hotline)**: Cập nhật đồng bộ Hotline `0566 38 5555`, loại bỏ hoàn toàn các địa chỉ và số điện thoại mock trước đây.
 - [ ] **Task 2.5 (Nội dung/Asset)**: Tải file catalogue/bản vẽ CAD PDF thật từ phòng kỹ thuật để người dùng tải về trên trang Tài liệu.
   - *Trạng thái*: Chờ phòng kỹ thuật cung cấp bản PDF gốc.
@@ -81,7 +81,7 @@
 ---
 
 ### GĐ3 – SEO & Hoàn Thiện Kỹ Thuật
-- [ ] **Task 3.1 (Hạ tầng)**: Cấu hình tên miền chính thức của doanh nghiệp trên Vercel.
+- [ ] **Task 3.1 (Hạ tầng)**: Tên miền chính thức `apexdoor.net` (Mắt Bão, hạn 09/10/2027): đã cập nhật trong code; chờ gắn domain trên Vercel + DNS (xem Hướng dẫn thao tác ngoài, mục 5).
   - *Trạng thái*: Chờ cung cấp domain và trỏ DNS.
 - [x] **Task 3.2 (Code)**: Chuyển các thẻ điều hướng trong Header/Footer/Trang chủ sang thẻ `<a href>` semantic chuẩn SEO.
 - [x] **Task 3.3 (Code)**: Trang lỗi 404 tùy chỉnh mang nhận diện thương hiệu APEX ([`src/pages/NotFoundPage.tsx`](../src/pages/NotFoundPage.tsx)).
@@ -154,7 +154,8 @@
 
 ### Việc còn lại (chưa làm)
 - Xác minh chứng nhận kiểm định và danh sách "đối tác" (`PARTNER_LOGOS`: Mitsubishi, Hitachi...).
-- Email Resend dùng `onboarding@resend.dev` (cần xác thực tên miền gửi); đổi tên miền chính thức trong sitemap/robots/canonical/og.
+- Gắn `apexdoor.net` trên Vercel + DNS Mắt Bão (code đã cập nhật sitemap, robots, canonical, og, JSON-LD).
+- Tạo hộp thư `contact@apexdoor.net`; xác thực `apexdoor.net` trên Resend và đặt biến `RESEND_FROM`.
 - SEO cho chia sẻ mạng xã hội (meta theo từng trang phía máy chủ), sitemap động.
 
 ---
@@ -175,7 +176,7 @@
 2. Sao chép và chạy nội dung file [`sql/neon_schema.sql`](../sql/neon_schema.sql) để khởi tạo toàn bộ 7 bảng và dữ liệu công ty ban đầu.
 3. Chạy lệnh tạo tài khoản quản trị đầu tiên tại terminal máy tính:
    ```powershell
-   node scripts/hash_password.js "MatKhauQuanTriCuaBan" "admin@apex.vn"
+   node scripts/hash_password.js "MatKhauQuanTriCuaBan" "admin@apexdoor.net"
    ```
    Sau đó sao chép câu lệnh SQL hiển thị trên màn hình và chạy trong Neon SQL Editor.
 
@@ -186,7 +187,13 @@
 ### 4. Bảng giới hạn đăng nhập (DB đã khởi tạo trước 09/10/2026):
 - Chạy [`sql/migrations/20261009_login_attempts.sql`](../sql/migrations/20261009_login_attempts.sql) trong Neon SQL Editor. Chỉ thêm bảng mới, chạy lại nhiều lần vẫn an toàn. Nếu thiếu bảng này, đăng nhập vẫn hoạt động nhưng **không** có giới hạn dò mật khẩu (có ghi log lỗi).
 
-### 5. Nạp nội dung ban đầu (sau khi đăng nhập `/admin`):
+### 5. Tên miền chính thức `apexdoor.net` (làm SAU khi merge PR vào `main`):
+1. Vercel → dự án `website-pccc` → **Settings → Domains** → thêm `apexdoor.net` (Production) và `www.apexdoor.net` (chuyển hướng 308 về `apexdoor.net`).
+2. Mắt Bão → quản lý DNS `apexdoor.net` → tạo đúng các bản ghi A/CNAME mà Vercel hiển thị; xóa bản ghi A/CNAME cũ trùng tên (`@`, `www`).
+3. Chờ Vercel báo **Valid Configuration** và tự cấp SSL; mở thử `https://apexdoor.net`.
+4. Google Search Console: thêm `apexdoor.net`, gửi `https://apexdoor.net/sitemap.xml`.
+
+### 6. Nạp nội dung ban đầu (sau khi đăng nhập `/admin`):
 1. Vào **Cấu hình** → bấm **Nhập danh mục ban đầu (dạng nháp)**.
 2. Rà soát từng sản phẩm / hồ sơ / bài viết, đối chiếu bản gốc, rồi chuyển trạng thái sang **Đã công bố**.
 3. Lưu ý: khi Neon đã kết nối, website chỉ hiển thị mục **Đã công bố**. Cần công bố nội dung trước khi trỏ tên miền chính thức.
