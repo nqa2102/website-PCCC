@@ -25,8 +25,17 @@ const GA4_ID = import.meta.env.VITE_GA4_ID as string | undefined;
 const ADS_ID = import.meta.env.VITE_GOOGLE_ADS_ID as string | undefined; // dạng AW-XXXXXXXXX
 const ADS_LEAD_LABEL = import.meta.env.VITE_GOOGLE_ADS_LEAD_LABEL as string | undefined;
 const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID as string | undefined;
+// Google Tag Manager cho đơn vị chạy quảng cáo tự quản lý thẻ (dạng GTM-XXXXXXX)
+const GTM_ID = import.meta.env.VITE_GTM_ID as string | undefined;
 
-export const trackingConfigured = Boolean(GA4_ID || ADS_ID || META_PIXEL_ID);
+export const trackingConfigured = Boolean(GA4_ID || ADS_ID || META_PIXEL_ID || GTM_ID);
+
+// Sự kiện chuẩn cho GTM: dataLayer.push({ event, ... }) để agency tạo trigger "Custom Event"
+const pushDataLayer = (event: string, params: Record<string, unknown> = {}) => {
+  if (!GTM_ID) return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event, ...params });
+};
 
 export type ConsentChoice = 'granted' | 'denied';
 const CONSENT_KEY = 'apex-cookie-consent';
@@ -53,6 +62,12 @@ const loadScript = (src: string) => {
 export const loadTracking = () => {
   if (loaded || !trackingConfigured || getConsent() !== 'granted') return;
   loaded = true;
+
+  if (GTM_ID) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+    loadScript(`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(GTM_ID)}`);
+  }
 
   if (GA4_ID || ADS_ID) {
     window.dataLayer = window.dataLayer || [];
@@ -102,6 +117,7 @@ export const trackPageView = () => {
     page_title: document.title,
   });
   window.fbq?.('track', 'PageView');
+  pushDataLayer('apex_page_view', { page_path: window.location.pathname + window.location.search, page_title: document.title });
 };
 
 // Chuyển đổi chính: khách gửi form báo giá / liên hệ thành công
@@ -112,6 +128,7 @@ export const trackLead = (formName: string) => {
     window.gtag?.('event', 'conversion', { send_to: `${ADS_ID}/${ADS_LEAD_LABEL}` });
   }
   window.fbq?.('track', 'Lead', { content_name: formName });
+  pushDataLayer('generate_lead', { form_name: formName });
 };
 
 // Bấm gọi hotline / nhắn Zalo ở bất kỳ vị trí nào trên website
@@ -119,6 +136,7 @@ export const trackContactClick = (channel: 'phone' | 'zalo') => {
   if (!loaded) return;
   window.gtag?.('event', 'contact_click', { channel });
   window.fbq?.('track', 'Contact', { channel });
+  pushDataLayer('contact_click', { channel });
 };
 
 export const installContactClickTracking = () => {
