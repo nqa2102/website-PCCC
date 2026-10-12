@@ -10,19 +10,37 @@ export default async function handler(req: any, res: any) {
 
     try {
       const sql = getDb();
-      const rows = await sql`
-        SELECT 
-          id, name, slug, category, category_name as "categoryName",
-          fire_rating as "fireRating", certification_no as "certificationNo",
-          short_description as "shortDescription", material, standard, warranty,
-          specs, features, long_description as "longDescription",
-          featured, status, sort_order as "sortOrder",
-          seo_title as "seoTitle", seo_description as "seoDescription",
-          image_alt as "imageAlt", image, price_estimate as "priceEstimate",
-          updated_at as "updatedAt"
-        FROM products
-        ORDER BY sort_order ASC, name ASC
-      `;
+      let rows;
+      try {
+        rows = await sql`
+          SELECT 
+            id, name, slug, category, category_name as "categoryName",
+            fire_rating as "fireRating", certification_no as "certificationNo",
+            short_description as "shortDescription", material, standard, warranty,
+            specs, features, long_description as "longDescription",
+            featured, status, sort_order as "sortOrder",
+            seo_title as "seoTitle", seo_description as "seoDescription",
+            image_alt as "imageAlt", image, price_estimate as "priceEstimate",
+            updated_at as "updatedAt"
+          FROM products
+          ORDER BY sort_order ASC, name ASC
+        `;
+      } catch (colErr: any) {
+        console.warn('Fallback admin products query:', colErr?.message || colErr);
+        rows = await sql`
+          SELECT 
+            id, name, slug, category, category_name as "categoryName",
+            fire_rating as "fireRating", certification_no as "certificationNo",
+            short_description as "shortDescription", material, standard, warranty,
+            specs, '[]'::jsonb as features, short_description as "longDescription",
+            featured, status, sort_order as "sortOrder",
+            seo_title as "seoTitle", seo_description as "seoDescription",
+            image_alt as "imageAlt", image, price_estimate as "priceEstimate",
+            updated_at as "updatedAt"
+          FROM products
+          ORDER BY sort_order ASC, name ASC
+        `;
+      }
       return res.status(200).json({ products: rows });
     } catch (err: any) {
       console.error('Lỗi lấy danh sách sản phẩm:', err);
@@ -71,45 +89,134 @@ export default async function handler(req: any, res: any) {
 
       const sql = getDb();
 
-      await sql`
-        INSERT INTO products (
-          id, name, slug, category, category_name, fire_rating, certification_no,
-          short_description, material, standard, warranty, specs, features, long_description,
-          featured, status, sort_order, seo_title, seo_description, image_alt, image,
-          price_estimate, updated_at
-        ) VALUES (
-          ${p.id}, ${p.name}, ${p.slug}, ${p.category}, ${p.categoryName || p.category},
-          ${p.fireRating || null}, ${p.certificationNo || null}, ${p.shortDescription || null},
-          ${p.material || null}, ${p.standard || null}, ${p.warranty || null},
-          ${specsJson}::jsonb, ${featuresJson}::jsonb, ${longDesc || null},
-          ${Boolean(p.featured)}, ${p.status || 'draft'},
-          ${Number(p.sortOrder) || 0}, ${p.seoTitle || null}, ${p.seoDescription || null},
-          ${p.imageAlt || null}, ${p.image || null}, ${p.priceEstimate || null}, NOW()
-        )
-        ON CONFLICT (id) DO UPDATE SET
-          name = EXCLUDED.name,
-          slug = EXCLUDED.slug,
-          category = EXCLUDED.category,
-          category_name = EXCLUDED.category_name,
-          fire_rating = EXCLUDED.fire_rating,
-          certification_no = EXCLUDED.certification_no,
-          short_description = EXCLUDED.short_description,
-          material = EXCLUDED.material,
-          standard = EXCLUDED.standard,
-          warranty = EXCLUDED.warranty,
-          specs = EXCLUDED.specs,
-          features = EXCLUDED.features,
-          long_description = EXCLUDED.long_description,
-          featured = EXCLUDED.featured,
-          status = EXCLUDED.status,
-          sort_order = EXCLUDED.sort_order,
-          seo_title = EXCLUDED.seo_title,
-          seo_description = EXCLUDED.seo_description,
-          image_alt = EXCLUDED.image_alt,
-          image = EXCLUDED.image,
-          price_estimate = EXCLUDED.price_estimate,
-          updated_at = NOW()
-      `;
+      try {
+        await sql`
+          INSERT INTO products (
+            id, name, slug, category, category_name, fire_rating, certification_no,
+            short_description, material, standard, warranty, specs, features, long_description,
+            featured, status, sort_order, seo_title, seo_description, image_alt, image,
+            price_estimate, updated_at
+          ) VALUES (
+            ${p.id}, ${p.name}, ${p.slug}, ${p.category}, ${p.categoryName || p.category},
+            ${p.fireRating || null}, ${p.certificationNo || null}, ${p.shortDescription || null},
+            ${p.material || null}, ${p.standard || null}, ${p.warranty || null},
+            ${specsJson}::jsonb, ${featuresJson}::jsonb, ${longDesc || null},
+            ${Boolean(p.featured)}, ${p.status || 'draft'},
+            ${Number(p.sortOrder) || 0}, ${p.seoTitle || null}, ${p.seoDescription || null},
+            ${p.imageAlt || null}, ${p.image || null}, ${p.priceEstimate || null}, NOW()
+          )
+          ON CONFLICT (id) DO UPDATE SET
+            name = EXCLUDED.name,
+            slug = EXCLUDED.slug,
+            category = EXCLUDED.category,
+            category_name = EXCLUDED.category_name,
+            fire_rating = EXCLUDED.fire_rating,
+            certification_no = EXCLUDED.certification_no,
+            short_description = EXCLUDED.short_description,
+            material = EXCLUDED.material,
+            standard = EXCLUDED.standard,
+            warranty = EXCLUDED.warranty,
+            specs = EXCLUDED.specs,
+            features = EXCLUDED.features,
+            long_description = EXCLUDED.long_description,
+            featured = EXCLUDED.featured,
+            status = EXCLUDED.status,
+            sort_order = EXCLUDED.sort_order,
+            seo_title = EXCLUDED.seo_title,
+            seo_description = EXCLUDED.seo_description,
+            image_alt = EXCLUDED.image_alt,
+            image = EXCLUDED.image,
+            price_estimate = EXCLUDED.price_estimate,
+            updated_at = NOW()
+        `;
+      } catch (insertErr: any) {
+        const errMsg = String(insertErr?.message || insertErr);
+        if (errMsg.includes('features') || errMsg.includes('long_description')) {
+          try {
+            await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS features JSONB DEFAULT '[]'::jsonb;`;
+            await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS long_description TEXT;`;
+            await sql`
+              INSERT INTO products (
+                id, name, slug, category, category_name, fire_rating, certification_no,
+                short_description, material, standard, warranty, specs, features, long_description,
+                featured, status, sort_order, seo_title, seo_description, image_alt, image,
+                price_estimate, updated_at
+              ) VALUES (
+                ${p.id}, ${p.name}, ${p.slug}, ${p.category}, ${p.categoryName || p.category},
+                ${p.fireRating || null}, ${p.certificationNo || null}, ${p.shortDescription || null},
+                ${p.material || null}, ${p.standard || null}, ${p.warranty || null},
+                ${specsJson}::jsonb, ${featuresJson}::jsonb, ${longDesc || null},
+                ${Boolean(p.featured)}, ${p.status || 'draft'},
+                ${Number(p.sortOrder) || 0}, ${p.seoTitle || null}, ${p.seoDescription || null},
+                ${p.imageAlt || null}, ${p.image || null}, ${p.priceEstimate || null}, NOW()
+              )
+              ON CONFLICT (id) DO UPDATE SET
+                name = EXCLUDED.name,
+                slug = EXCLUDED.slug,
+                category = EXCLUDED.category,
+                category_name = EXCLUDED.category_name,
+                fire_rating = EXCLUDED.fire_rating,
+                certification_no = EXCLUDED.certification_no,
+                short_description = EXCLUDED.short_description,
+                material = EXCLUDED.material,
+                standard = EXCLUDED.standard,
+                warranty = EXCLUDED.warranty,
+                specs = EXCLUDED.specs,
+                features = EXCLUDED.features,
+                long_description = EXCLUDED.long_description,
+                featured = EXCLUDED.featured,
+                status = EXCLUDED.status,
+                sort_order = EXCLUDED.sort_order,
+                seo_title = EXCLUDED.seo_title,
+                seo_description = EXCLUDED.seo_description,
+                image_alt = EXCLUDED.image_alt,
+                image = EXCLUDED.image,
+                price_estimate = EXCLUDED.price_estimate,
+                updated_at = NOW()
+            `;
+          } catch {
+            await sql`
+              INSERT INTO products (
+                id, name, slug, category, category_name, fire_rating, certification_no,
+                short_description, material, standard, warranty, specs,
+                featured, status, sort_order, seo_title, seo_description, image_alt, image,
+                price_estimate, updated_at
+              ) VALUES (
+                ${p.id}, ${p.name}, ${p.slug}, ${p.category}, ${p.categoryName || p.category},
+                ${p.fireRating || null}, ${p.certificationNo || null}, ${p.shortDescription || null},
+                ${p.material || null}, ${p.standard || null}, ${p.warranty || null},
+                ${specsJson}::jsonb,
+                ${Boolean(p.featured)}, ${p.status || 'draft'},
+                ${Number(p.sortOrder) || 0}, ${p.seoTitle || null}, ${p.seoDescription || null},
+                ${p.imageAlt || null}, ${p.image || null}, ${p.priceEstimate || null}, NOW()
+              )
+              ON CONFLICT (id) DO UPDATE SET
+                name = EXCLUDED.name,
+                slug = EXCLUDED.slug,
+                category = EXCLUDED.category,
+                category_name = EXCLUDED.category_name,
+                fire_rating = EXCLUDED.fire_rating,
+                certification_no = EXCLUDED.certification_no,
+                short_description = EXCLUDED.short_description,
+                material = EXCLUDED.material,
+                standard = EXCLUDED.standard,
+                warranty = EXCLUDED.warranty,
+                specs = EXCLUDED.specs,
+                featured = EXCLUDED.featured,
+                status = EXCLUDED.status,
+                sort_order = EXCLUDED.sort_order,
+                seo_title = EXCLUDED.seo_title,
+                seo_description = EXCLUDED.seo_description,
+                image_alt = EXCLUDED.image_alt,
+                image = EXCLUDED.image,
+                price_estimate = EXCLUDED.price_estimate,
+                updated_at = NOW()
+            `;
+          }
+        } else {
+          throw insertErr;
+        }
+      }
 
       return res.status(200).json({ ok: true, id: p.id });
     } catch (err: any) {
