@@ -159,6 +159,14 @@
 - Kiểm thử trên preview với Neon thật: `/api/public-content` → `isDatabaseLive: true`, MST đọc từ Neon; `/api/admin/products`, `/api/leads`, `/api/admin/me` → 401 khi chưa đăng nhập; đăng nhập sai → 401, bảng `login_attempts` hoạt động.
 - Lưu ý: Preview và Production đang dùng **chung một database Neon**.
 
+### Lưu thông tin khách hàng (12/10/2026)
+- Form báo giá: ô **đồng ý xử lý dữ liệu bắt buộc** (mặc định không tick); API từ chối lead không có `consent === true` (NĐ 13/2023).
+- Lưu tách cột: `product_interest`, `fire_rating`, `project_location`, `company`, `source` (Form báo giá / Form liên hệ).
+- Chống spam: bẫy bot ở form báo giá; giới hạn 3 lead/10 phút theo số điện thoại, 5 lead/10 phút theo IP (lưu mã băm HMAC, không lưu IP thô). Cần chạy `sql/migrations/20261012_lead_rate_limits.sql` (chưa chạy: giới hạn theo IP tạm tắt, lead vẫn nhận).
+- Cắt độ dài trường theo cột Neon để không mất lead khi khách nhập quá dài; kiểm tra định dạng email.
+- Trang quản trị: danh sách khách hàng phân trang (200/trang, nút "Tải thêm", hiển thị tổng số).
+- Kiểm thử trên Postgres thật (PGlite + schema): 24/24 PASS; trình duyệt: form chặn khi chưa tick đồng ý, gửi đủ trường tách riêng.
+
 ### Việc còn lại (chưa làm)
 - Xác minh chứng nhận kiểm định và danh sách "đối tác" (`PARTNER_LOGOS`: Mitsubishi, Hitachi...).
 - Gắn `apexdoor.net` trên Vercel + DNS Mắt Bão (code đã cập nhật sitemap, robots, canonical, og, JSON-LD).

@@ -58,8 +58,12 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [projectLocation, setProjectLocation] = useState('');
   const [notes, setNotes] = useState('');
+  const [consent, setConsent] = useState(false);
+  // Bẫy chống bot: ô ẩn, người thật không điền
+  const [website, setWebsite] = useState('');
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -81,6 +85,10 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
     e.preventDefault();
     if (!fullName.trim() || !phone.trim()) {
       setErrorMsg('Vui lòng nhập họ tên và số điện thoại liên hệ.');
+      return;
+    }
+    if (!consent) {
+      setErrorMsg('Vui lòng xác nhận đồng ý để APEX xử lý thông tin và liên hệ báo giá.');
       return;
     }
 
@@ -110,8 +118,14 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
         email: email.trim() || undefined,
         topic: `Yêu cầu báo giá: ${currentProd}`,
         message: composedMessage,
-        consent: true,
+        consent,
+        website,
         formName: 'quote',
+        // Lưu tách riêng để lọc / thống kê trong trang quản trị
+        productInterest: currentProd,
+        fireRating,
+        projectLocation: projectLocation.trim() || undefined,
+        company: companyName.trim() || undefined,
       });
       setSubmitted(true);
     } catch {
@@ -435,6 +449,17 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
                 </div>
 
                 <div>
+                  <label className="block text-[11px] text-slate-600 font-medium mb-1">Công ty / Chủ đầu tư (nếu có)</label>
+                  <input
+                    type="text"
+                    placeholder="Công ty Xây dựng ABC"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="w-full h-9 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                  />
+                </div>
+
+                <div>
                   <label className="block text-[11px] text-slate-600 font-medium mb-1">Địa điểm công trình / Dự án</label>
                   <input
                     type="text"
@@ -458,11 +483,34 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
               </div>
             </div>
 
-            {/* Nút hành động */}
-            <div className="border-t border-slate-200 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <span className="text-[11px] text-slate-500">
-                Thông tin được bảo mật theo chính sách quyền riêng tư APEX.
+            {/* Bẫy chống bot: ẩn với người dùng và trình đọc màn hình */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+              <label>
+                Website
+                <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+              </label>
+            </div>
+
+            {/* Đồng ý xử lý dữ liệu cá nhân (Nghị định 13/2023) */}
+            <label className="flex items-start gap-2 text-[11px] leading-5 text-slate-600">
+              <input
+                type="checkbox"
+                required
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-red-600"
+              />
+              <span>
+                Tôi đồng ý để APEX lưu và xử lý thông tin trên nhằm liên hệ tư vấn, báo giá theo{' '}
+                <a href="/chinh-sach-bao-mat" target="_blank" rel="noopener noreferrer" className="font-semibold text-red-700 underline">
+                  chính sách bảo mật
+                </a>
+                .
               </span>
+            </label>
+
+            {/* Nút hành động */}
+            <div className="border-t border-slate-200 pt-4 flex flex-col sm:flex-row items-center justify-end gap-3">
               <div className="flex gap-2 w-full sm:w-auto">
                 <button
                   type="button"

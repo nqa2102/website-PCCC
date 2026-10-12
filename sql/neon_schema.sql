@@ -228,3 +228,16 @@ CREATE TABLE IF NOT EXISTS login_attempts (
 
 CREATE INDEX IF NOT EXISTS idx_login_attempts_email_created ON login_attempts(email, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_created ON login_attempts(ip, created_at DESC);
+
+-- ====================================================================
+-- 9. GIỚI HẠN TẦN SUẤT GỬI FORM (LEAD RATE LIMITS)
+-- (Cũng có trong sql/migrations/20261012_lead_rate_limits.sql cho DB đã khởi tạo)
+-- ====================================================================
+CREATE TABLE IF NOT EXISTS lead_rate_limits (
+  id BIGSERIAL PRIMARY KEY,
+  ip_hash VARCHAR(64) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_lead_rate_limits_ip_created ON lead_rate_limits(ip_hash, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_leads_phone_created ON leads(phone, created_at DESC);

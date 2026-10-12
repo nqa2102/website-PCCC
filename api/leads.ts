@@ -1,7 +1,28 @@
+import crypto from 'crypto';
 import { getDb, requireAdminRole, ROLE_ACCESS } from './_db.js';
 
 const LEAD_STATUSES = ['new', 'contacted', 'qualified', 'closed', 'lost'];
 const LEAD_PRIORITIES = ['high', 'medium', 'low'];
+
+// Chống gửi hàng loạt (bot / spam từ quảng cáo)
+const RATE_WINDOW_MINUTES = 10;
+const MAX_LEADS_PER_IP = 5;
+const MAX_LEADS_PER_PHONE = 3;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Cắt chuỗi theo độ dài cột Neon để lệnh INSERT không lỗi (mất lead) khi khách nhập quá dài
+const clip = (value: unknown, max: number): string | null => {
+  if (value === undefined || value === null) return null;
+  const text = String(value).trim();
+  return text ? text.slice(0, max) : null;
+};
+
+// Không lưu IP thô (dữ liệu cá nhân): chỉ lưu mã băm có khóa bí mật của hệ thống
+const hashIp = (req: any) => {
+  const forwarded = req.headers?.['x-forwarded-for'];
+  const ip = (typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : '') || req.socket?.remoteAddress || 'unknown';
+  return crypto.createHmac('sha256', process.env.ADMIN_SESSION_SECRET || 'apex-lead-rate').update(ip).digest('hex').slice(0, 32);
+};
 
 // Dữ liệu khách nhập được chèn vào email HTML: phải escape để tránh chèn mã/link giả mạo
 const escapeHtml = (value: unknown) =>
@@ -12,6 +33,14 @@ export default async function handler(req: any, res: any) {
   if (req.method === 'GET') {
     const user = await requireAdminRole(req, res, ROLE_ACCESS.leads);
     if (!user) return;
+
+    // Phân trang theo con trỏ (created_at, id): ?before=<ISO>&beforeId=<id>&limit=<1-500>
+    const limit = Math.min(Math.max(Number(req.query?.limit) || 200, 1), 500);
+    const before = typeof req.query?.before === 'string' ? req.query.before : null;
+    const beforeId = typeof req.query?.beforeId === 'string' ? req.query.beforeId : '';
+    if (before && Number.isNaN(Date.parse(before))) {
+      return res.status(400).json({ error: 'BadRequest', message: 'Tham số phân trang không hợp lệ.' });
+    }
 
     try {
       const sql = getDb();
@@ -36,10 +65,13 @@ export default async function handler(req: any, res: any) {
           notes,
           consent
         FROM leads
-        ORDER BY created_at DESC
-        LIMIT 200
+        WHERE ${before}::timestamptz IS NULL
+          OR (date_trunc('milliseconds', created_at), id) < (${before}::timestamptz, ${beforeId})
+        ORDER BY date_trunc('milliseconds', created_at) DESC, id DESC
+        LIMIT ${limit + 1}
       `;
-      return res.status(200).json({ leads: rows });
+      const [{ total }] = await sql`SELECT COUNT(*)::int AS total FROM leads`;
+      return res.status(200).json({ leads: rows.slice(0, limit), hasMore: rows.length > limit, total });
     } catch (err: any) {
       console.error('Lỗi lấy danh sách leads:', err);
       return res.status(500).json({ error: 'DatabaseError', message: 'Không thể tải danh sách liên hệ.' });
@@ -80,9 +112,29 @@ export default async function handler(req: any, res: any) {
         return res.status(400).json({ error: 'BadRequest', message: 'Số điện thoại không hợp lệ.' });
       }
 
+      // 3. Đồng ý xử lý dữ liệu phải được khách chủ động xác nhận (Nghị định 13/2023)
+      if (consent !== true) {
+        return res.status(400).json({ error: 'ConsentRequired', message: 'Vui lòng xác nhận đồng ý xử lý thông tin để APEX liên hệ.' });
+      }
+
+      const cleanEmail = clip(email, 255);
+      if (cleanEmail && !EMAIL_PATTERN.test(cleanEmail)) {
+        return res.status(400).json({ error: 'BadRequest', message: 'Email không hợp lệ.' });
+      }
+
       const leadId = `lead-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
-      const cleanSource = source || 'Biểu mẫu website';
-      const cleanConsent = consent !== false;
+      const lead = {
+        fullName: clip(fullName, 255)!,
+        phone: clip(phone, 50)!,
+        email: cleanEmail,
+        company: clip(company, 255),
+        projectName: clip(projectName, 255),
+        projectLocation: clip(projectLocation, 255),
+        productInterest: clip(productInterest, 255),
+        fireRating: clip(fireRating, 100),
+        source: clip(source, 100) || 'Biểu mẫu website',
+        message: clip(message, 4000),
+      };
 
       let sql;
       try {
@@ -94,37 +146,61 @@ export default async function handler(req: any, res: any) {
         });
       }
 
-      // 3. Ghi nhận lead vào Neon DB
+      // 4. Giới hạn tần suất: theo số điện thoại (bảng leads) và theo IP đã băm (bảng lead_rate_limits)
+      const tooMany = () =>
+        res.status(429).json({
+          error: 'TooManyRequests',
+          message: 'Quý khách đã gửi nhiều yêu cầu trong thời gian ngắn. Vui lòng gọi hotline để được hỗ trợ ngay.',
+        });
+      const [phoneCount] = await sql`
+        SELECT COUNT(*)::int AS n FROM leads
+        WHERE regexp_replace(phone, '[^0-9+]', '', 'g') = ${cleanPhone}
+          AND created_at > NOW() - make_interval(mins => ${RATE_WINDOW_MINUTES})
+      `;
+      if (phoneCount.n >= MAX_LEADS_PER_PHONE) return tooMany();
+
+      const ipHash = hashIp(req);
+      let ipTableReady = true;
+      try {
+        const [ipCount] = await sql`
+          SELECT COUNT(*)::int AS n FROM lead_rate_limits
+          WHERE ip_hash = ${ipHash} AND created_at > NOW() - make_interval(mins => ${RATE_WINDOW_MINUTES})
+        `;
+        if (ipCount.n >= MAX_LEADS_PER_IP) return tooMany();
+      } catch (err) {
+        // Chưa chạy migration lead_rate_limits: vẫn nhận lead (giới hạn theo số điện thoại vẫn hoạt động)
+        ipTableReady = false;
+        console.error('Chưa kiểm tra được giới hạn theo IP (bảng lead_rate_limits?):', err);
+      }
+
+      // 5. Ghi nhận lead vào Neon DB
       await sql`
         INSERT INTO leads (
           id, full_name, phone, email, company, project_name, project_location,
-          product_interest, fire_rating, source, message, status, priority, consent
+          product_interest, fire_rating, source, message, status, priority, consent, consent_at
         ) VALUES (
-          ${leadId},
-          ${String(fullName).trim()},
-          ${String(phone).trim()},
-          ${email ? String(email).trim() : null},
-          ${company ? String(company).trim() : null},
-          ${projectName ? String(projectName).trim() : null},
-          ${projectLocation ? String(projectLocation).trim() : null},
-          ${productInterest ? String(productInterest).trim() : null},
-          ${fireRating ? String(fireRating).trim() : null},
-          ${cleanSource},
-          ${message ? String(message).trim() : null},
-          'new',
-          'medium',
-          ${cleanConsent}
+          ${leadId}, ${lead.fullName}, ${lead.phone}, ${lead.email}, ${lead.company},
+          ${lead.projectName}, ${lead.projectLocation}, ${lead.productInterest}, ${lead.fireRating},
+          ${lead.source}, ${lead.message}, 'new', 'medium', true, NOW()
         )
       `;
 
-      // 4. Gửi email thông báo nội bộ qua Resend nếu có cấu hình API Key
+      if (ipTableReady) {
+        try {
+          await sql`INSERT INTO lead_rate_limits (ip_hash) VALUES (${ipHash})`;
+          await sql`DELETE FROM lead_rate_limits WHERE created_at < NOW() - INTERVAL '1 day'`;
+        } catch (err) {
+          console.error('Không ghi được giới hạn tần suất lead:', err);
+        }
+      }
+
+      // 6. Gửi email thông báo nội bộ qua Resend nếu có cấu hình API Key
       // NOTIFICATION_EMAIL: một hoặc nhiều địa chỉ nhận, phân tách bằng dấu phẩy
       const notifyTo = (process.env.NOTIFICATION_EMAIL || '').split(',').map((item) => item.trim()).filter(Boolean);
       if (!process.env.RESEND_API_KEY || notifyTo.length === 0) {
         console.warn('Chưa gửi email báo lead mới: thiếu RESEND_API_KEY hoặc NOTIFICATION_EMAIL.');
       } else {
         try {
-          const cleanEmail = email ? String(email).trim() : '';
           const mailRes = await fetch('https://api.resend.com/emails', {
             method: 'POST',
             headers: {
@@ -136,7 +212,7 @@ export default async function handler(req: any, res: any) {
               from: process.env.RESEND_FROM || 'APEX Website <onboarding@resend.dev>',
               to: notifyTo,
               // Bấm "Trả lời" trong email là trả lời thẳng cho khách (nếu khách để lại email)
-              ...(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) ? { reply_to: cleanEmail } : {}),
+              ...(lead.email ? { reply_to: lead.email } : {}),
               subject: `[APEX PCCC] Khách hàng mới: ${String(fullName).trim()} - ${String(phone).trim()}`,
               html: `
                 <h2>Có yêu cầu tư vấn mới từ website APEX VN</h2>

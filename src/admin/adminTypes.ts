@@ -114,6 +114,9 @@ export interface AdminActivity {
 
 export interface AdminState {
   leads: AdminLead[];
+  // Danh sách khách hàng được tải theo trang
+  leadsHasMore?: boolean;
+  leadsTotal?: number;
   products: AdminProduct[];
   documents: AdminDocument[];
   contents: AdminContent[];
@@ -130,4 +133,9 @@ export interface WebsiteLeadInput {
   consent: boolean;
   website?: string;
   formName?: 'quote' | 'contact';
+  // Các trường lưu tách riêng (form báo giá)
+  productInterest?: string;
+  fireRating?: string;
+  projectLocation?: string;
+  company?: string;
 }
