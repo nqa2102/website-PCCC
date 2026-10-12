@@ -134,9 +134,9 @@ export default function App() {
           handleNavigate(tab);
         }}
         onOpenSearch={() => setSearchModalOpen(true)}
-        onOpenQuote={() => handleOpenQuote()}
-        onSelectProductCategory={(catId) => {
-          handleNavigate('products', undefined, catId);
+        onOpenQuote={(category) => handleOpenQuote(category)}
+        onSelectProductCategory={(catId, prodId) => {
+          handleNavigate('products', prodId, catId);
         }}
         onSelectSolution={(solId) => {
           handleNavigate('solutions', solId);

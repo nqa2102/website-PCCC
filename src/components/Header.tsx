@@ -1,15 +1,35 @@
 import React, { useState } from 'react';
-import { Phone, Search, Menu, X, ChevronDown, ChevronRight, ShieldCheck, Calculator, Download } from 'lucide-react';
+import {
+  Phone,
+  Search,
+  Menu,
+  X,
+  ChevronDown,
+  ChevronRight,
+  ShieldCheck,
+  Calculator,
+  ArrowRight,
+  DoorClosed,
+  Scan,
+  GalleryVertical,
+  Layers,
+  Zap,
+  Route,
+  Server,
+  Radio,
+  Power,
+} from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
 import { ApexBrandLogo } from './brand';
 import { pathForRoute } from '../routing';
+import { PRODUCT_CATEGORY_GROUPS } from './products/ProductCategoryGrid';
 
 interface HeaderProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onOpenSearch: () => void;
-  onOpenQuote?: () => void;
-  onSelectProductCategory?: (category: string) => void;
+  onOpenQuote?: (category?: string) => void;
+  onSelectProductCategory?: (category: string, productId?: string) => void;
   onSelectSolution?: (solutionId: string) => void;
 }
 
@@ -19,24 +39,34 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSearch,
   onOpenQuote,
   onSelectProductCategory,
-  onSelectSolution
+  onSelectSolution,
 }) => {
-  const { company } = useLiveData();
+  const { company, products } = useLiveData();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
+  // Sau khi chọn 1 mục: ẩn menu tới khi chuột rời khỏi vùng menu (tránh hover giữ menu mở)
+  const [productMenuSuppressed, setProductMenuSuppressed] = useState(false);
   const [solutionDropdownOpen, setSolutionDropdownOpen] = useState(false);
   const [mobileProductExpanded, setMobileProductExpanded] = useState(false);
+  const [mobileSelectedCategory, setMobileSelectedCategory] = useState<string | null>(null);
   const [mobileSolutionExpanded, setMobileSolutionExpanded] = useState(false);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, tab: string, itemId?: string) => {
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    tab: string,
+    itemId?: string,
+    productId?: string
+  ) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
     e.preventDefault();
     setActiveTab(tab);
     setMobileMenuOpen(false);
     setProductDropdownOpen(false);
     setSolutionDropdownOpen(false);
-    if (tab === 'products' && itemId && onSelectProductCategory) {
-      onSelectProductCategory(itemId);
+    if (tab === 'products' && onSelectProductCategory) {
+      if (itemId || productId) {
+        onSelectProductCategory(itemId || '', productId);
+      }
     }
     if (tab === 'solutions' && itemId && onSelectSolution) {
       onSelectSolution(itemId);
@@ -55,15 +85,69 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   const productCategories = [
-    { id: 'cua-thep-ngan-chay', name: 'Cửa thép ngăn cháy' },
-    { id: 'cua-kinh-ngan-chay', name: 'Cửa kính ngăn cháy' },
-    { id: 'cua-cuon-ngan-chay', name: 'Cửa cuốn ngăn cháy' },
-    { id: 'rem-ngan-chay', name: 'Rèm ngăn cháy & khói' },
-    { id: 'tu-dien', name: 'Tủ điện phân phối & điều khiển' },
-    { id: 'thang-mang-cap', name: 'Thang máng cáp điện' },
-    { id: 'tu-rack', name: 'Tủ rack mạng & viễn thông' },
-    { id: 'nha-tram-shelter', name: 'Nhà trạm Shelter viễn thông' },
-    { id: 'tu-nguon-outdoor', name: 'Tủ nguồn Outdoor ngoài trời' },
+    {
+      id: 'cua-thep-ngan-chay',
+      name: 'Cửa thép ngăn cháy',
+      icon: DoorClosed,
+      tag: 'PCCC Công Trình',
+      shortDesc: 'Khung cánh thép gia cường, lõi cách nhiệt không cháy, ngăn lửa và khói độc.',
+    },
+    {
+      id: 'cua-kinh-ngan-chay',
+      name: 'Cửa kính ngăn cháy',
+      icon: Scan,
+      tag: 'Kiến Trúc Mở',
+      shortDesc: 'Hệ khung chịu lực kết hợp kính ngăn cháy đa tầng, lấy sáng và thẩm mỹ.',
+    },
+    {
+      id: 'cua-cuon-ngan-chay',
+      name: 'Cửa cuốn ngăn cháy',
+      icon: GalleryVertical,
+      tag: 'Khoảng Mở Lớn',
+      shortDesc: 'Khoảng mở siêu trường nhịp lớn, đóng kín tự động khi nhận tín hiệu báo cháy.',
+    },
+    {
+      id: 'rem-ngan-chay',
+      name: 'Rèm ngăn cháy & khói',
+      icon: Layers,
+      tag: 'Ngăn Khói Trọng Lực',
+      shortDesc: 'Vải sợi thủy tinh gia cường thép, giấu âm trần thẩm mỹ, tự động hạ khi báo động.',
+    },
+    {
+      id: 'tu-dien',
+      name: 'Tủ điện phân phối & điều khiển',
+      icon: Zap,
+      tag: 'Cơ Điện Hạ Thế',
+      shortDesc: 'Vỏ tủ điện hạ thế, tủ MSB, DB và tủ điều khiển bơm PCCC gia công CNC chính xác.',
+    },
+    {
+      id: 'thang-mang-cap',
+      name: 'Thang máng cáp điện',
+      icon: Route,
+      tag: 'Hạ Tầng Dây Dẫn',
+      shortDesc: 'Máng cáp, thang cáp mạ kẽm / nhúng nóng, bảo vệ cáp điện lực và tín hiệu PCCC.',
+    },
+    {
+      id: 'tu-rack',
+      name: 'Tủ rack mạng & viễn thông',
+      icon: Server,
+      tag: 'CNTT & Viễn Thông',
+      shortDesc: 'Tủ mạng 19 inch (6U - 42U) chuẩn EIA-310-D, tải trọng cao, thông gió tối ưu.',
+    },
+    {
+      id: 'nha-tram-shelter',
+      name: 'Nhà trạm Shelter viễn thông',
+      icon: Radio,
+      tag: 'Module Dã Ngoại',
+      shortDesc: 'Panel sandwich cách nhiệt, chống nước, chống ăn mòn dã ngoại cho trạm BTS.',
+    },
+    {
+      id: 'tu-nguon-outdoor',
+      name: 'Tủ nguồn Outdoor ngoài trời',
+      icon: Power,
+      tag: 'Nguồn Ngoài Trời',
+      shortDesc: 'Kết cấu 2 lớp vỏ cách nhiệt IP55/IP65, bảo vệ bộ chỉnh lưu và ắc quy ngoài trời.',
+    },
   ];
 
   const solutionList = [
@@ -134,7 +218,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Primary Quote CTA Button */}
             {onOpenQuote && (
               <button
-                onClick={onOpenQuote}
+                onClick={() => onOpenQuote()}
                 className="hidden sm:inline-flex items-center gap-1.5 bg-red-600 hover:bg-red-700 active:scale-95 text-white font-bold px-3.5 py-2 rounded-lg text-xs transition-all shadow-xs"
               >
                 <Calculator className="w-3.5 h-3.5" />
@@ -167,50 +251,93 @@ export const Header: React.FC<HeaderProps> = ({
                   return (
                     <div 
                       key={item.id}
-                      className="relative"
+                      className="relative group"
                       onMouseEnter={() => setProductDropdownOpen(true)}
-                      onMouseLeave={() => setProductDropdownOpen(false)}
+                      onMouseLeave={() => {
+                        setProductDropdownOpen(false);
+                        setProductMenuSuppressed(false);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') setProductDropdownOpen(false);
+                      }}
                     >
-                      <a
-                        href="/san-pham"
-                        onClick={(e) => handleNavClick(e, 'products')}
-                        className={`flex items-center gap-1 py-3 px-3 border-b-2 transition-colors ${
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setProductDropdownOpen(!productDropdownOpen);
+                        }}
+                        className={`flex items-center gap-1 py-3 px-3 border-b-2 transition-colors cursor-pointer ${
                           isActive 
                             ? 'text-red-600 border-red-600' 
-                            : 'text-slate-700 border-transparent hover:text-red-600'
+                            : 'text-slate-700 border-transparent hover:text-red-600 group-hover:text-red-600'
                         }`}
                       >
                         <span>{item.label}</span>
-                        <ChevronDown className="w-3.5 h-3.5" />
-                      </a>
+                        <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          productDropdownOpen ? 'rotate-180' : 'group-hover:rotate-180'
+                        }`} />
+                      </button>
 
-                      {productDropdownOpen && (
-                        <div className="absolute top-full left-0 w-72 bg-white border border-neutral-200 shadow-xl rounded-b-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                          <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                            Danh mục sản phẩm PCCC
+                      {/* DESKTOP MENU SẢN PHẨM: danh sách 9 nhóm, chia 2 khối để quét nhanh */}
+                      <div
+                        className={`absolute top-full left-0 z-50 w-[340px] rounded-b-xl border border-neutral-200 bg-white p-2 shadow-xl ${
+                          productMenuSuppressed
+                            ? 'hidden'
+                            : productDropdownOpen
+                              ? 'block'
+                              : 'hidden md:group-hover:block md:group-focus-within:block'
+                        }`}
+                      >
+                        {PRODUCT_CATEGORY_GROUPS.map((group) => (
+                          <div key={group.label} className="py-1">
+                            <p className="px-3 pb-1 pt-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                              {group.label}
+                            </p>
+                            <ul>
+                              {group.ids.map((id) => {
+                                const cat = productCategories.find((c) => c.id === id);
+                                if (!cat) return null;
+                                const IconComponent = cat.icon;
+                                return (
+                                  <li key={cat.id}>
+                                    <a
+                                      href={`/san-pham/${cat.id}`}
+                                      onClick={(e) => {
+                                        setProductDropdownOpen(false);
+                                        setProductMenuSuppressed(true);
+                                        (e.currentTarget as HTMLElement).blur();
+                                        handleNavClick(e, 'products', cat.id);
+                                      }}
+                                      className="group/item flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-slate-700 transition-colors hover:bg-neutral-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-red-600"
+                                    >
+                                      <IconComponent
+                                        className="h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover/item:text-red-600"
+                                        aria-hidden="true"
+                                      />
+                                      <span>{cat.name}</span>
+                                    </a>
+                                  </li>
+                                );
+                              })}
+                            </ul>
                           </div>
-                          {productCategories.map((cat) => (
-                            <a
-                              key={cat.id}
-                              href={`/san-pham/${cat.id}`}
-                              onClick={(e) => handleNavClick(e, 'products', cat.id)}
-                              className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-neutral-50 hover:text-red-600 flex items-center justify-between"
-                            >
-                              <span>{cat.name}</span>
-                              <ChevronRight className="w-3 h-3 text-slate-400" />
-                            </a>
-                          ))}
-                          <div className="border-t border-neutral-100 mt-1 pt-1.5 px-3">
-                            <a
-                              href="/san-pham"
-                              onClick={(e) => handleNavClick(e, 'products')}
-                              className="text-xs font-bold text-red-600 hover:underline py-1 block"
-                            >
-                              Xem toàn bộ danh mục sản phẩm →
-                            </a>
-                          </div>
-                        </div>
-                      )}
+                        ))}
+
+                        <a
+                          href="/san-pham"
+                          onClick={(e) => {
+                            setProductDropdownOpen(false);
+                            setProductMenuSuppressed(true);
+                            (e.currentTarget as HTMLElement).blur();
+                            handleNavClick(e, 'products');
+                          }}
+                          className="mt-1 flex min-h-10 items-center justify-between border-t border-neutral-100 px-3 pt-2 text-xs font-bold text-red-700 transition-colors hover:text-red-800 focus-visible:outline-2 focus-visible:outline-red-600"
+                        >
+                          <span>Xem tất cả sản phẩm</span>
+                          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                        </a>
+                      </div>
                     </div>
                   );
                 }
@@ -219,41 +346,44 @@ export const Header: React.FC<HeaderProps> = ({
                   return (
                     <div 
                       key={item.id}
-                      className="relative"
+                      className="relative group"
                       onMouseEnter={() => setSolutionDropdownOpen(true)}
                       onMouseLeave={() => setSolutionDropdownOpen(false)}
                     >
-                      <a
-                        href="/giai-phap"
-                        onClick={(e) => handleNavClick(e, 'solutions')}
-                        className={`flex items-center gap-1 py-3 px-3 border-b-2 transition-colors ${
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSolutionDropdownOpen(!solutionDropdownOpen);
+                        }}
+                        className={`flex items-center gap-1 py-3 px-3 border-b-2 transition-colors cursor-pointer ${
                           isActive 
                             ? 'text-red-600 border-red-600' 
-                            : 'text-slate-700 border-transparent hover:text-red-600'
+                            : 'text-slate-700 border-transparent hover:text-red-600 group-hover:text-red-600'
                         }`}
                       >
                         <span>{item.label}</span>
                         <ChevronDown className="w-3.5 h-3.5" />
-                      </a>
+                      </button>
 
-                      {solutionDropdownOpen && (
-                        <div className="absolute top-full left-0 w-80 bg-white border border-neutral-200 shadow-xl rounded-b-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                          <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                            Giải pháp theo loại công trình
-                          </div>
-                          {solutionList.map((sol) => (
-                            <a
-                              key={sol.id}
-                              href={`/giai-phap/${sol.id}`}
-                              onClick={(e) => handleNavClick(e, 'solutions', sol.id)}
-                              className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-neutral-50 hover:text-red-600 flex items-center justify-between"
-                            >
-                              <span>{sol.name}</span>
-                              <ChevronRight className="w-3 h-3 text-slate-400" />
-                            </a>
-                          ))}
+                      <div className={`absolute top-full left-0 w-80 bg-white border border-neutral-200 shadow-xl rounded-b-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150 ${
+                        solutionDropdownOpen ? 'block' : 'hidden md:group-hover:block'
+                      }`}>
+                        <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                          Giải pháp theo loại công trình
                         </div>
-                      )}
+                        {solutionList.map((sol) => (
+                          <a
+                            key={sol.id}
+                            href={`/giai-phap/${sol.id}`}
+                            onClick={(e) => handleNavClick(e, 'solutions', sol.id)}
+                            className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-neutral-50 hover:text-red-600 flex items-center justify-between"
+                          >
+                            <span>{sol.name}</span>
+                            <ChevronRight className="w-3 h-3 text-slate-400" />
+                          </a>
+                        ))}
+                      </div>
                     </div>
                   );
                 }
@@ -341,19 +471,72 @@ export const Header: React.FC<HeaderProps> = ({
                       </button>
                     </div>
 
+                    {/* MOBILE ACCORDION: DANH MỤC & SẢN PHẨM TRONG DANH MỤC */}
                     {mobileProductExpanded && (
-                      <div className="pl-4 pr-2 py-1 space-y-1 bg-neutral-50 rounded-lg my-1">
-                        {productCategories.map((cat) => (
-                          <a
-                            key={cat.id}
-                            href={`/san-pham/${cat.id}`}
-                            onClick={(e) => handleNavClick(e, 'products', cat.id)}
-                            className="w-full text-left py-2 px-2 text-xs text-slate-700 hover:text-red-600 flex items-center justify-between"
-                          >
-                            <span>{cat.name}</span>
-                            <ChevronRight className="w-3 h-3 text-slate-400" />
-                          </a>
-                        ))}
+                      <div className="pl-1 pr-1 py-1 space-y-1.5 bg-neutral-50 rounded-xl my-1 border border-neutral-100">
+                        {productCategories.map((cat) => {
+                          const isCatExpanded = mobileSelectedCategory === cat.id;
+                          const catProds = products.filter((p) => p.category === cat.id);
+                          const subProds = catProds.length > 1
+                            ? catProds.filter((p) => p.id !== cat.id)
+                            : catProds;
+                          const IconComponent = cat.icon;
+
+                          return (
+                            <div key={cat.id} className="rounded-lg bg-white border border-neutral-100 overflow-hidden">
+                              <div className="flex items-center justify-between p-2">
+                                <a
+                                  href={`/san-pham/${cat.id}`}
+                                  onClick={(e) => handleNavClick(e, 'products', cat.id)}
+                                  className="flex items-center gap-2 text-xs font-semibold text-slate-800 hover:text-red-600 flex-1 truncate"
+                                >
+                                  <IconComponent className="w-4 h-4 text-slate-500 shrink-0" />
+                                  <span className="truncate">{cat.name}</span>
+                                </a>
+                                <button
+                                  type="button"
+                                  onClick={() => setMobileSelectedCategory(isCatExpanded ? null : cat.id)}
+                                  className="p-1 text-slate-400 hover:text-slate-700"
+                                  aria-label={`Mở rộng sản phẩm ${cat.name}`}
+                                >
+                                  <ChevronDown className={`w-4 h-4 transition-transform ${isCatExpanded ? 'rotate-180 text-red-600' : ''}`} />
+                                </button>
+                              </div>
+
+                              {isCatExpanded && (
+                                <div className="px-3 pb-2.5 pt-1 border-t border-neutral-100 bg-slate-50/50 space-y-1.5 animate-in fade-in duration-150">
+                                  <div className="text-[10px] font-semibold uppercase text-slate-400 tracking-wider">
+                                    Sản phẩm trong nhóm:
+                                  </div>
+                                  {subProds.map((p) => (
+                                    <a
+                                      key={p.id}
+                                      href={`/san-pham/${cat.id}/${p.slug || p.id}`}
+                                      onClick={(e) => handleNavClick(e, 'products', cat.id, p.slug || p.id)}
+                                      className="block py-1.5 px-2 rounded-lg bg-white border border-neutral-100 text-xs text-slate-700 hover:text-red-600 hover:border-red-200 transition-colors"
+                                    >
+                                      <div className="flex items-center justify-between">
+                                        <span className="font-medium truncate">{p.name}</span>
+                                        {p.fireRating && (
+                                          <span className="rounded bg-slate-900 text-white text-[9px] font-bold px-1.5 py-0.2 shrink-0 ml-1">
+                                            {p.fireRating}
+                                          </span>
+                                        )}
+                                      </div>
+                                    </a>
+                                  ))}
+                                  <a
+                                    href={`/san-pham/${cat.id}`}
+                                    onClick={(e) => handleNavClick(e, 'products', cat.id)}
+                                    className="block text-right text-[11px] font-bold text-red-600 hover:underline pt-1"
+                                  >
+                                    Xem tất cả nhóm {cat.name} →
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
                   </div>

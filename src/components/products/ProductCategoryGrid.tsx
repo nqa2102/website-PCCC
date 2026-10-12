@@ -87,6 +87,12 @@ export const PRODUCT_CATEGORY_DEFINITIONS: CategoryInfo[] = [
   },
 ];
 
+// 9 nhóm chia theo nhu cầu người mua; dùng chung cho menu Sản phẩm và trang danh mục
+export const PRODUCT_CATEGORY_GROUPS: { label: string; ids: ProductCategory[] }[] = [
+  { label: 'Giải pháp ngăn cháy', ids: ['cua-thep-ngan-chay', 'cua-kinh-ngan-chay', 'cua-cuon-ngan-chay', 'rem-ngan-chay'] },
+  { label: 'Cơ điện & viễn thông', ids: ['tu-dien', 'thang-mang-cap', 'tu-rack', 'nha-tram-shelter', 'tu-nguon-outdoor'] },
+];
+
 interface ProductCategoryGridProps {
   selectedCategory?: string;
   onSelectCategory: (category: ProductCategory | 'all') => void;
