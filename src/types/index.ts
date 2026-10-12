@@ -32,6 +32,9 @@ export interface Product {
   image: string;
   priceEstimate: string;
   popular?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  imageAlt?: string;
 }
 
 export interface Solution {

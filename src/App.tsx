@@ -6,7 +6,9 @@ import { CookieConsent } from './components/CookieConsent';
 import { installContactClickTracking, loadTracking, trackPageView } from './lib/tracking';
 
 import { HomePage } from './pages/HomePage';
-import { applySeo, isProductCategory, pathForRoute, readRoute, type AppRoute } from './routing';
+import { applySeo, isProductCategory, normalizeCategory, pathForRoute, readRoute, type AppRoute } from './routing';
+import { useLiveData } from './admin/adminData';
+import { PRODUCT_CATEGORY_DEFINITIONS } from './components/products/ProductCategoryGrid';
 
 const AboutPage = lazy(() => import('./pages/AboutPage').then((module) => ({ default: module.AboutPage })));
 const ProductsPage = lazy(() => import('./pages/ProductsPage').then((module) => ({ default: module.ProductsPage })));
@@ -31,6 +33,7 @@ const PageFallback = () => (
 );
 
 export default function App() {
+  const { products } = useLiveData();
   const initialRoute = useRef(readRoute()).current;
   const [isAdmin, setIsAdmin] = useState(() => initialRoute.tab === 'admin');
   const [activeTab, setActiveTab] = useState<string>(() => initialRoute.tab === 'admin' ? 'home' : initialRoute.tab);
@@ -60,10 +63,40 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    applySeo(isAdmin ? 'admin' : activeTab);
+    if (isAdmin) {
+      applySeo('admin');
+    } else if (activeTab === 'products') {
+      if (targetProductId) {
+        const prod = products.find((p) => p.slug === targetProductId || p.id === targetProductId);
+        if (prod) {
+          applySeo('products', prod.name, {
+            title: prod.seoTitle || `${prod.name} | APEX Việt Nam`,
+            description: prod.seoDescription || prod.description,
+            image: prod.image,
+          });
+        } else {
+          applySeo('products', targetProductId);
+        }
+      } else if (targetProductCategory) {
+        const norm = normalizeCategory(targetProductCategory);
+        const def = PRODUCT_CATEGORY_DEFINITIONS.find((d) => d.id === norm);
+        if (def) {
+          applySeo('products', def.name, {
+            title: `${def.name} | APEX Việt Nam`,
+            description: def.shortDesc,
+          });
+        } else {
+          applySeo('products');
+        }
+      } else {
+        applySeo('products');
+      }
+    } else {
+      applySeo(activeTab);
+    }
     // Không đo lường trang quản trị
     if (!isAdmin) trackPageView();
-  }, [activeTab, isAdmin, targetProductId, targetSolutionId, targetProjectId, targetDocId, targetArticleId]);
+  }, [activeTab, isAdmin, targetProductId, targetProductCategory, targetSolutionId, targetProjectId, targetDocId, targetArticleId, products]);
 
   // Tải mã đo lường nếu khách đã đồng ý từ lần trước; ghi nhận bấm gọi / Zalo
   useEffect(() => {

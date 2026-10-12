@@ -68,6 +68,14 @@ export const readRoute = (): AppRoute => {
     const rawCategory = new URLSearchParams(window.location.search).get('nhom');
     const queryCategory = normalizeCategory(rawCategory);
 
+    // /san-pham?nhom=... -> chuẩn hóa và chuyển hướng sạch qua replaceState
+    if (queryCategory && segments.length === 1) {
+      if (typeof window !== 'undefined' && window.history?.replaceState) {
+        window.history.replaceState({}, '', `/san-pham/${encodeURIComponent(queryCategory)}`);
+      }
+      return { tab: 'products', category: queryCategory };
+    }
+
     // /san-pham/:category/:slug
     if (segments.length >= 3) {
       const segCat = normalizeCategory(segments[1]);
@@ -177,19 +185,31 @@ const setMeta = (selector: string, attribute: string, value: string) => {
   element?.setAttribute(attribute, value);
 };
 
-export const applySeo = (tab: string, itemName?: string) => {
+export interface SeoOverrides {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+export const applySeo = (tab: string, itemName?: string, overrides?: SeoOverrides) => {
   const base = SEO[tab] || SEO.home;
-  const title = itemName ? `${itemName} | APEX Việt Nam` : base.title;
+  const title = overrides?.title || (itemName ? `${itemName} | APEX Việt Nam` : base.title);
+  const description = overrides?.description || base.description;
   document.title = title;
-  setMeta('meta[name="description"]', 'content', base.description);
+  setMeta('meta[name="description"]', 'content', description);
   setMeta('meta[property="og:title"]', 'content', title);
-  setMeta('meta[property="og:description"]', 'content', base.description);
-  // Chỉ giữ tham số nhóm sản phẩm (đã khai báo trong sitemap), bỏ utm_* và tham số theo dõi khác
-  const group = new URLSearchParams(window.location.search).get('nhom');
-  const pageUrl = `${SITE_URL}${window.location.pathname}${group ? `?nhom=${encodeURIComponent(group)}` : ''}`;
+  setMeta('meta[property="og:description"]', 'content', description);
+
+  // Canonical luôn là URL sạch, trỏ về chính xác tên miền chính thức và pathname, loại bỏ query parameters
+  const pageUrl = `${SITE_URL}${window.location.pathname}`;
   setMeta('meta[property="og:url"]', 'content', pageUrl);
-  setMeta('meta[property="og:image"]', 'content', `${SITE_URL}/og-image.png`);
-  setMeta('meta[name="twitter:image"]', 'content', `${SITE_URL}/og-image.png`);
+
+  const rawImage = overrides?.image || `${SITE_URL}/og-image.png`;
+  const imageUrl = rawImage.startsWith('http')
+    ? rawImage
+    : `${SITE_URL}${rawImage.startsWith('/') ? '' : '/'}${rawImage}`;
+  setMeta('meta[property="og:image"]', 'content', imageUrl);
+  setMeta('meta[name="twitter:image"]', 'content', imageUrl);
 
   let canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonical) {

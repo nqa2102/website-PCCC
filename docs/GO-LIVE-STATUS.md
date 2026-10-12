@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 12/10/2026 (Hoàn thành T0: Khôi phục kết nối Neon Production `isDatabaseLive: true`; Hoàn thành T1: Nhánh `feat/catalog-ui` Catalog 9 nhóm; Hoàn thành T2: Merge PR #3 Lưu lead, consent NĐ 13, chống spam 429, phân trang con trỏ; Hoàn thành T3: Form báo giá `QuoteModal` theo 9 nhóm sản phẩm, phân nhánh ngăn cháy & cơ điện viễn thông)*  
+*Cập nhật lần cuối: 12/10/2026 (Hoàn thành T0: Khôi phục Neon Production; Hoàn thành T1: Catalog 9 nhóm; Hoàn thành T2: Merge PR #3 Lead capture & rate limit; Hoàn thành T3: Form báo giá QuoteModal 9 nhóm; Hoàn thành T4: Sitemap 100% 24 URL sạch, Dynamic SEO title/desc/canonical/og:image cho 9 nhóm và chi tiết sản phẩm)*  
 *Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
