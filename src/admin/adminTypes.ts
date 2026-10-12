@@ -47,6 +47,8 @@ export interface AdminProduct {
   standard: string;
   warranty: string;
   specs?: Record<string, string>;
+  features?: string[];
+  longDescription?: string;
   featured: boolean;
   status: PublishStatus;
   sortOrder: number;

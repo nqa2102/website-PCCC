@@ -62,6 +62,8 @@ CREATE TABLE IF NOT EXISTS products (
   standard VARCHAR(255),
   warranty VARCHAR(100),
   specs JSONB DEFAULT '{}'::jsonb,
+  features JSONB DEFAULT '[]'::jsonb,
+  long_description TEXT,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   status VARCHAR(50) NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'review', 'published', 'internal')),
   sort_order INTEGER NOT NULL DEFAULT 0,

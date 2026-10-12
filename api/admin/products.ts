@@ -15,7 +15,8 @@ export default async function handler(req: any, res: any) {
           id, name, slug, category, category_name as "categoryName",
           fire_rating as "fireRating", certification_no as "certificationNo",
           short_description as "shortDescription", material, standard, warranty,
-          specs, featured, status, sort_order as "sortOrder",
+          specs, features, long_description as "longDescription",
+          featured, status, sort_order as "sortOrder",
           seo_title as "seoTitle", seo_description as "seoDescription",
           image_alt as "imageAlt", image, price_estimate as "priceEstimate",
           updated_at as "updatedAt"
@@ -44,19 +45,44 @@ export default async function handler(req: any, res: any) {
         return res.status(400).json({ error: 'BadRequest', message: 'Thiếu thông tin bắt buộc của sản phẩm.' });
       }
 
+      // Kiểm tra và làm sạch features: mảng chuỗi tối đa 12 mục, mỗi mục <= 200 ký tự
+      let cleanFeatures: string[] = [];
+      if (Array.isArray(p.features)) {
+        cleanFeatures = p.features
+          .filter((item: any) => typeof item === 'string' && item.trim().length > 0)
+          .map((item: string) => item.trim().slice(0, 200))
+          .slice(0, 12);
+      }
+      const featuresJson = JSON.stringify(cleanFeatures);
+
+      // Kiểm tra và làm sạch specs: object chuỗi -> chuỗi, tối đa 30 cặp
+      let cleanSpecs: Record<string, string> = {};
+      if (p.specs && typeof p.specs === 'object' && !Array.isArray(p.specs)) {
+        const entries = Object.entries(p.specs).slice(0, 30);
+        for (const [k, v] of entries) {
+          if (typeof k === 'string' && k.trim()) {
+            cleanSpecs[k.trim()] = String(v ?? '').trim();
+          }
+        }
+      }
+      const specsJson = JSON.stringify(cleanSpecs);
+
+      const longDesc = typeof p.longDescription === 'string' ? p.longDescription : (typeof p.long_description === 'string' ? p.long_description : null);
+
       const sql = getDb();
-      const specsJson = JSON.stringify(p.specs && typeof p.specs === 'object' ? p.specs : {});
 
       await sql`
         INSERT INTO products (
           id, name, slug, category, category_name, fire_rating, certification_no,
-          short_description, material, standard, warranty, specs, featured, status,
-          sort_order, seo_title, seo_description, image_alt, image, price_estimate, updated_at
+          short_description, material, standard, warranty, specs, features, long_description,
+          featured, status, sort_order, seo_title, seo_description, image_alt, image,
+          price_estimate, updated_at
         ) VALUES (
           ${p.id}, ${p.name}, ${p.slug}, ${p.category}, ${p.categoryName || p.category},
           ${p.fireRating || null}, ${p.certificationNo || null}, ${p.shortDescription || null},
           ${p.material || null}, ${p.standard || null}, ${p.warranty || null},
-          ${specsJson}::jsonb, ${Boolean(p.featured)}, ${p.status || 'draft'},
+          ${specsJson}::jsonb, ${featuresJson}::jsonb, ${longDesc || null},
+          ${Boolean(p.featured)}, ${p.status || 'draft'},
           ${Number(p.sortOrder) || 0}, ${p.seoTitle || null}, ${p.seoDescription || null},
           ${p.imageAlt || null}, ${p.image || null}, ${p.priceEstimate || null}, NOW()
         )
@@ -72,6 +98,8 @@ export default async function handler(req: any, res: any) {
           standard = EXCLUDED.standard,
           warranty = EXCLUDED.warranty,
           specs = EXCLUDED.specs,
+          features = EXCLUDED.features,
+          long_description = EXCLUDED.long_description,
           featured = EXCLUDED.featured,
           status = EXCLUDED.status,
           sort_order = EXCLUDED.sort_order,

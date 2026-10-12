@@ -37,7 +37,8 @@ export default async function handler(req: any, res: any) {
           id, name, slug, category, category_name as "categoryName",
           fire_rating as "fireRating", certification_no as "certificationNo",
           short_description as "shortDescription", material, standard, warranty,
-          specs, featured, status, sort_order as "sortOrder",
+          specs, features, long_description as "longDescription",
+          featured, status, sort_order as "sortOrder",
           seo_title as "seoTitle", seo_description as "seoDescription",
           image_alt as "imageAlt", image, price_estimate as "priceEstimate"
         FROM products
