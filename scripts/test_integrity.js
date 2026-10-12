@@ -143,27 +143,30 @@ assert(!foundCreds, 'Bundle JavaScript đã được làm sạch, không chứa 
 // -------------------------------------------------------------
 // Test 5: Rà soát API Serverless Endpoints
 // -------------------------------------------------------------
-console.log('\n--- 5. Kiểm tra Serverless API Handlers ---');
+console.log('\n--- 5. Kiểm tra Serverless API Handlers (Chuẩn tối đa 12 functions cho Vercel Hobby plan) ---');
 const requiredApis = [
   'api/_db.ts',
   'api/leads.ts',
-  'api/products.ts',
-  'api/projects.ts',
   'api/public-content.ts',
   'api/admin/login.ts',
-  'api/admin/logout.ts',
   'api/admin/me.ts',
+  'api/admin/change-password.ts',
   'api/admin/settings.ts',
   'api/admin/products.ts',
   'api/admin/projects.ts',
   'api/admin/documents.ts',
   'api/admin/contents.ts',
   'api/admin/activities.ts',
+  'api/admin/upload.ts',
 ];
 
 for (const apiPath of requiredApis) {
   assert(fs.existsSync(path.join(rootDir, apiPath)), `Endpoint ${apiPath} tồn tại`);
 }
+
+// Kiểm tra số lượng endpoint không vượt quá 12 theo chính sách Vercel Hobby plan (loại trừ file helper _db.ts)
+const totalServerlessEndpoints = requiredApis.filter((p) => !path.basename(p).startsWith('_')).length;
+assert(totalServerlessEndpoints <= 12, `Số lượng Serverless Functions (${totalServerlessEndpoints}) không vượt quá 12 (giới hạn Hobby plan)`);
 
 // package.json dùng "type": "module": Vercel chạy API dạng ES module, import tương đối
 // bắt buộc có đuôi .js (thiếu đuôi -> ERR_MODULE_NOT_FOUND, toàn bộ API trả 500)
@@ -210,8 +213,8 @@ for (const cat of expectedCategories) {
 }
 
 // 6.3 Bảo mật tầng API cho projects
-const publicProjectsApi = fs.readFileSync(path.join(rootDir, 'api', 'projects.ts'), 'utf8');
-assert(publicProjectsApi.includes('verified = true') && publicProjectsApi.includes("status = 'published'"), 'API public /api/projects CHỈ trả về verified = true AND status = published');
+const publicContentApi = fs.readFileSync(path.join(rootDir, 'api', 'public-content.ts'), 'utf8');
+assert(publicContentApi.includes('verified = true') && publicContentApi.includes("status = 'published'"), 'API public /api/public-content CHỈ trả về verified = true AND status = published cho projects');
 
 const adminProjectsApi = fs.readFileSync(path.join(rootDir, 'api', 'admin', 'projects.ts'), 'utf8');
 assert(adminProjectsApi.includes('verified_note') && adminProjectsApi.includes('role !== \'admin\''), 'API admin /api/admin/projects bắt buộc quyền admin và verified_note khi xác minh dự án');

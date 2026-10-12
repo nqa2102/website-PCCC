@@ -14,7 +14,7 @@
 | **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 9 Sản phẩm & Khung Dự án)** | 9 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ (ankovina, 3ce). `fireRating` & `certificationNo` để trống ("Đang cập nhật") tránh gây hiểu lầm. Bảng `projects` để trống tuyệt đối, chờ dữ liệu thật có xác nhận bằng văn bản. |
 | **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/:category`, `/san-pham/:category/:slug`, `/du-an`, `/du-an/:slug`. Schema.org `Product` (chỉ điền dữ liệu thật) và `CreativeWork` (cho dự án verified). |
 | **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử tự động `scripts/test_integrity.js` đạt **159/159 PASS (100%)**, `npm run lint` PASS (0 lỗi), `npm run build` PASS (0 lỗi, 509ms). |
-| **GĐ5** | **Go-live chính thức** | **P0** | ⚪ **NOT STARTED** | Chờ nghiệm thu nội bộ và gắn DNS tên miền chính thức của doanh nghiệp. |
+| **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Đã deploy production thành công lên Vercel: Aliased tên miền chính thức `https://apexdoor.net` và `https://website-pccc.vercel.app`. Bundle production `index-Pu8428da.js` đã hoạt động và được kiểm thử trực tiếp trên live. |
 | **GĐ6** | **Vận hành sau Go-live** | **P2** | ⚪ **NOT STARTED** | Quy trình backup tự động (Neon PITR) và phân quyền bảo trì. |
 
 ---

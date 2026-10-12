@@ -19,6 +19,22 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'MethodNotAllowed', message: 'Chỉ chấp nhận phương thức POST.' });
   }
 
+  // Xử lý đăng xuất (hỗ trợ rewrite từ /api/admin/logout)
+  if (req.url?.includes('logout') || req.query?.action === 'logout') {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const cookieFlags = [
+      'apex_admin_token=',
+      'Path=/',
+      'HttpOnly',
+      'SameSite=Lax',
+      'Max-Age=0',
+      isProduction ? 'Secure' : '',
+    ].filter(Boolean).join('; ');
+
+    res.setHeader('Set-Cookie', cookieFlags);
+    return res.status(200).json({ ok: true, message: 'Đã đăng xuất thành công.' });
+  }
+
   try {
     const { email, password } = req.body || {};
     const cleanEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
