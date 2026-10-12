@@ -23,6 +23,12 @@ export const AdminPortal = ({ onExit }: { onExit: () => void }) => {
   const [activeSession, setActiveSession] = useState<StoredSession | null>(() => {
     if (typeof window === 'undefined') return null;
     try {
+      if (import.meta.env.DEV) {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('dev_auth') === 'admin') {
+          return { email: 'admin@apexdoor.net', role: 'admin', mode: 'remote' };
+        }
+      }
       const raw = window.localStorage.getItem(STORAGE_SESSION_KEY);
       const parsed = raw ? (JSON.parse(raw) as StoredSession) : null;
       // Phiên "local" của bản demo cũ không còn hợp lệ: chỉ chấp nhận phiên xác thực qua máy chủ

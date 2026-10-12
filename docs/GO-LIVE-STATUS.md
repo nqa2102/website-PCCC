@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 12/10/2026 (Hoàn thành T0: Khôi phục Neon Production; Hoàn thành T1: Catalog 9 nhóm; Hoàn thành T2: Merge PR #3 Lead capture & rate limit; Hoàn thành T3: Form báo giá QuoteModal 9 nhóm; Hoàn thành T4: Sitemap 100% 24 URL sạch, Dynamic SEO title/desc/canonical/og:image cho 9 nhóm và chi tiết sản phẩm)*  
+*Cập nhật lần cuối: 12/10/2026 (Hoàn thành T0: Khôi phục Neon Production; Hoàn thành T1: Catalog 9 nhóm; Hoàn thành T2: Merge PR #3 Lead capture & rate limit; Hoàn thành T3: Form báo giá QuoteModal 9 nhóm; Hoàn thành T4: Sitemap 100% 24 URL sạch & Dynamic SEO; Hoàn thành T5: Dự án tiêu biểu 1 nguồn dữ liệu bảng projects & màn hình quản trị Dự án)*  
 *Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -224,3 +224,8 @@
 1. Vào **Cấu hình** → bấm **Nhập danh mục ban đầu (dạng nháp)** để nhập 9 dòng sản phẩm kỹ thuật vào Neon.
 2. Rà soát từng sản phẩm / hồ sơ / bài viết, đối chiếu bản gốc, rồi chuyển trạng thái sang **Đã công bố**.
 3. Lưu ý: khi Neon đã kết nối, website chỉ hiển thị mục **Đã công bố**. Riêng bảng `projects` để trống tuyệt đối, chỉ tạo khi phòng kinh doanh APEX cung cấp dự án thật đã xác minh bằng văn bản.
+
+### 8. Chuyển dữ liệu dự án sang bảng `projects` (T5 - 12/10/2026):
+- Chạy [`sql/migrations/20261012_move_projects.sql`](../sql/migrations/20261012_move_projects.sql) trong Neon SQL Editor.
+- Chuyển an toàn các bản ghi dự án cũ trong `contents` (type = 'project') sang bảng `projects` ở trạng thái `review` và `verified = false` để buộc xác minh lại trước khi công bố.
+- Migration này an toàn 100%, chạy lại nhiều lần không lỗi (idempotent), và tuyệt đối không xóa dữ liệu trong bảng `contents`.

@@ -245,52 +245,34 @@ const PROJECT_CATEGORY_LABELS: Record<Project['category'], string> = {
   healthcare: 'Y tế & Bệnh viện',
 };
 
-const mapProjects = (items: AdminContent[], projectRecords: any[] = []): Project[] => {
-  // Ưu tiên dữ liệu từ bảng projects chuyên biệt (chỉ lấy verified = true và status = 'published')
-  if (projectRecords && projectRecords.length > 0) {
-    return projectRecords
-      .filter((p) => p.verified && p.status === 'published')
-      .map((p) => {
-        const catKey = p.category || '';
-        const catLabel = PRODUCT_CATEGORY_LABELS[catKey] || p.category || 'Dự án tiêu biểu';
-        return {
-          id: p.id,
-          title: p.title,
-          slug: p.slug,
-          category: catKey,
-          categoryLabel: catLabel,
-          clientName: p.clientName || '',
-          client: p.clientName || '',
-          location: p.location || '',
-          completedYear: p.completedYear,
-          year: p.completedYear ? String(p.completedYear) : '',
-          description: p.description || '',
-          image: p.coverImage || HERO_IMAGE,
-          coverImage: p.coverImage || undefined,
-          gallery: p.gallery || [],
-          verified: Boolean(p.verified),
-          verifiedNote: p.verifiedNote || '',
-        };
-      });
+const mapProjects = (_items: AdminContent[], projectRecords: any[] = []): Project[] => {
+  // Chỉ lấy từ bảng projects chuyên biệt (chỉ lấy verified = true và status = 'published')
+  if (!projectRecords || projectRecords.length === 0) {
+    return [];
   }
 
-  // Fallback sang bảng contents (nếu có dự án cũ dạng content đã publish)
-  return items
-    .filter((c) => c.type === 'project' && c.status === 'published')
-    .map((c) => {
-      const category = (c.category && c.category in PROJECT_CATEGORY_LABELS ? c.category : 'commercial') as Project['category'];
+  return projectRecords
+    .filter((p) => p.verified && p.status === 'published')
+    .map((p) => {
+      const catKey = p.category || '';
+      const catLabel = PRODUCT_CATEGORY_LABELS[catKey as keyof typeof PRODUCT_CATEGORY_LABELS] || p.category || 'Dự án tiêu biểu';
       return {
-        id: c.id,
-        title: c.title,
-        category,
-        categoryLabel: PROJECT_CATEGORY_LABELS[category] || 'Dự án tiêu biểu',
-        location: c.location || '',
-        scale: c.scale || '',
-        itemsSupplied: c.itemsSupplied || '',
-        year: c.year || '',
-        image: c.image || HERO_IMAGE,
-        description: c.summary || '',
-        client: c.client || '',
+        id: p.id,
+        title: p.title,
+        slug: p.slug,
+        category: catKey,
+        categoryLabel: catLabel,
+        clientName: p.clientName || '',
+        client: p.clientName || '',
+        location: p.location || '',
+        completedYear: p.completedYear,
+        year: p.completedYear ? String(p.completedYear) : '',
+        description: p.description || '',
+        image: p.coverImage || HERO_IMAGE,
+        coverImage: p.coverImage || undefined,
+        gallery: Array.isArray(p.gallery) ? p.gallery : [],
+        verified: Boolean(p.verified),
+        verifiedNote: p.verifiedNote || '',
       };
     });
 };

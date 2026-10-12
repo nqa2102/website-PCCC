@@ -38,6 +38,14 @@ export default async function handler(req: any, res: any) {
 
       const isSettingVerified = Boolean(p.verified);
 
+      // Chặn công bố khi chưa xác minh (P0 an toàn pháp lý: chỉ dự án đã xác minh mới được công bố)
+      if (p.status === 'published' && !isSettingVerified) {
+        return res.status(400).json({
+          error: 'UnverifiedPublishForbidden',
+          message: 'Dự án phải được xác minh trước khi công bố.',
+        });
+      }
+
       // RÀNG BUỘC QUAN TRỌNG:
       // 1. Chỉ Quản trị viên (admin) mới được set verified = true
       if (isSettingVerified && user.role !== 'admin') {

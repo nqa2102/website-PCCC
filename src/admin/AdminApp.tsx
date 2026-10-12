@@ -45,12 +45,14 @@ import {
   loadMoreLeads,
   saveRemoteLead,
   saveRemoteProduct,
+  saveRemoteProject,
   saveRemoteDocument,
   saveRemoteContent,
   saveRemoteCompany,
   logRemoteActivity,
   deleteRemoteLead,
   deleteRemoteProduct,
+  deleteRemoteProject,
   deleteRemoteDocument,
   deleteRemoteContent,
 } from './adminRepository';
@@ -59,16 +61,18 @@ import type {
   AdminDocument,
   AdminLead,
   AdminProduct,
+  AdminProject,
   AdminState,
   LeadStatus,
   Priority,
   PublishStatus,
 } from './adminTypes';
 
-type AdminView = 'dashboard' | 'leads' | 'products' | 'documents' | 'content' | 'settings';
+type AdminView = 'dashboard' | 'leads' | 'products' | 'projects' | 'documents' | 'content' | 'settings';
 type EditorState =
   | { type: 'lead'; data: AdminLead }
   | { type: 'product'; data: AdminProduct }
+  | { type: 'project'; data: AdminProject }
   | { type: 'document'; data: AdminDocument }
   | { type: 'content'; data: AdminContent }
   | null;
@@ -84,8 +88,9 @@ const NAV_ITEMS: { id: AdminView; label: string; icon: React.ElementType }[] = [
   { id: 'dashboard', label: 'Tổng quan', icon: LayoutDashboard },
   { id: 'leads', label: 'Khách cần tư vấn', icon: UsersRound },
   { id: 'products', label: 'Sản phẩm', icon: Package },
+  { id: 'projects', label: 'Dự án', icon: Building2 },
   { id: 'documents', label: 'Hồ sơ kỹ thuật', icon: FileBadge2 },
-  { id: 'content', label: 'Nội dung & dự án', icon: FolderKanban },
+  { id: 'content', label: 'Nội dung & bài viết', icon: FolderKanban },
   { id: 'settings', label: 'Doanh nghiệp & quyền', icon: Settings },
 ];
 
@@ -232,7 +237,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
   const effectiveRole = userRole;
   // Khớp với API: chỉ Quản trị viên được xóa và công bố
   const isAdmin = userRole === 'admin';
-  const requestDelete = (target: { type: 'lead' | 'product' | 'document' | 'content'; id: string; name: string }) => {
+  const requestDelete = (target: { type: 'lead' | 'product' | 'project' | 'document' | 'content'; id: string; name: string }) => {
     if (!isAdmin) {
       setToast('Chỉ Quản trị viên được xóa dữ liệu.');
       return;
@@ -242,15 +247,15 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
 
   // Deletion Confirmation modal state
   const [confirmDelete, setConfirmDelete] = useState<{
-    type: 'lead' | 'product' | 'document' | 'content';
+    type: 'lead' | 'product' | 'project' | 'document' | 'content';
     id: string;
     name: string;
   } | null>(null);
 
   const permittedViews: Record<string, AdminView[]> = {
-    admin: ['dashboard', 'leads', 'products', 'documents', 'content', 'settings'],
+    admin: ['dashboard', 'leads', 'products', 'projects', 'documents', 'content', 'settings'],
     sales: ['dashboard', 'leads'],
-    editor: ['dashboard', 'products', 'content'],
+    editor: ['dashboard', 'products', 'projects', 'content'],
     technical: ['dashboard', 'products', 'documents'],
   };
   const availableViews = permittedViews[effectiveRole] || ['dashboard'];
@@ -339,6 +344,23 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
         const data = { ...editor.data, updatedAt: now };
         await persist({ ...state, products: upsert(state.products, data, false) }, 'Cập nhật sản phẩm', data.name, () => saveRemoteProduct(data));
       }
+      if (editor.type === 'project') {
+        const data = { ...editor.data, updatedAt: now };
+        if (data.verified && !data.verifiedNote?.trim()) {
+          setToast('Bắt buộc nhập Ghi chú xác minh khi đánh dấu dự án Đã xác minh.');
+          return;
+        }
+        if (data.status === 'published' && !data.verified) {
+          setToast('Dự án phải được xác minh trước khi công bố.');
+          return;
+        }
+        await persist(
+          { ...state, projects: upsert(state.projects || [], data) },
+          'Cập nhật dự án',
+          data.title,
+          () => saveRemoteProject(data)
+        );
+      }
       if (editor.type === 'document') {
         const data = editor.data;
         await persist({ ...state, documents: upsert(state.documents, data) }, 'Cập nhật hồ sơ', data.title, () => saveRemoteDocument(data));
@@ -391,11 +413,13 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     try {
       if (type === 'lead') await deleteRemoteLead(id);
       else if (type === 'product') await deleteRemoteProduct(id);
+      else if (type === 'project') await deleteRemoteProject(id);
       else if (type === 'document') await deleteRemoteDocument(id);
       else if (type === 'content') await deleteRemoteContent(id);
       const nextState = { ...state };
       if (type === 'lead') nextState.leads = state.leads.filter((l) => l.id !== id);
       else if (type === 'product') nextState.products = state.products.filter((p) => p.id !== id);
+      else if (type === 'project') nextState.projects = (state.projects || []).filter((p) => p.id !== id);
       else if (type === 'document') nextState.documents = state.documents.filter((d) => d.id !== id);
       else if (type === 'content') nextState.contents = state.contents.filter((c) => c.id !== id);
 
@@ -495,6 +519,11 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     const matchesSearch = `${product.name} ${product.categoryName} ${product.fireRating} ${product.slug}`.toLowerCase().includes(search.toLowerCase());
     return matchesSearch && (statusFilter === 'all' || product.status === statusFilter);
   }), [search, state.products, statusFilter]);
+
+  const filteredProjects = useMemo(() => (state.projects || []).filter((project) => {
+    const matchesSearch = `${project.title} ${project.clientName || ''} ${project.location || ''} ${project.category || ''} ${project.slug}`.toLowerCase().includes(search.toLowerCase());
+    return matchesSearch && (statusFilter === 'all' || project.status === statusFilter);
+  }), [search, state.projects, statusFilter]);
 
   const filteredDocuments = useMemo(() => state.documents.filter((document) => {
     const matchesSearch = `${document.title} ${document.code} ${document.standard} ${document.owner} ${document.productGroup}`.toLowerCase().includes(search.toLowerCase());
@@ -678,6 +707,25 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
             </DataSection>
           )}
 
+          {view === 'projects' && (
+            <DataSection
+              title="Dự án tiêu biểu & Công trình thực tế"
+              description="Quản lý hồ sơ công trình, khách hàng, hình ảnh thực tế và kiểm soát xác minh trước khi công bố."
+              search={search}
+              onSearch={setSearch}
+              statusFilter={statusFilter}
+              onStatusFilter={setStatusFilter}
+              statusOptions={Object.entries(PUBLISH_STATUS).map(([value, item]) => ({ value, label: item.label }))}
+              onAdd={() => setEditor({ type: 'project', data: newProject() })}
+            >
+              <ProjectsTable
+                projects={filteredProjects}
+                onEdit={(data) => setEditor({ type: 'project', data })}
+                onDelete={(proj) => requestDelete({ type: 'project', id: proj.id, name: proj.title })}
+              />
+            </DataSection>
+          )}
+
           {view === 'documents' && (
             <DataSection
               title="Hồ sơ kỹ thuật & Chứng nhận kiểm định"
@@ -699,8 +747,8 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
 
           {view === 'content' && (
             <DataSection
-              title="Nội dung, Dự án & Tin tức"
-              description="Kiểm soát dự án tiêu biểu, bài viết kỹ thuật PCCC, phê duyệt quyền sử dụng hình ảnh và xuất bản ra website."
+              title="Nội dung, Bài viết & Tin tức"
+              description="Kiểm soát bài viết chuyên ngành PCCC, trang tĩnh, phê duyệt quyền sử dụng hình ảnh và xuất bản ra website."
               search={search}
               onSearch={setSearch}
               statusFilter={statusFilter}
@@ -747,6 +795,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
             if (editor) {
               const name = editor.type === 'lead' ? editor.data.fullName :
                            editor.type === 'product' ? editor.data.name :
+                           editor.type === 'project' ? editor.data.title :
                            editor.type === 'document' ? editor.data.title : editor.data.title;
               requestDelete({ type: editor.type, id: editor.data.id, name });
             }
@@ -1187,6 +1236,94 @@ const ProductsTable = ({
   </div>
 ) : <EmptyState label="sản phẩm" />;
 
+/* --- PROJECTS TABLE --- */
+const ProjectsTable = ({
+  projects,
+  onEdit,
+  onDelete,
+}: {
+  projects: AdminProject[];
+  onEdit: (project: AdminProject) => void;
+  onDelete: (project: AdminProject) => void;
+}) => projects.length ? (
+  <div className="overflow-x-auto">
+    <table className="w-full min-w-[960px] text-left text-xs">
+      <thead>
+        <tr className="border-b border-neutral-200 bg-neutral-50 text-[10px] uppercase text-slate-500">
+          <th className="px-6 py-3">Công trình / Dự án</th>
+          <th className="px-4 py-3">Nhóm sản phẩm</th>
+          <th className="px-4 py-3">Địa điểm</th>
+          <th className="px-4 py-3">Năm</th>
+          <th className="px-4 py-3">Trạng thái</th>
+          <th className="px-4 py-3">Xác minh pháp lý</th>
+          <th className="px-4 py-3 text-right">Thao tác</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-neutral-100">
+        {projects.map((project) => {
+          const cat = PRODUCT_CATEGORY_CHOICES.find((c) => c.id === project.category);
+          const catLabel = cat ? cat.name : (project.category || 'Chung');
+          return (
+            <tr key={project.id} className="hover:bg-neutral-50 transition-colors">
+              <td className="max-w-[320px] px-6 py-3">
+                <div className="flex items-center gap-3">
+                  {project.coverImage ? (
+                    <img src={project.coverImage} alt="" className="h-10 w-14 shrink-0 rounded border border-neutral-200 object-cover" />
+                  ) : (
+                    <div className="flex h-10 w-14 shrink-0 items-center justify-center rounded border border-neutral-200 bg-neutral-100 text-slate-400">
+                      <Building2 className="h-5 w-5" />
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <strong className="block truncate text-slate-950 font-bold">{project.title}</strong>
+                    <span className="block truncate text-[11px] text-slate-500">
+                      {project.clientName ? `Chủ đầu tư: ${project.clientName}` : `Slug: /${project.slug}`}
+                    </span>
+                  </div>
+                </div>
+              </td>
+              <td className="px-4 py-3">
+                <span className="inline-block rounded px-2 py-0.5 text-[10px] font-medium bg-neutral-100 text-slate-700">
+                  {catLabel}
+                </span>
+              </td>
+              <td className="px-4 py-3 text-slate-600">{project.location || 'Chưa cập nhật'}</td>
+              <td className="px-4 py-3 font-mono text-slate-600">{project.completedYear || '—'}</td>
+              <td className="px-4 py-3"><Badge {...PUBLISH_STATUS[project.status]} /></td>
+              <td className="px-4 py-3">
+                {project.verified ? (
+                  <span className="inline-flex items-center gap-1 rounded border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[11px] font-bold text-emerald-800" title={project.verifiedNote}>
+                    <CheckCircle2 className="h-3 w-3 text-emerald-600" />
+                    Đã xác minh
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 rounded border border-neutral-200 bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
+                    Chưa xác minh
+                  </span>
+                )}
+              </td>
+              <td className="px-4 py-3 text-right">
+                <div className="flex items-center justify-end gap-2">
+                  <button onClick={() => onEdit(project)} className="font-bold text-red-700 hover:underline">
+                    Chỉnh sửa
+                  </button>
+                  <button
+                    onClick={() => onDelete(project)}
+                    className="text-slate-400 hover:text-red-700 p-1 transition-colors"
+                    title="Xóa dự án"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  </div>
+) : <EmptyState label="dự án" />;
+
 /* --- DOCUMENTS TABLE --- */
 const DocumentsTable = ({
   documents,
@@ -1541,8 +1678,9 @@ const EditorPanel = ({
   const titles = {
     lead: 'Thông tin khách cần tư vấn',
     product: 'Thông tin sản phẩm PCCC',
+    project: 'Thông tin dự án tiêu biểu',
     document: 'Thông tin hồ sơ kỹ thuật & kiểm định',
-    content: 'Thông tin nội dung, dự án & tin tức'
+    content: 'Thông tin nội dung & bài viết'
   };
 
   return (
@@ -1560,6 +1698,7 @@ const EditorPanel = ({
         <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {editor.type === 'lead' && <LeadEditor data={editor.data} onChange={(data) => onChange({ type: 'lead', data })} />}
           {editor.type === 'product' && <ProductEditor data={editor.data} canPublish={canPublish} onChange={(data) => onChange({ type: 'product', data })} />}
+          {editor.type === 'project' && <ProjectEditor data={editor.data} canPublish={canPublish} isAdmin={canPublish} onChange={(data) => onChange({ type: 'project', data })} />}
           {editor.type === 'document' && <DocumentEditor data={editor.data} canPublish={canPublish} onChange={(data) => onChange({ type: 'document', data })} />}
           {editor.type === 'content' && <ContentEditor data={editor.data} canPublish={canPublish} onChange={(data) => onChange({ type: 'content', data })} />}
         </div>
@@ -1751,6 +1890,192 @@ const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; can
   );
 };
 
+/* --- GALLERY EDITOR --- */
+const GalleryEditor = ({
+  images,
+  onChange,
+}: {
+  images: string[];
+  onChange: (images: string[]) => void;
+}) => {
+  const [newUrl, setNewUrl] = useState('');
+
+  const addImage = (url: string) => {
+    const trimmed = url.trim();
+    if (trimmed && !images.includes(trimmed)) {
+      onChange([...images, trimmed]);
+      setNewUrl('');
+    }
+  };
+
+  const removeImage = (index: number) => {
+    onChange(images.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="sm:col-span-2 space-y-2 border-t border-neutral-200 pt-3">
+      <label className="block text-xs font-semibold text-slate-700">
+        Bộ sưu tập hình ảnh công trình ({images.length} ảnh)
+      </label>
+      {images.length > 0 && (
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5">
+          {images.map((img, idx) => (
+            <div key={idx} className="group relative aspect-video overflow-hidden rounded border border-neutral-200 bg-neutral-100">
+              <img src={img} alt="" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => removeImage(idx)}
+                className="absolute right-1 top-1 rounded bg-slate-900/80 p-1 text-white hover:bg-red-600 transition-colors"
+                title="Xóa ảnh này"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      <UploadField
+        label="Thêm ảnh vào bộ sưu tập"
+        kind="images"
+        value={newUrl}
+        onChange={(url) => {
+          if (url) addImage(url);
+        }}
+        placeholder="Tải ảnh lên hoặc dán URL ảnh vào đây"
+      />
+    </div>
+  );
+};
+
+/* --- PROJECT EDITOR --- */
+const ProjectEditor = ({
+  data,
+  canPublish,
+  isAdmin,
+  onChange,
+}: {
+  data: AdminProject;
+  canPublish: boolean;
+  isAdmin: boolean;
+  onChange: (data: AdminProject) => void;
+}) => {
+  const set = (field: keyof AdminProject, value: any) => onChange({ ...data, [field]: value });
+
+  const handleTitleChange = (titleVal: string) => {
+    const updates: Partial<AdminProject> = { title: titleVal };
+    if (!data.slug || data.slug === slugify(data.title)) {
+      updates.slug = slugify(titleVal);
+    }
+    onChange({ ...data, ...updates });
+  };
+
+  const handleVerifiedToggle = (checked: boolean) => {
+    if (!isAdmin) return;
+    onChange({
+      ...data,
+      verified: checked,
+      // Nếu bỏ xác minh mà đang ở trạng thái published thì tự chuyển về review
+      status: !checked && data.status === 'published' ? 'review' : data.status,
+    });
+  };
+
+  // Chỉ cho phép công bố khi vừa có quyền admin vừa đã tick verified
+  const allowPublish = canPublish && data.verified;
+
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <Field label="Tên công trình / Dự án *" wide>
+        <input className={fieldClass} value={data.title} onChange={(e) => handleTitleChange(e.target.value)} placeholder="Ví dụ: Tòa nhà hỗn hợp Apex Tower" />
+      </Field>
+      <Field label="Đường dẫn (Slug) *">
+        <input className={fieldClass} value={data.slug} onChange={(e) => set('slug', e.target.value)} placeholder="toa-nha-apex-tower" />
+      </Field>
+      <Field label="Nhóm sản phẩm chính *">
+        <select
+          className={fieldClass}
+          value={data.category || 'cua-thep-ngan-chay'}
+          onChange={(e) => set('category', e.target.value)}
+        >
+          {PRODUCT_CATEGORY_CHOICES.map((choice) => (
+            <option key={choice.id} value={choice.id}>{choice.name} ({choice.id})</option>
+          ))}
+        </select>
+      </Field>
+      <Field label="Khách hàng / Chủ đầu tư (để trống nếu bảo mật tên)">
+        <input className={fieldClass} value={data.clientName || ''} onChange={(e) => set('clientName', e.target.value)} placeholder="Để trống nếu chưa được phép nêu tên" />
+      </Field>
+      <Field label="Địa điểm công trình">
+        <input className={fieldClass} value={data.location || ''} onChange={(e) => set('location', e.target.value)} placeholder="Hà Nội, Bắc Ninh, TP.HCM..." />
+      </Field>
+      <Field label="Năm hoàn thành">
+        <input
+          type="number"
+          className={fieldClass}
+          value={data.completedYear || ''}
+          onChange={(e) => set('completedYear', e.target.value ? Number(e.target.value) : undefined)}
+          placeholder="2024"
+        />
+      </Field>
+      <Field label="Trạng thái công bố">
+        <StatusSelect value={data.status} canPublish={allowPublish} onChange={(value) => set('status', value)} />
+      </Field>
+
+      {!data.verified && (
+        <div className="sm:col-span-2 rounded border border-amber-200 bg-amber-50 p-3 text-xs text-amber-900">
+          ⚠️ <strong>Dự án chưa được xác minh:</strong> Mục "Đã công bố" tạm thời bị khóa. Dự án phải được xác minh và có văn bản chấp thuận trước khi hiển thị trên website.
+        </div>
+      )}
+
+      {/* KHỐI XÁC MINH PHÁP LÝ (CHỈ ADMIN) */}
+      <div className="sm:col-span-2 rounded border border-neutral-200 bg-neutral-50/80 p-4 space-y-3">
+        <div className="flex items-start gap-3">
+          <input
+            type="checkbox"
+            id="proj-verified-toggle"
+            disabled={!isAdmin}
+            checked={Boolean(data.verified)}
+            onChange={(e) => handleVerifiedToggle(e.target.checked)}
+            className="mt-0.5 h-4 w-4 text-emerald-600 disabled:opacity-50"
+          />
+          <label htmlFor="proj-verified-toggle" className="text-xs font-bold text-slate-900 cursor-pointer">
+            Đã xác minh và có văn bản/hợp đồng chấp thuận công bố thông tin
+            {!isAdmin && <span className="block font-normal text-slate-500 mt-0.5">(Chỉ Quản trị viên - Admin mới có thẩm quyền xác minh)</span>}
+          </label>
+        </div>
+
+        {data.verified && (
+          <Field label="Ghi chú xác minh * (Bắt buộc: ai xác nhận, ngày nào, theo văn bản/hợp đồng nào)" wide>
+            <textarea
+              className={textareaClass}
+              value={data.verifiedNote || ''}
+              onChange={(e) => set('verifiedNote', e.target.value)}
+              placeholder="Ví dụ: Giám đốc kinh doanh xác nhận ngày 10/10/2026 theo Biên bản nghiệm thu và Thỏa thuận công bố số 42/2026/APEX-HD"
+              required
+            />
+          </Field>
+        )}
+      </div>
+
+      <Field label="Mô tả công trình / Hạng mục cung cấp" wide>
+        <textarea className={textareaClass} value={data.description} onChange={(e) => set('description', e.target.value)} placeholder="Mô tả quy mô, hạng mục cửa PCCC hoặc thiết bị cơ điện đã cung cấp..." />
+      </Field>
+
+      <UploadField
+        label="Ảnh bìa đại diện công trình"
+        kind="images"
+        value={data.coverImage || ''}
+        onChange={(url) => set('coverImage', url)}
+        placeholder="Tải ảnh lên hoặc dán URL ảnh bìa"
+      />
+
+      <GalleryEditor
+        images={Array.isArray(data.gallery) ? data.gallery : []}
+        onChange={(gallery) => set('gallery', gallery)}
+      />
+    </div>
+  );
+};
+
 /* --- DOCUMENT EDITOR --- */
 const DocumentEditor = ({ data, canPublish, onChange }: { data: AdminDocument; canPublish: boolean; onChange: (data: AdminDocument) => void }) => {
   const set = (field: keyof AdminDocument, value: string) => onChange({ ...data, [field]: value });
@@ -1836,8 +2161,7 @@ const ContentEditor = ({ data, canPublish, onChange }: { data: AdminContent; can
         <input className={fieldClass} value={data.title} onChange={(e) => set('title', e.target.value)} />
       </Field>
       <Field label="Loại nội dung">
-        <select className={fieldClass} value={data.type} onChange={(e) => set('type', e.target.value)}>
-          <option value="project">Hồ sơ dự án</option>
+        <select className={fieldClass} value={data.type} onChange={(e) => set('type', e.target.value as AdminContent['type'])}>
           <option value="article">Bài viết chuyên ngành</option>
           <option value="page">Trang tĩnh</option>
         </select>
@@ -1856,34 +2180,6 @@ const ContentEditor = ({ data, canPublish, onChange }: { data: AdminContent; can
           onChange={(e) => set('publishAt', e.target.value)}
         />
       </Field>
-
-      {data.type === 'project' && (
-        <>
-          <Field label="Phân nhóm dự án">
-            <select className={fieldClass} value={data.category || 'commercial'} onChange={(e) => set('category', e.target.value)}>
-              <option value="commercial">Trung tâm thương mại & Văn phòng</option>
-              <option value="residential">Chung cư cao tầng & Đô thị</option>
-              <option value="industrial">Nhà máy & Khu công nghiệp</option>
-              <option value="healthcare">Bệnh viện & Y tế</option>
-            </select>
-          </Field>
-          <Field label="Địa điểm công trình">
-            <input className={fieldClass} value={data.location || ''} onChange={(e) => set('location', e.target.value)} />
-          </Field>
-          <Field label="Quy mô dự án">
-            <input className={fieldClass} value={data.scale || ''} onChange={(e) => set('scale', e.target.value)} />
-          </Field>
-          <Field label="Hạng mục cung cấp">
-            <input className={fieldClass} value={data.itemsSupplied || ''} onChange={(e) => set('itemsSupplied', e.target.value)} />
-          </Field>
-          <Field label="Khách hàng / Chủ đầu tư">
-            <input className={fieldClass} value={data.client || ''} onChange={(e) => set('client', e.target.value)} />
-          </Field>
-          <Field label="Năm thực hiện">
-            <input className={fieldClass} value={data.year || '2024'} onChange={(e) => set('year', e.target.value)} />
-          </Field>
-        </>
-      )}
 
       {data.type === 'article' && (
         <>
@@ -1985,14 +2281,31 @@ const newDocument = (): AdminDocument => ({
 
 const newContent = (): AdminContent => ({
   id: `content-${Date.now()}`,
-  type: 'project',
+  type: 'article',
   title: '',
   summary: '',
   status: 'draft',
   publishAt: '',
-  owner: 'Ban dự án',
+  owner: 'Ban biên tập',
   featured: false,
   mediaApproved: false,
   clientApproved: false,
-  updatedAt: new Date().toISOString().slice(0, 16)
+  updatedAt: new Date().toISOString().slice(0, 16),
+});
+
+const newProject = (): AdminProject => ({
+  id: `project-${Date.now()}`,
+  title: '',
+  slug: '',
+  category: 'cua-thep-ngan-chay',
+  clientName: '',
+  location: '',
+  completedYear: new Date().getFullYear(),
+  description: '',
+  coverImage: '',
+  gallery: [],
+  status: 'draft',
+  verified: false,
+  verifiedNote: '',
+  updatedAt: new Date().toISOString().slice(0, 16),
 });
