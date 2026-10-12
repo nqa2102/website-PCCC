@@ -1,13 +1,27 @@
 import { Product, Solution, Project, TechnicalDoc, NewsArticle } from '../types';
 import heroImage from '../assets/images/hero_fire_door_apex_1790648819738.webp';
 import steelDoorImage from '../assets/images/product_steel_fire_door_1790648833826.webp';
+import doubleFireDoorImage from '../assets/images/product_double_fire_door.jpg';
+import glassFireDoorImage from '../assets/images/product_glass_fire_door.jpg';
 import rollerShutterImage from '../assets/images/product_fire_roller_shutter_1790648844563.webp';
 import fireCurtainImage from '../assets/images/product_fire_curtain_1790648858516.webp';
+import electricalCabinetImage from '../assets/images/product_electrical_cabinet.jpg';
+import cableTrayImage from '../assets/images/product_cable_tray.jpg';
+import serverRackImage from '../assets/images/product_server_rack.jpg';
+import telecomShelterImage from '../assets/images/product_telecom_shelter.jpg';
+import outdoorCabinetImage from '../assets/images/product_outdoor_cabinet.jpg';
 
 export const HERO_IMAGE = heroImage;
 export const STEEL_DOOR_IMAGE = steelDoorImage;
+export const DOUBLE_FIRE_DOOR_IMAGE = doubleFireDoorImage;
+export const GLASS_FIRE_DOOR_IMAGE = glassFireDoorImage;
 export const ROLLER_SHUTTER_IMAGE = rollerShutterImage;
 export const FIRE_CURTAIN_IMAGE = fireCurtainImage;
+export const ELECTRICAL_CABINET_IMAGE = electricalCabinetImage;
+export const CABLE_TRAY_IMAGE = cableTrayImage;
+export const SERVER_RACK_IMAGE = serverRackImage;
+export const TELECOM_SHELTER_IMAGE = telecomShelterImage;
+export const OUTDOOR_CABINET_IMAGE = outdoorCabinetImage;
 
 export const PRODUCTS: Product[] = [
   // ==========================================
@@ -92,7 +106,7 @@ export const PRODUCTS: Product[] = [
       'Hệ thống chốt âm Inox định vị cánh phụ chắc chắn',
       'Đồng bộ thanh thoát hiểm panic đôi cho cả 2 cánh'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: DOUBLE_FIRE_DOOR_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -119,7 +133,7 @@ export const PRODUCTS: Product[] = [
       'Khả năng ngăn khói và áp lực nhiệt vượt trội',
       'Gia công kích thước chính xác theo số đo thực tế công trình'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: DOUBLE_FIRE_DOOR_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -177,7 +191,7 @@ export const PRODUCTS: Product[] = [
       'Ngăn nhiệt bức xạ và khí độc trong 60 phút',
       'Đồng bộ phụ kiện tay nắm Inox và bản lề sàn thủy lực chịu lửa'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: GLASS_FIRE_DOOR_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -204,7 +218,7 @@ export const PRODUCTS: Product[] = [
       'Hệ thống gioăng chống khói kép kín khít tuyệt đối',
       'Tích hợp cảm biến mở tự động và khóa điện tử kết nối PCCC'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: GLASS_FIRE_DOOR_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -230,7 +244,7 @@ export const PRODUCTS: Product[] = [
       'Hệ keo kết cấu chống cháy chuyên dụng chịu nhiệt độ cao',
       'Gia công module tại xưởng rút ngắn thời gian lắp đặt tại công trình'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: GLASS_FIRE_DOOR_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -256,7 +270,7 @@ export const PRODUCTS: Product[] = [
       'Khung viền gia công chính xác, kín khít ngăn khói độc',
       'Tư vấn phương án lắp đặt chi tiết theo hồ sơ bản vẽ'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: GLASS_FIRE_DOOR_IMAGE,
     priceEstimate: 'Liên hệ'
   },
 
@@ -508,7 +522,7 @@ export const PRODUCTS: Product[] = [
       'Thanh cái đồng gia công uốn CNC, co màng nhiệt đánh dấu pha',
       'Sản xuất kích thước tùy biến chính xác theo bản vẽ cơ điện M&E'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: ELECTRICAL_CABINET_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -535,7 +549,7 @@ export const PRODUCTS: Product[] = [
       'Đèn báo pha, đồng hồ Vôn/Ampe và nút dừng khẩn cấp mặt tủ',
       'Kết nối tín hiệu rơ le áp lực đường ống và tủ trung tâm PCCC'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: ELECTRICAL_CABINET_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -561,7 +575,7 @@ export const PRODUCTS: Product[] = [
       'Tấm gá đáy tháo rời thuận tiện luồn dây cáp nguồn',
       'Nhận sản xuất đơn chiếc và số lượng lớn theo hồ sơ thiết kế'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: ELECTRICAL_CABINET_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -587,7 +601,7 @@ export const PRODUCTS: Product[] = [
       'Cấp bảo vệ kín nước, kín bụi IP43 đến IP65 theo môi trường lắp đặt',
       'Đáp ứng tiến độ cung ứng nhanh chóng cho các dự án cơ điện M&E'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: ELECTRICAL_CABINET_IMAGE,
     priceEstimate: 'Liên hệ'
   },
 
@@ -617,7 +631,7 @@ export const PRODUCTS: Product[] = [
       'Đục sẵn lỗ nối tiếp địa và lỗ liên kết phụ kiện tiêu chuẩn',
       'Chiều dài tiêu chuẩn 2.500mm hoặc 3.000mm/cây thuận tiện thi công'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: CABLE_TRAY_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -644,7 +658,7 @@ export const PRODUCTS: Product[] = [
       'Thanh ngang đột lỗ oval thuận tiện cố định dây bằng đai rút Inox',
       'Phụ kiện nối, ngã ba, co L mạ kẽm đồng bộ khớp nối vững chắc'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: CABLE_TRAY_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -670,7 +684,7 @@ export const PRODUCTS: Product[] = [
       'Hệ phụ kiện nối âm dương lắp đặt nhanh tiết kiệm chi phí nhân công',
       'Sản xuất số lượng lớn đáp ứng tiến độ gấp của nhà thầu cơ điện'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: CABLE_TRAY_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -696,7 +710,7 @@ export const PRODUCTS: Product[] = [
       'Hệ phụ kiện cút nối, tê, chữ thập, co lên co xuống đồng bộ',
       'Sản xuất theo kích thước và quy cách yêu cầu của bản vẽ cơ điện'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: CABLE_TRAY_IMAGE,
     priceEstimate: 'Liên hệ'
   },
 
@@ -726,7 +740,7 @@ export const PRODUCTS: Product[] = [
       'Khóa tay gạt xoay đa điểm an toàn cho cả cửa trước và cửa sau',
       'Trang bị sẵn cụm 4 quạt tản nhiệt nóc tủ và bánh xe chịu lực có hãm'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: SERVER_RACK_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -753,7 +767,7 @@ export const PRODUCTS: Product[] = [
       'Cửa hông tháo lắp nhanh thuận tiện đấu nối và kiểm tra cáp',
       'Tặng kèm 01 quạt tản nhiệt và thanh nguồn đa năng 3 chấu'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: SERVER_RACK_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -779,7 +793,7 @@ export const PRODUCTS: Product[] = [
       'Khóa tay gạt 3 điểm chống cạy phá bảo mật cao cho khu vực công cộng',
       'Đế bệ chân tủ vững chắc thuận tiện bắt bu lông neo móng bê tông'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: SERVER_RACK_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -805,7 +819,7 @@ export const PRODUCTS: Product[] = [
       'Tích hợp quạt tản nhiệt, thanh nguồn PDU và bánh xe chịu tải',
       'Khóa tay gạt an toàn, bảo vệ chống can thiệp trái phép'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: SERVER_RACK_IMAGE,
     priceEstimate: 'Liên hệ'
   },
 
@@ -835,7 +849,7 @@ export const PRODUCTS: Product[] = [
       'Cửa thoát hiểm có gioăng cao su kín khít và khóa bảo mật chống đột nhập',
       'Trang bị sẵn ống luồn cáp Feeder và hệ thống tiếp địa chống sét toàn trạm'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: TELECOM_SHELTER_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -862,7 +876,7 @@ export const PRODUCTS: Product[] = [
       'Mái dốc thoát nước mưa nhanh chống đọng nước cục bộ',
       'Lối vào có bậc thang chống trượt và mái che cửa chống hắt mưa'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: TELECOM_SHELTER_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -888,7 +902,7 @@ export const PRODUCTS: Product[] = [
       'Tích hợp cảm biến báo nhiệt, báo khói và cảnh báo ngập nước từ xa',
       'Khóa cửa vân tay và mã số bảo mật tuyệt đối'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: TELECOM_SHELTER_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -914,7 +928,7 @@ export const PRODUCTS: Product[] = [
       'Khung thép liên kết bu lông mạ kẽm chịu gió bão lớn',
       'Tích hợp sẵn hệ thống điện chiếu sáng, lỗ luồn cáp feeder và tiếp địa chống sét'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: TELECOM_SHELTER_IMAGE,
     priceEstimate: 'Liên hệ'
   },
 
@@ -944,7 +958,7 @@ export const PRODUCTS: Product[] = [
       'Khóa 3 điểm chìm chống cạy phá, tay gạt an toàn có nắp che ổ khóa',
       'Đế bệ chân tủ cao 100 - 200mm chống ngập nước cục bộ'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: OUTDOOR_CABINET_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -971,7 +985,7 @@ export const PRODUCTS: Product[] = [
       'Cảm biến nhiệt độ tự động kích hoạt quạt giải nhiệt thông minh',
       'Đèn LED chiếu sáng tự động bật sáng khi mở cửa phục vụ bảo trì ban đêm'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: OUTDOOR_CABINET_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -997,7 +1011,7 @@ export const PRODUCTS: Product[] = [
       'Tấm gá thiết bị bắt thanh ray nhôm cài aptomat và switch POE',
       'Khóa tam giác hoặc khóa chìa bảo mật chống phá hoại'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: OUTDOOR_CABINET_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
@@ -1023,7 +1037,7 @@ export const PRODUCTS: Product[] = [
       'Khóa bảo mật 3 điểm chuyên dụng chống cạy phá',
       'Cảm biến giám sát nhiệt độ và cảnh báo mở cửa kết nối từ xa'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: OUTDOOR_CABINET_IMAGE,
     priceEstimate: 'Liên hệ'
   }
 ];
