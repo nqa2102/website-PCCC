@@ -34,6 +34,114 @@ export default async function handler(req: any, res: any) {
     const user = await requireAdminRole(req, res, ROLE_ACCESS.leads);
     if (!user) return;
 
+    // Xuất toàn bộ danh sách leads dưới dạng CSV (BOM UTF-8, escape quote)
+    if (req.query?.format === 'csv') {
+      try {
+        const sql = getDb();
+        const allRows = await sql`
+          SELECT 
+            id,
+            created_at as "createdAt",
+            full_name as "fullName",
+            phone,
+            email,
+            company,
+            project_name as "projectName",
+            project_location as "projectLocation",
+            product_interest as "productInterest",
+            fire_rating as "fireRating",
+            source,
+            message,
+            status,
+            priority,
+            assignee,
+            next_follow_up_at as "nextFollowUpAt",
+            notes,
+            consent
+          FROM leads
+          ORDER BY date_trunc('milliseconds', created_at) DESC, id DESC
+        `;
+
+        const csvEscape = (val: unknown) => {
+          if (val === undefined || val === null) return '""';
+          const str = String(val).replace(/"/g, '""');
+          return `"${str}"`;
+        };
+
+        const headers = [
+          'Mã yêu cầu',
+          'Thời gian gửi',
+          'Họ và tên',
+          'Số điện thoại',
+          'Email',
+          'Công ty',
+          'Tên công trình',
+          'Địa điểm',
+          'Sản phẩm quan tâm',
+          'Chỉ số chịu lửa',
+          'Nguồn tiếp nhận',
+          'Trạng thái',
+          'Mức ưu tiên',
+          'Người phụ trách',
+          'Lịch liên hệ tiếp',
+          'Nội dung tin nhắn',
+          'Ghi chú nội bộ',
+          'Đồng ý xử lý dữ liệu'
+        ];
+
+        const statusLabels: Record<string, string> = {
+          new: 'Mới tiếp nhận',
+          contacted: 'Đã liên hệ',
+          qualified: 'Đủ điều kiện',
+          closed: 'Thành công',
+          lost: 'Thất bại'
+        };
+
+        const priorityLabels: Record<string, string> = {
+          high: 'Cao',
+          medium: 'Trung bình',
+          low: 'Thấp'
+        };
+
+        const lines = [headers.join(',')];
+        for (const row of allRows) {
+          lines.push([
+            csvEscape(row.id),
+            csvEscape(row.createdAt ? new Date(row.createdAt).toISOString() : ''),
+            csvEscape(row.fullName),
+            csvEscape(row.phone),
+            csvEscape(row.email),
+            csvEscape(row.company),
+            csvEscape(row.projectName),
+            csvEscape(row.projectLocation),
+            csvEscape(row.productInterest),
+            csvEscape(row.fireRating),
+            csvEscape(row.source),
+            csvEscape(statusLabels[row.status] || row.status),
+            csvEscape(priorityLabels[row.priority] || row.priority),
+            csvEscape(row.assignee),
+            csvEscape(row.nextFollowUpAt),
+            csvEscape(row.message),
+            csvEscape(row.notes),
+            csvEscape(row.consent ? 'Đồng ý' : 'Không')
+          ].join(','));
+        }
+
+        const csvContent = '\uFEFF' + lines.join('\r\n');
+        const dateStr = new Date().toISOString().slice(0, 10);
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', `attachment; filename="khach-hang-${dateStr}.csv"`);
+        if (typeof res.send === 'function') {
+          return res.status(200).send(csvContent);
+        }
+        res.statusCode = 200;
+        return res.end(csvContent);
+      } catch (err: any) {
+        console.error('Lỗi xuất CSV leads:', err);
+        return res.status(500).json({ error: 'DatabaseError', message: 'Không thể xuất danh sách liên hệ.' });
+      }
+    }
+
     // Phân trang theo con trỏ (created_at, id): ?before=<ISO>&beforeId=<id>&limit=<1-500>
     const limit = Math.min(Math.max(Number(req.query?.limit) || 200, 1), 500);
     const before = typeof req.query?.before === 'string' ? req.query.before : null;
