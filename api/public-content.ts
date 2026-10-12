@@ -60,7 +60,7 @@ export default async function handler(req: any, res: any) {
           category, location, scale, items_supplied as "itemsSupplied", year, client,
           author, read_time as "readTime", content, image
         FROM contents
-        WHERE status = 'published'
+        WHERE status = 'published' AND type != 'project'
         ORDER BY publish_at DESC
       `,
       sql`
