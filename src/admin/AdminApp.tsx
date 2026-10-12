@@ -206,6 +206,8 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
+  const [sourceFilter, setSourceFilter] = useState('all');
+  const [productInterestFilter, setProductInterestFilter] = useState('all');
   const [editor, setEditor] = useState<EditorState>(null);
   const [toast, setToast] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
@@ -340,7 +342,14 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     try {
       if (editor.type === 'lead') {
         const data = editor.data;
-        await persist({ ...state, leads: upsert(state.leads, data) }, 'Cập nhật khách hàng', data.fullName, () => saveRemoteLead(data));
+        const isNew = !state.leads.some((l) => l.id === data.id);
+        const nextTotal = isNew ? ((state.leadsTotal ?? state.leads.length) + 1) : state.leadsTotal;
+        await persist(
+          { ...state, leads: upsert(state.leads, data), leadsTotal: nextTotal },
+          isNew ? 'Thêm khách hàng mới' : 'Cập nhật khách hàng',
+          data.fullName,
+          () => saveRemoteLead(data)
+        );
       }
       if (editor.type === 'product') {
         const data = { ...editor.data, updatedAt: now };
@@ -419,7 +428,12 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
       else if (type === 'document') await deleteRemoteDocument(id);
       else if (type === 'content') await deleteRemoteContent(id);
       const nextState = { ...state };
-      if (type === 'lead') nextState.leads = state.leads.filter((l) => l.id !== id);
+      if (type === 'lead') {
+        nextState.leads = state.leads.filter((l) => l.id !== id);
+        if (typeof nextState.leadsTotal === 'number') {
+          nextState.leadsTotal = Math.max(0, nextState.leadsTotal - 1);
+        }
+      }
       else if (type === 'product') nextState.products = state.products.filter((p) => p.id !== id);
       else if (type === 'project') nextState.projects = (state.projects || []).filter((p) => p.id !== id);
       else if (type === 'document') nextState.documents = state.documents.filter((d) => d.id !== id);
@@ -450,7 +464,27 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     }
   };
 
-  const exportLeadsToCsv = () => {
+  const exportLeadsToCsv = async () => {
+    try {
+      setToast('Đang tải toàn bộ dữ liệu khách hàng từ máy chủ...');
+      const res = await fetch('/api/leads?format=csv');
+      if (res.ok) {
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `khach-hang-${new Date().toISOString().slice(0, 10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        setToast('Đã xuất toàn bộ khách hàng ra file Excel/CSV thành công.');
+        return;
+      }
+    } catch {
+      // Tiếp tục xuống fallback client nếu endpoint server chưa có hoặc môi trường mock
+    }
+
     if (!state.leads.length) {
       alert('Không có dữ liệu khách hàng để xuất.');
       return;
@@ -500,7 +534,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `APEX_KhachHang_PCCC_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `khach-hang-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -514,8 +548,10 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     const matchesSearch = `${lead.fullName} ${lead.phone} ${lead.company} ${lead.projectName} ${lead.productInterest}`.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === 'all' || lead.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || lead.priority === priorityFilter;
-    return matchesSearch && matchesStatus && matchesPriority;
-  }), [search, state.leads, statusFilter, priorityFilter]);
+    const matchesSource = sourceFilter === 'all' || (lead.source || '').toLowerCase().includes(sourceFilter.toLowerCase());
+    const matchesProductInterest = productInterestFilter === 'all' || (lead.productInterest || '').toLowerCase().includes(productInterestFilter.toLowerCase());
+    return matchesSearch && matchesStatus && matchesPriority && matchesSource && matchesProductInterest;
+  }), [search, state.leads, statusFilter, priorityFilter, sourceFilter, productInterestFilter]);
 
   const filteredProducts = useMemo(() => state.products.filter((product) => {
     const matchesSearch = `${product.name} ${product.categoryName} ${product.fireRating} ${product.slug}`.toLowerCase().includes(search.toLowerCase());
@@ -641,16 +677,41 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
               onStatusFilter={setStatusFilter}
               statusOptions={Object.entries(LEAD_STATUS).map(([value, item]) => ({ value, label: item.label }))}
               extraFilters={
-                <select
-                  value={priorityFilter}
-                  onChange={(e) => setPriorityFilter(e.target.value)}
-                  className="h-10 border border-neutral-300 bg-white px-3 text-sm outline-none focus:border-red-600"
-                >
-                  <option value="all">Tất cả mức ưu tiên</option>
-                  <option value="high">Ưu tiên Cao</option>
-                  <option value="medium">Ưu tiên Trung bình</option>
-                  <option value="low">Ưu tiên Thấp</option>
-                </select>
+                <>
+                  <select
+                    value={priorityFilter}
+                    onChange={(e) => setPriorityFilter(e.target.value)}
+                    className="h-10 border border-neutral-300 bg-white px-3 text-sm outline-none focus:border-red-600"
+                  >
+                    <option value="all">Tất cả mức ưu tiên</option>
+                    <option value="high">Ưu tiên Cao</option>
+                    <option value="medium">Ưu tiên Trung bình</option>
+                    <option value="low">Ưu tiên Thấp</option>
+                  </select>
+
+                  <select
+                    value={sourceFilter}
+                    onChange={(e) => setSourceFilter(e.target.value)}
+                    className="h-10 border border-neutral-300 bg-white px-3 text-sm outline-none focus:border-red-600"
+                  >
+                    <option value="all">Tất cả nguồn tiếp nhận</option>
+                    <option value="Form báo giá">Form báo giá</option>
+                    <option value="Form liên hệ">Form liên hệ</option>
+                    <option value="Biểu mẫu website">Biểu mẫu website</option>
+                    <option value="Nhập thủ công">Nhập thủ công</option>
+                  </select>
+
+                  <select
+                    value={productInterestFilter}
+                    onChange={(e) => setProductInterestFilter(e.target.value)}
+                    className="h-10 border border-neutral-300 bg-white px-3 text-sm outline-none focus:border-red-600 max-w-[200px]"
+                  >
+                    <option value="all">Tất cả sản phẩm quan tâm</option>
+                    {PRODUCT_CATEGORY_CHOICES.map((choice) => (
+                      <option key={choice.id} value={choice.name}>{choice.name}</option>
+                    ))}
+                  </select>
+                </>
               }
               onAdd={() => setEditor({ type: 'lead', data: newLead() })}
               extraAction={
