@@ -185,6 +185,7 @@
 | **T7** | **Danh sách khách hàng: leadsTotal & CSV** | Cập nhật `leadsTotal` (+1/-1); endpoint `GET /api/leads?format=csv` xuất toàn bộ UTF-8 BOM cho Excel; bộ lọc Nguồn & Sản phẩm | 🟢 **PR #9 MERGED** |
 | **T8** | **Menu mobile 2 nhóm phẳng** | Khối danh sách 2 nhóm phẳng theo `PRODUCT_CATEGORY_GROUPS`, touch target $\ge 44$px, đóng menu tự động khi chọn | 🟢 **PR #10 MERGED** |
 | **T9** | **Dọn dẹp kỹ thuật & Bàn giao** | Xóa an toàn worktree phụ `website-PCCC-leadfix`; xóa remote branches đã merge; bảo lưu `master` chờ chủ dự án | 🟢 **PR #11 MERGED** |
+| **PROD** | **Deploy Production & Fallback Tương Thích** | Cơ chế fallback tương thích ngược tự động cho bảng `products`; Deploy Production hoàn tất trên Vercel `apexdoor.net` với `isDatabaseLive: true` | 🟢 **PR #12 MERGED & LIVE** |
 
 ---
 
