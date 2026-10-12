@@ -31,7 +31,7 @@ export default async function handler(req: any, res: any) {
         FROM company_settings
         WHERE id = 'apex'
         LIMIT 1
-      `,
+      `.catch(() => []),
       sql`
         SELECT 
           id, name, slug, category, category_name as "categoryName",
@@ -44,7 +44,37 @@ export default async function handler(req: any, res: any) {
         FROM products
         WHERE status = 'published'
         ORDER BY sort_order ASC, name ASC
-      `,
+      `.catch(async (err: any) => {
+        // Fallback tương thích nếu database Neon chưa chạy migration features/long_description
+        console.warn('Truy vấn products fallback về tương thích ngược:', err?.message || err);
+        return await sql`
+          SELECT 
+            id, name, slug, category, category_name as "categoryName",
+            fire_rating as "fireRating", certification_no as "certificationNo",
+            short_description as "shortDescription", material, standard, warranty,
+            specs, '[]'::jsonb as features, short_description as "longDescription",
+            featured, status, sort_order as "sortOrder",
+            seo_title as "seoTitle", seo_description as "seoDescription",
+            image_alt as "imageAlt", image, price_estimate as "priceEstimate"
+          FROM products
+          WHERE status = 'published'
+          ORDER BY sort_order ASC, name ASC
+        `.catch(async () => {
+          return await sql`
+            SELECT 
+              id, name, slug, category, category_name as "categoryName",
+              fire_rating as "fireRating", '' as "certificationNo",
+              short_description as "shortDescription", material, standard, warranty,
+              '{}'::jsonb as specs, '[]'::jsonb as features, short_description as "longDescription",
+              featured, status, sort_order as "sortOrder",
+              seo_title as "seoTitle", seo_description as "seoDescription",
+              image_alt as "imageAlt", image, price_estimate as "priceEstimate"
+            FROM products
+            WHERE status = 'published'
+            ORDER BY sort_order ASC, name ASC
+          `;
+        });
+      }),
       sql`
         SELECT 
           id, title, code, document_type as "documentType", product_group as "productGroup",
@@ -53,7 +83,7 @@ export default async function handler(req: any, res: any) {
         FROM documents
         WHERE status = 'published'
         ORDER BY issued_date DESC
-      `,
+      `.catch(() => []),
       sql`
         SELECT 
           id, type, title, summary, status, publish_at as "publishAt", owner,
@@ -63,7 +93,7 @@ export default async function handler(req: any, res: any) {
         FROM contents
         WHERE status = 'published' AND type != 'project'
         ORDER BY publish_at DESC
-      `,
+      `.catch(() => []),
       sql`
         SELECT 
           id, title, slug, client_name as "clientName", category,
