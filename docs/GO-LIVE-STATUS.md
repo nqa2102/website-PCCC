@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 12/10/2026 (Hoàn thành T0: Khôi phục Neon Production; Hoàn thành T1: Catalog 9 nhóm; Hoàn thành T2: Merge PR #3 Lead capture & rate limit; Hoàn thành T3: Form báo giá QuoteModal 9 nhóm; Hoàn thành T4: Sitemap 100% 24 URL sạch & Dynamic SEO; Hoàn thành T5: Dự án tiêu biểu 1 nguồn dữ liệu bảng projects; Hoàn thành T6: Quản trị sản phẩm; Hoàn thành T7: Danh sách khách hàng; Hoàn thành T8: Menu mobile 2 nhóm phẳng theo PRODUCT_CATEGORY_GROUPS, chạm chuẩn ≥44px)*  
+*Cập nhật lần cuối: 12/10/2026 (Hoàn thành 100% toàn bộ lộ trình T0 → T9: Khôi phục Neon Production, Catalog 9 nhóm, Lead capture & rate limit, QuoteModal 9 nhóm, Clean Sitemap 24 URL, Dự án 1 nguồn projects, Quản trị sản phẩm specs/features, Danh sách khách hàng export CSV, Menu mobile phẳng chuẩn touch, và Dọn dẹp kỹ thuật bàn giao)*  
 *Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -171,11 +171,40 @@
 - Trang quản trị: danh sách khách hàng phân trang (200/trang, nút "Tải thêm", hiển thị tổng số).
 - Kiểm thử trên Postgres thật (PGlite + schema): 24/24 PASS; trình duyệt: form chặn khi chưa tick đồng ý, gửi đủ trường tách riêng.
 
-### Việc còn lại (chưa làm)
-- Xác minh chứng nhận kiểm định và danh sách "đối tác" (`PARTNER_LOGOS`: Mitsubishi, Hitachi...).
-- Gắn `apexdoor.net` trên Vercel + DNS Mắt Bão (code đã cập nhật sitemap, robots, canonical, og, JSON-LD).
-- Tạo hộp thư `contact@apexdoor.net`; xác thực `apexdoor.net` trên Resend và đặt biến `RESEND_FROM`.
-- SEO cho chia sẻ mạng xã hội (meta theo từng trang phía máy chủ), sitemap động.
+### 🚀 Tổng Kết Toàn Bộ Lộ Trình T0 → T9 (Hoàn Tất 12/10/2026)
+
+| Nhiệm vụ | Nội dung thực hiện | Bằng chứng kiểm thử & PR | Trạng thái |
+|---|---|---|:---:|
+| **T0** | **Khôi phục kết nối Neon Production** | `isDatabaseLive: true`, database `noisy-rain-90838361`, bổ sung đầy đủ cột `specs`, `certification_no` và bảng `projects` | 🟢 **DONE** |
+| **T1** | **Catalog 9 nhóm & Header 340px** | Menu header 340px 2 cụm; lọc sản phẩm sticky; chip mobile; đồng bộ 9 nhóm sản phẩm | 🟢 **PR #4 MERGED** |
+| **T2** | **Lưu thông tin khách hàng (PR #3)** | Tách cột `leads`; bẫy honeypot chống bot spam; rate limit IP (HMAC) & SĐT; đồng ý consent bắt buộc theo NĐ 13/2023 | 🟢 **PR #3 MERGED** |
+| **T3** | **Form báo giá QuoteModal 9 nhóm** | Phân tách 2 khối form: Ngăn cháy (EI, cánh, phụ kiện) & Cơ điện viễn thông (R×C×S, IP54/55/65, vật liệu) | 🟢 **PR #5 MERGED** |
+| **T4** | **Sitemap sạch 24 URL & Dynamic SEO** | Sitemap chuẩn 24 URL sạch; router redirect URL cũ 308; dynamic meta tags title/desc/canonical/og:image | 🟢 **PR #6 MERGED** |
+| **T5** | **Dự án 1 nguồn dữ liệu `projects`** | Bảng `projects` là nguồn duy nhất; migration `20261012_move_projects.sql` an toàn; màn hình quản trị Dự án; chặn công bố khi chưa xác minh | 🟢 **PR #7 MERGED** |
+| **T6** | **Quản trị sản phẩm: Specs, Features, SEO** | Migration `20261012_product_features_and_long_desc.sql`; `SpecsEditor` 2 cột có gợi ý 9 nhóm; textarea tính năng nổi bật & mô tả chi tiết | 🟢 **PR #8 MERGED** |
+| **T7** | **Danh sách khách hàng: leadsTotal & CSV** | Cập nhật `leadsTotal` (+1/-1); endpoint `GET /api/leads?format=csv` xuất toàn bộ UTF-8 BOM cho Excel; bộ lọc Nguồn & Sản phẩm | 🟢 **PR #9 MERGED** |
+| **T8** | **Menu mobile 2 nhóm phẳng** | Khối danh sách 2 nhóm phẳng theo `PRODUCT_CATEGORY_GROUPS`, touch target $\ge 44$px, đóng menu tự động khi chọn | 🟢 **PR #10 MERGED** |
+| **T9** | **Dọn dẹp kỹ thuật & Bàn giao** | Xóa an toàn worktree phụ `website-PCCC-leadfix`; xóa remote branches đã merge; bảo lưu `master` chờ chủ dự án | 🟢 **PR #11 MERGED** |
+
+---
+
+## 📋 Danh Sách Việc Của Chủ Dự Án (Thao Tác Ngoài Mã Nguồn)
+
+| # | Việc | Hạn / Điều kiện | Hướng dẫn thao tác |
+|---|---|---|---|
+| **1** | **T0 — Chạy SQL khôi phục Production** | **ĐÃ XONG** | Đã chạy migration trên Neon store `noisy-rain-90838361`, `isDatabaseLive: true`. |
+| **2** | **Chạy migration rate limits** | Đã sẵn sàng | File `sql/migrations/20261012_lead_rate_limits.sql` chạy trên Neon SQL Editor. |
+| **3** | **Chạy migration T5 & T6 trên Neon** | Sẵn sàng | Chạy `20261012_move_projects.sql` và `20261012_product_features_and_long_desc.sql` trong Neon SQL Editor. |
+| **4** | **Mắt Bão: Xác nhận thông tin chủ thể qua email** cho `apexdoor.net` | **Trước 24/10/2026** (Quá hạn tên miền bị khóa) | Kiểm tra email từ Mắt Bão và bấm link xác nhận chủ thể tên miền. |
+| **5** | **Mắt Bão: Hoàn tất bản khai "Chờ ký"** | Sớm | Ký điện tử hoặc nộp bản khai tên miền `apexdoor.net`, `apexdoor.cloud`. |
+| **6** | **Tạo hộp thư `contact@apexdoor.net`** | Trước khi chạy quảng cáo | Cấu hình hộp thư theo tên miền trên Mắt Bão / Google Workspace. |
+| **7** | **Resend Email API** | Trước khi chạy quảng cáo | Tạo tài khoản Resend, xác thực domain `apexdoor.net`, gắn `RESEND_API_KEY` và `NOTIFICATION_EMAIL` trên Vercel. |
+| **8** | **Mã đo lường marketing (GTM / GA4 / Pixel)** | Trước khi chạy quảng cáo | Cấu hình các biến `VITE_GTM_ID`, `VITE_GA4_ID`, `VITE_FB_PIXEL_ID` trên Vercel Production và redeploy. |
+| **9** | **Nâng Vercel lên gói Pro** | Trước khi chạy quảng cáo | Gói Hobby chỉ phục vụ cá nhân/phi thương mại, nâng Pro để đảm bảo SLA thương mại. |
+| **10** | **Nhập danh mục ban đầu dạng nháp trong `/admin`** | Trước khi chạy quảng cáo | Vào `/admin` → Cấu hình → Nhập danh mục ban đầu → rà soát thông số kỹ thuật → Công bố. |
+| **11** | **Xóa lead thử nghiệm** | Bất kỳ lúc nào | Vào tab Khách cần tư vấn xóa bản ghi "KIỂM THỬ HỆ THỐNG – xin xóa". |
+| **12** | **Xác minh logo đối tác & chứng nhận kiểm định** | Trước khi chạy quảng cáo | Chỉ công bố đối tác và số chứng nhận kiểm định khi có hợp đồng/văn bản xác nhận lưu hành. |
+| **13** | **Google Search Console** | Hoàn thành sau T4 | Thêm `apexdoor.net` vào GSC và nộp sitemap: `https://apexdoor.net/sitemap.xml`. |
 
 ---
 
@@ -186,55 +215,27 @@
 ### 1. Trên Vercel Console:
 1. Vào dự án trên Vercel $\rightarrow$ chọn mục **Settings** $\rightarrow$ **Environment Variables**.
 2. Thêm 2 biến môi trường:
-   - `DATABASE_URL`: Đường dẫn kết nối PostgreSQL do Neon cung cấp (ví dụ: `postgresql://user:pass@ep-xxxx.neon.tech/neondb?sslmode=require`).
-   - `ADMIN_SESSION_SECRET`: Chuỗi khóa bí mật ngẫu nhiên dài trên 32 ký tự dùng để ký session đăng nhập (ví dụ: tạo bằng chuỗi ngẫu nhiên bất kỳ).
-   - *(Tùy chọn)* `RESEND_API_KEY`: Khóa API từ [Resend.com](https://resend.com) nếu muốn nhận email thông báo tự động mỗi khi có khách gửi yêu cầu tư vấn.
+   - `DATABASE_URL`: Đường dẫn kết nối PostgreSQL do Neon cung cấp.
+   - `ADMIN_SESSION_SECRET`: Chuỗi khóa bí mật ngẫu nhiên dài trên 32 ký tự dùng để ký session đăng nhập.
+   - *(Tùy chọn)* `RESEND_API_KEY`: Khóa API từ Resend.com.
 
 ### 2. Trên Neon Console:
 1. Mở mục **SQL Editor** trong dự án Neon.
-2. Sao chép và chạy nội dung file [`sql/neon_schema.sql`](../sql/neon_schema.sql) để khởi tạo toàn bộ 7 bảng và dữ liệu công ty ban đầu.
-3. Chạy lệnh tạo tài khoản quản trị đầu tiên tại terminal máy tính:
+2. Sao chép và chạy nội dung file [`sql/neon_schema.sql`](../sql/neon_schema.sql) để khởi tạo toàn bộ các bảng và dữ liệu công ty ban đầu.
+3. Chạy lệnh tạo tài khoản quản trị đầu tiên tại terminal:
    ```powershell
    node scripts/hash_password.js "MatKhauQuanTriCuaBan" "admin@apexdoor.net"
    ```
    Sau đó sao chép câu lệnh SQL hiển thị trên màn hình và chạy trong Neon SQL Editor.
 
-### 3. Vercel Blob (để tải ảnh/PDF từ trang quản trị):
-1. Vercel → dự án → **Storage** → **Create** → **Blob**, chọn chế độ **Public**, rồi **Connect** vào dự án.
-2. Kiểm tra biến `BLOB_READ_WRITE_TOKEN` đã có trong Environment Variables, rồi deploy lại.
-
-### 4. Bảng giới hạn đăng nhập (DB đã khởi tạo trước 09/10/2026):
-- Chạy [`sql/migrations/20261009_login_attempts.sql`](../sql/migrations/20261009_login_attempts.sql) trong Neon SQL Editor. Chỉ thêm bảng mới, chạy lại nhiều lần vẫn an toàn. Nếu thiếu bảng này, đăng nhập vẫn hoạt động nhưng **không** có giới hạn dò mật khẩu (có ghi log lỗi).
-
-### 5. Migration 9 Dòng sản phẩm & Dự án tiêu biểu (12/10/2026):
-- Chạy [`sql/migrations/20261012_products_and_projects.sql`](../sql/migrations/20261012_products_and_projects.sql) trong Neon SQL Editor.
-- Migration này:
-  1. Thêm cột `certification_no` và `specs` (JSONB) cho bảng `products`.
-  2. Áp dụng CHECK constraint `products_category_check` cho 9 slug danh mục cố định.
-  3. Tạo bảng `projects` mới với các cột `verified` (BOOLEAN DEFAULT false), `verified_note` (TEXT), `gallery` (JSONB).
-  4. Tạo các chỉ mục tối ưu tìm kiếm và lọc: `idx_projects_slug`, `idx_projects_verified`, `idx_projects_category`.
-
-### 6. Tên miền chính thức `apexdoor.net` (làm SAU khi merge PR vào `main`):
-1. Vercel → dự án `website-pccc` → **Settings → Domains** → thêm `apexdoor.net` (Production) và `www.apexdoor.net` (chuyển hướng 308 về `apexdoor.net`).
-2. Mắt Bão → quản lý DNS `apexdoor.net` → tạo đúng các bản ghi A/CNAME mà Vercel hiển thị; xóa bản ghi A/CNAME cũ trùng tên (`@`, `www`).
-3. Chờ Vercel báo **Valid Configuration** và tự cấp SSL; mở thử `https://apexdoor.net`.
-4. Google Search Console: thêm `apexdoor.net`, gửi `https://apexdoor.net/sitemap.xml`.
-
-### 7. Nạp nội dung ban đầu (sau khi đăng nhập `/admin`):
-1. Vào **Cấu hình** → bấm **Nhập danh mục ban đầu (dạng nháp)** để nhập 9 dòng sản phẩm kỹ thuật vào Neon.
-2. Rà soát từng sản phẩm / hồ sơ / bài viết, đối chiếu bản gốc, rồi chuyển trạng thái sang **Đã công bố**.
-3. Lưu ý: khi Neon đã kết nối, website chỉ hiển thị mục **Đã công bố**. Riêng bảng `projects` để trống tuyệt đối, chỉ tạo khi phòng kinh doanh APEX cung cấp dự án thật đã xác minh bằng văn bản.
-
-### 8. Chuyển dữ liệu dự án sang bảng `projects` (T5 - 12/10/2026):
+### 3. Migration Chuyển dữ liệu dự án sang bảng `projects` (T5):
 - Chạy [`sql/migrations/20261012_move_projects.sql`](../sql/migrations/20261012_move_projects.sql) trong Neon SQL Editor.
-- Chuyển an toàn các bản ghi dự án cũ trong `contents` (type = 'project') sang bảng `projects` ở trạng thái `review` và `verified = false` để buộc xác minh lại trước khi công bố.
-- Migration này an toàn 100%, chạy lại nhiều lần không lỗi (idempotent), và tuyệt đối không xóa dữ liệu trong bảng `contents`.
 
-### 9. Thêm cột `features` & `long_description` cho bảng `products` (T6 - 12/10/2026):
+### 4. Migration Thêm cột `features` & `long_description` cho bảng `products` (T6):
 - Chạy [`sql/migrations/20261012_product_features_and_long_desc.sql`](../sql/migrations/20261012_product_features_and_long_desc.sql) trong Neon SQL Editor:
   ```sql
   ALTER TABLE products ADD COLUMN IF NOT EXISTS features JSONB DEFAULT '[]'::jsonb;
   ALTER TABLE products ADD COLUMN IF NOT EXISTS long_description TEXT;
   ```
-- Cho phép quản trị viên cập nhật thông số kỹ thuật (bảng 2 cột Tên - Giá trị, hỗ trợ gợi ý nhanh theo 9 nhóm), danh sách tính năng nổi bật (tối đa 12 mục) và bài viết mô tả chi tiết từ màn hình `/admin` mà không cần can thiệp mã nguồn.
+
 
