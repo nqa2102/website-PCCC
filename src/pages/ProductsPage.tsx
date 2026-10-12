@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Calculator,
   Download,
@@ -6,10 +6,11 @@ import {
   Layers,
   Phone,
   ShieldCheck,
+  PackageSearch,
 } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
 import type { Product, ProductCategory } from '../types';
-import { ProductCategoryGrid, PRODUCT_CATEGORY_DEFINITIONS } from '../components/products/ProductCategoryGrid';
+import { PRODUCT_CATEGORY_DEFINITIONS, PRODUCT_CATEGORY_GROUPS } from '../components/products/ProductCategoryGrid';
 import { ProductCard } from '../components/products/ProductCard';
 import { ProductDetailLayout } from '../components/products/ProductDetailLayout';
 
@@ -100,6 +101,8 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
 }) => {
   const { products, company } = useLiveData();
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
+  const catalogSectionRef = useRef<HTMLDivElement>(null);
+
   const [detailProduct, setDetailProduct] = useState<Product | null>(() => {
     if (initialProductId) {
       return products.find((p) => p.id === initialProductId || p.slug === initialProductId) || null;
@@ -122,15 +125,16 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     }
   }, [initialProductId, products]);
 
-  const categoryFilterList = useMemo(() => {
-    return [
-      { id: 'all', label: 'Tất cả sản phẩm (9 dòng)' },
-      ...PRODUCT_CATEGORY_DEFINITIONS.map((c) => ({
-        id: c.id,
-        label: c.name,
-      })),
-    ];
-  }, []);
+  // Số sản phẩm theo từng nhóm (hiển thị cạnh tên nhóm trong bộ lọc)
+  const countByCategory = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const item of products) counts[item.category] = (counts[item.category] || 0) + 1;
+    return counts;
+  }, [products]);
+
+  const currentCategoryInfo = useMemo(() => {
+    return PRODUCT_CATEGORY_DEFINITIONS.find((c) => c.id === selectedCategory);
+  }, [selectedCategory]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((item) => {
@@ -145,6 +149,9 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     if (onNavigate) {
       onNavigate('products', undefined, catId !== 'all' ? catId : undefined);
     }
+    // Chỉ cuộn khi đầu danh sách đã trôi khỏi màn hình (đang ở giữa trang)
+    const top = catalogSectionRef.current?.getBoundingClientRect().top ?? 0;
+    if (top < 0) catalogSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handleViewProduct = (product: Product) => {
@@ -176,246 +183,231 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     );
   }
 
+  const isSteelDoor = selectedCategory === 'cua-thep-ngan-chay';
+  const quoteCategory = selectedCategory !== 'all' ? selectedCategory : undefined;
+
+  const filterButtonClass = (active: boolean) =>
+    `flex min-h-10 w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-colors focus-visible:outline-2 focus-visible:outline-red-600 ${
+      active ? 'bg-white font-semibold text-red-700 shadow-xs ring-1 ring-slate-200' : 'text-slate-700 hover:bg-white/70 hover:text-slate-950'
+    }`;
+
   return (
-    <div className="min-h-screen w-full bg-[#f4f4f1] pb-20">
-      {/* Hero Banner Header */}
-      <div className="border-b border-white/10 bg-slate-950 py-12 text-white sm:py-16">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-          <p className="flex items-center gap-3 text-xs font-semibold uppercase text-red-400">
-            <span className="h-0.5 w-8 bg-red-500" />
-            Hệ sản phẩm APEX Việt Nam
-          </p>
-          <h1 className="mt-4 max-w-4xl text-3xl font-semibold leading-tight text-white sm:text-5xl">
-            9 Dòng sản phẩm giải pháp ngăn cháy & thiết bị kỹ thuật công trình.
-          </h1>
-          <p className="mt-5 max-w-3xl text-sm leading-7 text-slate-300 sm:text-base">
-            Sản xuất cơ khí chính xác theo hồ sơ thiết kế, kích thước khảo sát thực tế và tiêu chuẩn kỹ thuật nghiêm ngặt của dự án.
-          </p>
-          <div className="mt-8 grid max-w-2xl grid-cols-3 border-y border-white/15 text-xs text-slate-300">
-            <div className="py-3 pr-4">
-              <strong className="block text-sm text-white">09 Nhóm</strong>Sản phẩm đồng bộ
-            </div>
-            <div className="border-l border-white/15 px-4 py-3">
-              <strong className="block text-sm text-white">Chính xác</strong>Gia công CNC
-            </div>
-            <div className="border-l border-white/15 px-4 py-3">
-              <strong className="block text-sm text-white">Theo thiết kế</strong>Khảo sát thực tế
-            </div>
+    <div className="min-h-svh w-full bg-[#f4f4f1] pb-20">
+      {/* Đầu trang gọn: tên nhóm đang xem + 1 CTA */}
+      <div className="border-b border-slate-200 bg-white">
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-7 sm:flex-row sm:items-end sm:justify-between sm:px-8 lg:px-10">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-red-700">Sản phẩm APEX</p>
+            <h1 className="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
+              {currentCategoryInfo ? currentCategoryInfo.name : 'Tất cả sản phẩm'}
+            </h1>
+            <p className="mt-1.5 max-w-2xl text-sm leading-6 text-slate-600">
+              {currentCategoryInfo
+                ? currentCategoryInfo.shortDesc
+                : 'Cửa và rèm ngăn cháy, thiết bị cơ điện – viễn thông. Sản xuất theo hồ sơ thiết kế và kích thước khảo sát thực tế.'}
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={() => onOpenQuote(quoteCategory)}
+            className="hidden min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-red-600 px-5 text-sm font-bold text-white transition-colors hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 sm:inline-flex"
+          >
+            <Calculator className="h-4 w-4" aria-hidden="true" />
+            Nhận báo giá
+          </button>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-5 pt-10 sm:px-8 lg:px-10 space-y-12">
-        {/* 9 Dòng sản phẩm Grid Overview */}
-        <ProductCategoryGrid
-          selectedCategory={selectedCategory}
-          onSelectCategory={handleSelectCategory}
-        />
-
-        {/* Filter Pills */}
-        <div className="border-b border-slate-300 pb-5">
-          <span className="mb-3 block text-xs font-semibold uppercase text-slate-500">
-            Lọc theo nhóm sản phẩm ({filteredProducts.length} sản phẩm)
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {categoryFilterList.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => handleSelectCategory(cat.id as any)}
-                className={`min-h-10 px-4 py-2 text-xs font-semibold transition-all rounded-lg ${
-                  selectedCategory === cat.id
-                    ? 'bg-slate-950 text-white shadow-xs'
-                    : 'border border-slate-300 bg-white text-slate-700 hover:border-red-600 hover:text-red-700'
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Products Grid */}
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onViewDetail={handleViewProduct}
-              onOpenQuote={onOpenQuote}
-            />
-          ))}
-        </div>
-
-        {filteredProducts.length === 0 && (
-          <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center">
-            <p className="text-sm font-bold text-slate-800">
-              Không tìm thấy sản phẩm nào trong nhóm hiện tại.
-            </p>
+      <div
+        ref={catalogSectionRef}
+        className="mx-auto max-w-7xl scroll-mt-32 px-5 pt-6 sm:px-8 lg:grid lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-8 lg:px-10"
+      >
+        {/* Bộ lọc nhóm sản phẩm: cột trái cố định trên desktop */}
+        <nav aria-label="Nhóm sản phẩm" className="hidden lg:block">
+          <div className="sticky top-36 space-y-4">
             <button
+              type="button"
+              aria-current={selectedCategory === 'all' ? 'page' : undefined}
               onClick={() => handleSelectCategory('all')}
-              className="mt-4 rounded-lg bg-slate-900 px-4 py-2 text-xs font-semibold text-white"
+              className={filterButtonClass(selectedCategory === 'all')}
             >
-              Xem tất cả sản phẩm
+              <span>Tất cả sản phẩm</span>
+              <span className="text-xs font-normal tabular-nums text-slate-400">{products.length}</span>
             </button>
+            {PRODUCT_CATEGORY_GROUPS.map((group) => (
+              <div key={group.label}>
+                <p className="px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">{group.label}</p>
+                <ul className="space-y-0.5">
+                  {group.ids.map((id) => {
+                    const cat = PRODUCT_CATEGORY_DEFINITIONS.find((c) => c.id === id);
+                    if (!cat) return null;
+                    const active = selectedCategory === id;
+                    return (
+                      <li key={id}>
+                        <button
+                          type="button"
+                          aria-current={active ? 'page' : undefined}
+                          onClick={() => handleSelectCategory(id)}
+                          className={filterButtonClass(active)}
+                        >
+                          <span>{cat.name}</span>
+                          <span className="text-xs font-normal tabular-nums text-slate-400">{countByCategory[id] || 0}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
           </div>
-        )}
+        </nav>
 
-        {/* ========================================================
-            TECHNICAL SECTION 1: EI MATRIX COMPARISON
-           ======================================================== */}
-        <section className="border-t border-slate-300 pt-14">
-          <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-red-600">
-                Quy chuẩn QCVN 06:2022/BXD
-              </span>
-              <h2 className="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">
-                Ma trận đối chiếu cấp độ chịu lửa EI
-              </h2>
-              <p className="mt-2 max-w-2xl text-xs text-slate-600 sm:text-sm">
-                Bảng phân tích kỹ thuật giúp chủ đầu tư và tư vấn thiết kế lựa chọn chính xác cấu hình cửa theo vị trí ngăn cháy và hồ sơ công trình.
-              </p>
-            </div>
-            <button
-              onClick={() => onOpenQuote('cua-thep-ngan-chay')}
-              className="inline-flex self-start items-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-xs font-bold text-white transition-colors hover:bg-slate-800 md:self-end"
-            >
-              <Calculator className="h-4 w-4 text-red-400" />
-              <span>Dự toán cấu hình theo công trình</span>
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {EI_MATRIX.map((item) => (
-              <div
-                key={item.rating}
-                className={`relative flex flex-col justify-between rounded-xl border bg-white p-5 shadow-xs transition-all hover:shadow-md ${
-                  item.popular ? 'border-red-600 ring-1 ring-red-600' : 'border-slate-200'
-                }`}
-              >
-                {item.popular && (
-                  <span className="absolute -top-3 right-4 rounded-full bg-red-600 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-xs">
-                    Phổ biến nhất
-                  </span>
-                )}
-                <div className="space-y-3">
-                  <div className="flex items-baseline justify-between border-b border-slate-100 pb-3">
-                    <span className="text-2xl font-black text-slate-900">{item.rating}</span>
-                    <span className="rounded bg-red-50 px-2 py-0.5 text-[11px] font-bold text-red-700">
-                      {item.title}
-                    </span>
-                  </div>
-
-                  <div>
-                    <span className="block text-[10px] font-bold uppercase text-slate-400">Độ dày thép</span>
-                    <p className="mt-0.5 text-xs font-semibold text-slate-800">{item.thickness}</p>
-                  </div>
-
-                  <div>
-                    <span className="block text-[10px] font-bold uppercase text-slate-400">Lõi cách nhiệt</span>
-                    <p className="mt-0.5 text-xs leading-relaxed text-slate-700">{item.core}</p>
-                  </div>
-
-                  <div>
-                    <span className="block text-[10px] font-bold uppercase text-slate-400">Vị trí lắp đặt khuyến nghị</span>
-                    <p className="mt-0.5 text-xs leading-relaxed text-slate-600">{item.application}</p>
-                  </div>
-
-                  <div className="flex items-start gap-1.5 border-t border-slate-100 pt-2 text-[11px] text-emerald-700">
-                    <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                    <span>{item.standard}</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 border-t border-slate-100 pt-4">
+        <div className="min-w-0">
+          {/* Bộ lọc trên điện thoại / máy tính bảng: hàng chip cuộn ngang */}
+          <div className="-mx-5 mb-5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:-mx-8 sm:px-8 lg:hidden [&::-webkit-scrollbar]:hidden" role="group" aria-label="Nhóm sản phẩm">
+            <div className="flex w-max gap-2">
+              {[{ id: 'all', name: 'Tất cả' }, ...PRODUCT_CATEGORY_DEFINITIONS].map((cat) => {
+                const active = selectedCategory === cat.id;
+                return (
                   <button
-                    onClick={() => onOpenQuote('cua-thep-ngan-chay')}
-                    className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-neutral-100 py-2 px-3 text-xs font-bold text-slate-800 transition-colors hover:bg-red-600 hover:text-white"
+                    key={cat.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => handleSelectCategory(cat.id as ProductCategory | 'all')}
+                    className={`min-h-10 whitespace-nowrap rounded-full px-4 text-[13px] font-semibold transition-colors ${
+                      active ? 'bg-slate-950 text-white' : 'border border-slate-300 bg-white text-slate-700 hover:border-red-600 hover:text-red-700'
+                    }`}
                   >
-                    <Calculator className="h-3.5 w-3.5" />
-                    <span>Báo giá {item.rating}</span>
+                    {cat.name}
                   </button>
-                </div>
-              </div>
-            ))}
+                );
+              })}
+            </div>
           </div>
-        </section>
 
-        {/* ========================================================
-            TECHNICAL SECTION 2: 5-LAYER EXPLODED VIEW
-           ======================================================== */}
-        <section className="border-t border-slate-300 pt-14">
-          <div className="mb-8 max-w-2xl">
-            <span className="text-xs font-bold uppercase tracking-wider text-red-600">
-              Tiêu chuẩn gia công cơ khí
-            </span>
-            <h2 className="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">
-              Cấu tạo mặt cắt 5 lớp cửa ngăn cháy APEX
-            </h2>
-            <p className="mt-2 text-xs text-slate-600 sm:text-sm">
-              Mỗi lớp vật liệu đóng vai trò quyết định trong việc ngăn lửa, chặn khói độc và duy trì lối thoát hiểm an toàn.
+          {/* Danh sách sản phẩm */}
+          <section aria-label="Danh sách sản phẩm">
+            <p className="mb-4 text-xs text-slate-500" aria-live="polite">
+              {filteredProducts.length} sản phẩm
             </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
-            {DOOR_LAYERS.map((layer) => (
-              <div
-                key={layer.step}
-                className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-xs transition-colors hover:border-red-300"
-              >
-                <div>
-                  <div className="mb-4 flex items-center justify-between">
-                    <span className="font-mono text-2xl font-black text-red-600">Lớp {layer.step}</span>
-                    <Layers className="h-5 w-5 text-slate-400" />
-                  </div>
-                  <h3 className="text-sm font-bold leading-snug text-slate-900">{layer.name}</h3>
-                  <div className="mt-2 rounded bg-red-50 p-1.5 text-[11px] font-bold text-red-700">
-                    {layer.spec}
-                  </div>
-                  <p className="mt-3 text-xs leading-relaxed text-slate-600">
-                    {layer.desc}
-                  </p>
-                </div>
+            {filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} onViewDetail={handleViewProduct} onOpenQuote={onOpenQuote} />
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
+            ) : (
+              <div className="flex flex-col items-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
+                <PackageSearch className="h-8 w-8 text-slate-400" aria-hidden="true" />
+                <p className="mt-3 text-sm font-semibold text-slate-900">Nhóm này đang cập nhật sản phẩm</p>
+                <p className="mt-1 max-w-sm text-sm text-slate-600">
+                  APEX vẫn nhận sản xuất theo yêu cầu. Gửi thông số công trình để nhận tư vấn và dự toán.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => onOpenQuote(quoteCategory)}
+                  className="mt-5 inline-flex min-h-10 items-center gap-2 rounded-lg bg-red-600 px-4 text-sm font-bold text-white hover:bg-red-700"
+                >
+                  <Calculator className="h-4 w-4" aria-hidden="true" />
+                  Nhận báo giá
+                </button>
+              </div>
+            )}
+          </section>
 
-        {/* ========================================================
-            TECHNICAL SECTION 3: CATALOGUE & PROFILE CTA
-           ======================================================== */}
-        <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-950 via-[#102b21] to-slate-950 p-8 text-white shadow-xl sm:p-12">
-          <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
-            <div className="space-y-3 lg:col-span-8">
-              <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-400">
-                <FileCheck className="h-4 w-4" />
-                <span>Hồ sơ năng lực & Tài liệu kỹ thuật 2026</span>
-              </span>
-              <h2 className="text-2xl font-bold text-white sm:text-3xl">
-                Tải E-Catalogue & Hồ sơ năng lực APEX Việt Nam
-              </h2>
-              <p className="max-w-2xl text-xs leading-relaxed text-slate-300 sm:text-sm">
-                Tài liệu đầy đủ bao gồm thông số kỹ thuật 9 dòng sản phẩm, bản vẽ cấu tạo chi tiết và hướng dẫn lựa chọn giải pháp theo tiêu chuẩn công trình.
+          {/* Thông tin kỹ thuật: chỉ hiển thị cho nhóm cửa thép ngăn cháy */}
+          {isSteelDoor && (
+            <div className="mt-14 space-y-14 border-t border-slate-300 pt-12">
+              <section aria-labelledby="ei-matrix-title">
+                <h2 id="ei-matrix-title" className="text-xl font-bold text-slate-950 sm:text-2xl">
+                  Giới hạn chịu lửa EI theo QCVN 06:2022/BXD
+                </h2>
+                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                  {EI_MATRIX.map((item) => (
+                    <div
+                      key={item.rating}
+                      className={`rounded-xl border bg-white p-5 ${item.popular ? 'border-red-600 ring-1 ring-red-600' : 'border-slate-200'}`}
+                    >
+                      <div className="flex items-baseline justify-between border-b border-slate-100 pb-3">
+                        <span className="text-2xl font-black text-slate-900">{item.rating}</span>
+                        <span className="rounded bg-red-50 px-2 py-0.5 text-[11px] font-bold text-red-700">
+                          {item.popular ? 'Phổ biến nhất' : item.title}
+                        </span>
+                      </div>
+                      <dl className="mt-3 space-y-2 text-xs">
+                        <div>
+                          <dt className="font-semibold text-slate-500">Độ dày thép</dt>
+                          <dd className="text-slate-800">{item.thickness}</dd>
+                        </div>
+                        <div>
+                          <dt className="font-semibold text-slate-500">Lõi cách nhiệt</dt>
+                          <dd className="text-slate-700">{item.core}</dd>
+                        </div>
+                        <div>
+                          <dt className="font-semibold text-slate-500">Vị trí khuyến nghị</dt>
+                          <dd className="text-slate-700">{item.application}</dd>
+                        </div>
+                      </dl>
+                      <p className="mt-3 flex items-start gap-1.5 border-t border-slate-100 pt-2 text-[11px] text-emerald-700">
+                        <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
+                        <span>{item.standard}</span>
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section aria-labelledby="door-layers-title">
+                <h2 id="door-layers-title" className="text-xl font-bold text-slate-950 sm:text-2xl">
+                  Cấu tạo 5 lớp cửa ngăn cháy APEX
+                </h2>
+                <ol className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+                  {DOOR_LAYERS.map((layer) => (
+                    <li key={layer.step} className="rounded-xl border border-slate-200 bg-white p-5">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-lg font-black text-red-600">Lớp {layer.step}</span>
+                        <Layers className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                      </div>
+                      <h3 className="mt-2 text-sm font-bold text-slate-900">{layer.name}</h3>
+                      <p className="mt-1 text-[11px] font-bold text-red-700">{layer.spec}</p>
+                      <p className="mt-2 text-xs leading-relaxed text-slate-600">{layer.desc}</p>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            </div>
+          )}
+
+          {/* CTA cuối trang: catalogue + hotline */}
+          <div className="mt-14 flex flex-col gap-4 rounded-xl bg-slate-950 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">
+            <div>
+              <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-400">
+                <FileCheck className="h-4 w-4" aria-hidden="true" />
+                E-Catalogue & hồ sơ năng lực
+              </p>
+              <p className="mt-1.5 max-w-xl text-sm text-slate-300">
+                Nhận thông số kỹ thuật, bản vẽ cấu tạo và hướng dẫn chọn giải pháp theo công trình.
               </p>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row lg:col-span-4 lg:flex-col">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <button
-                onClick={() => onOpenQuote()}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 py-3.5 px-6 text-xs font-bold text-white shadow-lg shadow-red-900/30 transition-colors hover:bg-red-700"
+                type="button"
+                onClick={() => onOpenQuote(quoteCategory)}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-red-600 px-5 text-sm font-bold text-white hover:bg-red-700"
               >
-                <Download className="h-4 w-4" />
-                <span>Yêu cầu gửi E-Catalogue (PDF)</span>
+                <Download className="h-4 w-4" aria-hidden="true" />
+                Nhận catalogue
               </button>
               <a
                 href={company.hotlineHref}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 py-3.5 px-6 text-xs font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-white/20 px-5 text-sm font-semibold text-white hover:bg-white/10"
               >
-                <Phone className="h-4 w-4 text-red-400" />
-                <span>Hotline Kỹ sư: {company.hotlineDisplay}</span>
+                <Phone className="h-4 w-4 text-red-400" aria-hidden="true" />
+                {company.hotlineDisplay}
               </a>
             </div>
           </div>
-        </section>
+        </div>
       </div>
     </div>
   );

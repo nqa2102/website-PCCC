@@ -99,27 +99,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Footer Actions */}
       <div className="border-t border-slate-100 bg-slate-50/50 p-4">
-        <div className="flex items-center justify-between gap-2">
-          <div>
-            <span className="block text-[10px] uppercase text-slate-400">Dự toán cấu hình</span>
-            <span className="text-xs font-bold text-red-600">{product.priceEstimate || 'Liên hệ'}</span>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => onViewDetail(product)}
-              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition-colors hover:border-slate-900 hover:text-slate-900"
-            >
-              Thông số
-            </button>
-            <button
-              onClick={() => onOpenQuote(product.category)}
-              className="inline-flex items-center gap-1 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs transition-colors hover:bg-red-700"
-            >
-              <span>Báo giá</span>
-              <ArrowRight className="h-3 w-3" />
-            </button>
-          </div>
+        {/* Chỉ hiện giá khi có giá tham khảo thật ("Liên hệ" không thêm thông tin) */}
+        {product.priceEstimate && product.priceEstimate !== 'Liên hệ' && (
+          <p className="mb-3 text-xs text-slate-500">
+            Giá tham khảo: <span className="font-bold text-red-700">{product.priceEstimate}</span>
+          </p>
+        )}
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => onViewDetail(product)}
+            className="min-h-10 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition-colors hover:border-slate-900 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-red-600"
+          >
+            Thông số
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpenQuote(product.category)}
+            className="inline-flex min-h-10 items-center justify-center gap-1 whitespace-nowrap rounded-lg bg-red-600 px-3 text-xs font-bold text-white shadow-xs transition-colors hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          >
+            <span>Báo giá</span>
+            <ArrowRight className="h-3 w-3" aria-hidden="true" />
+          </button>
         </div>
       </div>
     </div>
