@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 12/10/2026 (Hoàn thành T0: Khôi phục Neon Production; Hoàn thành T1: Catalog 9 nhóm; Hoàn thành T2: Merge PR #3 Lead capture & rate limit; Hoàn thành T3: Form báo giá QuoteModal 9 nhóm; Hoàn thành T4: Sitemap 100% 24 URL sạch & Dynamic SEO; Hoàn thành T5: Dự án tiêu biểu 1 nguồn dữ liệu bảng projects & màn hình quản trị Dự án)*  
+*Cập nhật lần cuối: 12/10/2026 (Hoàn thành T0: Khôi phục Neon Production; Hoàn thành T1: Catalog 9 nhóm; Hoàn thành T2: Merge PR #3 Lead capture & rate limit; Hoàn thành T3: Form báo giá QuoteModal 9 nhóm; Hoàn thành T4: Sitemap 100% 24 URL sạch & Dynamic SEO; Hoàn thành T5: Dự án tiêu biểu 1 nguồn dữ liệu bảng projects; Hoàn thành T6: Quản trị sản phẩm - SpecsEditor, Features, Long Description & SEO)*  
 *Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -229,3 +229,12 @@
 - Chạy [`sql/migrations/20261012_move_projects.sql`](../sql/migrations/20261012_move_projects.sql) trong Neon SQL Editor.
 - Chuyển an toàn các bản ghi dự án cũ trong `contents` (type = 'project') sang bảng `projects` ở trạng thái `review` và `verified = false` để buộc xác minh lại trước khi công bố.
 - Migration này an toàn 100%, chạy lại nhiều lần không lỗi (idempotent), và tuyệt đối không xóa dữ liệu trong bảng `contents`.
+
+### 9. Thêm cột `features` & `long_description` cho bảng `products` (T6 - 12/10/2026):
+- Chạy [`sql/migrations/20261012_product_features_and_long_desc.sql`](../sql/migrations/20261012_product_features_and_long_desc.sql) trong Neon SQL Editor:
+  ```sql
+  ALTER TABLE products ADD COLUMN IF NOT EXISTS features JSONB DEFAULT '[]'::jsonb;
+  ALTER TABLE products ADD COLUMN IF NOT EXISTS long_description TEXT;
+  ```
+- Cho phép quản trị viên cập nhật thông số kỹ thuật (bảng 2 cột Tên - Giá trị, hỗ trợ gợi ý nhanh theo 9 nhóm), danh sách tính năng nổi bật (tối đa 12 mục) và bài viết mô tả chi tiết từ màn hình `/admin` mà không cần can thiệp mã nguồn.
+

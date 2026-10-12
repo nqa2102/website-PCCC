@@ -8,7 +8,9 @@ import {
   Building2,
   Check,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
+  ChevronUp,
   CircleUserRound,
   ClipboardList,
   Download,
@@ -1805,6 +1807,184 @@ const LeadEditor = ({ data, onChange }: { data: AdminLead; onChange: (data: Admi
   );
 };
 
+const SPEC_SUGGESTIONS_BY_GROUP: Record<string, string[]> = {
+  'cua-thep-ngan-chay': ['Độ dày thép khung', 'Độ dày thép cánh', 'Lõi cách nhiệt', 'Phụ kiện tiêu chuẩn', 'Giới hạn chịu lửa', 'Sơn hoàn thiện'],
+  'cua-kinh-ngan-chay': ['Độ dày kính', 'Cấu tạo kính chống cháy', 'Khung viền', 'Giới hạn chịu lửa', 'Keo chống cháy', 'Bản lề sàn'],
+  'cua-cuon-ngan-chay': ['Độ dày nan cửa', 'Vật liệu nan', 'Động cơ & Bình lưu điện', 'Hộp kỹ thuật', 'Giới hạn chịu lửa', 'Cảm biến an toàn'],
+  'rem-ngan-chay': ['Vải sợi thủy tinh tráng PU', 'Tủ điều khiển rèm', 'Động cơ rèm', 'Vận tốc cuộn', 'Giới hạn chịu lửa'],
+  'tu-dien': ['Kích thước (R×C×S mm)', 'Độ dày tôn', 'Cấp bảo vệ IP', 'Tiêu chuẩn sản xuất', 'Xử lý bề mặt', 'Cửa mở'],
+  'thang-mang-cap': ['Kích thước danh định', 'Chiều dài tiêu chuẩn', 'Độ dày vật liệu', 'Xử lý hoàn thiện', 'Phụ kiện kết nối'],
+  'tu-rack': ['Kích thước (U / mm)', 'Tải trọng tối đa', 'Cửa trước / Cửa sau', 'Cấp bảo vệ', 'Hệ thống quạt làm mát', 'Màu sơn'],
+  'nha-tram-shelter': ['Kích thước tổng thể', 'Vật liệu vách & trần', 'Cách âm / Cách nhiệt', 'Cấp chống nước bụi IP', 'Hệ thống điều hòa'],
+  'tu-nguon-outdoor': ['Kích thước', 'Cấp bảo vệ IP', 'Chống ăn mòn ngoài trời', 'Khóa an toàn', 'Thông gió / Trao đổi nhiệt'],
+};
+
+interface SpecRow {
+  id: string;
+  key: string;
+  value: string;
+}
+
+const SpecsEditor = ({
+  category,
+  specs,
+  onChange,
+}: {
+  category: string;
+  specs?: Record<string, string>;
+  onChange: (specs: Record<string, string>) => void;
+}) => {
+  const [rows, setRows] = useState<SpecRow[]>(() => {
+    if (!specs || typeof specs !== 'object') return [];
+    return Object.entries(specs).map(([key, value], idx) => ({
+      id: `spec-${idx}-${Date.now()}`,
+      key,
+      value: String(value ?? ''),
+    }));
+  });
+
+  const sync = (next: SpecRow[]) => {
+    setRows(next);
+    const obj: Record<string, string> = {};
+    for (const r of next) {
+      if (r.key.trim()) obj[r.key.trim()] = r.value.trim();
+    }
+    onChange(obj);
+  };
+
+  const addRow = (keyName = '') => {
+    sync([...rows, { id: `spec-${Date.now()}-${Math.random()}`, key: keyName, value: '' }]);
+  };
+
+  const updateRow = (id: string, field: 'key' | 'value', val: string) => {
+    sync(rows.map((r) => (r.id === id ? { ...r, [field]: val } : r)));
+  };
+
+  const deleteRow = (id: string) => {
+    sync(rows.filter((r) => r.id !== id));
+  };
+
+  const moveRow = (idx: number, dir: 'up' | 'down') => {
+    const target = dir === 'up' ? idx - 1 : idx + 1;
+    if (target < 0 || target >= rows.length) return;
+    const next = [...rows];
+    const [item] = next.splice(idx, 1);
+    next.splice(target, 0, item);
+    sync(next);
+  };
+
+  const suggestions = SPEC_SUGGESTIONS_BY_GROUP[category] || [
+    'Độ dày vật liệu',
+    'Kích thước gia công',
+    'Cấp bảo vệ',
+    'Tiêu chuẩn kiểm định',
+  ];
+
+  return (
+    <div className="sm:col-span-2 space-y-3 rounded-lg border border-neutral-200 bg-neutral-50/70 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200 pb-2">
+        <div>
+          <strong className="block text-xs font-bold text-slate-900">
+            Bảng thông số kỹ thuật (Tên – Giá trị)
+          </strong>
+          <span className="text-[11px] text-slate-500">
+            Hiển thị trực tiếp trong bảng thông số kỹ thuật của sản phẩm ({rows.length} mục)
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={() => addRow()}
+          className="flex items-center gap-1.5 rounded border border-neutral-300 bg-white px-2.5 py-1 text-xs font-bold text-slate-700 hover:bg-neutral-50 hover:text-red-700 transition-colors"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          Thêm thông số
+        </button>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-600">
+        <span className="font-semibold text-slate-500">Gợi ý nhanh theo nhóm:</span>
+        {suggestions.map((sug) => {
+          const isAdded = rows.some((r) => r.key === sug);
+          return (
+            <button
+              key={sug}
+              type="button"
+              disabled={isAdded}
+              onClick={() => addRow(sug)}
+              className={`rounded px-2 py-0.5 text-[11px] font-medium transition-colors ${
+                isAdded
+                  ? 'bg-neutral-200/60 text-slate-400 cursor-not-allowed'
+                  : 'bg-white border border-neutral-200 text-slate-700 hover:border-red-500 hover:text-red-700'
+              }`}
+            >
+              + {sug}
+            </button>
+          );
+        })}
+      </div>
+
+      {rows.length === 0 ? (
+        <div className="rounded border border-dashed border-neutral-300 bg-white p-4 text-center text-xs text-slate-500">
+          Chưa có thông số riêng. Nhấp nút "Thêm thông số" hoặc chọn từ gợi ý nhanh ở trên.
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {rows.map((row, idx) => (
+            <div
+              key={row.id}
+              className="flex items-center gap-2 rounded border border-neutral-200 bg-white p-2 text-xs"
+            >
+              <div className="flex flex-col">
+                <button
+                  type="button"
+                  disabled={idx === 0}
+                  onClick={() => moveRow(idx, 'up')}
+                  className="text-slate-400 hover:text-slate-800 disabled:opacity-20 p-0.5"
+                  title="Di chuyển lên"
+                >
+                  <ChevronUp className="h-3 w-3" />
+                </button>
+                <button
+                  type="button"
+                  disabled={idx === rows.length - 1}
+                  onClick={() => moveRow(idx, 'down')}
+                  className="text-slate-400 hover:text-slate-800 disabled:opacity-20 p-0.5"
+                  title="Di chuyển xuống"
+                >
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+              </div>
+
+              <input
+                className="h-8 w-2/5 min-w-[120px] rounded border border-neutral-200 px-2 text-xs font-semibold text-slate-900 outline-none focus:border-red-600"
+                value={row.key}
+                onChange={(e) => updateRow(row.id, 'key', e.target.value)}
+                placeholder="Tên thông số"
+              />
+
+              <input
+                className="h-8 flex-1 min-w-[140px] rounded border border-neutral-200 px-2 text-xs text-slate-700 outline-none focus:border-red-600"
+                value={row.value}
+                onChange={(e) => updateRow(row.id, 'value', e.target.value)}
+                placeholder="Giá trị kỹ thuật"
+              />
+
+              <button
+                type="button"
+                onClick={() => deleteRow(row.id)}
+                className="p-1.5 text-slate-400 hover:text-red-700 transition-colors"
+                title="Xóa dòng này"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 /* --- PRODUCT EDITOR --- */
 const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; canPublish: boolean; onChange: (data: AdminProduct) => void }) => {
   const set = (field: keyof AdminProduct, value: string | number | boolean) => onChange({ ...data, [field]: value });
@@ -1866,9 +2046,39 @@ const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; can
       <Field label="Thứ tự hiển thị">
         <input type="number" className={fieldClass} value={data.sortOrder} onChange={(e) => set('sortOrder', Number(e.target.value))} />
       </Field>
-      <Field label="Mô tả ngắn" wide>
+
+      <Field label="Mô tả ngắn (Hiển thị thẻ danh mục)" wide>
         <textarea className={textareaClass} value={data.shortDescription} onChange={(e) => set('shortDescription', e.target.value)} />
       </Field>
+
+      <Field label="Mô tả chi tiết sản phẩm (Hiển thị đầu trang chi tiết sản phẩm)" wide>
+        <textarea
+          className={textareaClass}
+          value={data.longDescription || ''}
+          onChange={(e) => set('longDescription', e.target.value)}
+          placeholder="Bài viết mô tả chi tiết nguyên lý hoạt động, tiêu chuẩn kỹ thuật và ứng dụng công trình..."
+        />
+      </Field>
+
+      <Field label="Tính năng nổi bật (Mỗi dòng một tính năng, tối đa 12 mục)" wide>
+        <textarea
+          className={textareaClass}
+          value={(data.features || []).join('\n')}
+          onChange={(e) => {
+            const lines = e.target.value.split('\n');
+            onChange({ ...data, features: lines.map((l) => l.trim()).filter(Boolean) });
+          }}
+          placeholder="Khả năng ngăn khói và chịu nhiệt vượt trội&#10;Phụ kiện bản lề, khóa đồng bộ tiêu chuẩn PCCC&#10;Sơn tĩnh điện kháng ăn mòn cao cấp..."
+        />
+      </Field>
+
+      {/* BẢNG THÔNG SỐ KỸ THUẬT */}
+      <SpecsEditor
+        category={data.category}
+        specs={data.specs}
+        onChange={(specs) => onChange({ ...data, specs })}
+      />
+
       <Field label="Vật liệu & Cấu tạo" wide>
         <textarea className={textareaClass} value={data.material} onChange={(e) => set('material', e.target.value)} />
       </Field>
@@ -2247,6 +2457,9 @@ const newProduct = (sortOrder: number): AdminProduct => ({
   categoryName: 'Cửa thép ngăn cháy',
   fireRating: 'EI70',
   shortDescription: '',
+  longDescription: '',
+  features: [],
+  specs: {},
   material: 'Thép mạ kẽm chất lượng cao',
   standard: 'TCVN 9383:2012 / QCVN 06:2022',
   warranty: '12 tháng',
