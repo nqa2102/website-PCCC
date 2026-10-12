@@ -237,3 +237,14 @@ INSERT INTO company_settings (
   'APEX Việt Nam - Cửa Ngăn Cháy & Giải Pháp PCCC Toàn Diện',
   'Cung cấp và thi công cửa chống cháy, cửa cuốn ngăn cháy, rèm ngăn cháy đạt chuẩn QCVN 06:2022/BXD.'
 ) ON CONFLICT (id) DO NOTHING;
+
+-- 10. BẢNG GIỚI HẠN TẦN SUẤT GỬI FORM (LEAD RATE LIMITS)
+CREATE TABLE IF NOT EXISTS lead_rate_limits (
+  id BIGSERIAL PRIMARY KEY,
+  ip_hash VARCHAR(64) NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_lead_rate_limits_ip_created ON lead_rate_limits(ip_hash, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_leads_phone_created ON leads(phone, created_at DESC);
+

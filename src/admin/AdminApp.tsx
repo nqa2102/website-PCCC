@@ -42,6 +42,7 @@ import { createDefaultAdminCompany, createInitialCatalog } from './adminData';
 import { ApexAvatar, ApexBrandLogo } from '../components/brand';
 import {
   loadRemoteAdminState,
+  loadMoreLeads,
   saveRemoteLead,
   saveRemoteProduct,
   saveRemoteDocument,
@@ -201,6 +202,29 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
   const [editor, setEditor] = useState<EditorState>(null);
   const [toast, setToast] = useState('');
   const [changingPassword, setChangingPassword] = useState(false);
+  const [loadingMoreLeads, setLoadingMoreLeads] = useState(false);
+
+  const handleLoadMoreLeads = async () => {
+    const oldest = state.leads[state.leads.length - 1];
+    if (!oldest) return;
+    setLoadingMoreLeads(true);
+    try {
+      const page = await loadMoreLeads(oldest);
+      setState((current) => {
+        const known = new Set(current.leads.map((lead) => lead.id));
+        return {
+          ...current,
+          leads: [...current.leads, ...(page.leads || []).filter((lead) => !known.has(lead.id))],
+          leadsHasMore: Boolean(page.hasMore),
+          leadsTotal: page.total ?? current.leadsTotal,
+        };
+      });
+    } catch (err) {
+      setToast(`Không tải thêm được khách hàng: ${errorMessage(err, 'lỗi không xác định')}`);
+    } finally {
+      setLoadingMoreLeads(false);
+    }
+  };
   const [remoteLoading, setRemoteLoading] = useState(true);
   const [remoteError, setRemoteError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -615,6 +639,23 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
                 onDelete={(lead) => requestDelete({ type: 'lead', id: lead.id, name: lead.fullName })}
                 onUpdateStatus={handleUpdateLeadStatus}
               />
+              <div className="flex flex-col items-center gap-2 border-t border-neutral-200 px-4 py-3 text-xs text-slate-500 sm:flex-row sm:justify-between">
+                <span>
+                  Đã tải {state.leads.length}
+                  {state.leadsTotal ? ` / ${state.leadsTotal}` : ''} khách hàng
+                  {state.leadsHasMore ? ' — tìm kiếm, lọc và xuất CSV áp dụng trên phần đã tải' : ''}
+                </span>
+                {state.leadsHasMore && (
+                  <button
+                    type="button"
+                    onClick={handleLoadMoreLeads}
+                    disabled={loadingMoreLeads}
+                    className="min-h-9 border border-neutral-300 bg-white px-4 font-bold text-slate-700 hover:bg-neutral-50 disabled:opacity-60"
+                  >
+                    {loadingMoreLeads ? 'Đang tải...' : 'Tải thêm'}
+                  </button>
+                )}
+              </div>
             </DataSection>
           )}
 

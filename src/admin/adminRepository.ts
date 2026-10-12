@@ -18,7 +18,7 @@ const fetchJson = async <T>(url: string, options?: RequestInit): Promise<T> => {
 // tránh hiển thị danh sách trống rồi người dùng lưu đè lên dữ liệu thật.
 export const loadRemoteAdminState = async (): Promise<AdminState> => {
   const [leadsRes, productsRes, projectsRes, documentsRes, contentsRes, companyRes, activitiesRes] = await Promise.all([
-    fetchJson<{ leads: AdminLead[] }>('/api/leads'),
+    fetchJson<LeadPage>('/api/leads'),
     fetchJson<{ products: AdminProduct[] }>('/api/admin/products'),
     fetchJson<{ projects: AdminProject[] }>('/api/admin/projects').catch(() => ({ projects: [] })),
     fetchJson<{ documents: AdminDocument[] }>('/api/admin/documents'),
@@ -29,6 +29,8 @@ export const loadRemoteAdminState = async (): Promise<AdminState> => {
 
   return {
     leads: leadsRes.leads || [],
+    leadsHasMore: Boolean(leadsRes.hasMore),
+    leadsTotal: leadsRes.total ?? (leadsRes.leads || []).length,
     products: productsRes.products || [],
     projects: projectsRes.projects || [],
     documents: documentsRes.documents || [],
@@ -38,6 +40,16 @@ export const loadRemoteAdminState = async (): Promise<AdminState> => {
     activities: activitiesRes.activities || [],
   };
 };
+
+interface LeadPage {
+  leads: AdminLead[];
+  hasMore?: boolean;
+  total?: number;
+}
+
+// Tải trang tiếp theo, sau khách hàng cũ nhất đang hiển thị
+export const loadMoreLeads = (oldest: AdminLead) =>
+  fetchJson<LeadPage>(`/api/leads?before=${encodeURIComponent(oldest.createdAt)}&beforeId=${encodeURIComponent(oldest.id)}`);
 
 // Mỗi thao tác chỉ ghi đúng bản ghi được sửa, không gửi lại toàn bộ danh sách
 export const saveRemoteLead = (item: AdminLead) =>
