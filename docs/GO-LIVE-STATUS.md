@@ -195,8 +195,8 @@
 |---|---|---|---|
 | **1** | **T0 — Chạy SQL khôi phục Production** | **ĐÃ XONG** | Đã chạy migration trên Neon store `noisy-rain-90838361`, `isDatabaseLive: true`. |
 | **2** | **Chạy migration rate limits** | Đã sẵn sàng | File `sql/migrations/20261012_lead_rate_limits.sql` chạy trên Neon SQL Editor. |
-| **3** | **Chạy migration T5 & T6 trên Neon** | Sẵn sàng | Chạy `20261012_move_projects.sql` và `20261012_product_features_and_long_desc.sql` trong Neon SQL Editor. |
-| **4** | **Mắt Bão: Xác nhận thông tin chủ thể qua email** cho `apexdoor.net` | **Trước 24/10/2026** (Quá hạn tên miền bị khóa) | Kiểm tra email từ Mắt Bão và bấm link xác nhận chủ thể tên miền. |
+| **3** | **Chạy migration T5 & T6 trên Neon** | **ĐÃ XONG** | Đã chạy thành công `20261012_product_features_and_long_desc.sql` và `20261012_move_projects.sql` trên Neon SQL Editor. |
+| **4** | **Mắt Bão: Xác nhận thông tin chủ thể qua email** cho `apexdoor.net` | **ĐÃ XONG** | Đã xác thực thành công qua link RAA servlet của Mắt Bão (`Your email address has been verified successfully`). Tên miền an toàn tuyệt đối. |
 | **5** | **Mắt Bão: Hoàn tất bản khai "Chờ ký"** | Sớm | Ký điện tử hoặc nộp bản khai tên miền `apexdoor.net`, `apexdoor.cloud`. |
 | **6** | **Tạo hộp thư `contact@apexdoor.net`** | Trước khi chạy quảng cáo | Cấu hình hộp thư theo tên miền trên Mắt Bão / Google Workspace. |
 | **7** | **Resend Email API** | Trước khi chạy quảng cáo | Tạo tài khoản Resend, xác thực domain `apexdoor.net`, gắn `RESEND_API_KEY` và `NOTIFICATION_EMAIL` trên Vercel. |
