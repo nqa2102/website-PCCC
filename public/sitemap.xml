@@ -3,45 +3,75 @@
   <!-- Trang chủ & Giới thiệu -->
   <url>
     <loc>https://apexdoor.net/</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/gioi-thieu</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Sản phẩm & Nhóm danh mục -->
+  <!-- Sản phẩm & 9 Nhóm Danh Mục Kỹ Thuật -->
   <url>
     <loc>https://apexdoor.net/san-pham</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://apexdoor.net/san-pham?nhom=steel-door</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://apexdoor.net/san-pham/cua-thep-ngan-chay</loc>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://apexdoor.net/san-pham?nhom=glass-door</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://apexdoor.net/san-pham/cua-kinh-ngan-chay</loc>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://apexdoor.net/san-pham?nhom=roller-shutter</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://apexdoor.net/san-pham/cua-cuon-ngan-chay</loc>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://apexdoor.net/san-pham?nhom=fire-curtain</loc>
-    <lastmod>2026-10-09</lastmod>
+    <loc>https://apexdoor.net/san-pham/rem-ngan-chay</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://apexdoor.net/san-pham/tu-dien</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://apexdoor.net/san-pham/thang-mang-cap</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://apexdoor.net/san-pham/tu-rack</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://apexdoor.net/san-pham/nha-tram-shelter</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://apexdoor.net/san-pham/tu-nguon-outdoor</loc>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -49,75 +79,75 @@
   <!-- Giải pháp theo công trình -->
   <url>
     <loc>https://apexdoor.net/giai-phap</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/giai-phap/chung-cu-can-ho</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/giai-phap/van-phong-toa-nha</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/giai-phap/trung-tam-thuong-mai</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/giai-phap/nha-xuong-khu-cong-nghiep</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/giai-phap/benh-vien-truong-hoc</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/giai-phap/khach-san-resort</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Dự án & Tài liệu & Tin tức & Liên hệ -->
+  <!-- Dự án tiêu biểu, Tài liệu kỹ thuật, Tin tức, Liên hệ, Chính sách -->
   <url>
     <loc>https://apexdoor.net/du-an</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/tai-lieu-ky-thuat</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/tin-tuc</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/lien-he</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://apexdoor.net/chinh-sach-bao-mat</loc>
-    <lastmod>2026-10-09</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>

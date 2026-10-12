@@ -158,6 +158,9 @@ const mapProducts = (items: AdminProduct[]): Product[] => {
           popular: ap.featured,
           image: ap.image || orig.image,
           priceEstimate: ap.priceEstimate || orig.priceEstimate || 'Liên hệ',
+          seoTitle: ap.seoTitle || orig.seoTitle,
+          seoDescription: ap.seoDescription || orig.seoDescription,
+          imageAlt: ap.imageAlt || orig.imageAlt,
           specs: {
             ...orig.specs,
             ...(ap.specs || {}),
@@ -178,6 +181,9 @@ const mapProducts = (items: AdminProduct[]): Product[] => {
         certificationNo: ap.certificationNo || '',
         description: ap.shortDescription,
         longDescription: ap.shortDescription,
+        seoTitle: ap.seoTitle,
+        seoDescription: ap.seoDescription,
+        imageAlt: ap.imageAlt,
         specs: ap.specs || {
           material: ap.material || 'Liên hệ để được tư vấn',
           thickness: 'Theo hồ sơ công trình',
