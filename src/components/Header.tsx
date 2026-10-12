@@ -55,10 +55,15 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   const productCategories = [
-    { id: 'steel-door', name: 'Cửa thép ngăn cháy EI70 - EI120' },
-    { id: 'glass-door', name: 'Cửa kính ngăn cháy' },
-    { id: 'roller-shutter', name: 'Cửa cuốn ngăn cháy' },
-    { id: 'fire-curtain', name: 'Rèm ngăn cháy' },
+    { id: 'cua-thep-ngan-chay', name: 'Cửa thép ngăn cháy' },
+    { id: 'cua-kinh-ngan-chay', name: 'Cửa kính ngăn cháy' },
+    { id: 'cua-cuon-ngan-chay', name: 'Cửa cuốn ngăn cháy' },
+    { id: 'rem-ngan-chay', name: 'Rèm ngăn cháy & khói' },
+    { id: 'tu-dien', name: 'Tủ điện phân phối & điều khiển' },
+    { id: 'thang-mang-cap', name: 'Thang máng cáp điện' },
+    { id: 'tu-rack', name: 'Tủ rack mạng & viễn thông' },
+    { id: 'nha-tram-shelter', name: 'Nhà trạm Shelter viễn thông' },
+    { id: 'tu-nguon-outdoor', name: 'Tủ nguồn Outdoor ngoài trời' },
   ];
 
   const solutionList = [
@@ -187,7 +192,7 @@ export const Header: React.FC<HeaderProps> = ({
                           {productCategories.map((cat) => (
                             <a
                               key={cat.id}
-                              href={`/san-pham?nhom=${cat.id}`}
+                              href={`/san-pham/${cat.id}`}
                               onClick={(e) => handleNavClick(e, 'products', cat.id)}
                               className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-neutral-50 hover:text-red-600 flex items-center justify-between"
                             >
@@ -341,7 +346,7 @@ export const Header: React.FC<HeaderProps> = ({
                         {productCategories.map((cat) => (
                           <a
                             key={cat.id}
-                            href={`/san-pham?nhom=${cat.id}`}
+                            href={`/san-pham/${cat.id}`}
                             onClick={(e) => handleNavClick(e, 'products', cat.id)}
                             className="w-full text-left py-2 px-2 text-xs text-slate-700 hover:text-red-600 flex items-center justify-between"
                           >

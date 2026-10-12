@@ -104,11 +104,15 @@ const PUBLISH_STATUS: Record<PublishStatus, { label: string; classes: string }> 
 };
 
 const PRODUCT_CATEGORY_CHOICES = [
-  { id: 'steel-door', name: 'Cửa thép ngăn cháy' },
-  { id: 'glass-door', name: 'Cửa kính ngăn cháy' },
-  { id: 'roller-shutter', name: 'Cửa cuốn ngăn cháy' },
-  { id: 'fire-curtain', name: 'Rèm ngăn cháy/khói' },
-  { id: 'accessories', name: 'Phụ kiện chống cháy' },
+  { id: 'cua-thep-ngan-chay', name: 'Cửa thép ngăn cháy' },
+  { id: 'cua-kinh-ngan-chay', name: 'Cửa kính ngăn cháy' },
+  { id: 'cua-cuon-ngan-chay', name: 'Cửa cuốn ngăn cháy' },
+  { id: 'rem-ngan-chay', name: 'Rèm ngăn cháy' },
+  { id: 'tu-dien', name: 'Tủ điện' },
+  { id: 'thang-mang-cap', name: 'Thang máng cáp' },
+  { id: 'tu-rack', name: 'Tủ rack' },
+  { id: 'nha-tram-shelter', name: 'Nhà trạm shelter' },
+  { id: 'tu-nguon-outdoor', name: 'Tủ nguồn outdoor' },
 ];
 
 const DOC_GROUP_CHOICES = [
@@ -1665,7 +1669,10 @@ const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; can
         <input className={fieldClass} value={data.categoryName} onChange={(e) => set('categoryName', e.target.value)} />
       </Field>
       <Field label="Giới hạn chịu lửa">
-        <input className={fieldClass} value={data.fireRating} onChange={(e) => set('fireRating', e.target.value)} placeholder="EI70, EI90, EI120..." />
+        <input className={fieldClass} value={data.fireRating} onChange={(e) => set('fireRating', e.target.value)} placeholder="EI70, EI90, EI120... (để trống nếu chưa kiểm định)" />
+      </Field>
+      <Field label="Số chứng nhận kiểm định PCCC">
+        <input className={fieldClass} value={data.certificationNo || ''} onChange={(e) => set('certificationNo', e.target.value)} placeholder="1803/KD-PCCC-P7 (để trống nếu chưa có)" />
       </Field>
       <Field label="Bảo hành">
         <input className={fieldClass} value={data.warranty} onChange={(e) => set('warranty', e.target.value)} />

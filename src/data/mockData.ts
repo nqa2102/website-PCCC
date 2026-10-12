@@ -11,26 +11,28 @@ export const FIRE_CURTAIN_IMAGE = fireCurtainImage;
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'cua-thep-ngan-chay-ei70-ei120',
+    id: 'cua-thep-ngan-chay',
+    slug: 'cua-thep-ngan-chay',
     name: 'Cửa Thép Ngăn Cháy',
-    category: 'steel-door',
+    category: 'cua-thep-ngan-chay',
     categoryName: 'Cửa thép ngăn cháy',
-    fireRating: 'EI70-EI120',
-    description: 'Giải pháp ngăn cháy, ngăn khói phổ biến với độ bền cơ học cao và chi phí hợp lý.',
-    longDescription: 'Cửa thép ngăn cháy được làm từ thép kết hợp lõi vật liệu cách nhiệt như bông gốm, MGO hoặc bông thủy tinh, giúp hạn chế sự lan truyền của lửa và khói giữa các khu vực khi xảy ra hỏa hoạn.',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Cửa thép ngăn cháy APEX kết cấu thép tấm định hình vững chắc, lõi cách nhiệt chuyên dụng, ngăn lửa và ngăn khói lan giữa các khoang cháy theo tiêu chuẩn PCCC.',
+    longDescription: 'Cửa thép ngăn cháy là cấu kiện phân khoang ngăn cháy trọng yếu trong các công trình công nghiệp và dân dụng. Sản phẩm được sản xuất từ thép mạ kẽm hoặc thép cán nguội chất lượng cao, khung và cánh gia cường gân tăng cứng, bên trong chứa lõi cách nhiệt chống cháy. Hệ thống gioăng ngăn khói tự giãn nở khi nhiệt độ tăng cao giúp cô lập buồng cháy, bảo vệ lối thoát nạn khẩn cấp.',
     specs: {
-      material: 'Thép kết hợp lõi bông gốm, MGO hoặc bông thủy tinh',
-      thickness: 'Kích thước tiêu chuẩn 900 x 2.200 mm; nhận sản xuất theo kích thước thực tế',
-      insulation: 'Bông gốm, MGO hoặc bông thủy tinh theo cấu hình sản phẩm',
-      finish: 'Màu hoàn thiện theo bảng màu Jotun',
-      standard: 'EI70, EI90, EI120; kiểm định theo hồ sơ sản phẩm',
-      warranty: '12 tháng'
+      material: 'Thép mạ kẽm độ dày theo hồ sơ thiết kế công trình',
+      thickness: 'Kích thước gia công theo khảo sát thực tế',
+      insulation: 'Lõi vật liệu cách nhiệt không cháy chuyên dụng',
+      finish: 'Sơn tĩnh điện bảng màu Jotun theo yêu cầu',
+      standard: 'QCVN 06:2022/BXD, TCVN 9383:2012',
+      warranty: '12 - 24 tháng theo hợp đồng'
     },
     features: [
-      'Các cấu hình chịu lửa EI70, EI90 và EI120',
-      'Tùy chọn khóa tay gạt, khóa thanh đẩy, ô kính và tay co',
-      'Màu sắc theo bảng màu Jotun',
-      'Sản xuất theo kích thước thực tế của công trình'
+      'Gia công theo kích thước khảo sát thực tế của từng công trình',
+      'Tùy chọn khóa tay gạt, thanh đẩy thoát hiểm panic, tay co thủy lực',
+      'Hệ gioăng ngăn khói và chống ồn chuyên dụng',
+      'Hồ sơ kỹ thuật đồng bộ phục vụ nghiệm thu PCCC'
     ],
     image: STEEL_DOOR_IMAGE,
     priceEstimate: 'Liên hệ',
@@ -38,80 +40,221 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'cua-kinh-ngan-chay',
+    slug: 'cua-kinh-ngan-chay',
     name: 'Cửa Kính Ngăn Cháy',
-    category: 'glass-door',
+    category: 'cua-kinh-ngan-chay',
     categoryName: 'Cửa kính ngăn cháy',
-    fireRating: 'Theo cấu hình',
-    description: 'Kết hợp khả năng ngăn cháy, cách nhiệt và tính thẩm mỹ, đồng thời giữ ánh sáng tự nhiên cho không gian.',
-    longDescription: 'Cửa kính ngăn cháy phù hợp với các vị trí cần mở rộng tầm nhìn và lấy sáng tự nhiên nhưng vẫn phải đáp ứng yêu cầu phân khoang cháy của công trình.',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Cửa kính ngăn cháy APEX kết hợp hệ khung chịu lực và kính ngăn lửa nhiều lớp, duy trì khả năng quan sát và lấy sáng tự nhiên đồng thời đảm bảo an toàn chịu nhiệt.',
+    longDescription: 'Cửa kính ngăn cháy là giải pháp kiến trúc hiện đại đáp ứng đồng thời yêu cầu phân khoang ngăn lửa và tính thẩm mỹ không gian mở. Kính ngăn cháy có cấu tạo nhiều lớp với gel cách nhiệt trong suốt trương nở khi gặp nhiệt độ cao, tạo thành màng chắn ngăn bức xạ nhiệt và khói độc.',
     specs: {
-      material: 'Kính ngăn cháy kết hợp hệ khung theo thiết kế',
-      thickness: 'Sản xuất theo kích thước khảo sát thực tế',
-      insulation: 'Cấu hình kính lựa chọn theo yêu cầu chịu lửa',
-      finish: 'Màu và hoàn thiện theo lựa chọn của khách hàng',
-      standard: 'Áp dụng theo hồ sơ thiết kế và hồ sơ kiểm định sản phẩm',
-      warranty: '12-24 tháng tùy loại sản phẩm'
+      material: 'Kính ngăn cháy chuyên dụng kết hợp khung thép hoặc Inox gia cường',
+      thickness: 'Theo cấu hình kính và khẩu độ thiết kế',
+      insulation: 'Lớp hợp chất trương nở cách nhiệt trong suốt',
+      finish: 'Sơn tĩnh điện cao cấp hoặc Inox xước hairline',
+      standard: 'QCVN 06:2022/BXD, TCVN 9383:2012',
+      warranty: '12 - 24 tháng theo hợp đồng'
     },
     features: [
-      'Hỗ trợ lấy sáng tự nhiên và mở rộng tầm nhìn',
-      'Phù hợp công trình yêu cầu cao về thẩm mỹ',
-      'Cấu hình theo vị trí lắp đặt thực tế',
-      'Tư vấn chi tiết sau khi tiếp nhận bản vẽ'
+      'Đảm bảo tầm nhìn thông thoáng và khả năng lấy sáng tự nhiên',
+      'Tính thẩm mỹ cao cho sảnh tòa nhà, văn phòng và trung tâm thương mại',
+      'Khung viền gia công chính xác, kín khít ngăn khói độc',
+      'Tư vấn phương án lắp đặt chi tiết theo hồ sơ bản vẽ'
     ],
     image: STEEL_DOOR_IMAGE,
     priceEstimate: 'Liên hệ'
   },
   {
     id: 'cua-cuon-ngan-chay',
+    slug: 'cua-cuon-ngan-chay',
     name: 'Cửa Cuốn Ngăn Cháy',
-    category: 'roller-shutter',
+    category: 'cua-cuon-ngan-chay',
     categoryName: 'Cửa cuốn ngăn cháy',
-    fireRating: 'EI70-EI92',
-    description: 'Giải pháp che chắn các khoảng mở lớn mà cửa mở quay thông thường khó đáp ứng.',
-    longDescription: 'Cửa cuốn ngăn cháy có khả năng che chắn các khoảng mở diện tích lớn, phù hợp nhà xưởng, kho vận và các không gian cần duy trì khẩu độ sử dụng khi vận hành bình thường.',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Cửa cuốn ngăn cháy siêu trường APEX che chắn các khoảng mở nhịp lớn, tự động kích hoạt đóng kín khi nhận tín hiệu báo cháy kết nối hệ thống điều khiển trung tâm.',
+    longDescription: 'Cửa cuốn ngăn cháy được thiết kế nhằm đáp ứng yêu cầu ngăn khoang cháy diện tích lớn tại các vị trí không thể bố trí cửa mở quay thông thường. Nan cửa chế tạo bằng thép định hình chịu nhiệt, ray dẫn hướng và trục cuốn gia cố vững chắc, kết hợp motor chống cháy và bộ lưu điện dự phòng UPS đảm bảo vận hành tin cậy ngay cả khi mất điện nguồn.',
     specs: {
-      material: 'Vật liệu và cơ cấu cuốn theo cấu hình được duyệt',
-      thickness: 'Sản xuất theo kích thước khoảng mở thực tế',
-      insulation: 'Lựa chọn theo yêu cầu chịu lửa của công trình',
-      finish: 'Màu hoàn thiện theo lựa chọn của khách hàng',
-      standard: 'TCVN 9383:2012; đối chiếu hồ sơ thử nghiệm theo cấu hình AKS',
-      warranty: '12-24 tháng tùy loại sản phẩm'
+      material: 'Nan thép mạ kẽm định hình chịu nhiệt, cấu trúc cách âm cách nhiệt',
+      thickness: 'Sản xuất khẩu độ rộng theo khoảng mở công trình',
+      insulation: 'Lớp cách nhiệt chuyên dụng trong lòng nan',
+      finish: 'Sơn tĩnh điện công nghiệp kháng ăn mòn',
+      standard: 'QCVN 06:2022/BXD, TCVN 9383:2012',
+      warranty: '12 - 24 tháng theo hợp đồng'
     },
     features: [
-      'Phù hợp các khoảng mở có diện tích lớn',
-      'Giải pháp cho nhà xưởng, kho và không gian thương mại',
-      'Có cấu hình tham chiếu hồ sơ thử nghiệm EI70 và EI92',
-      'Tư vấn chi tiết sau khi tiếp nhận bản vẽ'
+      'Giải pháp tối ưu cho khoảng mở siêu trường tại tầng hầm và nhà xưởng',
+      'Động cơ chuyên dụng tích hợp xích kéo thoát hiểm khẩn cấp cơ học',
+      'Kết nối trực tiếp hệ thống báo cháy tự động tòa nhà (BMS)',
+      'Hộp che cuốn gọn gàng, tiết kiệm không gian vận hành'
     ],
     image: ROLLER_SHUTTER_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
   },
   {
-    id: 'rem-ngan-chay-ngan-khoi',
-    name: 'Rèm Ngăn Cháy',
-    category: 'fire-curtain',
-    categoryName: 'Rèm ngăn cháy & khói',
-    fireRating: 'EI60-EI91',
-    description: 'Giải pháp ngăn cháy linh hoạt, trọng lượng nhẹ và có thể giấu kín trên trần khi cuộn lại.',
-    longDescription: 'Rèm ngăn cháy phù hợp các không gian cần giải pháp ngăn cháy linh hoạt và ưu tiên tính thẩm mỹ. Khi cuộn lại, hệ rèm có thể được giấu trên trần để hạn chế ảnh hưởng tới kiến trúc.',
+    id: 'rem-ngan-chay',
+    slug: 'rem-ngan-chay',
+    name: 'Rèm Ngăn Cháy & Ngăn Khói Tự Động',
+    category: 'rem-ngan-chay',
+    categoryName: 'Rèm ngăn cháy',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Màn rèm ngăn cháy APEX cấu tạo từ sợi thủy tinh gia cường dây thép, trọng lượng nhẹ, giấu âm trần thẩm mỹ và tự động hạ xuống ngăn khói lửa khi xảy ra hỏa hoạn.',
+    longDescription: 'Rèm ngăn cháy và ngăn khói tự động là giải pháp phân chia khoang cháy linh hoạt cho kiến trúc hiện đại. Vải rèm được dệt từ sợi kỹ thuật composite chịu nhiệt độ cao, cuốn gọn trong hộp kỹ thuật gắn âm trần khi trạng thái bình thường. Khi có tín hiệu khẩn cấp, rèm tự động hạ theo trọng lực (gravity fail-safe) xuống vị trí cách ly ngăn khói độc lan truyền.',
     specs: {
-      material: 'Vật liệu rèm và hệ cuốn theo cấu hình được duyệt',
-      thickness: 'Sản xuất theo kích thước khảo sát thực tế',
-      insulation: 'Lựa chọn theo yêu cầu chịu lửa của công trình',
-      finish: 'Hộp rèm và chi tiết hoàn thiện theo thiết kế',
-      standard: 'TCVN 9383:2012; đối chiếu hồ sơ thử nghiệm theo cấu hình AKF',
-      warranty: '12-24 tháng tùy loại sản phẩm'
+      material: 'Vải sợi thủy tinh kỹ thuật gia cường sợi thép không gỉ',
+      thickness: 'Thiết kế theo kích thước ô thông tầng hoặc hành lang',
+      insulation: 'Lớp phủ phản xạ nhiệt và ngăn truyền khói độc',
+      finish: 'Hộp cuốn kỹ thuật sơn tĩnh điện lắp âm trần',
+      standard: 'QCVN 06:2022/BXD, TCVN 9383:2012',
+      warranty: '12 - 24 tháng theo hợp đồng'
     },
     features: [
-      'Trọng lượng nhẹ và linh hoạt trong bố trí',
-      'Có thể giấu kín trên trần khi cuộn lại',
-      'Có cấu hình tham chiếu hồ sơ thử nghiệm EI60 và EI91',
-      'Tư vấn chi tiết sau khi tiếp nhận bản vẽ'
+      'Trọng lượng nhẹ, giấu kín trên trần không ảnh hưởng thiết kế nội thất',
+      'Cơ chế hạ tự do an toàn theo trọng lực (Gravity Fail-Safe)',
+      'Ứng dụng cho sảnh thông tầng, giếng trời, thang cuốn trung tâm thương mại',
+      'Tích hợp cảm biến báo khói và tủ điều khiển trung tâm'
     ],
     image: FIRE_CURTAIN_IMAGE,
     priceEstimate: 'Liên hệ',
     popular: true
+  },
+  {
+    id: 'tu-dien',
+    slug: 'tu-dien',
+    name: 'Tủ Điện Phân Phối & Điều Khiển Công Nghiệp',
+    category: 'tu-dien',
+    categoryName: 'Tủ điện',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Vỏ tủ điện và hệ thống tủ phân phối hạ thế, tủ điều khiển máy bơm PCCC APEX chế tạo cơ khí chính xác, cấp bảo vệ IP cao và sơn tĩnh điện bền bỉ.',
+    longDescription: 'Tủ điện APEX được thiết kế và gia công cơ khí đáp ứng các tiêu chuẩn kỹ thuật điện và an toàn phòng chống cháy nổ. Kết cấu khung vỏ chắc chắn từ thép mạ kẽm hoặc Inox, khoang ngăn phân đoạn hợp lý giúp tản nhiệt tối ưu, bảo vệ thiết bị đóng cắt và hệ thống điều khiển bơm PCCC vận hành ổn định trong điều kiện khắc nghiệt.',
+    specs: {
+      material: 'Thép cán nguội mạ kẽm độ dày 1.5mm - 2.5mm',
+      thickness: 'Dạng module tự đứng hoặc treo tường theo sơ đồ đơn tuyến',
+      insulation: 'Sơn tĩnh điện chống ăn mòn và cách điện an toàn',
+      finish: 'Màu ghi sáng sần RAL 7032 / RAL 7035 tiêu chuẩn công nghiệp',
+      standard: 'TCVN 7994-1 (IEC 61439-1), Cấp bảo vệ IP43 - IP55',
+      warranty: '12 - 24 tháng theo hợp đồng'
+    },
+    features: [
+      'Gia công CNC đột dập và chấn gấp cơ khí độ chính xác cao',
+      'Tủ phân phối tổng MSB, tủ phân phối tầng DB, tủ điều khiển bơm PCCC',
+      'Gioăng cao su bọt biển chống bụi và nước xâm nhập',
+      'Bố trí thanh cái đồng và thiết bị đóng cắt khoa học, dễ bảo trì'
+    ],
+    image: STEEL_DOOR_IMAGE,
+    priceEstimate: 'Liên hệ'
+  },
+  {
+    id: 'thang-mang-cap',
+    slug: 'thang-mang-cap',
+    name: 'Thang Máng Cáp Điện & Khay Cáp Kỹ Thuật',
+    category: 'thang-mang-cap',
+    categoryName: 'Thang máng cáp',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Hệ thống thang cáp, máng cáp và khay cáp APEX đột dập CNC chính xác, chịu tải trọng lớn, bảo vệ đường dây dẫn điện và cáp tín hiệu PCCC an toàn.',
+    longDescription: 'Thang máng cáp APEX là giải pháp quản lý hạ tầng dây dẫn điện lực, dây điều khiển và cáp tín hiệu PCCC trong các công trình hiện đại. Sản phẩm được sản xuất trên dây chuyền cơ khí tự động với đa dạng vật liệu (sơn tĩnh điện, mạ kẽm nhúng nóng), mép uốn an toàn không làm trầy xước vỏ cáp, phụ kiện đồng bộ dễ dàng thi công lắp đặt.',
+    specs: {
+      material: 'Thép mạ kẽm, tôn tráng kẽm hoặc Inox 304 độ dày 1.2mm - 2.5mm',
+      thickness: 'Chiều dài tiêu chuẩn 2.500 mm - 3.000 mm / cây kèm nắp đậy',
+      insulation: 'Máng cáp (Trunking), Thang cáp (Cable Ladder), Khay cáp (Tray)',
+      finish: 'Sơn tĩnh điện hoặc mạ kẽm nhúng nóng theo môi trường sử dụng',
+      standard: 'TCVN 10688 (NEMA VE 1)',
+      warranty: '12 - 24 tháng theo hợp đồng'
+    },
+    features: [
+      'Gia cường gân tăng cứng, chịu tải trọng cáp điện lớn',
+      'Mép gấp chữ C chống võng và bảo vệ an toàn cho vỏ bọc cáp',
+      'Hệ phụ kiện cút nối, tê, chữ thập, co lên co xuống đồng bộ',
+      'Sản xuất theo kích thước và quy cách yêu cầu của bản vẽ cơ điện'
+    ],
+    image: STEEL_DOOR_IMAGE,
+    priceEstimate: 'Liên hệ'
+  },
+  {
+    id: 'tu-rack',
+    slug: 'tu-rack',
+    name: 'Tủ Rack Mạng & Viễn Thông Server Rack',
+    category: 'tu-rack',
+    categoryName: 'Tủ rack',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Tủ mạng, tủ server rack APEX chuẩn 19 inch đa dạng kích thước (6U - 42U), tải trọng cao, thông gió tối ưu và bảo vệ an toàn cho thiết bị viễn thông.',
+    longDescription: 'Tủ rack APEX phục vụ lắp đặt máy chủ, thiết bị mạng, switch, tổng đài và hệ thống ghi hình giám sát PCCC. Thiết kế theo tiêu chuẩn công nghiệp quốc tế 19 inch với kết cấu tháo lắp linh hoạt, cửa lưới đột lỗ thông thoáng tăng hiệu quả làm mát, ray trượt đánh số U rõ ràng thuận tiện cho việc đấu nối và bảo trì hạ tầng CNTT.',
+    specs: {
+      material: 'Thép cán nguội SPCC chất lượng cao, khung hàn liền hoặc lắp ghép',
+      thickness: 'Độ sâu D600, D800, D1000, D1200 mm; Chiều cao 6U đến 42U',
+      insulation: 'Tải trọng chịu lực lên tới 800 kg - 1.000 kg đối với tủ đứng',
+      finish: 'Sơn tĩnh điện màu đen cát hoặc ghi sáng chống trầy xước',
+      standard: 'Chuẩn 19 inch EIA-310-D, IEC 60297',
+      warranty: '12 - 24 tháng theo hợp đồng'
+    },
+    features: [
+      'Cửa trước đột lưới tổ ong dạng lục giác đạt độ thông thoáng trên 70%',
+      'Cột gắn thiết bị đánh số U rõ ràng, điều chỉnh chiều sâu linh hoạt',
+      'Tích hợp quạt tản nhiệt, thanh nguồn PDU và bánh xe chịu tải',
+      'Khóa tay gạt an toàn, bảo vệ chống can thiệp trái phép'
+    ],
+    image: STEEL_DOOR_IMAGE,
+    priceEstimate: 'Liên hệ'
+  },
+  {
+    id: 'nha-tram-shelter',
+    slug: 'nha-tram-shelter',
+    name: 'Nhà Trạm Viễn Thông Shelter Tích Hợp',
+    category: 'nha-tram-shelter',
+    categoryName: 'Nhà trạm Shelter',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Nhà trạm Shelter APEX kết cấu sandwich panel cách nhiệt, kín nước, chống ăn mòn thời tiết, bảo vệ thiết bị truyền dẫn và nguồn điện tại các trạm BTS dã ngoại.',
+    longDescription: 'Nhà trạm viễn thông Shelter APEX là giải pháp nhà tiền chế module chuyên dụng bảo vệ máy móc viễn thông và năng lượng điện tại các địa hình phức tạp ngoài trời. Vỏ trạm gồm các tấm panel lõi xốp PU/PIR hoặc bông khoáng chống cháy, khung thép mạ kẽm chịu gió bão, tích hợp hệ thống điều hòa luân phiên, cửa kín nước và hệ thống tiếp địa chống sét toàn diện.',
+    specs: {
+      material: 'Sandwich panel cách nhiệt lõi PU/PIR hoặc bông khoáng chống cháy',
+      thickness: 'Khung thép mạ kẽm nhúng nóng liên kết module cơ động',
+      insulation: 'Hệ số truyền nhiệt thấp, bảo ôn duy trì nhiệt độ tối ưu',
+      finish: 'Tôn mạ màu chống chịu thời tiết, muối biển và bức xạ UV',
+      standard: 'TCVN kỹ thuật xây dựng nhà trạm viễn thông dã ngoại',
+      warranty: '24 - 36 tháng theo hợp đồng'
+    },
+    features: [
+      'Lắp dựng cơ động trên mọi địa hình: đồi núi, mái nhà, ven biển',
+      'Độ kín khít cao, chống bụi bẩn và chống ngấm nước mưa tuyệt đối',
+      'Tích hợp hệ thống điều hòa luân phiên, chiếu sáng và báo khói khẩn cấp',
+      'Cửa bảo vệ 3 điểm khóa chống đột nhập chuyên dụng ngoài trời'
+    ],
+    image: STEEL_DOOR_IMAGE,
+    priceEstimate: 'Liên hệ'
+  },
+  {
+    id: 'tu-nguon-outdoor',
+    slug: 'tu-nguon-outdoor',
+    name: 'Tủ Nguồn Outdoor Chuyên Dụng Ngoài Trời',
+    category: 'tu-nguon-outdoor',
+    categoryName: 'Tủ nguồn Outdoor',
+    fireRating: '',
+    certificationNo: '',
+    description: 'Tủ nguồn ngoài trời APEX kết cấu hai lớp vỏ cách nhiệt, cấp bảo vệ IP55/IP65, tích hợp điều hòa / quạt thông gió tản nhiệt, chống nước và chống bụi xâm nhập.',
+    longDescription: 'Tủ nguồn ngoài trời (Outdoor Power Cabinet) APEX được thiết kế chuyên biệt để chứa bộ chỉnh lưu (Rectifier), ắc quy dự phòng (Battery) và thiết bị phân phối nguồn tại các vị trí ngoài trời khắc nghiệt. Thiết kế vỏ hai lớp tản nhiệt tự nhiên, khóa an toàn chống cạy phá đa điểm, gioăng cao su bọt biển kháng lão hóa đảm bảo thiết bị bên trong hoạt động bền bỉ 24/7.',
+    specs: {
+      material: 'Thép mạ kẽm hoặc Inox cấu trúc 2 lớp cách nhiệt',
+      thickness: 'Kích thước thiết kế theo dung lượng nguồn và ắc quy dự phòng',
+      insulation: 'Lớp đệm lưu thông khí động học giảm bức xạ nhiệt mặt trời',
+      finish: 'Sơn tĩnh điện ngoài trời chuyên dụng kháng tia cực tím',
+      standard: 'Cấp bảo vệ kín khít IP55 / IP65 chống nước bụi',
+      warranty: '12 - 24 tháng theo hợp đồng'
+    },
+    features: [
+      'Khoang chứa ắc quy và khoang thiết bị điện tử độc lập an toàn',
+      'Hệ thống làm mát bằng quạt hút lọc bụi hoặc máy lạnh mini ngoài trời',
+      'Khóa bảo mật 3 điểm chuyên dụng chống cạy phá',
+      'Cảm biến giám sát nhiệt độ và cảnh báo mở cửa kết nối từ xa'
+    ],
+    image: STEEL_DOOR_IMAGE,
+    priceEstimate: 'Liên hệ'
   }
 ];
 

@@ -1,246 +1,196 @@
-import React, { useState, useMemo } from 'react';
-import { 
-  Building2, 
-  MapPin, 
-  Calendar, 
-  UserCheck, 
-  Layers, 
-  ArrowRight, 
-  X,
+import React, { useState, useMemo, useEffect } from 'react';
+import {
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  FileCheck,
   ShieldCheck,
-  CheckCircle2
 } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
-import { Project } from '../types';
+import type { Project } from '../types';
+import { ProjectCard } from '../components/projects/ProjectCard';
+import { ProjectDetailLayout } from '../components/projects/ProjectDetailLayout';
+import { PRODUCT_CATEGORY_LABELS } from '../routing';
 
 interface ProjectsPageProps {
   onOpenQuote: () => void;
   initialProjectId?: string;
+  onNavigate?: (tab: string, itemId?: string) => void;
 }
 
 export const ProjectsPage: React.FC<ProjectsPageProps> = ({
   onOpenQuote,
-  initialProjectId
+  initialProjectId,
+  onNavigate,
 }) => {
   const { projects } = useLiveData();
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
-  const [activeProject, setActiveProject] = useState<Project | null>(
-    initialProjectId ? (projects.find(p => p.id === initialProjectId) || null) : null
-  );
+  const [activeProject, setActiveProject] = useState<Project | null>(() => {
+    if (initialProjectId) {
+      return projects.find((p) => p.id === initialProjectId || p.slug === initialProjectId) || null;
+    }
+    return null;
+  });
 
-  const filters = [
-    { id: 'all', label: 'Tất cả dự án' },
-    { id: 'commercial', label: 'Trung tâm thương mại & Văn phòng' },
-    { id: 'residential', label: 'Chung cư cao tầng & Đô thị' },
-    { id: 'industrial', label: 'Nhà máy & Khu công nghiệp' },
-    { id: 'healthcare', label: 'Bệnh viện & Y tế' },
-  ];
+  useEffect(() => {
+    if (initialProjectId) {
+      const found = projects.find((p) => p.id === initialProjectId || p.slug === initialProjectId);
+      setActiveProject(found || null);
+    } else {
+      setActiveProject(null);
+    }
+  }, [initialProjectId, projects]);
+
+  // Bộ lọc danh mục dựa trên các dự án thực tế hiện có trong database
+  const availableCategories = useMemo(() => {
+    const set = new Set<string>();
+    projects.forEach((p) => {
+      if (p.category) set.add(p.category);
+    });
+    return Array.from(set);
+  }, [projects]);
 
   const filteredProjects = useMemo(() => {
     if (selectedFilter === 'all') return projects;
-    return projects.filter(p => p.category === selectedFilter);
+    return projects.filter((p) => p.category === selectedFilter);
   }, [projects, selectedFilter]);
 
+  const handleViewDetail = (project: Project) => {
+    setActiveProject(project);
+    if (onNavigate) {
+      onNavigate('projects', project.slug || project.id);
+    }
+  };
+
+  const handleBackToList = () => {
+    setActiveProject(null);
+    if (onNavigate) {
+      onNavigate('projects');
+    }
+  };
+
+  // Nếu đang xem chi tiết một dự án: hiển thị layout chi tiết
+  if (activeProject) {
+    return (
+      <div className="min-h-screen w-full bg-neutral-50 pb-20">
+        <ProjectDetailLayout
+          project={activeProject}
+          onBack={handleBackToList}
+          onOpenQuote={onOpenQuote}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full bg-neutral-50 min-h-screen py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+    <div className="min-h-screen w-full bg-neutral-50 py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs font-bold text-red-600 uppercase tracking-wider mb-1">
-            <span className="w-1 h-3.5 bg-red-600 inline-block rounded-xs"></span>
-            <span>HỒ SƠ NĂNG LỰC DỰ ÁN</span>
+          <div className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-600">
+            <span className="inline-block h-3.5 w-1 rounded-xs bg-red-600" />
+            <span>Hồ sơ năng lực công trình</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 uppercase tracking-tight">
-            HỒ SƠ DỰ ÁN APEX VIỆT NAM
+          <h1 className="text-2xl font-black uppercase tracking-tight text-slate-900 sm:text-3xl">
+            Dự án tiêu biểu APEX Việt Nam
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-            Thông tin và hình ảnh dự án sẽ được công bố sau khi hoàn tất hồ sơ và quyền sử dụng tư liệu.
+          <p className="mt-2 max-w-2xl text-xs text-slate-600 sm:text-sm">
+            Thông tin và hình ảnh dự án thực tế chỉ được công bố sau khi đã hoàn tất nghiệm thu và được sự đồng ý xác nhận bằng văn bản của chủ đầu tư.
           </p>
         </div>
 
-        {/* Filter Bar */}
-        {projects.length > 0 && <div className="flex flex-wrap gap-2 mb-8">
-          {filters.map((f) => (
+        {/* Filter Bar (nếu có dự án) */}
+        {projects.length > 0 && availableCategories.length > 1 && (
+          <div className="mb-8 flex flex-wrap gap-2">
             <button
-              key={f.id}
-              onClick={() => setSelectedFilter(f.id)}
-              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
-                selectedFilter === f.id
+              onClick={() => setSelectedFilter('all')}
+              className={`rounded-lg px-4 py-2 text-xs font-semibold transition-all ${
+                selectedFilter === 'all'
                   ? 'bg-slate-900 text-white shadow-xs'
-                  : 'bg-white text-slate-700 border border-neutral-200 hover:bg-neutral-100'
+                  : 'border border-neutral-200 bg-white text-slate-700 hover:bg-neutral-100'
               }`}
             >
-              {f.label}
+              Tất cả dự án ({projects.length})
             </button>
-          ))}
-        </div>}
-
-        {/* Project Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-xs hover:shadow-lg transition-all group flex flex-col"
-            >
-              <div className="relative h-64 bg-neutral-200 overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
-                <div className="absolute top-3 left-3 bg-red-600 text-white text-[11px] font-bold px-3 py-1 rounded-md shadow-xs">
-                  {project.categoryLabel}
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 text-white">
-                  <div className="flex items-center gap-1.5 text-xs text-slate-300 mb-1">
-                    <MapPin className="w-3.5 h-3.5 text-red-400" />
-                    <span>{project.location}</span>
-                    <span className="mx-1">·</span>
-                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{project.year}</span>
-                  </div>
-                  <h3 className="text-base sm:text-lg font-bold text-white line-clamp-1">
-                    {project.title}
-                  </h3>
-                </div>
-              </div>
-
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                <div className="space-y-2">
-                  <div className="text-xs text-slate-600">
-                    <strong className="text-slate-900">Chủ đầu tư:</strong> {project.client}
-                  </div>
-                  <div className="text-xs text-slate-600">
-                    <strong className="text-slate-900">Quy mô:</strong> {project.scale}
-                  </div>
-                  <div className="p-3 bg-neutral-50 rounded-xl border border-neutral-200 text-xs">
-                    <span className="font-bold text-slate-800 block mb-1">Hạng mục PCCC cung cấp:</span>
-                    <p className="text-red-700 font-semibold">{project.itemsSupplied}</p>
-                  </div>
-                  <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed pt-1">
-                    {project.description}
-                  </p>
-                </div>
-
-                <div className="pt-3 border-t border-neutral-100 flex items-center justify-between">
-                  <button
-                    onClick={() => setActiveProject(project)}
-                    className="text-xs font-bold text-slate-900 hover:text-red-600 flex items-center gap-1 transition-colors"
-                  >
-                    <span>Xem chi tiết dự án</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    onClick={onOpenQuote}
-                    className="text-xs font-semibold text-red-600 hover:underline"
-                  >
-                    Tư vấn dự án tương tự →
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {projects.length === 0 && (
-          <div className="border-y border-neutral-200 bg-white px-6 py-14 sm:px-10">
-            <ShieldCheck className="w-8 h-8 text-emerald-600" />
-            <h2 className="mt-4 text-xl font-bold text-slate-900">Hồ sơ dự án đang được cập nhật</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">APEX chỉ công bố dự án sau khi thông tin, hình ảnh và phạm vi cung cấp đã được xác nhận. Bạn vẫn có thể gửi yêu cầu để nhận phương án phù hợp với công trình hiện tại.</p>
-            <button onClick={onOpenQuote} className="mt-6 inline-flex items-center gap-2 bg-red-600 px-5 py-2.5 text-xs font-bold text-white hover:bg-red-700">
-              Gửi yêu cầu tư vấn <ArrowRight className="w-4 h-4" />
-            </button>
+            {availableCategories.map((catKey) => (
+              <button
+                key={catKey}
+                onClick={() => setSelectedFilter(catKey)}
+                className={`rounded-lg px-4 py-2 text-xs font-semibold transition-all ${
+                  selectedFilter === catKey
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'border border-neutral-200 bg-white text-slate-700 hover:bg-neutral-100'
+                }`}
+              >
+                {PRODUCT_CATEGORY_LABELS[catKey] || catKey}
+              </button>
+            ))}
           </div>
         )}
 
-      </div>
-
-      {/* Project Detail Modal */}
-      {activeProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-150">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden border border-neutral-200 my-auto">
-            <div className="relative h-48 sm:h-64 bg-slate-900 shrink-0">
-              <img
-                src={activeProject.image}
-                alt={activeProject.title}
-                className="w-full h-full object-cover opacity-90"
-                referrerPolicy="no-referrer"
+        {/* Project Grid */}
+        {projects.length > 0 ? (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {filteredProjects.map((project) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                onViewDetail={handleViewDetail}
               />
-              <button
-                onClick={() => setActiveProject(null)}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-900/80 text-white flex items-center justify-center hover:bg-slate-900"
-              >
-                <X className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <span className="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm">
-                  {activeProject.categoryLabel}
-                </span>
-                <h2 className="text-base sm:text-xl font-bold mt-1 leading-snug">{activeProject.title}</h2>
-              </div>
-            </div>
-
-            <div className="p-4 sm:p-6 space-y-4 text-xs overflow-y-auto flex-1">
-              <div className="grid grid-cols-2 gap-2.5 sm:gap-3 p-3 bg-neutral-50 rounded-xl border border-neutral-200">
-                <div>
-                  <span className="text-slate-400 block text-[10px]">Chủ đầu tư</span>
-                  <span className="font-bold text-slate-800">{activeProject.client}</span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px]">Vị trí</span>
-                  <span className="font-bold text-slate-800">{activeProject.location}</span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px]">Quy mô công trình</span>
-                  <span className="font-bold text-slate-800">{activeProject.scale}</span>
-                </div>
-                <div>
-                  <span className="text-slate-400 block text-[10px]">Năm hoàn thành</span>
-                  <span className="font-bold text-slate-800">{activeProject.year}</span>
-                </div>
+            ))}
+          </div>
+        ) : (
+          /* Trạng thái chuẩn: Chưa có dự án verified được công bố */
+          <div className="rounded-2xl border border-slate-200 bg-white p-8 sm:p-12 shadow-xs">
+            <div className="max-w-3xl space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">
+                <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                <span>Quy trình thẩm định tính trung thực dữ liệu</span>
               </div>
 
-              <div>
-                <h4 className="font-bold text-slate-900 uppercase text-xs mb-1.5">
-                  Chi tiết triển khai & Nghiệm thu
-                </h4>
-                <p className="text-slate-600 leading-relaxed">
-                  {activeProject.description}
-                </p>
+              <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
+                Hồ sơ dự án đang được cập nhật & kiểm duyệt xác minh
+              </h2>
+
+              <p className="text-sm leading-relaxed text-slate-600">
+                APEX cam kết <strong>tuyệt đối không sao chép hình ảnh hoặc thông tin dự án từ bất kỳ đối thủ cạnh tranh nào</strong> trên thị trường. Mọi công trình xuất hiện trên website phải có hợp đồng cung cấp thật, biên bản nghiệm thu PCCC và văn bản chấp thuận công bố từ chủ đầu tư.
+              </p>
+
+              <div className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2">
+                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 text-xs text-slate-700">
+                  <div className="flex items-center gap-2 font-bold text-slate-900">
+                    <FileCheck className="h-4 w-4 text-red-600" />
+                    <span>Hồ sơ năng lực riêng theo ngành</span>
+                  </div>
+                  <p className="mt-1 text-slate-500">
+                    Quý đối tác, tổng thầu hoặc tư vấn thiết kế có thể yêu cầu tài liệu năng lực và danh sách dự án tham chiếu theo từng nhóm công trình cụ thể.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-slate-100 bg-slate-50 p-4 text-xs text-slate-700">
+                  <div className="flex items-center gap-2 font-bold text-slate-900">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                    <span>Tư vấn phương án tối ưu</span>
+                  </div>
+                  <p className="mt-1 text-slate-500">
+                    Đội ngũ kỹ sư APEX sẵn sàng bóc tách bản vẽ kỹ thuật, tính toán cấp chịu lửa EI và tối ưu chi phí dự toán cho công trình của bạn.
+                  </p>
+                </div>
               </div>
 
-              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-                <span>
-                  Công trình đã hoàn tất nghiệm thu và được cấp biên bản kiểm tra PCCC đạt chuẩn đi vào vận hành.
-                </span>
+              <div className="pt-4">
+                <button
+                  onClick={onOpenQuote}
+                  className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-6 py-3 text-xs font-bold text-white shadow-sm transition-colors hover:bg-red-700"
+                >
+                  <span>Gửi yêu cầu nhận hồ sơ năng lực dự án</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
               </div>
-            </div>
-
-            <div className="p-4 bg-neutral-50 border-t border-neutral-200 flex justify-end gap-2">
-              <button
-                onClick={() => setActiveProject(null)}
-                className="px-4 py-2 border border-neutral-200 text-xs font-semibold rounded-lg hover:bg-neutral-100"
-              >
-                Đóng
-              </button>
-              <button
-                onClick={() => {
-                  setActiveProject(null);
-                  onOpenQuote();
-                }}
-                className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg"
-              >
-                Liên hệ kinh doanh
-              </button>
             </div>
           </div>
-        </div>
-      )}
-
+        )}
+      </div>
     </div>
   );
 };

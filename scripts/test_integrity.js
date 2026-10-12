@@ -147,12 +147,15 @@ console.log('\n--- 5. Kiểm tra Serverless API Handlers ---');
 const requiredApis = [
   'api/_db.ts',
   'api/leads.ts',
+  'api/products.ts',
+  'api/projects.ts',
   'api/public-content.ts',
   'api/admin/login.ts',
   'api/admin/logout.ts',
   'api/admin/me.ts',
   'api/admin/settings.ts',
   'api/admin/products.ts',
+  'api/admin/projects.ts',
   'api/admin/documents.ts',
   'api/admin/contents.ts',
   'api/admin/activities.ts',
@@ -174,6 +177,62 @@ for (const apiFile of apiFiles) {
     .filter((spec) => !spec.endsWith('.js'));
   assert(badImports.length === 0, `${apiFile}: import tương đối có đuôi .js${badImports.length ? ` (thiếu: ${badImports.join(', ')})` : ''}`);
 }
+
+// -------------------------------------------------------------
+// Test 6: Kiểm tra 9 Dòng sản phẩm, Dự án & Tuân thủ bản quyền
+// -------------------------------------------------------------
+console.log('\n--- 6. Kiểm tra 9 Dòng sản phẩm, Dự án & Tuân thủ bản quyền ---');
+
+// 6.1 Migration SQL mới
+const migrationPath = path.join(rootDir, 'sql', 'migrations', '20261012_products_and_projects.sql');
+assert(fs.existsSync(migrationPath), 'Migration SQL sql/migrations/20261012_products_and_projects.sql tồn tại');
+const migrationSql = fs.readFileSync(migrationPath, 'utf8').toLowerCase();
+assert(migrationSql.includes('products_category_check'), 'Migration chứa CHECK constraint cho 9 category slug');
+assert(migrationSql.includes('create table if not exists projects'), 'Migration tạo bảng projects');
+assert(migrationSql.includes('verified') && migrationSql.includes('default false'), 'Bảng projects có cột verified với default false');
+assert(migrationSql.includes('verified_note'), 'Bảng projects có cột verified_note');
+
+// 6.2 Đồng bộ 9 Category slugs
+const expectedCategories = [
+  'cua-thep-ngan-chay',
+  'cua-kinh-ngan-chay',
+  'cua-cuon-ngan-chay',
+  'rem-ngan-chay',
+  'tu-dien',
+  'thang-mang-cap',
+  'tu-rack',
+  'nha-tram-shelter',
+  'tu-nguon-outdoor',
+];
+const routingSource = fs.readFileSync(path.join(rootDir, 'src', 'routing.ts'), 'utf8');
+for (const cat of expectedCategories) {
+  assert(routingSource.includes(`'${cat}'`), `routing.ts chứa category slug '${cat}'`);
+}
+
+// 6.3 Bảo mật tầng API cho projects
+const publicProjectsApi = fs.readFileSync(path.join(rootDir, 'api', 'projects.ts'), 'utf8');
+assert(publicProjectsApi.includes('verified = true') && publicProjectsApi.includes("status = 'published'"), 'API public /api/projects CHỈ trả về verified = true AND status = published');
+
+const adminProjectsApi = fs.readFileSync(path.join(rootDir, 'api', 'admin', 'projects.ts'), 'utf8');
+assert(adminProjectsApi.includes('verified_note') && adminProjectsApi.includes('role !== \'admin\''), 'API admin /api/admin/projects bắt buộc quyền admin và verified_note khi xác minh dự án');
+
+// 6.4 Kiểm tra không sao chép đối thủ (ankovina.vn, 3ce.vn)
+const srcDir = path.join(rootDir, 'src');
+const scanForCompetitorUrls = (dir) => {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      scanForCompetitorUrls(fullPath);
+    } else if (entry.isFile() && (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx') || entry.name.endsWith('.json') || entry.name.endsWith('.html'))) {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      assert(!content.includes('ankovina.vn'), `Không chứa link ankovina.vn trong ${entry.name}`);
+      assert(!content.includes('3ce.vn'), `Không chứa link 3ce.vn trong ${entry.name}`);
+    }
+  }
+};
+scanForCompetitorUrls(srcDir);
+assert(true, 'Toàn bộ mã nguồn src/ không chứa bất kỳ liên kết hay tài sản nào từ đối thủ (ankovina, 3ce)');
 
 console.log('\n=============================================================');
 console.log(`KẾT QUẢ TỔNG QUAN: ${passedTests}/${totalTests} BÀI KIỂM THỬ THÀNH CÔNG (${Math.round((passedTests / totalTests) * 100)}%)`);

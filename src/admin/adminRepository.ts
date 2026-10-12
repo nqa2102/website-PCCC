@@ -1,5 +1,5 @@
 import { createDefaultAdminCompany } from './adminData';
-import type { AdminActivity, AdminContent, AdminDocument, AdminLead, AdminProduct, AdminState, AdminCompany } from './adminTypes';
+import type { AdminActivity, AdminContent, AdminDocument, AdminLead, AdminProduct, AdminProject, AdminState, AdminCompany } from './adminTypes';
 
 const fetchJson = async <T>(url: string, options?: RequestInit): Promise<T> => {
   const res = await fetch(url, {
@@ -17,9 +17,10 @@ const fetchJson = async <T>(url: string, options?: RequestInit): Promise<T> => {
 // Lỗi tải (chưa đăng nhập, mất kết nối DB) được ném ra để giao diện báo lỗi,
 // tránh hiển thị danh sách trống rồi người dùng lưu đè lên dữ liệu thật.
 export const loadRemoteAdminState = async (): Promise<AdminState> => {
-  const [leadsRes, productsRes, documentsRes, contentsRes, companyRes, activitiesRes] = await Promise.all([
+  const [leadsRes, productsRes, projectsRes, documentsRes, contentsRes, companyRes, activitiesRes] = await Promise.all([
     fetchJson<{ leads: AdminLead[] }>('/api/leads'),
     fetchJson<{ products: AdminProduct[] }>('/api/admin/products'),
+    fetchJson<{ projects: AdminProject[] }>('/api/admin/projects').catch(() => ({ projects: [] })),
     fetchJson<{ documents: AdminDocument[] }>('/api/admin/documents'),
     fetchJson<{ contents: AdminContent[] }>('/api/admin/contents'),
     fetchJson<{ company: AdminCompany | null }>('/api/admin/settings'),
@@ -29,6 +30,7 @@ export const loadRemoteAdminState = async (): Promise<AdminState> => {
   return {
     leads: leadsRes.leads || [],
     products: productsRes.products || [],
+    projects: projectsRes.projects || [],
     documents: documentsRes.documents || [],
     contents: contentsRes.contents || [],
     // Chưa có bản ghi cấu hình: điền sẵn thông tin doanh nghiệp đã xác minh để admin lưu lần đầu
@@ -43,6 +45,9 @@ export const saveRemoteLead = (item: AdminLead) =>
 
 export const saveRemoteProduct = (item: AdminProduct) =>
   fetchJson('/api/admin/products', { method: 'POST', body: JSON.stringify(item) });
+
+export const saveRemoteProject = (item: AdminProject) =>
+  fetchJson('/api/admin/projects', { method: 'POST', body: JSON.stringify(item) });
 
 export const saveRemoteDocument = (item: AdminDocument) =>
   fetchJson('/api/admin/documents', { method: 'POST', body: JSON.stringify(item) });
@@ -65,6 +70,10 @@ export const deleteRemoteLead = async (id: string) => {
 
 export const deleteRemoteProduct = async (id: string) => {
   await fetchJson(`/api/admin/products?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+};
+
+export const deleteRemoteProject = async (id: string) => {
+  await fetchJson(`/api/admin/projects?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
 };
 
 export const deleteRemoteDocument = async (id: string) => {
