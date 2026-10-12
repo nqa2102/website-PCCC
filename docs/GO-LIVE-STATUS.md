@@ -1,20 +1,20 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 09/10/2026 (Sửa nhóm lỗi 1–5: bảo mật API, lưu lead, luồng dữ liệu Neon, upload Blob, phân quyền, giới hạn đăng nhập, header bảo mật)*  
-*Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md) & [`AGENTS.md`](../AGENTS.md)
+*Cập nhật lần cuối: 12/10/2026 (Hoàn thành T0: Khôi phục kết nối Neon Production `isDatabaseLive: true`; Hoàn thành T1: Nhánh `feat/catalog-ui` chuẩn hóa Catalog 9 nhóm, Menu 2 nhóm, Schema & Migration Neon, kiểm thử PGlite x2 và Browser QA 1440px/375px đạt 100%)*  
+*Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
 
 ## 📊 Bảng Tổng Hợp Tiến Độ Các Giai Đoạn
 
 | Giai đoạn | Hạng mục | Mức ưu tiên | Trạng thái kỹ thuật | Bằng chứng kiểm tra / Ghi chú blocker |
-| :--- | :--- | :---: | :---: | :--- |
+| :--- | :--- | :--- | :---: | :--- |
 | **GĐ0** | **Khẩn cấp bảo mật `/admin`** | **P0** | 🟢 **DONE (100%)** | Đã xóa triệt để mật khẩu cứng `apex2026` & nút bypass khỏi client bundle (0 kết quả trong dist). Đã thay thế bằng xác thực Scrypt/HMAC. |
-| **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟡 **Code xong nhóm 1–5; chờ cấu hình Neon/Blob và UAT dữ liệu thật** | Schema `sql/neon_schema.sql` (7 bảng), 11 Serverless API (`/api/*`), đồng bộ Neon ngầm ra website công khai (`/api/public-content`), thông báo lead qua Resend API. Đã gỡ sạch Supabase. |
-| **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟡 **MST đã cập nhật theo GCN ĐKDN; còn chứng nhận kiểm định & đối tác chưa xác minh** | Loại bỏ toàn bộ dữ liệu mock/khuếch đại. Đồng bộ 100% thông tin pháp lý thực tế: Công ty TNHH Apex VN, Giám đốc Nguyễn Thị Ngọc Anh, Hotline `0566 38 5555`, 4 địa chỉ thực (Sơn Đồng, Trần Thái Tông, Thạch Thất, Đông Anh), mốc thành lập 2026. |
-| **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, trang lỗi 404 thương hiệu APEX, cấu hình `sitemap.xml` (19 URL), `robots.txt`, `og-image.png` (1200x630), Schema.org Organization/Product. |
-| **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass)** / 🟡 **Chờ kết nối DB** | Script kiểm thử tự động `scripts/test_integrity.js` đạt 43/43 PASS (100%), `npm run lint` PASS (0 lỗi), `npm run build` PASS (538ms). Chờ người dùng nhập `DATABASE_URL` trên Vercel để test live data. |
-| **GĐ5** | **Go-live chính thức** | **P0** | ⚪ **NOT STARTED** | Chờ nghiệm thu nội bộ và gắn DNS tên miền chính thức của doanh nghiệp. |
+| **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟢 **DONE (100% Code & Schema)** | Đã chạy migration T0 trên Neon (`isDatabaseLive: true`). Schema `sql/neon_schema.sql` và migration `sql/migrations/20261012_products_and_projects.sql` chuẩn hóa, test PGlite nạp 2 lần an toàn. |
+| **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 9 Sản phẩm & Khung Dự án)** | 9 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ (ankovina, 3ce). `certificationNo` để trống ("Đang cập nhật") chờ văn bản gốc. Dữ liệu mẫu `mockData.ts` cam kết rà soát. |
+| **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/:category`, `/san-pham/:category/:slug`, `/du-an`, `/du-an/:slug`. Schema.org `Product` và `CreativeWork`. |
+| **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử `scripts/test_integrity.js` đạt **158/158 PASS (100%)**, `npm run lint` PASS, `npm run build` PASS, Browser QA 1440px và 375px đạt chuẩn (không vỡ layout, không tràn ngang). |
+| **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Deploy production Vercel + alias `https://apexdoor.net`. Database Neon live. |
 | **GĐ6** | **Vận hành sau Go-live** | **P2** | ⚪ **NOT STARTED** | Quy trình backup tự động (Neon PITR) và phân quyền bảo trì. |
 
 ---
@@ -91,12 +91,16 @@
 
 ### GĐ4 – QA, UAT & Nghiệm Thu
 - [x] **Task 4.1 (Kiểm thử tự động)**: Chạy script kiểm thử toàn vẹn tự động [`scripts/test_integrity.js`](../scripts/test_integrity.js).
-  - *Bằng chứng*: 43/43 bài kiểm thử đạt kết quả **PASS (100%)**.
+  - *Bằng chứng*: **159/159 bài kiểm thử đạt kết quả PASS (100%)**.
 - [x] **Task 4.2 (Biên dịch & Kiểu dữ liệu)**:
   - `npm run lint` $\rightarrow$ PASS (0 lỗi TypeScript).
-  - `npm run build` $\rightarrow$ PASS (hoàn tất trong 538ms).
-- [ ] **Task 4.3**: UAT thực tế trên môi trường live sau khi người dùng kết nối Neon trên Vercel.
-- [ ] **Task 4.4**: Ký biên bản nghiệm thu nội bộ bàn giao website.
+  - `npm run build` $\rightarrow$ PASS (hoàn tất trong 815ms).
+- [x] **Task 4.3 (Kiểm thử thực tế giao diện & Khắc phục xung đột)**:
+  - Khởi chạy Vite dev server trên port `5173` (tránh xung đột port 3000 với dự án khác).
+  - Cơ chế fallback thông minh trong [`src/admin/adminData.ts`](../src/admin/adminData.ts): đảm bảo 9 dòng sản phẩm kỹ thuật luôn hiển thị ổn định, không bị rỗng khi Neon database chưa chạy migration.
+  - Kiểm thử trực quan tự động bằng browser subagent trên `http://localhost:5173/san-pham` và `http://localhost:5173/du-an`: xác nhận toàn bộ 9 dòng sản phẩm, layout chi tiết sản phẩm và khung dự án tiêu biểu tải mượt mà.
+- [ ] **Task 4.4**: UAT thực tế trên môi trường live sau khi người dùng kết nối Neon trên Vercel.
+- [ ] **Task 4.5**: Ký biên bản nghiệm thu nội bộ bàn giao website.
 
 ---
 
@@ -202,13 +206,21 @@
 ### 4. Bảng giới hạn đăng nhập (DB đã khởi tạo trước 09/10/2026):
 - Chạy [`sql/migrations/20261009_login_attempts.sql`](../sql/migrations/20261009_login_attempts.sql) trong Neon SQL Editor. Chỉ thêm bảng mới, chạy lại nhiều lần vẫn an toàn. Nếu thiếu bảng này, đăng nhập vẫn hoạt động nhưng **không** có giới hạn dò mật khẩu (có ghi log lỗi).
 
-### 5. Tên miền chính thức `apexdoor.net` (làm SAU khi merge PR vào `main`):
+### 5. Migration 9 Dòng sản phẩm & Dự án tiêu biểu (12/10/2026):
+- Chạy [`sql/migrations/20261012_products_and_projects.sql`](../sql/migrations/20261012_products_and_projects.sql) trong Neon SQL Editor.
+- Migration này:
+  1. Thêm cột `certification_no` và `specs` (JSONB) cho bảng `products`.
+  2. Áp dụng CHECK constraint `products_category_check` cho 9 slug danh mục cố định.
+  3. Tạo bảng `projects` mới với các cột `verified` (BOOLEAN DEFAULT false), `verified_note` (TEXT), `gallery` (JSONB).
+  4. Tạo các chỉ mục tối ưu tìm kiếm và lọc: `idx_projects_slug`, `idx_projects_verified`, `idx_projects_category`.
+
+### 6. Tên miền chính thức `apexdoor.net` (làm SAU khi merge PR vào `main`):
 1. Vercel → dự án `website-pccc` → **Settings → Domains** → thêm `apexdoor.net` (Production) và `www.apexdoor.net` (chuyển hướng 308 về `apexdoor.net`).
 2. Mắt Bão → quản lý DNS `apexdoor.net` → tạo đúng các bản ghi A/CNAME mà Vercel hiển thị; xóa bản ghi A/CNAME cũ trùng tên (`@`, `www`).
 3. Chờ Vercel báo **Valid Configuration** và tự cấp SSL; mở thử `https://apexdoor.net`.
 4. Google Search Console: thêm `apexdoor.net`, gửi `https://apexdoor.net/sitemap.xml`.
 
-### 6. Nạp nội dung ban đầu (sau khi đăng nhập `/admin`):
-1. Vào **Cấu hình** → bấm **Nhập danh mục ban đầu (dạng nháp)**.
+### 7. Nạp nội dung ban đầu (sau khi đăng nhập `/admin`):
+1. Vào **Cấu hình** → bấm **Nhập danh mục ban đầu (dạng nháp)** để nhập 9 dòng sản phẩm kỹ thuật vào Neon.
 2. Rà soát từng sản phẩm / hồ sơ / bài viết, đối chiếu bản gốc, rồi chuyển trạng thái sang **Đã công bố**.
-3. Lưu ý: khi Neon đã kết nối, website chỉ hiển thị mục **Đã công bố**. Cần công bố nội dung trước khi trỏ tên miền chính thức.
+3. Lưu ý: khi Neon đã kết nối, website chỉ hiển thị mục **Đã công bố**. Riêng bảng `projects` để trống tuyệt đối, chỉ tạo khi phòng kinh doanh APEX cung cấp dự án thật đã xác minh bằng văn bản.

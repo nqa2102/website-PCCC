@@ -4,7 +4,36 @@ export interface AppRoute {
   category?: string;
 }
 
-const PRODUCT_CATEGORIES = new Set(['steel-door', 'glass-door', 'roller-shutter', 'fire-curtain', 'accessories']);
+export const PRODUCT_CATEGORIES = new Set([
+  'cua-thep-ngan-chay',
+  'cua-kinh-ngan-chay',
+  'cua-cuon-ngan-chay',
+  'rem-ngan-chay',
+  'tu-dien',
+  'thang-mang-cap',
+  'tu-rack',
+  'nha-tram-shelter',
+  'tu-nguon-outdoor',
+]);
+
+export const LEGACY_CATEGORY_MAP: Record<string, string> = {
+  'steel-door': 'cua-thep-ngan-chay',
+  'glass-door': 'cua-kinh-ngan-chay',
+  'roller-shutter': 'cua-cuon-ngan-chay',
+  'fire-curtain': 'rem-ngan-chay',
+};
+
+export const PRODUCT_CATEGORY_LABELS: Record<string, string> = {
+  'cua-thep-ngan-chay': 'Cửa thép ngăn cháy',
+  'cua-kinh-ngan-chay': 'Cửa kính ngăn cháy',
+  'cua-cuon-ngan-chay': 'Cửa cuốn ngăn cháy',
+  'rem-ngan-chay': 'Rèm ngăn cháy',
+  'tu-dien': 'Tủ điện',
+  'thang-mang-cap': 'Thang máng cáp',
+  'tu-rack': 'Tủ rack',
+  'nha-tram-shelter': 'Nhà trạm shelter',
+  'tu-nguon-outdoor': 'Tủ nguồn outdoor',
+};
 
 const TAB_PATHS: Record<string, string> = {
   home: '/',
@@ -20,19 +49,47 @@ const TAB_PATHS: Record<string, string> = {
   'not-found': '/404',
 };
 
+export const normalizeCategory = (cat?: string | null): string | undefined => {
+  if (!cat) return undefined;
+  if (PRODUCT_CATEGORIES.has(cat)) return cat;
+  if (LEGACY_CATEGORY_MAP[cat]) return LEGACY_CATEGORY_MAP[cat];
+  return undefined;
+};
+
 export const readRoute = (): AppRoute => {
   if (window.location.hash === '#/admin' || window.location.pathname === '/admin') return { tab: 'admin' };
 
   const segments = window.location.pathname.split('/').filter(Boolean);
   const root = segments[0] || '';
-  const itemId = segments[1] ? decodeURIComponent(segments.slice(1).join('/')) : undefined;
 
   if (root === '') return { tab: 'home' };
   if (root === 'gioi-thieu') return { tab: 'about' };
   if (root === 'san-pham') {
-    const category = new URLSearchParams(window.location.search).get('nhom') || undefined;
-    return { tab: 'products', itemId, category };
+    const rawCategory = new URLSearchParams(window.location.search).get('nhom');
+    const queryCategory = normalizeCategory(rawCategory);
+
+    // /san-pham/:category/:slug
+    if (segments.length >= 3) {
+      const segCat = normalizeCategory(segments[1]);
+      const slug = decodeURIComponent(segments.slice(2).join('/'));
+      return { tab: 'products', category: segCat || queryCategory, itemId: slug };
+    }
+
+    // /san-pham/:category OR /san-pham/:slug
+    if (segments.length === 2) {
+      const segCat = normalizeCategory(segments[1]);
+      if (segCat) {
+        return { tab: 'products', category: segCat };
+      }
+      return { tab: 'products', category: queryCategory, itemId: decodeURIComponent(segments[1]) };
+    }
+
+    // /san-pham (?nhom=...)
+    return { tab: 'products', category: queryCategory };
   }
+
+  const itemId = segments[1] ? decodeURIComponent(segments.slice(1).join('/')) : undefined;
+
   if (root === 'giai-phap') return { tab: 'solutions', itemId };
   if (root === 'du-an') return { tab: 'projects', itemId };
   if (root === 'tai-lieu-ky-thuat') return { tab: 'documents', itemId };
@@ -43,15 +100,27 @@ export const readRoute = (): AppRoute => {
   return { tab: 'not-found' };
 };
 
-export const pathForRoute = (tab: string, itemId?: string) => {
+export const pathForRoute = (tab: string, itemId?: string, category?: string) => {
   const base = TAB_PATHS[tab] || '/';
-  if (!itemId) return base;
-  if (tab === 'products' && PRODUCT_CATEGORIES.has(itemId)) return `${base}?nhom=${encodeURIComponent(itemId)}`;
-  if (['products', 'solutions', 'projects', 'documents', 'news'].includes(tab)) return `${base}/${encodeURIComponent(itemId)}`;
+  if (!itemId && !category) return base;
+
+  if (tab === 'products') {
+    const normCat = normalizeCategory(category);
+    if (normCat && itemId) return `${base}/${encodeURIComponent(normCat)}/${encodeURIComponent(itemId)}`;
+    if (normCat) return `${base}/${encodeURIComponent(normCat)}`;
+    if (itemId) {
+      const maybeCat = normalizeCategory(itemId);
+      if (maybeCat) return `${base}/${encodeURIComponent(maybeCat)}`;
+      return `${base}/${encodeURIComponent(itemId)}`;
+    }
+  }
+
+  if (tab === 'projects' && itemId) return `${base}/${encodeURIComponent(itemId)}`;
+  if (['solutions', 'documents', 'news'].includes(tab) && itemId) return `${base}/${encodeURIComponent(itemId)}`;
   return base;
 };
 
-export const isProductCategory = (value?: string) => Boolean(value && PRODUCT_CATEGORIES.has(value));
+export const isProductCategory = (value?: string) => Boolean(value && (PRODUCT_CATEGORIES.has(value) || LEGACY_CATEGORY_MAP[value]));
 
 const SEO: Record<string, { title: string; description: string }> = {
   home: {

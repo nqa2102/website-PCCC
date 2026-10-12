@@ -99,9 +99,9 @@ export default function App() {
     setTargetArticleId(undefined);
 
     if (tab === 'products') {
-      if (route.category || isProductCategory(route.itemId)) {
-        setTargetProductCategory(route.category || route.itemId);
-      } else {
+      const cat = route.category || (isProductCategory(route.itemId) ? route.itemId : undefined);
+      setTargetProductCategory(cat);
+      if (route.itemId && (!cat || route.itemId !== cat)) {
         setTargetProductId(route.itemId);
       }
     } else if (tab === 'solutions') {
@@ -115,8 +115,8 @@ export default function App() {
     }
   };
 
-  const handleNavigate = (tab: string, itemId?: string) => {
-    const path = pathForRoute(tab, itemId);
+  const handleNavigate = (tab: string, itemId?: string, category?: string) => {
+    const path = pathForRoute(tab, itemId, category);
     window.history.pushState({}, '', path);
     applyRouteState(readRoute());
   };
@@ -134,9 +134,9 @@ export default function App() {
           handleNavigate(tab);
         }}
         onOpenSearch={() => setSearchModalOpen(true)}
-        onOpenQuote={() => handleOpenQuote()}
-        onSelectProductCategory={(catId) => {
-          handleNavigate('products', catId);
+        onOpenQuote={(category) => handleOpenQuote(category)}
+        onSelectProductCategory={(catId, prodId) => {
+          handleNavigate('products', prodId, catId);
         }}
         onSelectSolution={(solId) => {
           handleNavigate('solutions', solId);
@@ -167,6 +167,7 @@ export default function App() {
             onOpenQuote={handleOpenQuote}
             initialCategory={targetProductCategory}
             initialProductId={targetProductId}
+            onNavigate={handleNavigate}
           />
         )}
 
@@ -184,6 +185,7 @@ export default function App() {
             key={targetProjectId || 'projects'}
             onOpenQuote={() => handleOpenQuote()}
             initialProjectId={targetProjectId}
+            onNavigate={handleNavigate}
           />
         )}
 

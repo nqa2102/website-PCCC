@@ -21,7 +21,7 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const [companyRows, productRows, documentRows, contentRows] = await Promise.all([
+    const [companyRows, productRows, documentRows, contentRows, projectRows] = await Promise.all([
       sql`
         SELECT 
           id, legal_name as "legalName", tax_code as "taxCode", brand_name as "brandName",
@@ -35,8 +35,9 @@ export default async function handler(req: any, res: any) {
       sql`
         SELECT 
           id, name, slug, category, category_name as "categoryName",
-          fire_rating as "fireRating", short_description as "shortDescription",
-          material, standard, warranty, featured, status, sort_order as "sortOrder",
+          fire_rating as "fireRating", certification_no as "certificationNo",
+          short_description as "shortDescription", material, standard, warranty,
+          specs, featured, status, sort_order as "sortOrder",
           seo_title as "seoTitle", seo_description as "seoDescription",
           image_alt as "imageAlt", image, price_estimate as "priceEstimate"
         FROM products
@@ -62,6 +63,15 @@ export default async function handler(req: any, res: any) {
         WHERE status = 'published'
         ORDER BY publish_at DESC
       `,
+      sql`
+        SELECT 
+          id, title, slug, client_name as "clientName", category,
+          location, completed_year as "completedYear", description,
+          cover_image as "coverImage", gallery, status, verified
+        FROM projects
+        WHERE verified = true AND status = 'published'
+        ORDER BY completed_year DESC NULLS LAST, created_at DESC
+      `.catch(() => []),
     ]);
 
     return res.status(200).json({
@@ -70,6 +80,7 @@ export default async function handler(req: any, res: any) {
       products: productRows || [],
       documents: documentRows || [],
       contents: contentRows || [],
+      projects: projectRows || [],
     });
   } catch (err: any) {
     console.error('Lỗi truy vấn dữ liệu công khai từ Neon:', err);

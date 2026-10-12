@@ -48,7 +48,7 @@ CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
 
 -- 3. BẢNG SẢN PHẨM (PRODUCTS)
--- Đồng bộ sản phẩm cửa ngăn cháy, phụ kiện PCCC
+-- Đồng bộ sản phẩm cửa ngăn cháy, phụ kiện PCCC, cơ điện viễn thông
 CREATE TABLE IF NOT EXISTS products (
   id VARCHAR(64) PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
@@ -56,10 +56,12 @@ CREATE TABLE IF NOT EXISTS products (
   category VARCHAR(100) NOT NULL,
   category_name VARCHAR(255) NOT NULL,
   fire_rating VARCHAR(100),
+  certification_no TEXT,
   short_description TEXT,
   material TEXT,
   standard VARCHAR(255),
   warranty VARCHAR(100),
+  specs JSONB DEFAULT '{}'::jsonb,
   featured BOOLEAN NOT NULL DEFAULT FALSE,
   status VARCHAR(50) NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'review', 'published', 'internal')),
   sort_order INTEGER NOT NULL DEFAULT 0,
@@ -75,7 +77,30 @@ CREATE INDEX IF NOT EXISTS idx_products_slug ON products(slug);
 CREATE INDEX IF NOT EXISTS idx_products_category ON products(category);
 CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
 
--- 4. BẢNG HỒ SƠ KIỂM ĐỊNH & TÀI LIỆU KỸ THUẬT (DOCUMENTS)
+-- 4. BẢNG DỰ ÁN TIÊU BIỂU (PROJECTS)
+CREATE TABLE IF NOT EXISTS projects (
+  id              VARCHAR(64) PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  title           TEXT NOT NULL,
+  slug            TEXT NOT NULL UNIQUE,
+  client_name     TEXT,
+  category        TEXT,
+  location        TEXT,
+  completed_year  INTEGER,
+  description     TEXT,
+  cover_image     TEXT,
+  gallery         JSONB DEFAULT '[]'::jsonb,
+  status          VARCHAR(50) NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'review', 'published', 'internal')),
+  verified        BOOLEAN NOT NULL DEFAULT FALSE,
+  verified_note   TEXT,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_projects_slug ON projects (slug);
+CREATE INDEX IF NOT EXISTS idx_projects_verified ON projects (verified, status);
+CREATE INDEX IF NOT EXISTS idx_projects_category ON projects (category);
+
+-- 5. BẢNG HỒ SƠ KIỂM ĐỊNH & TÀI LIỆU KỸ THUẬT (DOCUMENTS)
 CREATE TABLE IF NOT EXISTS documents (
   id VARCHAR(64) PRIMARY KEY,
   title VARCHAR(255) NOT NULL,
@@ -99,7 +124,7 @@ CREATE TABLE IF NOT EXISTS documents (
 CREATE INDEX IF NOT EXISTS idx_documents_code ON documents(code);
 CREATE INDEX IF NOT EXISTS idx_documents_status ON documents(status);
 
--- 5. BẢNG NỘI DUNG (CONTENTS: PROJECTS, NEWS & PAGES)
+-- 6. BẢNG NỘI DUNG (CONTENTS: PROJECTS, NEWS & PAGES)
 CREATE TABLE IF NOT EXISTS contents (
   id VARCHAR(64) PRIMARY KEY,
   type VARCHAR(50) NOT NULL CHECK (type IN ('project', 'article', 'page')),
@@ -126,7 +151,7 @@ CREATE TABLE IF NOT EXISTS contents (
 
 CREATE INDEX IF NOT EXISTS idx_contents_type_status ON contents(type, status);
 
--- 6. BẢNG THÔNG TIN DOANH NGHIỆP & CẤU HÌNH (COMPANY SETTINGS)
+-- 7. BẢNG THÔNG TIN DOANH NGHIỆP & CẤU HÌNH (COMPANY SETTINGS)
 CREATE TABLE IF NOT EXISTS company_settings (
   id VARCHAR(64) PRIMARY KEY DEFAULT 'apex',
   legal_name VARCHAR(255) NOT NULL,
@@ -154,16 +179,28 @@ CREATE TABLE IF NOT EXISTS company_settings (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 7. BẢNG NHẬT KÝ HOẠT ĐỘNG (ACTIVITIES)
+-- 8. BẢNG NHẬT KÝ HOẠT ĐỘNG (ACTIVITIES)
 CREATE TABLE IF NOT EXISTS activities (
   id VARCHAR(64) PRIMARY KEY,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   actor VARCHAR(255) NOT NULL,
   action VARCHAR(255) NOT NULL,
-  target VARCHAR(255) NOT NULL
+  target TEXT NOT NULL DEFAULT '',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX IF NOT EXISTS idx_activities_created ON activities(created_at DESC);
+
+-- 9. BẢNG GHI NHẬN ĐĂNG NHẬP (LOGIN ATTEMPTS) - giới hạn dò mật khẩu
+CREATE TABLE IF NOT EXISTS login_attempts (
+  id BIGSERIAL PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  ip VARCHAR(100) NOT NULL,
+  success BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_login_attempts_email_created ON login_attempts(email, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_created ON login_attempts(ip, created_at DESC);
 
 -- ====================================================================
 -- DỮ LIỆU KHỞI TẠO (SEED DATA)
@@ -201,38 +238,7 @@ INSERT INTO company_settings (
   'Cung cấp và thi công cửa chống cháy, cửa cuốn ngăn cháy, rèm ngăn cháy đạt chuẩn QCVN 06:2022/BXD.'
 ) ON CONFLICT (id) DO NOTHING;
 
--- ====================================================================
--- 7. BẢNG NHẬT KÝ HOẠT ĐỘNG (ACTIVITIES)
--- ====================================================================
-CREATE TABLE IF NOT EXISTS activities (
-  id VARCHAR(64) PRIMARY KEY,
-  actor VARCHAR(255) NOT NULL,
-  action VARCHAR(255) NOT NULL,
-  target TEXT NOT NULL DEFAULT '',
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_activities_created_at ON activities(created_at DESC);
-
--- ====================================================================
--- 8. BẢNG GHI NHẬN ĐĂNG NHẬP (LOGIN ATTEMPTS) - giới hạn dò mật khẩu
--- (Cũng có trong sql/migrations/20261009_login_attempts.sql cho DB đã khởi tạo)
--- ====================================================================
-CREATE TABLE IF NOT EXISTS login_attempts (
-  id BIGSERIAL PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  ip VARCHAR(100) NOT NULL,
-  success BOOLEAN NOT NULL DEFAULT FALSE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_login_attempts_email_created ON login_attempts(email, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_login_attempts_ip_created ON login_attempts(ip, created_at DESC);
-
--- ====================================================================
--- 9. GIỚI HẠN TẦN SUẤT GỬI FORM (LEAD RATE LIMITS)
--- (Cũng có trong sql/migrations/20261012_lead_rate_limits.sql cho DB đã khởi tạo)
--- ====================================================================
+-- 10. BẢNG GIỚI HẠN TẦN SUẤT GỬI FORM (LEAD RATE LIMITS)
 CREATE TABLE IF NOT EXISTS lead_rate_limits (
   id BIGSERIAL PRIMARY KEY,
   ip_hash VARCHAR(64) NOT NULL,
@@ -241,3 +247,4 @@ CREATE TABLE IF NOT EXISTS lead_rate_limits (
 
 CREATE INDEX IF NOT EXISTS idx_lead_rate_limits_ip_created ON lead_rate_limits(ip_hash, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_leads_phone_created ON leads(phone, created_at DESC);
+

@@ -13,8 +13,9 @@ export default async function handler(req: any, res: any) {
       const rows = await sql`
         SELECT 
           id, name, slug, category, category_name as "categoryName",
-          fire_rating as "fireRating", short_description as "shortDescription",
-          material, standard, warranty, featured, status, sort_order as "sortOrder",
+          fire_rating as "fireRating", certification_no as "certificationNo",
+          short_description as "shortDescription", material, standard, warranty,
+          specs, featured, status, sort_order as "sortOrder",
           seo_title as "seoTitle", seo_description as "seoDescription",
           image_alt as "imageAlt", image, price_estimate as "priceEstimate",
           updated_at as "updatedAt"
@@ -44,18 +45,20 @@ export default async function handler(req: any, res: any) {
       }
 
       const sql = getDb();
+      const specsJson = JSON.stringify(p.specs && typeof p.specs === 'object' ? p.specs : {});
+
       await sql`
         INSERT INTO products (
-          id, name, slug, category, category_name, fire_rating, short_description,
-          material, standard, warranty, featured, status, sort_order, seo_title,
-          seo_description, image_alt, image, price_estimate, updated_at
+          id, name, slug, category, category_name, fire_rating, certification_no,
+          short_description, material, standard, warranty, specs, featured, status,
+          sort_order, seo_title, seo_description, image_alt, image, price_estimate, updated_at
         ) VALUES (
           ${p.id}, ${p.name}, ${p.slug}, ${p.category}, ${p.categoryName || p.category},
-          ${p.fireRating || null}, ${p.shortDescription || null}, ${p.material || null},
-          ${p.standard || null}, ${p.warranty || null}, ${Boolean(p.featured)},
-          ${p.status || 'draft'}, ${Number(p.sortOrder) || 0}, ${p.seoTitle || null},
-          ${p.seoDescription || null}, ${p.imageAlt || null}, ${p.image || null},
-          ${p.priceEstimate || null}, NOW()
+          ${p.fireRating || null}, ${p.certificationNo || null}, ${p.shortDescription || null},
+          ${p.material || null}, ${p.standard || null}, ${p.warranty || null},
+          ${specsJson}::jsonb, ${Boolean(p.featured)}, ${p.status || 'draft'},
+          ${Number(p.sortOrder) || 0}, ${p.seoTitle || null}, ${p.seoDescription || null},
+          ${p.imageAlt || null}, ${p.image || null}, ${p.priceEstimate || null}, NOW()
         )
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
@@ -63,10 +66,12 @@ export default async function handler(req: any, res: any) {
           category = EXCLUDED.category,
           category_name = EXCLUDED.category_name,
           fire_rating = EXCLUDED.fire_rating,
+          certification_no = EXCLUDED.certification_no,
           short_description = EXCLUDED.short_description,
           material = EXCLUDED.material,
           standard = EXCLUDED.standard,
           warranty = EXCLUDED.warranty,
+          specs = EXCLUDED.specs,
           featured = EXCLUDED.featured,
           status = EXCLUDED.status,
           sort_order = EXCLUDED.sort_order,

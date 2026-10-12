@@ -2,6 +2,17 @@ export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'closed' | 'lost';
 export type Priority = 'high' | 'medium' | 'low';
 export type PublishStatus = 'draft' | 'review' | 'published' | 'internal';
 
+export type ProductCategory =
+  | 'cua-thep-ngan-chay'
+  | 'cua-kinh-ngan-chay'
+  | 'cua-cuon-ngan-chay'
+  | 'rem-ngan-chay'
+  | 'tu-dien'
+  | 'thang-mang-cap'
+  | 'tu-rack'
+  | 'nha-tram-shelter'
+  | 'tu-nguon-outdoor';
+
 export interface AdminLead {
   id: string;
   createdAt: string;
@@ -27,13 +38,15 @@ export interface AdminProduct {
   id: string;
   name: string;
   slug: string;
-  category: string;
+  category: ProductCategory | string;
   categoryName: string;
-  fireRating: string;
+  fireRating?: string;
+  certificationNo?: string;
   shortDescription: string;
   material: string;
   standard: string;
   warranty: string;
+  specs?: Record<string, string>;
   featured: boolean;
   status: PublishStatus;
   sortOrder: number;
@@ -43,6 +56,24 @@ export interface AdminProduct {
   image?: string;
   priceEstimate?: string;
   updatedAt: string;
+}
+
+export interface AdminProject {
+  id: string;
+  title: string;
+  slug: string;
+  clientName?: string;
+  category?: ProductCategory | string;
+  location?: string;
+  completedYear?: number;
+  description: string;
+  coverImage?: string;
+  gallery: string[];
+  status: PublishStatus;
+  verified: boolean;
+  verifiedNote?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AdminDocument {
@@ -118,6 +149,7 @@ export interface AdminState {
   leadsHasMore?: boolean;
   leadsTotal?: number;
   products: AdminProduct[];
+  projects?: AdminProject[];
   documents: AdminDocument[];
   contents: AdminContent[];
   company: AdminCompany;

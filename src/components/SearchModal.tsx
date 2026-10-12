@@ -32,7 +32,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
     const matchedProducts = products.filter(
       p => p.name.toLowerCase().includes(query) || 
            p.description.toLowerCase().includes(query) ||
-           p.fireRating.toLowerCase().includes(query)
+           (p.fireRating && p.fireRating.toLowerCase().includes(query))
     );
 
     const matchedSolutions = SOLUTIONS.filter(
@@ -49,7 +49,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
     const matchedProjects = projects.filter(
       p => p.title.toLowerCase().includes(query) ||
-           p.itemsSupplied.toLowerCase().includes(query) ||
+           (p.itemsSupplied && p.itemsSupplied.toLowerCase().includes(query)) ||
            p.location.toLowerCase().includes(query)
     );
 

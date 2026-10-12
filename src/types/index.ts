@@ -1,18 +1,32 @@
+export type ProductCategory =
+  | 'cua-thep-ngan-chay'
+  | 'cua-kinh-ngan-chay'
+  | 'cua-cuon-ngan-chay'
+  | 'rem-ngan-chay'
+  | 'tu-dien'
+  | 'thang-mang-cap'
+  | 'tu-rack'
+  | 'nha-tram-shelter'
+  | 'tu-nguon-outdoor';
+
 export interface Product {
   id: string;
+  slug?: string;
   name: string;
-  category: 'steel-door' | 'roller-shutter' | 'fire-curtain' | 'accessories' | 'glass-door';
+  category: ProductCategory | string;
   categoryName: string;
-  fireRating: string;
+  fireRating?: string;
+  certificationNo?: string;
   description: string;
   longDescription: string;
   specs: {
-    material: string;
-    thickness: string;
-    insulation: string;
-    finish: string;
-    standard: string;
-    warranty: string;
+    material?: string;
+    thickness?: string;
+    insulation?: string;
+    finish?: string;
+    standard?: string;
+    warranty?: string;
+    [key: string]: string | undefined;
   };
   features: string[];
   image: string;
@@ -36,15 +50,22 @@ export interface Solution {
 export interface Project {
   id: string;
   title: string;
-  category: 'commercial' | 'residential' | 'industrial' | 'healthcare';
+  slug?: string;
+  category: string;
   categoryLabel: string;
+  clientName?: string;
   location: string;
-  scale: string;
-  itemsSupplied: string;
-  year: string;
+  completedYear?: number;
+  scale?: string;
+  itemsSupplied?: string;
+  year?: string;
   image: string;
+  coverImage?: string;
+  gallery?: string[];
   description: string;
-  client: string;
+  client?: string;
+  verified?: boolean;
+  verifiedNote?: string;
 }
 
 export interface TechnicalDoc {

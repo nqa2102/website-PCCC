@@ -4,6 +4,7 @@ import { PRODUCTS, TECHNICAL_DOCS, NEWS_ARTICLES, HERO_IMAGE } from '../data/moc
 import type { Product, TechnicalDoc, Project, NewsArticle } from '../types';
 import type { AdminCompany, AdminContent, AdminDocument, AdminProduct, WebsiteLeadInput } from './adminTypes';
 import { trackLead } from '../lib/tracking';
+import { PRODUCT_CATEGORY_LABELS } from '../routing';
 
 // Thông tin doanh nghiệp đã xác minh theo giấy chứng nhận ĐKDN, dùng để điền sẵn khi Neon chưa có bản ghi cấu hình.
 export const createDefaultAdminCompany = (): AdminCompany => ({
@@ -34,11 +35,13 @@ export const createInitialCatalog = (): { products: AdminProduct[]; documents: A
       slug: product.id,
       category: product.category,
       categoryName: product.categoryName,
-      fireRating: product.fireRating,
+      fireRating: product.fireRating || '',
+      certificationNo: product.certificationNo || '',
+      specs: (product.specs || {}) as Record<string, string>,
       shortDescription: product.description,
-      material: product.specs.material,
-      standard: product.specs.standard,
-      warranty: product.specs.warranty,
+      material: product.specs.material || '',
+      standard: product.specs.standard || '',
+      warranty: product.specs.warranty || '',
       featured: Boolean(product.popular),
       status: 'draft',
       sortOrder: index + 1,
@@ -130,41 +133,52 @@ const mapCompany = (comp?: Partial<AdminCompany> | null) => {
   };
 };
 
-const mapProducts = (items: AdminProduct[]): Product[] =>
-  items
-    .filter((p) => p.status === 'published')
+const mapProducts = (items: AdminProduct[]): Product[] => {
+  if (!items || items.length === 0) {
+    return PRODUCTS;
+  }
+  const publishedItems = items.filter((p) => p.status === 'published');
+  if (publishedItems.length === 0) {
+    return PRODUCTS;
+  }
+  const mapped = publishedItems
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((ap) => {
-      const orig = PRODUCTS.find((p) => p.id === ap.id || p.id === ap.slug);
+      const orig = PRODUCTS.find((p) => p.id === ap.id || p.id === ap.slug || p.slug === ap.slug);
       if (orig) {
         return {
           ...orig,
           name: ap.name,
+          slug: ap.slug || orig.slug,
           category: ap.category as Product['category'],
-          categoryName: ap.categoryName,
+          categoryName: ap.categoryName || orig.categoryName,
           fireRating: ap.fireRating,
+          certificationNo: ap.certificationNo,
           description: ap.shortDescription || orig.description,
           popular: ap.featured,
           image: ap.image || orig.image,
           priceEstimate: ap.priceEstimate || orig.priceEstimate || 'Liên hệ',
           specs: {
             ...orig.specs,
-            material: ap.material || orig.specs.material,
-            standard: ap.standard || orig.specs.standard,
-            warranty: ap.warranty || orig.specs.warranty,
+            ...(ap.specs || {}),
+            material: ap.material || ap.specs?.material || orig.specs.material,
+            standard: ap.standard || ap.specs?.standard || orig.specs.standard,
+            warranty: ap.warranty || ap.specs?.warranty || orig.specs.warranty,
           },
         };
       }
       // Sản phẩm mới tạo từ admin: chỉ hiển thị thông tin admin đã nhập, không tự thêm cam kết kỹ thuật
       return {
         id: ap.id,
+        slug: ap.slug || ap.id,
         name: ap.name,
         category: ap.category as Product['category'],
         categoryName: ap.categoryName || 'Sản phẩm PCCC',
-        fireRating: ap.fireRating || 'Theo cấu hình',
+        fireRating: ap.fireRating || '',
+        certificationNo: ap.certificationNo || '',
         description: ap.shortDescription,
         longDescription: ap.shortDescription,
-        specs: {
+        specs: ap.specs || {
           material: ap.material || 'Liên hệ để được tư vấn',
           thickness: 'Theo hồ sơ công trình',
           insulation: 'Theo hồ sơ công trình',
@@ -179,10 +193,17 @@ const mapProducts = (items: AdminProduct[]): Product[] =>
       };
     });
 
-const mapDocuments = (items: AdminDocument[]): TechnicalDoc[] =>
-  items
-    .filter((d) => d.status === 'published')
-    .map((ad) => {
+  // Đảm bảo 9 dòng sản phẩm cốt lõi không bị mất nếu DB chưa seed đủ
+  const existingKeys = new Set<string>(publishedItems.flatMap((p) => [p.id, p.slug].filter((k): k is string => Boolean(k))));
+  const missingBase = PRODUCTS.filter((p) => !existingKeys.has(p.id) && (!p.slug || !existingKeys.has(p.slug)));
+  return [...mapped, ...missingBase];
+};
+
+const mapDocuments = (items: AdminDocument[]): TechnicalDoc[] => {
+  if (!items || items.length === 0) return TECHNICAL_DOCS;
+  const published = items.filter((d) => d.status === 'published');
+  if (published.length === 0) return TECHNICAL_DOCS;
+  return published.map((ad) => {
       const orig = TECHNICAL_DOCS.find((td) => td.id === ad.id);
       if (orig) {
         return {
@@ -209,6 +230,7 @@ const mapDocuments = (items: AdminDocument[]): TechnicalDoc[] =>
         fileUrl: ad.fileUrl || undefined,
       };
     });
+};
 
 const PROJECT_CATEGORY_LABELS: Record<Project['category'], string> = {
   residential: 'Chung cư cao cấp',
@@ -217,8 +239,37 @@ const PROJECT_CATEGORY_LABELS: Record<Project['category'], string> = {
   healthcare: 'Y tế & Bệnh viện',
 };
 
-const mapProjects = (items: AdminContent[]): Project[] =>
-  items
+const mapProjects = (items: AdminContent[], projectRecords: any[] = []): Project[] => {
+  // Ưu tiên dữ liệu từ bảng projects chuyên biệt (chỉ lấy verified = true và status = 'published')
+  if (projectRecords && projectRecords.length > 0) {
+    return projectRecords
+      .filter((p) => p.verified && p.status === 'published')
+      .map((p) => {
+        const catKey = p.category || '';
+        const catLabel = PRODUCT_CATEGORY_LABELS[catKey] || p.category || 'Dự án tiêu biểu';
+        return {
+          id: p.id,
+          title: p.title,
+          slug: p.slug,
+          category: catKey,
+          categoryLabel: catLabel,
+          clientName: p.clientName || '',
+          client: p.clientName || '',
+          location: p.location || '',
+          completedYear: p.completedYear,
+          year: p.completedYear ? String(p.completedYear) : '',
+          description: p.description || '',
+          image: p.coverImage || HERO_IMAGE,
+          coverImage: p.coverImage || undefined,
+          gallery: p.gallery || [],
+          verified: Boolean(p.verified),
+          verifiedNote: p.verifiedNote || '',
+        };
+      });
+  }
+
+  // Fallback sang bảng contents (nếu có dự án cũ dạng content đã publish)
+  return items
     .filter((c) => c.type === 'project' && c.status === 'published')
     .map((c) => {
       const category = (c.category && c.category in PROJECT_CATEGORY_LABELS ? c.category : 'commercial') as Project['category'];
@@ -226,7 +277,7 @@ const mapProjects = (items: AdminContent[]): Project[] =>
         id: c.id,
         title: c.title,
         category,
-        categoryLabel: PROJECT_CATEGORY_LABELS[category],
+        categoryLabel: PROJECT_CATEGORY_LABELS[category] || 'Dự án tiêu biểu',
         location: c.location || '',
         scale: c.scale || '',
         itemsSupplied: c.itemsSupplied || '',
@@ -236,21 +287,24 @@ const mapProjects = (items: AdminContent[]): Project[] =>
         client: c.client || '',
       };
     });
+};
 
-const mapNews = (items: AdminContent[]): NewsArticle[] =>
-  items
-    .filter((c) => c.type === 'article' && c.status === 'published')
-    .map((c) => ({
-      id: c.id,
-      title: c.title,
-      date: c.publishAt ? c.publishAt.slice(0, 10).split('-').reverse().join('/') : '',
-      author: c.author || c.owner || 'Ban Kỹ thuật APEX',
-      category: c.category || 'Tin tức',
-      summary: c.summary || '',
-      content: c.content?.length ? c.content : [c.summary],
-      image: c.image || HERO_IMAGE,
-      readTime: c.readTime || '',
-    }));
+const mapNews = (items: AdminContent[]): NewsArticle[] => {
+  if (!items || items.length === 0) return NEWS_ARTICLES;
+  const published = items.filter((c) => c.type === 'article' && c.status === 'published');
+  if (published.length === 0) return NEWS_ARTICLES;
+  return published.map((c) => ({
+    id: c.id,
+    title: c.title,
+    date: c.publishAt ? c.publishAt.slice(0, 10).split('-').reverse().join('/') : '',
+    author: c.author || c.owner || 'Ban Kỹ thuật APEX',
+    category: c.category || 'Tin tức',
+    summary: c.summary || '',
+    content: c.content?.length ? c.content : [c.summary],
+    image: c.image || HERO_IMAGE,
+    readTime: c.readTime || '',
+  }));
+};
 
 interface LiveData {
   company: LiveCompanyInfo;
@@ -283,11 +337,12 @@ const loadPublicContent = () => {
       .then((payload) => {
         if (!payload || !payload.isDatabaseLive) return;
         const contents: AdminContent[] = payload.contents || [];
+        const remoteProjects: any[] = payload.projects || [];
         liveSnapshot = {
           company: mapCompany(payload.company),
           products: mapProducts(payload.products || []),
           documents: mapDocuments(payload.documents || []),
-          projects: mapProjects(contents),
+          projects: mapProjects(contents, remoteProjects),
           news: mapNews(contents),
         };
         liveListeners.forEach((listener) => listener(liveSnapshot));
