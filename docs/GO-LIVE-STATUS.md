@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 12/10/2026 (Hoàn thành 100% toàn bộ lộ trình T0 → T9: Khôi phục Neon Production, Catalog 9 nhóm, Lead capture & rate limit, QuoteModal 9 nhóm, Clean Sitemap 24 URL, Dự án 1 nguồn projects, Quản trị sản phẩm specs/features, Danh sách khách hàng export CSV, Menu mobile phẳng chuẩn touch, và Dọn dẹp kỹ thuật bàn giao)*  
+*Cập nhật lần cuối: 13/10/2026 (Hoàn thành đồng bộ toàn diện 37 sản phẩm tiêu chuẩn của 9 nhóm danh mục vào Neon Database & Trang Quản trị Admin: Migration SQL 20261013_seed_37_products.sql, Batch API /api/admin/products, nút 1-click Đồng bộ 37 sản phẩm, và Dev Server API Middleware)*  
 *Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -10,7 +10,7 @@
 | Giai đoạn | Hạng mục | Mức ưu tiên | Trạng thái kỹ thuật | Bằng chứng kiểm tra / Ghi chú blocker |
 | :--- | :--- | :--- | :---: | :--- |
 | **GĐ0** | **Khẩn cấp bảo mật `/admin`** | **P0** | 🟢 **DONE (100%)** | Đã xóa triệt để mật khẩu cứng `apex2026` & nút bypass khỏi client bundle (0 kết quả trong dist). Đã thay thế bằng xác thực Scrypt/HMAC. |
-| **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟢 **DONE (100% Code & Schema)** | Đã chạy migration T0 trên Neon (`isDatabaseLive: true`). Schema `sql/neon_schema.sql` và migration `sql/migrations/20261012_products_and_projects.sql` chuẩn hóa, test PGlite nạp 2 lần an toàn. |
+| **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟢 **DONE (100% Code & Schema)** | Đã chạy migration T0 trên Neon (`isDatabaseLive: true`). Schema `sql/neon_schema.sql` và migration `sql/migrations/20261013_seed_37_products.sql` nạp đầy đủ 37 sản phẩm, test PGlite nạp 2 lần an toàn (Idempotency PASS). |
 | **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 9 Sản phẩm & Khung Dự án)** | 9 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ (ankovina, 3ce). `certificationNo` để trống ("Đang cập nhật") chờ văn bản gốc. Dữ liệu mẫu `mockData.ts` cam kết rà soát. |
 | **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/:category`, `/san-pham/:category/:slug`, `/du-an`, `/du-an/:slug`. Schema.org `Product` và `CreativeWork`. |
 | **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử `scripts/test_integrity.js` đạt **158/158 PASS (100%)**, `npm run lint` PASS, `npm run build` PASS, Browser QA 1440px và 375px đạt chuẩn (không vỡ layout, không tràn ngang). |

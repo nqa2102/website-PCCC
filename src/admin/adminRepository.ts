@@ -58,6 +58,12 @@ export const saveRemoteLead = (item: AdminLead) =>
 export const saveRemoteProduct = (item: AdminProduct) =>
   fetchJson('/api/admin/products', { method: 'POST', body: JSON.stringify(item) });
 
+export const seedRemoteProducts = (items: AdminProduct[]) =>
+  fetchJson<{ ok: boolean; count?: number }>('/api/admin/products', {
+    method: 'POST',
+    body: JSON.stringify({ action: 'seed', products: items }),
+  });
+
 export const saveRemoteProject = (item: AdminProject) =>
   fetchJson('/api/admin/projects', { method: 'POST', body: JSON.stringify(item) });
 
