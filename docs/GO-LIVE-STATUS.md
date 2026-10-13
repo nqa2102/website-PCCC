@@ -1,7 +1,7 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 13/10/2026 (Hoàn thành VIỆC B: Đổi logic Menu Sản phẩm dạng accordion xổ xuống trực tiếp, gom nhóm biến thể theo số cánh & cấp EI, deep link thẳng trang chi tiết, auto-expand theo route, mobile tap targets >= 44px)*  
-*Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-ANH-VA-MENU-SAN-PHAM.md`](./PROMPT-ANH-VA-MENU-SAN-PHAM.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
+*Cập nhật lần cuối: 13/10/2026 (Hoàn thành VIỆC A — Xử lý 37 ảnh sản phẩm thật, WebP tối ưu, xóa sạch EXIF, gắn Cover 4:5 và Thư viện ảnh Gallery cho 9 sản phẩm Cửa thép và Cửa kính ngăn cháy, loại bỏ vi phạm bản quyền 3CElectric; và VIỆC B — Đổi logic Menu Sản phẩm dạng accordion xổ xuống trực tiếp, gom nhóm biến thể theo số cánh & cấp EI, deep link thẳng trang chi tiết, auto-expand theo route, mobile tap targets >= 44px)*  
+*Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-ANH-VA-MENU-SAN-PHAM.md`](./PROMPT-ANH-VA-MENU-SAN-PHAM.md), [`docs/anh-san-pham-phan-loai.md`](./anh-san-pham-phan-loai.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
 
@@ -11,7 +11,7 @@
 | :--- | :--- | :--- | :---: | :--- |
 | **GĐ0** | **Khẩn cấp bảo mật `/admin`** | **P0** | 🟢 **DONE (100%)** | Đã xóa triệt để mật khẩu cứng `apex2026` & nút bypass khỏi client bundle (0 kết quả trong dist). Đã thay thế bằng xác thực Scrypt/HMAC. |
 | **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟢 **DONE (100% Code & Schema)** | Đã chạy migration T0 trên Neon (`isDatabaseLive: true`). Schema `sql/neon_schema.sql` và migration `sql/migrations/20261013_seed_37_products.sql` nạp đầy đủ 37 sản phẩm, test PGlite nạp 2 lần an toàn (Idempotency PASS). |
-| **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 9 Sản phẩm & Khung Dự án)** | 9 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ (ankovina, 3ce). `certificationNo` để trống ("Đang cập nhật") chờ văn bản gốc. Dữ liệu mẫu `mockData.ts` cam kết rà soát. |
+| **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 9 Sản phẩm & Ảnh Thật)** | 9 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ (ankovina, 3ce). Đã xử lý & gắn 37 ảnh sản phẩm thật (VIỆC A), xóa 100% EXIF/GPS, tỷ lệ 4:5, gallery thumbnails, loại bỏ bản quyền G7. `certificationNo` để trống ("Đang cập nhật") chờ văn bản gốc. |
 | **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/:category`, `/san-pham/:category/:slug`, `/du-an`, `/du-an/:slug`. Schema.org `Product` và `CreativeWork`. **Đã hoàn thành Menu Sản phẩm Accordion (VIỆC B)**. |
 | **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử `scripts/test_integrity.js` đạt **169/169 PASS (100%)**, `npm run lint` PASS, `npm run build` PASS, Browser QA 1440px và 375px đạt chuẩn (không vỡ layout, không tràn ngang). |
 | **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Deploy production Vercel + alias `https://apexdoor.net`. Database Neon live. |
@@ -77,6 +77,13 @@
 - [x] **Task 2.4 (Địa chỉ & Hotline)**: Cập nhật đồng bộ Hotline `0566 38 5555`, loại bỏ hoàn toàn các địa chỉ và số điện thoại mock trước đây.
 - [ ] **Task 2.5 (Nội dung/Asset)**: Tải file catalogue/bản vẽ CAD PDF thật từ phòng kỹ thuật để người dùng tải về trên trang Tài liệu.
   - *Trạng thái*: Chờ phòng kỹ thuật cung cấp bản PDF gốc.
+- [x] **Task 2.6 (Ảnh sản phẩm thật & Thư viện ảnh Gallery)**:
+  - Khảo sát & phân loại toàn bộ 37 ảnh nguồn tại `D:\ELMICH\Apex-pccc\ảnh`, lập bảng phân loại [`docs/anh-san-pham-phan-loai.md`](./anh-san-pham-phan-loai.md) đủ 37 dòng.
+  - Tối ưu bằng `sharp` sang chuẩn WebP chất lượng cao, xóa 100% EXIF/GPS metadata, Cover 1200x1500 (tỷ lệ 4:5, dung lượng 43–96 KB ≤ 200 KB), Gallery cạnh dài 1600px (16–87 KB ≤ 300 KB).
+  - Gắn Cover + Gallery cho 9 sản phẩm Cửa thép và Cửa kính ngăn cháy, cập nhật `imageAlt` chuẩn SEO kỹ thuật.
+  - Khung `ProductCard` chuyển sang tỷ lệ `aspect-[4/5]`, thêm `width`/`height` chống CLS.
+  - Trang chi tiết `ProductDetailLayout` hiển thị ảnh lớn `object-contain bg-slate-100` (`fetchPriority="high"`) + dải thumbnails tương tác chuẩn WCAG accessible (`aria-label`, `aria-current`).
+  - Gỡ bỏ hoàn toàn ảnh vi phạm bản quyền 3CElectric (nhóm G7) và các từ khóa liên quan khỏi mã nguồn.
 
 ---
 

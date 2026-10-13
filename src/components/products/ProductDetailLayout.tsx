@@ -62,10 +62,27 @@ export const ProductDetailLayout: React.FC<ProductDetailLayoutProps> = ({
     };
   }, [product]);
 
-  const hasRealImage = Boolean(product.image && !product.image.includes('placeholder'));
-  const altText = hasRealImage
+  const [selectedImageIndex, setSelectedImageIndex] = React.useState(0);
+
+  // Reset khi chuyển sản phẩm khác
+  useEffect(() => {
+    setSelectedImageIndex(0);
+  }, [product.id]);
+
+  const galleryImages = (product.gallery && product.gallery.length > 0)
+    ? product.gallery
+    : (product.image ? [product.image] : []);
+
+  const currentImage = galleryImages[selectedImageIndex] || product.image;
+
+  const hasRealImage = Boolean(
+    (product.gallery && product.gallery.length > 0) ||
+    ['cua-thep-ngan-chay', 'cua-kinh-ngan-chay'].includes(product.category) ||
+    (product.image && (product.image.includes('/products/') || product.image.includes('cua-thep') || product.image.includes('cua-kinh') || product.image.includes('vach-kinh')))
+  );
+  const altText = product.imageAlt || (hasRealImage
     ? `${product.name} - APEX Việt Nam`
-    : `${product.name} (Hình ảnh minh họa) - APEX Việt Nam`;
+    : `${product.name} (Hình ảnh minh họa) - APEX Việt Nam`);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -88,12 +105,13 @@ export const ProductDetailLayout: React.FC<ProductDetailLayoutProps> = ({
         {/* Cột trái: Ảnh sản phẩm */}
         <div className="lg:col-span-5">
           <div className="sticky top-24 space-y-4">
-            <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm">
+            <div className="relative flex aspect-square sm:aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm">
               <img
-                src={product.image}
-                alt={altText}
-                className="aspect-square w-full object-cover"
-                loading="eager"
+                src={currentImage}
+                alt={`${altText}${galleryImages.length > 1 ? ` (Ảnh ${selectedImageIndex + 1}/${galleryImages.length})` : ''}`}
+                className="h-full w-full object-contain"
+                fetchPriority={selectedImageIndex === 0 ? 'high' : undefined}
+                loading={selectedImageIndex === 0 ? 'eager' : 'lazy'}
               />
               {!hasRealImage && (
                 <div className="absolute bottom-3 right-3 rounded-md bg-slate-900/70 px-2 py-1 text-[11px] text-white/90 backdrop-blur-xs">
@@ -101,6 +119,40 @@ export const ProductDetailLayout: React.FC<ProductDetailLayoutProps> = ({
                 </div>
               )}
             </div>
+
+            {/* Gallery thumbnails strip (khi có >= 2 ảnh) */}
+            {galleryImages.length >= 2 && (
+              <div
+                className="flex flex-wrap gap-2 pt-1"
+                role="group"
+                aria-label="Danh sách ảnh chi tiết sản phẩm"
+              >
+                {galleryImages.map((imgSrc, idx) => {
+                  const isSelected = idx === selectedImageIndex;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedImageIndex(idx)}
+                      aria-label={`Xem ảnh ${idx + 1} / ${galleryImages.length}`}
+                      aria-current={isSelected ? 'true' : undefined}
+                      className={`relative h-16 w-16 overflow-hidden rounded-lg border-2 bg-slate-100 transition-all focus-visible:outline-2 focus-visible:outline-red-600 ${
+                        isSelected
+                          ? 'border-red-600 ring-2 ring-red-600/30'
+                          : 'border-slate-200 opacity-75 hover:border-slate-400 hover:opacity-100'
+                      }`}
+                    >
+                      <img
+                        src={imgSrc}
+                        alt={`${product.name} thu nhỏ ${idx + 1}`}
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Hộp hành động nhanh */}
             <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-xs">

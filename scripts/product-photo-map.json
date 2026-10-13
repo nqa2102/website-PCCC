@@ -1,0 +1,233 @@
+[
+  {
+    "source": "1791878194731",
+    "product": "cua-thep-ei70-1-canh",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791877528969",
+    "product": "cua-thep-ei70-1-canh",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791877528971",
+    "product": "cua-thep-ei70-1-canh",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791878194722",
+    "product": "cua-thep-ei70-1-canh",
+    "role": "gallery",
+    "index": 4
+  },
+  {
+    "source": "1791878194739",
+    "product": "cua-thep-ei70-1-canh",
+    "role": "gallery",
+    "index": 5
+  },
+  {
+    "source": "1791878207023",
+    "product": "cua-thep-ei90-1-canh",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791877528963",
+    "product": "cua-thep-ei90-1-canh",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791877528971",
+    "product": "cua-thep-ei90-1-canh",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791877528986",
+    "product": "cua-thep-ei90-1-canh",
+    "role": "gallery",
+    "index": 4
+  },
+  {
+    "source": "1791877528976",
+    "product": "cua-thep-ei90-2-canh",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791877528973",
+    "product": "cua-thep-ei90-2-canh",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791877528978",
+    "product": "cua-thep-ei90-2-canh",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791877528980",
+    "product": "cua-thep-ei90-2-canh",
+    "role": "gallery",
+    "index": 4
+  },
+  {
+    "source": "1791877528988",
+    "product": "cua-thep-ei90-2-canh",
+    "role": "gallery",
+    "index": 5
+  },
+  {
+    "source": "1791877528990",
+    "product": "cua-thep-ei120-2-canh",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791877528978",
+    "product": "cua-thep-ei120-2-canh",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791877528984",
+    "product": "cua-thep-ei120-2-canh",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791877528963",
+    "product": "cua-thep-ngan-chay",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791878207023",
+    "product": "cua-thep-ngan-chay",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791877528990",
+    "product": "cua-thep-ngan-chay",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791877528976",
+    "product": "cua-thep-ngan-chay",
+    "role": "gallery",
+    "index": 4
+  },
+  {
+    "source": "1791877528971",
+    "product": "cua-thep-ngan-chay",
+    "role": "gallery",
+    "index": 5
+  },
+  {
+    "source": "1791878158043",
+    "product": "cua-kinh-ngan-chay-ei60",
+    "role": "gallery",
+    "index": 4
+  },
+  {
+    "source": "1791878059623",
+    "product": "cua-kinh-ngan-chay-ei60",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791878158030",
+    "product": "cua-kinh-ngan-chay-ei60",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791878158039",
+    "product": "cua-kinh-ngan-chay-ei60",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791878166393",
+    "product": "cua-kinh-ngan-chay-ei90",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791878158047",
+    "product": "cua-kinh-ngan-chay-ei90",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791878158043",
+    "product": "cua-kinh-ngan-chay-ei90",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791878158030",
+    "product": "cua-kinh-ngan-chay-ei90",
+    "role": "gallery",
+    "index": 4
+  },
+  {
+    "source": "1791878158047",
+    "product": "vach-kinh-ngan-chay-ei60-ei90",
+    "role": "cover",
+    "fit": "contain",
+    "background": "#f1f5f9"
+  },
+  {
+    "source": "1791878059623",
+    "product": "vach-kinh-ngan-chay-ei60-ei90",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791878166393",
+    "product": "vach-kinh-ngan-chay-ei60-ei90",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791878059623",
+    "product": "cua-kinh-ngan-chay",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791878166393",
+    "product": "cua-kinh-ngan-chay",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791878158043",
+    "product": "cua-kinh-ngan-chay",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791878158030",
+    "product": "cua-kinh-ngan-chay",
+    "role": "gallery",
+    "index": 4
+  }
+]
