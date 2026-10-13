@@ -16,10 +16,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onOpenQuote,
   className = '',
 }) => {
-  const hasRealImage = Boolean(product.image && !product.image.includes('placeholder'));
-  const altText = hasRealImage
+  const hasRealImage = Boolean(
+    (product.gallery && product.gallery.length > 0) ||
+    ['cua-thep-ngan-chay', 'cua-kinh-ngan-chay'].includes(product.category) ||
+    (product.image && (product.image.includes('/products/') || product.image.includes('cua-thep') || product.image.includes('cua-kinh') || product.image.includes('vach-kinh')))
+  );
+  const altText = product.imageAlt || (hasRealImage
     ? `${product.name} - Sản phẩm APEX Việt Nam`
-    : `${product.name} (Hình ảnh minh họa) - APEX Việt Nam`;
+    : `${product.name} (Hình ảnh minh họa) - APEX Việt Nam`);
 
   return (
     <div
@@ -27,11 +31,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     >
       <div>
         {/* Khung ảnh sản phẩm */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-100">
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-slate-100">
           {product.image ? (
             <img
               src={product.image}
               alt={altText}
+              width={400}
+              height={500}
               loading="lazy"
               decoding="async"
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

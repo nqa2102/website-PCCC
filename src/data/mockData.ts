@@ -1,8 +1,5 @@
 import { Product, Solution, Project, TechnicalDoc, NewsArticle } from '../types';
 import heroImage from '../assets/images/hero_fire_door_apex_1790648819738.webp';
-import steelDoorImage from '../assets/images/product_steel_fire_door_1790648833826.webp';
-import doubleFireDoorImage from '../assets/images/product_double_fire_door.jpg';
-import glassFireDoorImage from '../assets/images/product_glass_fire_door.jpg';
 import rollerShutterImage from '../assets/images/product_fire_roller_shutter_1790648844563.webp';
 import fireCurtainImage from '../assets/images/product_fire_curtain_1790648858516.webp';
 import electricalCabinetImage from '../assets/images/product_electrical_cabinet.jpg';
@@ -11,10 +8,58 @@ import serverRackImage from '../assets/images/product_server_rack.jpg';
 import telecomShelterImage from '../assets/images/product_telecom_shelter.jpg';
 import outdoorCabinetImage from '../assets/images/product_outdoor_cabinet.jpg';
 
+// Ảnh sản phẩm thật Cửa Thép Ngăn Cháy
+import cuaThepEi70Cover from '../assets/images/products/cua-thep-ei70-1-canh-cover.webp';
+import cuaThepEi70_2 from '../assets/images/products/cua-thep-ei70-1-canh-2.webp';
+import cuaThepEi70_3 from '../assets/images/products/cua-thep-ei70-1-canh-3.webp';
+import cuaThepEi70_4 from '../assets/images/products/cua-thep-ei70-1-canh-4.webp';
+import cuaThepEi70_5 from '../assets/images/products/cua-thep-ei70-1-canh-5.webp';
+
+import cuaThepEi90_1Cover from '../assets/images/products/cua-thep-ei90-1-canh-cover.webp';
+import cuaThepEi90_1_2 from '../assets/images/products/cua-thep-ei90-1-canh-2.webp';
+import cuaThepEi90_1_3 from '../assets/images/products/cua-thep-ei90-1-canh-3.webp';
+import cuaThepEi90_1_4 from '../assets/images/products/cua-thep-ei90-1-canh-4.webp';
+
+import cuaThepEi90_2Cover from '../assets/images/products/cua-thep-ei90-2-canh-cover.webp';
+import cuaThepEi90_2_2 from '../assets/images/products/cua-thep-ei90-2-canh-2.webp';
+import cuaThepEi90_2_3 from '../assets/images/products/cua-thep-ei90-2-canh-3.webp';
+import cuaThepEi90_2_4 from '../assets/images/products/cua-thep-ei90-2-canh-4.webp';
+import cuaThepEi90_2_5 from '../assets/images/products/cua-thep-ei90-2-canh-5.webp';
+
+import cuaThepEi120_2Cover from '../assets/images/products/cua-thep-ei120-2-canh-cover.webp';
+import cuaThepEi120_2_2 from '../assets/images/products/cua-thep-ei120-2-canh-2.webp';
+import cuaThepEi120_2_3 from '../assets/images/products/cua-thep-ei120-2-canh-3.webp';
+
+import cuaThepTongQuanCover from '../assets/images/products/cua-thep-ngan-chay-cover.webp';
+import cuaThepTongQuan_2 from '../assets/images/products/cua-thep-ngan-chay-2.webp';
+import cuaThepTongQuan_3 from '../assets/images/products/cua-thep-ngan-chay-3.webp';
+import cuaThepTongQuan_4 from '../assets/images/products/cua-thep-ngan-chay-4.webp';
+import cuaThepTongQuan_5 from '../assets/images/products/cua-thep-ngan-chay-5.webp';
+
+// Ảnh sản phẩm thật Cửa Kính Ngăn Cháy
+import cuaKinhEi60Cover from '../assets/images/products/cua-kinh-ngan-chay-ei60-cover.webp';
+import cuaKinhEi60_2 from '../assets/images/products/cua-kinh-ngan-chay-ei60-2.webp';
+import cuaKinhEi60_3 from '../assets/images/products/cua-kinh-ngan-chay-ei60-3.webp';
+import cuaKinhEi60_4 from '../assets/images/products/cua-kinh-ngan-chay-ei60-4.webp';
+
+import cuaKinhEi90Cover from '../assets/images/products/cua-kinh-ngan-chay-ei90-cover.webp';
+import cuaKinhEi90_2 from '../assets/images/products/cua-kinh-ngan-chay-ei90-2.webp';
+import cuaKinhEi90_3 from '../assets/images/products/cua-kinh-ngan-chay-ei90-3.webp';
+import cuaKinhEi90_4 from '../assets/images/products/cua-kinh-ngan-chay-ei90-4.webp';
+
+import vachKinhCover from '../assets/images/products/vach-kinh-ngan-chay-ei60-ei90-cover.webp';
+import vachKinh_2 from '../assets/images/products/vach-kinh-ngan-chay-ei60-ei90-2.webp';
+import vachKinh_3 from '../assets/images/products/vach-kinh-ngan-chay-ei60-ei90-3.webp';
+
+import cuaKinhTongQuanCover from '../assets/images/products/cua-kinh-ngan-chay-cover.webp';
+import cuaKinhTongQuan_2 from '../assets/images/products/cua-kinh-ngan-chay-2.webp';
+import cuaKinhTongQuan_3 from '../assets/images/products/cua-kinh-ngan-chay-3.webp';
+import cuaKinhTongQuan_4 from '../assets/images/products/cua-kinh-ngan-chay-4.webp';
+
 export const HERO_IMAGE = heroImage;
-export const STEEL_DOOR_IMAGE = steelDoorImage;
-export const DOUBLE_FIRE_DOOR_IMAGE = doubleFireDoorImage;
-export const GLASS_FIRE_DOOR_IMAGE = glassFireDoorImage;
+export const STEEL_DOOR_IMAGE = cuaThepEi90_1Cover;
+export const DOUBLE_FIRE_DOOR_IMAGE = cuaThepEi90_2Cover;
+export const GLASS_FIRE_DOOR_IMAGE = cuaKinhEi60Cover;
 export const ROLLER_SHUTTER_IMAGE = rollerShutterImage;
 export const FIRE_CURTAIN_IMAGE = fireCurtainImage;
 export const ELECTRICAL_CABINET_IMAGE = electricalCabinetImage;
@@ -51,7 +96,9 @@ export const PRODUCTS: Product[] = [
       'Tích hợp tay co thủy lực tự đóng và thanh đẩy panic thoát hiểm',
       'Khung bao chấn rãnh cài gioăng chuyên dụng chống ồn và khói'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: cuaThepEi70Cover,
+    gallery: [cuaThepEi70Cover, cuaThepEi70_2, cuaThepEi70_3, cuaThepEi70_4, cuaThepEi70_5],
+    imageAlt: 'Cửa thép ngăn cháy 1 cánh sơn tĩnh điện xám lắp cạnh hộp chữa cháy PCCC – APEX',
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -79,7 +126,9 @@ export const PRODUCTS: Product[] = [
       'Bản lề cối Inox 304 chịu tải trọng cánh lớn',
       'Tùy chọn ô kính quan sát chống cháy EI90 kích thước theo quy chuẩn'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: cuaThepEi90_1Cover,
+    gallery: [cuaThepEi90_1Cover, cuaThepEi90_1_2, cuaThepEi90_1_3, cuaThepEi90_1_4],
+    imageAlt: 'Cửa thép ngăn cháy 1 cánh EI90 sơn tĩnh điện xám hoàn thiện tại sảnh văn phòng – APEX',
     priceEstimate: 'Liên hệ'
   },
   {
@@ -106,7 +155,9 @@ export const PRODUCTS: Product[] = [
       'Hệ thống chốt âm Inox định vị cánh phụ chắc chắn',
       'Đồng bộ thanh thoát hiểm panic đôi cho cả 2 cánh'
     ],
-    image: DOUBLE_FIRE_DOOR_IMAGE,
+    image: cuaThepEi90_2Cover,
+    gallery: [cuaThepEi90_2Cover, cuaThepEi90_2_2, cuaThepEi90_2_3, cuaThepEi90_2_4, cuaThepEi90_2_5],
+    imageAlt: 'Cửa thép ngăn cháy 2 cánh EI90 phủ vân gỗ sáng lắp tại hành lang tòa nhà – APEX',
     priceEstimate: 'Liên hệ'
   },
   {
@@ -133,7 +184,9 @@ export const PRODUCTS: Product[] = [
       'Khả năng ngăn khói và áp lực nhiệt vượt trội',
       'Gia công kích thước chính xác theo số đo thực tế công trình'
     ],
-    image: DOUBLE_FIRE_DOOR_IMAGE,
+    image: cuaThepEi120_2Cover,
+    gallery: [cuaThepEi120_2Cover, cuaThepEi120_2_2, cuaThepEi120_2_3],
+    imageAlt: 'Cửa thép ngăn cháy 2 cánh EI120 có ô kính quan sát chịu nhiệt và tay nắm inox – APEX',
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -161,7 +214,9 @@ export const PRODUCTS: Product[] = [
       'Hệ gioăng ngăn khói và chống ồn chuyên dụng',
       'Hồ sơ kỹ thuật đồng bộ phục vụ nghiệm thu PCCC'
     ],
-    image: STEEL_DOOR_IMAGE,
+    image: cuaThepTongQuanCover,
+    gallery: [cuaThepTongQuanCover, cuaThepTongQuan_2, cuaThepTongQuan_3, cuaThepTongQuan_4, cuaThepTongQuan_5],
+    imageAlt: 'Tổng quan giải pháp cửa thép ngăn cháy kiểm định PCCC công trình – APEX',
     priceEstimate: 'Liên hệ'
   },
 
@@ -191,7 +246,9 @@ export const PRODUCTS: Product[] = [
       'Ngăn nhiệt bức xạ và khí độc trong 60 phút',
       'Đồng bộ phụ kiện tay nắm Inox và bản lề sàn thủy lực chịu lửa'
     ],
-    image: GLASS_FIRE_DOOR_IMAGE,
+    image: cuaKinhEi60Cover,
+    gallery: [cuaKinhEi60Cover, cuaKinhEi60_2, cuaKinhEi60_3, cuaKinhEi60_4],
+    imageAlt: 'Cửa kính ngăn cháy EI60 khung thép định hình sơn tĩnh điện lắp tại sảnh thang máy – APEX',
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -218,7 +275,9 @@ export const PRODUCTS: Product[] = [
       'Hệ thống gioăng chống khói kép kín khít tuyệt đối',
       'Tích hợp cảm biến mở tự động và khóa điện tử kết nối PCCC'
     ],
-    image: GLASS_FIRE_DOOR_IMAGE,
+    image: cuaKinhEi90Cover,
+    gallery: [cuaKinhEi90Cover, cuaKinhEi90_2, cuaKinhEi90_3, cuaKinhEi90_4],
+    imageAlt: 'Cửa kính ngăn cháy EI90 2 cánh khung thép chịu nhiệt nhìn ra cầu thang ngoài trời – APEX',
     priceEstimate: 'Liên hệ'
   },
   {
@@ -244,7 +303,9 @@ export const PRODUCTS: Product[] = [
       'Hệ keo kết cấu chống cháy chuyên dụng chịu nhiệt độ cao',
       'Gia công module tại xưởng rút ngắn thời gian lắp đặt tại công trình'
     ],
-    image: GLASS_FIRE_DOOR_IMAGE,
+    image: vachKinhCover,
+    gallery: [vachKinhCover, vachKinh_2, vachKinh_3],
+    imageAlt: 'Vách kính và cửa kính ngăn cháy cách nhiệt thông tầng kiến trúc mở – APEX',
     priceEstimate: 'Liên hệ'
   },
   {
@@ -270,7 +331,9 @@ export const PRODUCTS: Product[] = [
       'Khung viền gia công chính xác, kín khít ngăn khói độc',
       'Tư vấn phương án lắp đặt chi tiết theo hồ sơ bản vẽ'
     ],
-    image: GLASS_FIRE_DOOR_IMAGE,
+    image: cuaKinhTongQuanCover,
+    gallery: [cuaKinhTongQuanCover, cuaKinhTongQuan_2, cuaKinhTongQuan_3, cuaKinhTongQuan_4],
+    imageAlt: 'Hệ cửa kính ngăn cháy an toàn thẩm mỹ cho trung tâm thương mại và tòa nhà văn phòng – APEX',
     priceEstimate: 'Liên hệ'
   },
 
@@ -1388,7 +1451,7 @@ const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
 export const NEWS_ARTICLES: NewsArticle[] = NEWS_ARTICLE_SAMPLES;
 
 const PARTNER_LOGO_SAMPLES = [
-  { name: '3CElectric', tag: 'Switch on your world' },
+  { name: 'SCHNEIDER ELECTRIC', tag: 'Life Is On' },
   { name: 'ANKO', tag: 'Fire Resistant Doors & Curtains' },
   { name: 'MITSUBISHI ELECTRIC', tag: 'Changes for the Better' },
   { name: 'HITACHI', tag: 'Inspire the Next' },
