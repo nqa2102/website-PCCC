@@ -3,9 +3,7 @@ import {
   Calculator,
   Download,
   FileCheck,
-  Layers,
   Phone,
-  ShieldCheck,
   PackageSearch,
 } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
@@ -13,6 +11,7 @@ import type { Product, ProductCategory } from '../types';
 import { PRODUCT_CATEGORY_DEFINITIONS, PRODUCT_CATEGORY_GROUPS } from '../components/products/ProductCategoryGrid';
 import { ProductCard } from '../components/products/ProductCard';
 import { ProductDetailLayout } from '../components/products/ProductDetailLayout';
+import { groupProductsByVariant } from '../components/products/productMenu';
 
 interface ProductsPageProps {
   onOpenQuote: (productCategory?: string) => void;
@@ -20,78 +19,6 @@ interface ProductsPageProps {
   initialProductId?: string;
   onNavigate?: (tab: string, itemId?: string, category?: string) => void;
 }
-
-const EI_MATRIX = [
-  {
-    rating: 'EI60',
-    title: 'Giới hạn chịu lửa 60 phút',
-    thickness: 'Cánh 0.8mm / Khung 1.2mm',
-    core: 'Bông gốm Ceramic hoặc Magie Oxit (MGO) 120kg/m³',
-    application: 'Cửa phòng căn hộ, cửa hành lang các tầng, lối thoát nạn văn phòng tiêu chuẩn.',
-    standard: 'QCVN 06:2022/BXD Bảng 4, TCVN 9383:2012',
-    popular: false,
-  },
-  {
-    rating: 'EI70',
-    title: 'Giới hạn chịu lửa 70 phút',
-    thickness: 'Cánh 0.8 - 1.0mm / Khung 1.2 - 1.4mm',
-    core: 'Bông gốm Ceramic cách nhiệt kết hợp ron trương nở ngăn khói độc',
-    application: 'Buồng thang bộ thoát hiểm N1/N2/N3, sảnh thang máy tòa nhà cao tầng, khu công cộng.',
-    standard: 'QCVN 06:2022/BXD và Sửa đổi 1:2023',
-    popular: true,
-  },
-  {
-    rating: 'EI90',
-    title: 'Giới hạn chịu lửa 90 phút',
-    thickness: 'Cánh 1.0mm / Khung 1.4mm',
-    core: 'Lõi composite đa tầng chống cháy chịu nhiệt > 1.100°C',
-    application: 'Phòng kỹ thuật điện, phòng máy chủ server, trạm biến áp phụ tải, kho hồ sơ.',
-    standard: 'TCVN 9383:2012',
-    popular: false,
-  },
-  {
-    rating: 'EI120',
-    title: 'Giới hạn chịu lửa 120 phút',
-    thickness: 'Cánh 1.0 - 1.2mm / Khung 1.4 - 1.6mm',
-    core: 'Lõi bông gốm Ceramic mật độ cao 128kg/m³ siêu cách nhiệt',
-    application: 'Phòng máy biến áp chính, trạm bơm PCCC, phân khoang cháy nhà xưởng công nghiệp nặng.',
-    standard: 'QCVN 06:2022/BXD',
-    popular: true,
-  },
-];
-
-const DOOR_LAYERS = [
-  {
-    step: '01',
-    name: 'Khung bao thép định hình',
-    spec: 'Thép cán nguội mạ kẽm dày 1.2 - 1.6mm',
-    desc: 'Chấn gấp CNC độ chính xác cao, tăng cứng chịu lực tại bản lề & lỗ khóa, gioăng rãnh chìm chuyên dụng.',
-  },
-  {
-    step: '02',
-    name: 'Tấm thép bề mặt cánh cửa',
-    spec: 'Thép mạ điện dày 0.8 - 1.2mm',
-    desc: 'Phủ sơn tĩnh điện bột Jotun cao cấp, chống trầy xước, chịu va đập cơ học lớn, chống oxy hóa.',
-  },
-  {
-    step: '03',
-    name: 'Lõi cách nhiệt chịu lửa đa tầng',
-    spec: 'Bông gốm Ceramic / Magie Oxit (MGO)',
-    desc: 'Vật liệu vô cơ chống cháy tuyệt đối, không sinh khói độc, giữ nhiệt độ mặt không cháy dưới 140°C.',
-  },
-  {
-    step: '04',
-    name: 'Hệ gioăng kép ngăn khói độc',
-    spec: 'Gioăng EPDM + Gioăng Intumescent',
-    desc: 'Gioăng giảm chấn khi đóng mở; gioăng trương nở tự động phồng nở khi nhiệt độ > 150°C để bịt kín khe hở.',
-  },
-  {
-    step: '05',
-    name: 'Phụ kiện cơ khí đồng bộ',
-    spec: 'Inox 304 chuẩn chịu lửa',
-    desc: 'Bản lề cối chịu lực, tay co thủy lực tự đóng đạt 500.000 chu kỳ, thanh panic và khóa liên kết ngầm.',
-  },
-];
 
 export const ProductsPage: React.FC<ProductsPageProps> = ({
   onOpenQuote,
@@ -183,8 +110,17 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     );
   }
 
-  const isSteelDoor = selectedCategory === 'cua-thep-ngan-chay';
   const quoteCategory = selectedCategory !== 'all' ? selectedCategory : undefined;
+
+  // Danh mục cụ thể: chia nhóm theo biến thể (1 cánh / 2 cánh...) để hiển thị thành khối
+  const variantGroups = useMemo(
+    () => (selectedCategory === 'all' ? [] : groupProductsByVariant(filteredProducts, selectedCategory)),
+    [filteredProducts, selectedCategory]
+  );
+  const displayCount =
+    selectedCategory === 'all'
+      ? filteredProducts.length
+      : variantGroups.reduce((sum, g) => sum + g.products.length, 0);
 
   const filterButtonClass = (active: boolean) =>
     `flex min-h-10 w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-[13px] transition-colors focus-visible:outline-2 focus-visible:outline-red-600 ${
@@ -288,14 +224,35 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
           {/* Danh sách sản phẩm */}
           <section aria-label="Danh sách sản phẩm">
             <p className="mb-4 text-xs text-slate-500" aria-live="polite">
-              {filteredProducts.length} sản phẩm
+              {displayCount} sản phẩm
             </p>
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} onViewDetail={handleViewProduct} onOpenQuote={onOpenQuote} />
-                ))}
-              </div>
+            {displayCount > 0 ? (
+              selectedCategory === 'all' ? (
+                // Trang "Tất cả": lưới phẳng
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                  {filteredProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} onViewDetail={handleViewProduct} onOpenQuote={onOpenQuote} />
+                  ))}
+                </div>
+              ) : (
+                // Danh mục cụ thể: chia nhóm theo biến thể (1 CÁNH / 2 CÁNH) nếu có, giữ ảnh trong thẻ
+                <div className="space-y-10">
+                  {variantGroups.map((group, gIdx) => (
+                    <div key={group.label ?? `group-${gIdx}`}>
+                      {group.label && (
+                        <h2 className="mb-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                          {group.label}
+                        </h2>
+                      )}
+                      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                        {group.products.map((product) => (
+                          <ProductCard key={product.id} product={product} onViewDetail={handleViewProduct} onOpenQuote={onOpenQuote} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )
             ) : (
               <div className="flex flex-col items-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
                 <PackageSearch className="h-8 w-8 text-slate-400" aria-hidden="true" />
@@ -314,69 +271,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
               </div>
             )}
           </section>
-
-          {/* Thông tin kỹ thuật: chỉ hiển thị cho nhóm cửa thép ngăn cháy */}
-          {isSteelDoor && (
-            <div className="mt-14 space-y-14 border-t border-slate-300 pt-12">
-              <section aria-labelledby="ei-matrix-title">
-                <h2 id="ei-matrix-title" className="text-xl font-bold text-slate-950 sm:text-2xl">
-                  Giới hạn chịu lửa EI theo QCVN 06:2022/BXD
-                </h2>
-                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  {EI_MATRIX.map((item) => (
-                    <div
-                      key={item.rating}
-                      className={`rounded-xl border bg-white p-5 ${item.popular ? 'border-red-600 ring-1 ring-red-600' : 'border-slate-200'}`}
-                    >
-                      <div className="flex items-baseline justify-between border-b border-slate-100 pb-3">
-                        <span className="text-2xl font-black text-slate-900">{item.rating}</span>
-                        <span className="rounded bg-red-50 px-2 py-0.5 text-[11px] font-bold text-red-700">
-                          {item.popular ? 'Phổ biến nhất' : item.title}
-                        </span>
-                      </div>
-                      <dl className="mt-3 space-y-2 text-xs">
-                        <div>
-                          <dt className="font-semibold text-slate-500">Độ dày thép</dt>
-                          <dd className="text-slate-800">{item.thickness}</dd>
-                        </div>
-                        <div>
-                          <dt className="font-semibold text-slate-500">Lõi cách nhiệt</dt>
-                          <dd className="text-slate-700">{item.core}</dd>
-                        </div>
-                        <div>
-                          <dt className="font-semibold text-slate-500">Vị trí khuyến nghị</dt>
-                          <dd className="text-slate-700">{item.application}</dd>
-                        </div>
-                      </dl>
-                      <p className="mt-3 flex items-start gap-1.5 border-t border-slate-100 pt-2 text-[11px] text-emerald-700">
-                        <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" aria-hidden="true" />
-                        <span>{item.standard}</span>
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section aria-labelledby="door-layers-title">
-                <h2 id="door-layers-title" className="text-xl font-bold text-slate-950 sm:text-2xl">
-                  Cấu tạo 5 lớp cửa ngăn cháy APEX
-                </h2>
-                <ol className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
-                  {DOOR_LAYERS.map((layer) => (
-                    <li key={layer.step} className="rounded-xl border border-slate-200 bg-white p-5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-lg font-black text-red-600">Lớp {layer.step}</span>
-                        <Layers className="h-4 w-4 text-slate-400" aria-hidden="true" />
-                      </div>
-                      <h3 className="mt-2 text-sm font-bold text-slate-900">{layer.name}</h3>
-                      <p className="mt-1 text-[11px] font-bold text-red-700">{layer.spec}</p>
-                      <p className="mt-2 text-xs leading-relaxed text-slate-600">{layer.desc}</p>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-            </div>
-          )}
 
           {/* CTA cuối trang: catalogue + hotline */}
           <div className="mt-14 flex flex-col gap-4 rounded-xl bg-slate-950 p-6 text-white sm:flex-row sm:items-center sm:justify-between sm:p-8">

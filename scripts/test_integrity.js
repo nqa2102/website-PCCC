@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -237,6 +238,27 @@ const scanForCompetitorUrls = (dir) => {
 scanForCompetitorUrls(srcDir);
 assert(true, 'Toàn bộ mã nguồn src/ không chứa bất kỳ liên kết hay tài sản nào từ đối thủ (ankovina, 3ce)');
 
+// --- 7. Kiểm tra Menu Sản phẩm Accordion (VIỆC B) ---
+console.log('\n--- 7. Kiểm tra Menu Sản phẩm Accordion (VIỆC B) ---');
+
+const productMenuPath = path.join(rootDir, 'src', 'components', 'products', 'productMenu.ts');
+assert(fs.existsSync(productMenuPath), 'Module src/components/products/productMenu.ts tồn tại');
+
+try {
+  const menuTestOutput = execSync('node --experimental-strip-types scripts/test_product_menu.mjs', { cwd: rootDir }).toString();
+  assert(menuTestOutput.includes('TẤT CẢ TEST groupProductsByVariant THÀNH CÔNG'), 'Kiểm thử groupProductsByVariant (Cửa thép 2 nhóm EI, Tủ điện phẳng, Rỗng, Loại bỏ Tổng quan) PASS 100%');
+} catch (err) {
+  assert(false, `Kiểm thử unit test product menu thất bại: ${err.message}`);
+}
+
+const headerSource = fs.readFileSync(path.join(rootDir, 'src', 'components', 'Header.tsx'), 'utf8');
+assert(headerSource.includes('groupProductsByVariant'), 'Header.tsx sử dụng hàm groupProductsByVariant');
+assert(headerSource.includes('formatMenuProductName'), 'Header.tsx sử dụng hàm formatMenuProductName');
+assert(headerSource.includes('getCategorySubProducts'), 'Header.tsx sử dụng hàm getCategorySubProducts');
+assert(headerSource.includes('aria-expanded'), 'Header.tsx có aria-expanded cho accordion');
+assert(headerSource.includes('overscroll-contain'), 'Header.tsx có scrolling container chống tràn viewport');
+
 console.log('\n=============================================================');
 console.log(`KẾT QUẢ TỔNG QUAN: ${passedTests}/${totalTests} BÀI KIỂM THỬ THÀNH CÔNG (${Math.round((passedTests / totalTests) * 100)}%)`);
 console.log('=============================================================');
+
