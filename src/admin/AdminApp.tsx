@@ -47,6 +47,7 @@ import {
   loadMoreLeads,
   saveRemoteLead,
   saveRemoteProduct,
+  seedRemoteProducts,
   saveRemoteProject,
   saveRemoteDocument,
   saveRemoteContent,
@@ -418,6 +419,23 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     }
   };
 
+  // Đồng bộ toàn bộ 37 sản phẩm tiêu chuẩn vào cơ sở dữ liệu
+  const handleSeedAllProducts = async () => {
+    const catalog = createInitialCatalog();
+    const products = catalog.products;
+    if (!window.confirm(`Đồng bộ toàn bộ ${products.length} sản phẩm tiêu chuẩn vào cơ sở dữ liệu?\nMọi sản phẩm sẽ sẵn sàng ở trạng thái "Đã công bố" để chỉnh sửa thông số, xóa hoặc thêm mới.`)) return;
+    try {
+      await seedRemoteProducts(products);
+      setState(recordActivity({
+        ...state,
+        products,
+      }, 'Đồng bộ danh mục', `${products.length} sản phẩm tiêu chuẩn`));
+      setToast(`Đã đồng bộ thành công ${products.length} sản phẩm vào cơ sở dữ liệu!`);
+    } catch (err) {
+      setToast(`Lỗi khi nạp danh mục: ${errorMessage(err, 'không xác định')}`);
+    }
+  };
+
   const handleDeleteConfirmed = async () => {
     if (!confirmDelete) return;
     const { type, id, name } = confirmDelete;
@@ -761,11 +779,23 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
               onStatusFilter={setStatusFilter}
               statusOptions={Object.entries(PUBLISH_STATUS).map(([value, item]) => ({ value, label: item.label }))}
               onAdd={() => setEditor({ type: 'product', data: newProduct(state.products.length + 1) })}
+              extraAction={
+                <button
+                  type="button"
+                  onClick={handleSeedAllProducts}
+                  className="flex min-h-10 items-center justify-center gap-1.5 border border-neutral-300 bg-white px-3 text-xs font-bold text-slate-700 hover:bg-neutral-50 transition-colors cursor-pointer"
+                  title="Nạp hoặc đồng bộ toàn bộ 37 sản phẩm tiêu chuẩn vào cơ sở dữ liệu"
+                >
+                  <RefreshCw className="h-3.5 w-3.5 text-blue-600" />
+                  Đồng bộ 37 sản phẩm
+                </button>
+              }
             >
               <ProductsTable
                 products={filteredProducts}
                 onEdit={(data) => setEditor({ type: 'product', data })}
                 onDelete={(prod) => requestDelete({ type: 'product', id: prod.id, name: prod.name })}
+                onSeed={handleSeedAllProducts}
               />
             </DataSection>
           )}
@@ -1248,10 +1278,12 @@ const ProductsTable = ({
   products,
   onEdit,
   onDelete,
+  onSeed,
 }: {
   products: AdminProduct[];
   onEdit: (product: AdminProduct) => void;
   onDelete: (product: AdminProduct) => void;
+  onSeed?: () => void;
 }) => products.length ? (
   <div className="overflow-x-auto">
     <table className="w-full min-w-[860px] text-left text-xs">
@@ -1280,12 +1312,12 @@ const ProductsTable = ({
             <td className="px-4 py-3 text-slate-500">{localDate(product.updatedAt)}</td>
             <td className="px-4 py-3 text-right">
               <div className="flex items-center justify-end gap-2">
-                <button onClick={() => onEdit(product)} className="font-bold text-red-700 hover:underline">
+                <button onClick={() => onEdit(product)} className="font-bold text-red-700 hover:underline cursor-pointer">
                   Sửa
                 </button>
                 <button
                   onClick={() => onDelete(product)}
-                  className="text-slate-400 hover:text-red-700 p-1 transition-colors"
+                  className="text-slate-400 hover:text-red-700 p-1 transition-colors cursor-pointer"
                   title="Xóa sản phẩm"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -1297,7 +1329,25 @@ const ProductsTable = ({
       </tbody>
     </table>
   </div>
-) : <EmptyState label="sản phẩm" />;
+) : (
+  <div className="px-6 py-12 text-center">
+    <Package className="mx-auto h-10 w-10 text-slate-300 mb-3" />
+    <h3 className="text-sm font-bold text-slate-900">Chưa có sản phẩm trong cơ sở dữ liệu</h3>
+    <p className="mt-1 text-xs text-slate-500 max-w-md mx-auto">
+      Hệ thống quản trị hiện chưa có bản ghi sản phẩm nào. Bạn có thể nạp nhanh toàn bộ 37 sản phẩm tiêu chuẩn của 9 nhóm danh mục để bắt đầu chỉnh sửa, xóa hoặc thêm mới.
+    </p>
+    {onSeed && (
+      <button
+        type="button"
+        onClick={onSeed}
+        className="mt-4 inline-flex items-center gap-2 rounded bg-red-700 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-red-800 transition-colors cursor-pointer"
+      >
+        <RefreshCw className="h-4 w-4" />
+        Nạp 37 sản phẩm tiêu chuẩn vào Admin
+      </button>
+    )}
+  </div>
+);
 
 /* --- PROJECTS TABLE --- */
 const ProjectsTable = ({
