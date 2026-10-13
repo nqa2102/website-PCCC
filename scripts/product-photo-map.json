@@ -139,9 +139,8 @@
   {
     "source": "1791878158043",
     "product": "cua-kinh-ngan-chay-ei60",
-    "role": "cover",
-    "fit": "cover",
-    "position": "center"
+    "role": "gallery",
+    "index": 4
   },
   {
     "source": "1791878059623",
@@ -158,8 +157,9 @@
   {
     "source": "1791878158039",
     "product": "cua-kinh-ngan-chay-ei60",
-    "role": "gallery",
-    "index": 4
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
   },
   {
     "source": "1791878166393",
