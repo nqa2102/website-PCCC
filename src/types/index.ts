@@ -30,6 +30,7 @@ export interface Product {
   };
   features: string[];
   image: string;
+  gallery?: string[];
   priceEstimate: string;
   popular?: boolean;
   seoTitle?: string;
