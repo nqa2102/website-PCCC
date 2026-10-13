@@ -1451,7 +1451,6 @@ const NEWS_ARTICLE_SAMPLES: NewsArticle[] = [
 export const NEWS_ARTICLES: NewsArticle[] = NEWS_ARTICLE_SAMPLES;
 
 const PARTNER_LOGO_SAMPLES = [
-  { name: 'SCHNEIDER ELECTRIC', tag: 'Life Is On' },
   { name: 'ANKO', tag: 'Fire Resistant Doors & Curtains' },
   { name: 'MITSUBISHI ELECTRIC', tag: 'Changes for the Better' },
   { name: 'HITACHI', tag: 'Inspire the Next' },
