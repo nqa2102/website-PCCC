@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({
   const [productMenuSuppressed, setProductMenuSuppressed] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [mobileExpandedCategory, setMobileExpandedCategory] = useState<string | null>(null);
-  const productButtonRef = React.useRef<HTMLButtonElement | null>(null);
+  const productButtonRef = React.useRef<HTMLAnchorElement | null>(null);
   const [solutionDropdownOpen, setSolutionDropdownOpen] = useState(false);
   const [mobileProductExpanded, setMobileProductExpanded] = useState(false);
   const [mobileSolutionExpanded, setMobileSolutionExpanded] = useState(false);
@@ -286,22 +286,19 @@ export const Header: React.FC<HeaderProps> = ({
                         }
                       }}
                     >
-                      <button
+                      <a
                         ref={productButtonRef}
-                        type="button"
+                        href="/san-pham"
                         aria-expanded={productDropdownOpen}
                         aria-haspopup="true"
                         onClick={(e) => {
-                          e.preventDefault();
-                          if (productDropdownOpen) {
-                            closeProductDropdown();
-                          } else {
-                            openProductDropdown();
-                          }
+                          // Bấm "Sản phẩm" đi thẳng trang danh mục; hover vẫn xổ dropdown
+                          handleNavClick(e, 'products');
+                          closeProductDropdown();
                         }}
                         className={`flex items-center gap-1 py-3 px-3 border-b-2 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-red-600 ${
-                          isActive 
-                            ? 'text-red-600 border-red-600' 
+                          isActive
+                            ? 'text-red-600 border-red-600'
                             : 'text-slate-700 border-transparent hover:text-red-600 group-hover:text-red-600'
                         }`}
                       >
@@ -309,7 +306,7 @@ export const Header: React.FC<HeaderProps> = ({
                         <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 motion-reduce:transition-none ${
                           productDropdownOpen ? 'rotate-180 text-red-600' : 'group-hover:rotate-180'
                         }`} />
-                      </button>
+                      </a>
 
                       {/* DESKTOP MENU SẢN PHẨM: Accordion xổ danh sách sản phẩm con */}
                       <div
