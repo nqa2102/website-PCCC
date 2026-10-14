@@ -38,7 +38,7 @@
 | **Phase 1** | Tạo `src/data/categoryDetails.ts`, điền đủ `cua-thep-ngan-chay` từ mockup, tạo khung rỗng 8 danh mục còn lại. | 🟢 **DONE** |
 | **Phase 2** | Xây dựng component `src/pages/CategoryDetailPage.tsx` đúng 6 khối, thư viện ảnh thumbnail, tự ẩn khối rỗng. Đã kiểm thử 1440px & 375px. | 🟢 **DONE** |
 | **Phase 3** | Đổi điều hướng: menu link thẳng trang chi tiết (bỏ accordion xổ con), `/san-pham` hiện lưới 9 thẻ danh mục. Tự động chuyển hướng link cũ `/san-pham/:category/:slug` về `/san-pham/:category`. | 🟢 **DONE** |
-| **Phase 4** | Điền nội dung cho 8 danh mục còn lại theo từng nhóm 2-3 danh mục (dừng duyệt từng nhóm). Đã hoàn thành 100% template 6 khối cho `cua-kinh-ngan-chay` (ảnh thật, thông số, ưu điểm, công dụng, dự toán mẫu). | 🟡 **IN PROGRESS (Cửa kính DONE)** |
+| **Phase 4** | Điền nội dung cho 8 danh mục còn lại theo từng nhóm 2-3 danh mục (dừng duyệt từng nhóm). Đã hoàn thành 100% template 6 khối cho `cua-kinh-ngan-chay` với bảng dự toán vật tư và thông số chuẩn theo file báo giá thực tế của công ty (`1310 MẪU BG UP WEB.xls`: mẫu 2CG-FGD60S1, đơn giá 4.300.000 đ/m², tổng 10.656.000 đ/bộ). | 🟡 **IN PROGRESS (Cửa kính DONE 100% số liệu thực tế)** |
 | **Phase 5** | SEO (sitemap 9 URL danh mục, canonical, meta), dọn dẹp code cũ, kiểm tra integrity. | ⚪ Chưa làm |
 | **Phase 6** | QA tổng thể 1440px & 375px, kiểm tra liên kết, hoàn thiện bàn giao. | ⚪ Chưa làm |
 
