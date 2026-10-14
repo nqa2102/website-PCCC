@@ -13,7 +13,59 @@ function devApiPlugin(): Plugin {
     devProducts = [];
   }
   let devLeads: any[] = [];
-  let devProjects: any[] = [];
+  let devProjects: any[] = [
+    {
+      id: 'prj-hoc-vien-hau-can',
+      title: 'Tòa nhà đa năng KV I – Học viện Hậu Cần',
+      slug: 'toa-nha-da-nang-kv-i-hoc-vien-hau-can',
+      clientName: 'Học viện Hậu Cần',
+      generalContractor: 'Tổng công ty 789/BQP',
+      apexRole: 'Nghiệm thu hoàn thành gói cửa chống cháy',
+      category: 'cua-thep-ngan-chay',
+      location: 'Long Biên, Hà Nội',
+      completedYear: 2026,
+      description: 'Cung cấp, lắp đặt và nghiệm thu hoàn thành toàn bộ hệ thống cửa thép chống cháy tiêu chuẩn EI70 - EI90 tại Tòa nhà đa năng KV I - Học viện Hậu Cần.',
+      coverImage: '/src/assets/images/hero_fire_door_apex_1790648819738.webp',
+      gallery: [],
+      status: 'published',
+      verified: true,
+      verifiedNote: 'Biên bản nghiệm thu hoàn thành 22/5/2026',
+    },
+    {
+      id: 'prj-toa-an-quang-ninh',
+      title: 'Trụ sở Tòa án nhân dân tỉnh Quảng Ninh',
+      slug: 'tru-so-toa-an-nhan-dan-tinh-quang-ninh',
+      clientName: 'Tòa án nhân dân tỉnh Quảng Ninh',
+      generalContractor: '',
+      apexRole: 'Cung cấp và thi công cửa kính & vách kính chống cháy',
+      category: 'cua-kinh-ngan-chay',
+      location: 'Hạ Long, Quảng Ninh',
+      completedYear: 2025,
+      description: 'Cung cấp và hoàn thiện hệ thống cửa kính ngăn cháy EI60 và vách kính chống cháy cho khu vực đại sảnh và phòng xét xử.',
+      coverImage: '/src/assets/images/products/cua-kinh-ngan-chay-cover.webp',
+      gallery: [],
+      status: 'published',
+      verified: true,
+      verifiedNote: 'Văn bản nghiệm thu số 48/PCCC',
+    },
+    {
+      id: 'prj-nha-may-dien-tu',
+      title: 'Tổ hợp Nhà máy sản xuất linh kiện điện tử',
+      slug: 'to-hop-nha-may-san-xuat-linh-kien-dien-tu',
+      clientName: 'Ban Quản lý KCN',
+      generalContractor: 'Tổng thầu Xây dựng Công nghiệp',
+      apexRole: 'Cung cấp cửa cuốn ngăn cháy siêu trường EI120',
+      category: 'cua-cuon-ngan-chay',
+      location: 'KCN Quế Võ, Bắc Ninh',
+      completedYear: 2026,
+      description: 'Lắp đặt hệ thống cửa cuốn ngăn cháy siêu trường EI120 tích hợp motor tự động và kết nối hệ thống báo cháy BMS nhà máy.',
+      coverImage: '/src/assets/images/product_fire_roller_shutter_1790648844563.webp',
+      gallery: [],
+      status: 'published',
+      verified: true,
+      verifiedNote: 'Hợp đồng & biên bản kiểm định số 102/KD-PCCC',
+    },
+  ];
   let devDocuments: any[] = [];
   let devContents: any[] = [];
   let devCompany: any = null;

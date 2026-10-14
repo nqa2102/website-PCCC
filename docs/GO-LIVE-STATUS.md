@@ -224,6 +224,7 @@
 | **PROD** | **Deploy Production & Fallback Tương Thích** | Cơ chế fallback tương thích ngược tự động cho bảng `products`; Deploy Production hoàn tất trên Vercel `apexhome.vn` với `isDatabaseLive: true` | 🟢 **PR #12 MERGED & LIVE** |
 | **IMG** | **Chuẩn Hóa Hình Ảnh 9 Dòng Sản Phẩm** | Cung cấp ảnh chụp sản phẩm công nghiệp sắc nét riêng biệt cho từng nhóm (cửa kính, tủ điện MSB/DB, thang máng cáp, tủ rack 42U, shelter, tủ nguồn outdoor), loại bỏ hoàn toàn việc dùng chung 1 ảnh cửa thép | 🟢 **HOÀN TẤT** |
 | **PJ-P0/P1** | **Dự án: Phase 0 & Phase 1 (Schema & Đồng bộ)** | Nhánh `feat/projects-showcase`. Bổ sung `general_contractor` (Tổng thầu) & `apex_role` (Vai trò APEX) cho `projects`. Fallback an toàn (zero-crash) trong `public-content.ts` và `admin/projects.ts`. 178/178 test pass | 🟢 **DONE** |
+| **PJ-P2** | **Dự án: Phase 2 (Danh sách /du-an Wireframe)** | Nâng cấp `ProjectsPage.tsx` & `ProjectCard.tsx`: Hàng số liệu uy tín (UC9 tự ẩn khi 0 dự án), bộ lọc chip danh mục, lưới 3 cột thẻ ảnh 4:3, nhãn vai trò `apexRole`, phân trang client 9 thẻ/lần. Đã test 1440px & 375px | 🟢 **DONE** |
 
 ---
 
