@@ -76,11 +76,16 @@ export const readRoute = (): AppRoute => {
       return { tab: 'products', category: queryCategory };
     }
 
-    // /san-pham/:category/:slug
+    // /san-pham/:category/:slug -> chuyển hướng (redirect) sạch về /san-pham/:category (tránh 404 link cũ)
     if (segments.length >= 3) {
-      const segCat = normalizeCategory(segments[1]);
-      const slug = decodeURIComponent(segments.slice(2).join('/'));
-      return { tab: 'products', category: segCat || queryCategory, itemId: slug };
+      const segCat = normalizeCategory(segments[1]) || queryCategory;
+      if (segCat) {
+        if (typeof window !== 'undefined' && window.history?.replaceState) {
+          window.history.replaceState({}, '', `/san-pham/${encodeURIComponent(segCat)}`);
+        }
+        return { tab: 'products', category: segCat };
+      }
+      return { tab: 'products', category: queryCategory };
     }
 
     // /san-pham/:category OR /san-pham/:slug
@@ -113,14 +118,14 @@ export const pathForRoute = (tab: string, itemId?: string, category?: string) =>
   if (!itemId && !category) return base;
 
   if (tab === 'products') {
-    const normCat = normalizeCategory(category);
-    if (normCat && itemId) return `${base}/${encodeURIComponent(normCat)}/${encodeURIComponent(itemId)}`;
+    const normCat = normalizeCategory(category || itemId);
     if (normCat) return `${base}/${encodeURIComponent(normCat)}`;
     if (itemId) {
       const maybeCat = normalizeCategory(itemId);
       if (maybeCat) return `${base}/${encodeURIComponent(maybeCat)}`;
       return `${base}/${encodeURIComponent(itemId)}`;
     }
+    return base;
   }
 
   if (tab === 'projects' && itemId) return `${base}/${encodeURIComponent(itemId)}`;
