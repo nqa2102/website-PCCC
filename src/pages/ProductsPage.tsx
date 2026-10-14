@@ -12,6 +12,8 @@ import { PRODUCT_CATEGORY_DEFINITIONS, PRODUCT_CATEGORY_GROUPS } from '../compon
 import { ProductCard } from '../components/products/ProductCard';
 import { ProductDetailLayout } from '../components/products/ProductDetailLayout';
 import { groupProductsByVariant } from '../components/products/productMenu';
+import { CategoryDetailPage } from './CategoryDetailPage';
+import { CATEGORY_DETAILS } from '../data/categoryDetails';
 
 interface ProductsPageProps {
   onOpenQuote: (productCategory?: string) => void;
@@ -105,6 +107,19 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
           onOpenQuote={onOpenQuote}
           hotlineDisplay={company.hotlineDisplay}
           hotlineHref={company.hotlineHref}
+        />
+      </div>
+    );
+  }
+
+  // Nếu đang chọn một danh mục cụ thể và danh mục đó có trang chi tiết: render CategoryDetailPage
+  if (selectedCategory !== 'all' && CATEGORY_DETAILS[selectedCategory]) {
+    return (
+      <div className="min-h-screen w-full bg-[#f4f4f1] pb-20">
+        <CategoryDetailPage
+          slug={selectedCategory}
+          onOpenQuote={onOpenQuote}
+          onNavigate={onNavigate}
         />
       </div>
     );
