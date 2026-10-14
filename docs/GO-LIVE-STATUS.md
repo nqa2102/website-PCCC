@@ -1,4 +1,4 @@
-# Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
+﻿# Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
 *Cập nhật lần cuối: 13/10/2026 (Hoàn thành VIỆC A — Xử lý 37 ảnh sản phẩm thật, WebP tối ưu, xóa sạch EXIF, gắn Cover 4:5 và Thư viện ảnh Gallery cho 9 sản phẩm Cửa thép và Cửa kính ngăn cháy, loại bỏ vi phạm bản quyền 3CElectric; và VIỆC B — Đổi logic Menu Sản phẩm dạng accordion xổ xuống trực tiếp, gom nhóm biến thể theo số cánh & cấp EI, deep link thẳng trang chi tiết, auto-expand theo route, mobile tap targets >= 44px)*  
 *Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-ANH-VA-MENU-SAN-PHAM.md`](./PROMPT-ANH-VA-MENU-SAN-PHAM.md), [`docs/anh-san-pham-phan-loai.md`](./anh-san-pham-phan-loai.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
@@ -14,7 +14,7 @@
 | **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 9 Sản phẩm & Ảnh Thật)** | 9 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ (ankovina, 3ce). Đã xử lý & gắn 37 ảnh sản phẩm thật (VIỆC A), xóa 100% EXIF/GPS, tỷ lệ 4:5, gallery thumbnails, loại bỏ bản quyền G7. `certificationNo` để trống ("Đang cập nhật") chờ văn bản gốc. |
 | **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/:category`, `/san-pham/:category/:slug`, `/du-an`, `/du-an/:slug`. Schema.org `Product` và `CreativeWork`. **Đã hoàn thành Menu Sản phẩm Accordion (VIỆC B)**. |
 | **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử `scripts/test_integrity.js` đạt **169/169 PASS (100%)**, `npm run lint` PASS, `npm run build` PASS, Browser QA 1440px và 375px đạt chuẩn (không vỡ layout, không tràn ngang). |
-| **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Deploy production Vercel + tên miền chính thức `https://apexhome.vn` (kèm alias `apexdoor.net`). Database Neon live. |
+| **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Deploy production Vercel + tên miền chính thức `https://apexhome.vn` (kèm alias `apexhome.vn`). Database Neon live. |
 | **GĐ6** | **Vận hành sau Go-live** | **P2** | ⚪ **NOT STARTED** | Quy trình backup tự động (Neon PITR) và phân quyền bảo trì. |
 | **GĐ-CAT** | **Trang chi tiết theo danh mục (6 Phase)** | **P1** | 🟡 **IN PROGRESS (Phase 0, 1, 2 & 3 DONE)** | Chuyển từ lưới sản phẩm con sang trang chi tiết danh mục (landing 6 khối theo mockup `chi-tiet-cua-thep.html`). Nhánh `feat/category-detail-page`. |
 
@@ -96,7 +96,7 @@
 ### GĐ2 – Nội Dung & Pháp Lý Thực Tế
 - [x] **Task 2.1 (Nội dung thực tế)**: Chuẩn hóa case study khách hàng mang tính giải pháp kỹ thuật, không tự ý công bố đối tác khi chưa ký duyệt văn bản.
 - [x] **Task 2.2 (Thời gian)**: Chuẩn hóa mốc thời gian thành lập doanh nghiệp năm 2026.
-- [x] **Task 2.3 (Pháp lý & Đại diện)**: Cập nhật mã số doanh nghiệp `0111651857` theo GCN ĐKDN (09/10/2026; trước đó là số giả `0111222333`), email chính thức (`contact@apexdoor.net`), đại diện pháp luật (`Nguyễn Thị Ngọc Anh` - Giám đốc) ở Footer và [`src/pages/PrivacyPage.tsx`](../src/pages/PrivacyPage.tsx).
+- [x] **Task 2.3 (Pháp lý & Đại diện)**: Cập nhật mã số doanh nghiệp `0111651857` theo GCN ĐKDN (09/10/2026; trước đó là số giả `0111222333`), email chính thức (`contact@apexhome.vn`), đại diện pháp luật (`Nguyễn Thị Ngọc Anh` - Giám đốc) ở Footer và [`src/pages/PrivacyPage.tsx`](../src/pages/PrivacyPage.tsx).
 - [x] **Task 2.4 (Địa chỉ & Hotline)**: Cập nhật đồng bộ Hotline `0566 38 5555`, loại bỏ hoàn toàn các địa chỉ và số điện thoại mock trước đây.
 - [ ] **Task 2.5 (Nội dung/Asset)**: Tải file catalogue/bản vẽ CAD PDF thật từ phòng kỹ thuật để người dùng tải về trên trang Tài liệu.
   - *Trạng thái*: Chờ phòng kỹ thuật cung cấp bản PDF gốc.
@@ -194,8 +194,8 @@
 - **Chưa kiểm thử với Neon và Vercel Blob thật.**
 
 ### Hạ tầng Vercel/Neon & lỗi API trên Vercel (09/10/2026)
-- Vercel: `ADMIN_SESSION_SECRET` (ẩn, 3 môi trường), Blob store `apex-pccc-media` (public, sin1), Neon `apex-pccc-db` (Singapore) đã kết nối (Production + Preview), tên miền `apexdoor.net` + `www` (308) đã gắn, chờ DNS.
-- Neon: đã chạy `sql/neon_schema.sql` (8 bảng, MST `0111651857`, website `https://apexdoor.net`); đã tạo tài khoản admin đầu tiên.
+- Vercel: `ADMIN_SESSION_SECRET` (ẩn, 3 môi trường), Blob store `apex-pccc-media` (public, sin1), Neon `apex-pccc-db` (Singapore) đã kết nối (Production + Preview), tên miền `apexhome.vn` + `www` (308) đã gắn, chờ DNS.
+- Neon: đã chạy `sql/neon_schema.sql` (8 bảng, MST `0111651857`, website `https://apexhome.vn`); đã tạo tài khoản admin đầu tiên.
 - **Lỗi nghiêm trọng đã sửa:** mọi `/api/*` trên Vercel trả 500 (`ERR_MODULE_NOT_FOUND`) vì `"type": "module"` yêu cầu import tương đối có đuôi `.js`. Đã thêm đuôi `.js` và kiểm tra tự động trong `scripts/test_integrity.js` (55/55).
 - Kiểm thử trên preview với Neon thật: `/api/public-content` → `isDatabaseLive: true`, MST đọc từ Neon; `/api/admin/products`, `/api/leads`, `/api/admin/me` → 401 khi chưa đăng nhập; đăng nhập sai → 401, bảng `login_attempts` hoạt động.
 - Lưu ý: Preview và Production đang dùng **chung một database Neon**.
@@ -233,8 +233,8 @@
 | **1** | **T0 — Chạy SQL khôi phục Production** | **ĐÃ XONG** | Đã chạy migration trên Neon store `noisy-rain-90838361`, `isDatabaseLive: true`. |
 | **2** | **Chạy migration rate limits** | Đã sẵn sàng | File `sql/migrations/20261012_lead_rate_limits.sql` chạy trên Neon SQL Editor. |
 | **3** | **Chạy migration T5 & T6 trên Neon** | **ĐÃ XONG** | Đã chạy thành công `20261012_product_features_and_long_desc.sql` và `20261012_move_projects.sql` trên Neon SQL Editor. |
-| **4** | **Mắt Bão: Xác nhận thông tin chủ thể qua email** cho `apexdoor.net` | **ĐÃ XONG** | Đã xác thực thành công qua link RAA servlet của Mắt Bão (`Your email address has been verified successfully`). Tên miền an toàn tuyệt đối. |
-| **5** | **Mắt Bão: Hoàn tất bản khai "Chờ ký"** | Sớm | Ký điện tử hoặc nộp bản khai tên miền `apexdoor.net`, `apexdoor.cloud`. |
+| **4** | **Mắt Bão: Xác nhận thông tin chủ thể qua email** cho `apexhome.vn` | **ĐÃ XONG** | Đã xác thực thành công qua link RAA servlet của Mắt Bão (`Your email address has been verified successfully`). Tên miền an toàn tuyệt đối. |
+| **5** | **Mắt Bão: Hoàn tất bản khai "Chờ ký"** | Sớm | Ký điện tử hoặc nộp bản khai tên miền `apexhome.vn`, `apexdoor.cloud`. |
 | **6** | **Tạo hộp thư `contact@apexhome.vn`** | Trước khi chạy quảng cáo | Cấu hình hộp thư theo tên miền trên Mắt Bão / Google Workspace. |
 | **7** | **Resend Email API** | Trước khi chạy quảng cáo | Tạo tài khoản Resend, xác thực domain `apexhome.vn`, gắn `RESEND_API_KEY` và `NOTIFICATION_EMAIL` trên Vercel. |
 | **8** | **Mã đo lường marketing (GTM / GA4 / Pixel)** | Trước khi chạy quảng cáo | Cấu hình các biến `VITE_GTM_ID`, `VITE_GA4_ID`, `VITE_FB_PIXEL_ID` trên Vercel Production và redeploy. |
@@ -262,7 +262,7 @@
 2. Sao chép và chạy nội dung file [`sql/neon_schema.sql`](../sql/neon_schema.sql) để khởi tạo toàn bộ các bảng và dữ liệu công ty ban đầu.
 3. Chạy lệnh tạo tài khoản quản trị đầu tiên tại terminal:
    ```powershell
-   node scripts/hash_password.js "MatKhauQuanTriCuaBan" "admin@apexdoor.net"
+   node scripts/hash_password.js "MatKhauQuanTriCuaBan" "admin@apexhome.vn"
    ```
    Sau đó sao chép câu lệnh SQL hiển thị trên màn hình và chạy trong Neon SQL Editor.
 
@@ -275,5 +275,6 @@
   ALTER TABLE products ADD COLUMN IF NOT EXISTS features JSONB DEFAULT '[]'::jsonb;
   ALTER TABLE products ADD COLUMN IF NOT EXISTS long_description TEXT;
   ```
+
 
 

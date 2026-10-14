@@ -316,7 +316,7 @@ export default async function handler(req: any, res: any) {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              // Đặt RESEND_FROM (vd: "APEX Website <thongbao@apexdoor.net>") sau khi xác thực tên miền trên Resend
+              // Đặt RESEND_FROM (vd: "APEX Website <thongbao@apexhome.vn>") sau khi xác thực tên miền trên Resend
               from: process.env.RESEND_FROM || 'APEX Website <onboarding@resend.dev>',
               to: notifyTo,
               // Bấm "Trả lời" trong email là trả lời thẳng cho khách (nếu khách để lại email)

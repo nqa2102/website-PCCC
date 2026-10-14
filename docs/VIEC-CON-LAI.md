@@ -1,4 +1,4 @@
-# Bàn giao việc còn lại — Website APEX VN (apexdoor.net)
+﻿# Bàn giao việc còn lại — Website APEX VN (apexhome.vn)
 
 *Lập ngày 12/10/2026 · Dành cho AI agent (Antigravity) xử lý tiếp · Đọc kèm [`AGENTS.md`](../AGENTS.md) và [`GO-LIVE-STATUS.md`](./GO-LIVE-STATUS.md)*
 
@@ -9,7 +9,7 @@
 > Bạn tiếp quản dự án website APEX VN tại thư mục này. Đọc `AGENTS.md`, rồi đọc toàn bộ `docs/VIEC-CON-LAI.md`.
 > Làm lần lượt các việc **T1 → T9** theo đúng thứ tự, mỗi việc một nhánh git và một Pull Request vào `main` (repo `nqa2102/website-PCCC`). Không push thẳng `main`.
 > Với mỗi việc: làm đúng phần "Các bước", tuân thủ "Không được làm", chạy đủ "Kiểm thử", chỉ báo xong khi đạt "Xong khi" và dán bằng chứng (output lệnh) vào mô tả PR. Sau mỗi việc cập nhật `docs/GO-LIVE-STATUS.md`.
-> Việc **T0** do chủ dự án tự chạy trên Neon — nếu `curl https://apexdoor.net/api/public-content` vẫn trả `"isDatabaseLive": false`, dừng lại và nhắc chủ dự án làm T0 trước.
+> Việc **T0** do chủ dự án tự chạy trên Neon — nếu `curl https://apexhome.vn/api/public-content` vẫn trả `"isDatabaseLive": false`, dừng lại và nhắc chủ dự án làm T0 trước.
 > Mọi bước cần tài khoản bên ngoài (Neon, Vercel, Mắt Bão, Resend, Google): không tự làm, ghi rõ vào phần "Việc của chủ dự án" và tiếp tục việc độc lập.
 
 ---
@@ -18,13 +18,13 @@
 
 | Mục | Giá trị |
 |---|---|
-| Website | https://apexdoor.net (`www` chuyển 308 về đây). Tên miền ở Mắt Bão, DNS trỏ Vercel |
+| Website | https://apexhome.vn (`www` chuyển 308 về đây). Tên miền ở Mắt Bão, DNS trỏ Vercel |
 | Repo | GitHub `nqa2102/website-PCCC`, nhánh chính `main` |
 | Stack | React 19 + Vite + Tailwind v4 (SPA), Vercel Functions trong `api/` (Node, ESM), Neon PostgreSQL (`@neondatabase/serverless`), Vercel Blob (ảnh/PDF) |
 | Vercel | Team `nguyen-quang-anh`, project `website-pccc`. Production deploy tự động từ `main`; mỗi PR có Preview |
 | Neon | Store `neon-amethyst-pillar`, branch `main`, database `neondb`. **Preview và Production dùng chung database này** |
 | Biến môi trường (Vercel) | `DATABASE_URL` (sensitive), `ADMIN_SESSION_SECRET` (sensitive), `BLOB_READ_WRITE_TOKEN`. Chưa có: `RESEND_API_KEY`, `NOTIFICATION_EMAIL`, `RESEND_FROM`, `VITE_GTM_ID`, `VITE_GA4_ID`, `VITE_GOOGLE_ADS_ID`, `VITE_GOOGLE_ADS_LEAD_LABEL`, `VITE_META_PIXEL_ID` |
-| Doanh nghiệp | Công ty TNHH Apex VN · MST 0111651857 · Trụ sở: Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, TP. Hà Nội · Hotline 0566 38 5555 · Email `contact@apexdoor.net` (hộp thư **chưa tồn tại**) |
+| Doanh nghiệp | Công ty TNHH Apex VN · MST 0111651857 · Trụ sở: Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, TP. Hà Nội · Hotline 0566 38 5555 · Email `contact@apexhome.vn` (hộp thư **chưa tồn tại**) |
 | Kiểm thử | `npm run lint` (tsc), `npm run build`, `node scripts/test_integrity.js` |
 
 ### Trạng thái lúc bàn giao
@@ -101,7 +101,7 @@ CREATE INDEX IF NOT EXISTS idx_projects_verified ON projects (verified, status);
 CREATE INDEX IF NOT EXISTS idx_projects_category ON projects (category);
 ```
 
-**Xong khi:** `curl https://apexdoor.net/api/public-content` trả `"isDatabaseLive": true`; Vercel logs (Production) không còn `certification_no does not exist`; `/admin` → Sản phẩm tải được danh sách.
+**Xong khi:** `curl https://apexhome.vn/api/public-content` trả `"isDatabaseLive": true`; Vercel logs (Production) không còn `certification_no does not exist`; `/admin` → Sản phẩm tải được danh sách.
 
 ---
 
@@ -195,11 +195,11 @@ CREATE INDEX IF NOT EXISTS idx_projects_category ON projects (category);
 ### T4 — Sitemap và SEO theo nhóm / sản phẩm
 
 **Vấn đề:**
-- `public/sitemap.xml` còn `https://apexdoor.net/san-pham?nhom=steel-door|glass-door|roller-shutter|fire-curtain` (ID cũ); thiếu 5 nhóm mới và trang chi tiết sản phẩm.
+- `public/sitemap.xml` còn `https://apexhome.vn/san-pham?nhom=steel-door|glass-door|roller-shutter|fire-curtain` (ID cũ); thiếu 5 nhóm mới và trang chi tiết sản phẩm.
 - `applySeo(tab, itemName)` trong `src/routing.ts` dùng chung tiêu đề/mô tả "Sản phẩm" cho mọi nhóm; trang chi tiết không dùng `seo_title` / `seo_description` / `image_alt` đã lưu.
 
 **Các bước:**
-1. Sitemap: thay 4 URL `?nhom=` bằng 9 URL `https://apexdoor.net/san-pham/<slug>`; giữ các trang tĩnh khác; thêm `/du-an` nếu có dự án công bố. Cập nhật `scripts/test_integrity.js` (đang kiểm tra URL trang chủ trong sitemap) nếu cần.
+1. Sitemap: thay 4 URL `?nhom=` bằng 9 URL `https://apexhome.vn/san-pham/<slug>`; giữ các trang tĩnh khác; thêm `/du-an` nếu có dự án công bố. Cập nhật `scripts/test_integrity.js` (đang kiểm tra URL trang chủ trong sitemap) nếu cần.
 2. URL cũ: kiểm tra `/san-pham?nhom=steel-door` hiển thị nhóm Cửa thép và `history.replaceState` về `/san-pham/cua-thep-ngan-chay` (dùng `normalizeCategory`). Canonical = URL mới.
 3. `applySeo`: mở rộng nhận `{ title?, description?, image? }`. Trang nhóm: `"<Tên nhóm> | APEX Việt Nam"` + `shortDesc`. Trang chi tiết: `seoTitle || "<Tên sản phẩm> | APEX Việt Nam"`, `seoDescription || mô tả ngắn`, `og:image` = ảnh sản phẩm (URL tuyệt đối).
 4. Canonical giữ quy tắc hiện tại: `SITE_URL` + pathname (+ `?nhom=` nếu còn), bỏ `utm_*`.
@@ -308,16 +308,16 @@ Hiện là accordion 2 cấp (nhóm → sản phẩm con) trong `Header.tsx` (kh
 | 1 | **T0** — chạy SQL khôi phục Production | **Ngay** |
 | 2 | Chạy `sql/migrations/20261012_lead_rate_limits.sql` | Trước/khi merge PR #3 |
 | 3 | Chạy các migration mới của T5, T6 | Trước khi merge PR tương ứng |
-| 4 | **Mắt Bão: xác nhận thông tin chủ thể qua email** cho `apexdoor.net` | **Trước 24/10/2026** (quá hạn tên miền bị khóa) |
-| 5 | Mắt Bão: hoàn tất bản khai "Chờ ký" cho `apexdoor.net`, `apexdoor.cloud` | Sớm |
-| 6 | Tạo hộp thư `contact@apexdoor.net` | Trước khi chạy quảng cáo |
-| 7 | Resend: tạo tài khoản, thêm domain `apexdoor.net` (bản ghi DNS tại Mắt Bão), tạo API key → `vercel env add RESEND_API_KEY production` (tự nhập, không gửi qua chat); đặt `NOTIFICATION_EMAIL`, `RESEND_FROM="APEX Website <thongbao@apexdoor.net>"` | Trước khi chạy quảng cáo |
+| 4 | **Mắt Bão: xác nhận thông tin chủ thể qua email** cho `apexhome.vn` | **Trước 24/10/2026** (quá hạn tên miền bị khóa) |
+| 5 | Mắt Bão: hoàn tất bản khai "Chờ ký" cho `apexhome.vn`, `apexdoor.cloud` | Sớm |
+| 6 | Tạo hộp thư `contact@apexhome.vn` | Trước khi chạy quảng cáo |
+| 7 | Resend: tạo tài khoản, thêm domain `apexhome.vn` (bản ghi DNS tại Mắt Bão), tạo API key → `vercel env add RESEND_API_KEY production` (tự nhập, không gửi qua chat); đặt `NOTIFICATION_EMAIL`, `RESEND_FROM="APEX Website <thongbao@apexhome.vn>"` | Trước khi chạy quảng cáo |
 | 8 | Mã đo lường: tạo GTM container (khuyến nghị cho agency) hoặc GA4 / Google Ads / Meta Pixel → đặt `VITE_*` trên Vercel (Production) → **deploy lại** (biến build-time) | Trước khi chạy quảng cáo |
 | 9 | Nâng Vercel lên gói **Pro** (Hobby không dành cho thương mại) | Trước khi chạy quảng cáo |
 | 10 | `/admin` → Cấu hình → Lưu; "Nhập danh mục ban đầu (dạng nháp)" → rà soát → công bố sản phẩm | Trước khi chạy quảng cáo |
 | 11 | Xóa lead thử "KIỂM THỬ HỆ THỐNG – xin xóa" | Bất kỳ lúc nào |
 | 12 | Xác minh logo đối tác (`PARTNER_LOGOS`: Mitsubishi, Hitachi, LS…), số chứng nhận kiểm định, dự án — gửi văn bản để công bố hoặc yêu cầu gỡ | Trước khi chạy quảng cáo |
-| 13 | Google Search Console: thêm `apexdoor.net`, gửi sitemap | Sau T4 |
+| 13 | Google Search Console: thêm `apexhome.vn`, gửi sitemap | Sau T4 |
 
 ---
 
@@ -330,7 +330,7 @@ npm run build
 node scripts/test_integrity.js
 
 # Sức khỏe Production
-curl -s https://apexdoor.net/api/public-content          # phải có "isDatabaseLive": true
+curl -s https://apexhome.vn/api/public-content          # phải có "isDatabaseLive": true
 
 # Log Vercel (đã đăng nhập Vercel CLI, đã link project)
 vercel logs --environment production --since 1h --json
@@ -342,3 +342,4 @@ gh pr create --repo nqa2102/website-PCCC --base main --head <nhánh> --title "<t
 ```
 
 Trên Git Bash (Windows) gọi `vercel api /v9/...` phải đặt `MSYS_NO_PATHCONV=1`, nếu không đường dẫn API bị đổi thành đường dẫn Windows.
+

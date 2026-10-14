@@ -1,4 +1,4 @@
-# Prompt cho Antigravity: Ảnh sản phẩm thật + Menu sản phẩm dạng xổ xuống
+﻿# Prompt cho Antigravity: Ảnh sản phẩm thật + Menu sản phẩm dạng xổ xuống
 
 > Copy toàn bộ phần dưới đường kẻ và dán vào Antigravity.
 
@@ -90,7 +90,7 @@ Yêu cầu đầu ra:
 1. `src/types/index.ts`: thêm `gallery?: string[]` vào `Product` (tuỳ chọn, không phá kiểu cũ).
 2. `src/data/mockData.ts`: import ảnh mới, đặt `image` = cover, `gallery` = [cover, ảnh phụ…] cho các sản phẩm ở A2. Cập nhật `imageAlt` mô tả đúng ảnh thật, ví dụ `"Cửa thép ngăn cháy 1 cánh sơn tĩnh điện xám lắp tại lối thoát hiểm – APEX"`. **Không** viết alt có tên/địa chỉ công trình khách hàng.
 3. Ảnh cũ (`product_steel_fire_door_…webp`, `product_double_fire_door.jpg`, `product_glass_fire_door.jpg`): nếu không còn chỗ nào import thì xóa khỏi repo (kiểm tra bằng grep cả `src/`, `api/`, `index.html`, `public/`). Ảnh còn dùng ở dự án/tin tức/hero thì giữ.
-4. **Neon:** dữ liệu sản phẩm trong DB đang có `image = ''` nên web tự dùng ảnh tĩnh. Kiểm tra `GET https://apexdoor.net/api/public-content` – nếu sản phẩm nào có `image` khác rỗng trong DB thì ảnh DB sẽ **đè** ảnh mới: liệt kê trong báo cáo, **không tự chạy SQL**, ghi rõ câu SQL đề xuất để chủ dự án tự chạy.
+4. **Neon:** dữ liệu sản phẩm trong DB đang có `image = ''` nên web tự dùng ảnh tĩnh. Kiểm tra `GET https://apexhome.vn/api/public-content` – nếu sản phẩm nào có `image` khác rỗng trong DB thì ảnh DB sẽ **đè** ảnh mới: liệt kê trong báo cáo, **không tự chạy SQL**, ghi rõ câu SQL đề xuất để chủ dự án tự chạy.
 5. `ProductCard.tsx`: đổi khung ảnh từ `aspect-[16/10]` sang **`aspect-[4/5]`** (ảnh cửa là ảnh dọc). Giữ `object-cover`, `loading="lazy"`, `decoding="async"`, thêm `width`/`height` để không giật bố cục (CLS). Kiểm tra lưới 9 nhóm vẫn đều (các ảnh cũ ngang của nhóm cơ điện vẫn nhìn được).
 6. Trang chi tiết (`ProductDetailLayout.tsx`): nếu có `gallery` ≥ 2 ảnh thì hiện ảnh lớn + hàng thumbnail bên dưới (bấm thumbnail đổi ảnh lớn; thumbnail là `<button>` có `aria-label="Xem ảnh 2 / 5"`, `aria-current` cho ảnh đang chọn; điều khiển được bằng bàn phím). Ảnh lớn dùng `object-contain` nền `bg-slate-100`, ảnh đầu tiên `fetchpriority="high"`, các ảnh khác `loading="lazy"`. Không thêm thư viện slider.
 7. Bỏ nhãn "Hình ảnh minh họa" ở các sản phẩm đã có ảnh thật (logic `hasRealImage` hiện đang dựa vào chữ `placeholder` – kiểm tra lại cho đúng).
@@ -190,3 +190,4 @@ Xem tất cả sản phẩm →
 - **Không** dùng ảnh nhóm G7 (3CElectric) và không đăng ảnh còn lộ tọa độ GPS / địa chỉ công trình.
 - Import trong thư mục `api/` phải có đuôi `.js` (nếu có sửa API).
 - Mọi điểm chưa chắc chắn (ảnh nào là 1 hay 2 cánh, ảnh G5 dùng cho đâu) → liệt kê trong mục "Cần chủ dự án xác nhận" cuối PR thay vì tự đoán.
+
