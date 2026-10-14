@@ -18,6 +18,9 @@ import cuaKinhCover from '../assets/images/products/cua-kinh-ngan-chay-cover.web
 import cuaKinhEi60Cover from '../assets/images/products/cua-kinh-ngan-chay-ei60-cover.webp';
 import cuaKinhEi90Cover from '../assets/images/products/cua-kinh-ngan-chay-ei90-cover.webp';
 import vachKinhCover from '../assets/images/products/vach-kinh-ngan-chay-ei60-ei90-cover.webp';
+import cuaKinhProj1 from '../assets/images/products/cua-kinh-ngan-chay-2.webp';
+import cuaKinhProj2 from '../assets/images/products/cua-kinh-ngan-chay-3.webp';
+import cuaKinhProj3 from '../assets/images/products/cua-kinh-ngan-chay-4.webp';
 
 // Ảnh các nhóm cơ điện & ngăn cháy còn lại
 import rollerShutterImage from '../assets/images/product_fire_roller_shutter_1790648844563.webp';
@@ -177,42 +180,121 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
   },
 
   // ==========================================
-  // 2. CỬA KÍNH NGĂN CHÁY (Khung rỗng chờ Phase 4)
+  // 2. CỬA KÍNH NGĂN CHÁY (Điền đầy đủ 100% theo template chuẩn)
   // ==========================================
   'cua-kinh-ngan-chay': {
     slug: 'cua-kinh-ngan-chay',
     name: 'Cửa Kính Ngăn Cháy',
+    priceFrom: '3.800.000 đ/m²',
     intro:
-      'Hệ khung thép hoặc inox chịu lực kết hợp kính ngăn cháy chuyên dụng đa tầng, cách nhiệt và ngăn khói theo tiêu chuẩn QCVN 06:2022/BXD.',
+      'Cửa kính và vách kính ngăn cháy chuyên dụng 1 cánh và 2 cánh đạt chuẩn EI60 – EI90. Hệ khung thép hoặc Inox 304 chịu lực kết hợp kính chống cháy đa tầng bơm gel cách nhiệt, vừa đảm bảo an toàn PCCC tối đa vừa mang lại thẩm mỹ kiến trúc mở và lấy sáng tự nhiên.',
     sellingPoints: [
-      'Kính chống cháy đa tầng chuyên dụng',
+      'Đã kiểm định phương tiện PCCC',
       'Lấy sáng tự nhiên, thẩm mỹ kiến trúc mở',
-      'Đạt cấp độ chịu lửa EI60 – EI90',
+      'Miễn phí tư vấn, thiết kế theo yêu cầu',
     ],
     quickSpec: [
       { label: 'Cấp độ ngăn cháy', value: 'EI60 / EI90' },
       { label: 'Loại cửa', value: 'Cửa đi 1 cánh, 2 cánh & vách kính cố định' },
-      { label: 'Khung bao', value: 'Thép mạ kẽm sơn tĩnh điện / Inox 304' },
-      { label: 'Kính ngăn cháy', value: 'Kính chống cháy đa tầng bơm keo cách nhiệt' },
+      { label: 'Khung bao', value: 'Thép mạ kẽm sơn tĩnh điện / Inox 304 xước hairline' },
+      { label: 'Kính ngăn cháy', value: 'Kính chống cháy đa tầng bơm gel cách nhiệt (Intumescent)' },
+      { label: 'Độ dày kính', value: '20–28mm (EI60) / 30–36mm (EI90)' },
+      { label: 'Phụ kiện đồng bộ', value: 'Bản lề sàn thủy lực, tay nắm inox 304, khóa cửa chuyên dụng' },
       { label: 'Bảo hành', value: '24 tháng' },
     ],
-    advantages: [],
-    uses: [],
-    specTable: [
-      { label: 'Loại cửa', value: 'Cửa kính 1 cánh, 2 cánh, vách kính ngăn cháy' },
-      { label: 'Cấp độ ngăn cháy', value: 'EI60, EI90 (phút)' },
-      { label: 'Vật liệu khung', value: 'Thép tấm gia cường / Inox 304 định hình' },
-      { label: 'Loại kính', value: 'Kính ngăn cháy đa lớp chống truyền nhiệt' },
-      { label: 'Hệ gioăng', value: 'Gioăng chống cháy chịu nhiệt chuyên dụng' },
-      { label: 'Bảo hành', value: '24 tháng theo tiêu chuẩn nhà sản xuất' },
+    advantages: [
+      'Chịu lửa cách nhiệt EI60 – EI90, ngăn ngọn lửa và bức xạ nhiệt theo chuẩn QCVN 06:2022/BXD',
+      'Độ truyền sáng cao (> 82%), tạo tầm nhìn thông thoáng và vẻ đẹp sang trọng cho công trình',
+      'Kính nhiều lớp bơm keo intumescent tự động phồng nở tạo màng chắn nhiệt khi gặp nhiệt độ cao',
+      'Khung thép gia cường hoặc Inox 304 chịu lực cao, chống biến dạng và chống rung lắc',
+      'Khả năng cách âm, giảm ồn vượt trội (> 38dB), giữ không gian làm việc luôn yên tĩnh',
+      'Phụ kiện bản lề sàn thủy lực, khóa cửa và tay co đồng bộ kiểm định an toàn PCCC',
     ],
+    uses: [
+      {
+        icon: 'flame',
+        title: 'Ngăn lửa & bức xạ nhiệt',
+        desc: 'Lớp gel cách nhiệt phồng nở tạo màng bọt xốp cách nhiệt, bảo vệ an toàn lối thoát hiểm.',
+      },
+      {
+        icon: 'scan',
+        title: 'Lấy sáng & kiến trúc mở',
+        desc: 'Tối ưu độ truyền sáng, mở rộng không gian và tầm nhìn cho sảnh, hành lang và văn phòng.',
+      },
+      {
+        icon: 'wind',
+        title: 'Chặn khói & khí độc',
+        desc: 'Hệ gioăng kép chuyên dụng và keo silicone chịu nhiệt bịt kín khói và khí CO lan rộng.',
+      },
+      {
+        icon: 'ear',
+        title: 'Cách âm & giảm ồn',
+        desc: 'Kết cấu kính ghép đa lớp giúp giảm nhiệt truyền qua và cách âm chống ồn vượt trội (> 38dB).',
+      },
+    ],
+    specTable: [
+      { label: 'Chủng loại', value: 'Cửa đi kính ngăn cháy 1 cánh, 2 cánh; vách kính cố định' },
+      { label: 'Giới hạn chịu lửa', value: 'EI60 (60 phút), EI90 (90 phút) theo TCVN 9383:2012' },
+      { label: 'Khung bao cửa', value: 'Thép mạ kẽm định hình 1.4–1.8mm sơn tĩnh điện / Inox 304 xước 1.2–1.5mm' },
+      { label: 'Kích thước mặt cắt khung', value: '50×100mm, 60×120mm hoặc gia công theo bản vẽ thiết kế' },
+      { label: 'Cấu tạo kính', value: 'Kính ngăn cháy đa lớp xen kẽ lớp gel cách nhiệt (Intumescent gel)' },
+      { label: 'Độ dày kính', value: '20–28mm (EI60) / 30–36mm (EI90) (± 1mm)' },
+      { label: 'Độ truyền sáng', value: '≥ 82% (kính trong suốt, không ố mờ trong điều kiện thường)' },
+      { label: 'Hệ gioăng & keo', value: 'Gioăng cao su EPDM chống cháy, keo silicone chịu nhiệt chuyên dụng' },
+      { label: 'Phụ kiện đồng bộ', value: 'Bản lề sàn thủy lực, khóa cửa, tay nắm inox 304, kẹp kính chịu lực' },
+      { label: 'Khả năng cách âm', value: 'Giảm ồn ≥ 38 dB' },
+      { label: 'Bảo hành', value: '24 tháng theo tiêu chuẩn nhà sản xuất APEX' },
+    ],
+    quote: {
+      model: 'cửa kính 1 cánh, mẫu 0.9 × 2.2m',
+      rows: [
+        {
+          name: 'Cửa kính ngăn cháy EI60 khung Inox 304/thép, KT 900×2200',
+          unit: 'm²',
+          qty: '1.98',
+          price: '3.800.000',
+          amount: '7.524.000',
+        },
+        {
+          name: 'Bản lề sàn thủy lực chịu lửa chuyên dụng',
+          unit: 'Bộ',
+          qty: '1',
+          price: '1.200.000',
+          amount: '1.200.000',
+        },
+        {
+          name: 'Tay nắm cửa Inox 304 xước Hairline',
+          unit: 'Bộ',
+          qty: '1',
+          price: '450.000',
+          amount: '450.000',
+        },
+        {
+          name: 'Khóa cửa sàn chống cháy inox',
+          unit: 'Bộ',
+          qty: '1',
+          price: '650.000',
+          amount: '650.000',
+        },
+        {
+          name: 'Hệ keo silicone chống cháy & gioăng EPDM',
+          unit: 'Gói',
+          qty: '1',
+          price: '350.000',
+          amount: '350.000',
+        },
+      ],
+      total: '10.174.000',
+      note: 'Dự toán mẫu cho cửa kính 1 cánh EI60, KT 900×2200. Giá chính xác căn cứ bản vẽ, khẩu độ kính và cấu hình khung thép/inox thực tế. Chi phí kiểm định PCCC tính riêng (liên hệ).',
+    },
     gallery: [
       cuaKinhCover,
       cuaKinhEi60Cover,
       cuaKinhEi90Cover,
       vachKinhCover,
+      cuaKinhProj1,
     ],
-    projectImages: [],
+    projectImages: [cuaKinhProj1, cuaKinhProj2, cuaKinhProj3],
     relatedSlugs: ['cua-thep-ngan-chay', 'cua-cuon-ngan-chay', 'rem-ngan-chay'],
   },
 

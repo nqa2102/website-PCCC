@@ -14,6 +14,7 @@ import {
   LayoutGrid,
   ArrowRight,
   Award,
+  Scan,
 } from 'lucide-react';
 import { CATEGORY_DETAILS } from '../data/categoryDetails';
 import { useLiveData } from '../admin/adminData';
@@ -63,6 +64,8 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
     switch (iconName) {
       case 'flame':
         return <Flame className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
+      case 'scan':
+        return <Scan className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
       case 'shield-half':
       case 'shield':
         return <Shield className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
@@ -338,9 +341,9 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
         )}
 
         {/* =========================================================================
-            KHỐI 5: DỰ TOÁN CHI TIẾT CHO 1 BỘ + CTA BAR (tự ẩn nếu rỗng)
+            KHỐI 5: DỰ TOÁN CHI TIẾT CHO 1 BỘ HOẶC THANH CTA BÁO GIÁ
            ========================================================================= */}
-        {detail.quote && (
+        {detail.quote ? (
           <section className="mt-10">
             <h2 className="mb-4 flex items-center gap-2 text-[13px] font-bold tracking-wider uppercase text-red-700">
               <Receipt className="h-4 w-4 text-red-700" aria-hidden="true" />
@@ -398,6 +401,38 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                 </p>
                 <p className="text-xs text-slate-600 sm:text-sm">
                   Gửi kích thước và số lượng, kỹ sư APEX dự toán trong ngày.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => onOpenQuote?.(detail.slug)}
+                  className="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-lg bg-red-700 px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-red-800"
+                >
+                  <FileText className="h-4 w-4" aria-hidden="true" />
+                  <span>Nhận báo giá</span>
+                </button>
+                <a
+                  href={company.zaloHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#0068ff] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#0057d9]"
+                >
+                  <MessageSquare className="h-4 w-4" aria-hidden="true" />
+                  <span>Tư vấn Zalo</span>
+                </a>
+              </div>
+            </div>
+          </section>
+        ) : (
+          <section className="mt-10">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-red-200/60 bg-red-50/60 p-4 sm:p-5">
+              <div>
+                <p className="mb-0.5 text-sm font-semibold text-slate-900">
+                  Cần báo giá dự toán {detail.name}?
+                </p>
+                <p className="text-xs text-slate-600 sm:text-sm">
+                  Gửi kích thước và yêu cầu kỹ thuật, kỹ sư APEX phản hồi dự toán trong ngày.
                 </p>
               </div>
               <div className="flex flex-wrap gap-2.5">
