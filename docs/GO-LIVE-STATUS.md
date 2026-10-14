@@ -275,9 +275,22 @@
 ### 4. Migration Thêm cột `features` & `long_description` cho bảng `products` (T6):
 - Chạy [`sql/migrations/20261012_product_features_and_long_desc.sql`](../sql/migrations/20261012_product_features_and_long_desc.sql) trong Neon SQL Editor:
   ```sql
-  ALTER TABLE products ADD COLUMN IF NOT EXISTS features JSONB DEFAULT '[]'::jsonb;
-  ALTER TABLE products ADD COLUMN IF NOT EXISTS long_description TEXT;
-  ```
+---
+
+## 🏗️ Kế Hoạch 7 Phase: Nâng Cấp Hồ Sơ Dự Án Tiêu Biểu (PROMPT-DU-AN.md)
+*Tài liệu kỹ thuật*: [`docs/PROMPT-DU-AN.md`](./PROMPT-DU-AN.md) & [`AGENTS.md`](../AGENTS.md).
+- **Mục tiêu**: Chuẩn hóa toàn bộ hệ thống trưng bày và quản trị dự án thực tế của APEX, tuân thủ nguyên tắc trung thực tuyệt đối: không sao chép đối thủ, không tự bịa số liệu, chỉ công bố dự án có hồ sơ nghiệm thu thực tế (`verified = true`).
+
+| Phase | Nội dung công việc | Trạng thái | Bằng chứng kiểm thử |
+|:---:|:---|:---:|:---|
+| **Phase 0** | Khởi tạo nhánh `feat/projects-showcase`, rà soát kiến trúc Neon, API, types, lập kế hoạch. | 🟢 **DONE** | Lập plan chi tiết, người dùng phê duyệt. |
+| **Phase 1** | Bổ sung 2 cột `general_contractor` & `apex_role` với migration an toàn idempotency, fallback SELECT API chống crash, cập nhật types và automated integrity tests. | 🟢 **DONE** | Commit `6472f54`, 178/178 test integrity PASS. |
+| **Phase 2** | Nâng cấp trang danh sách `/du-an` theo wireframe: Hero + số liệu thật (UC9), chip filter theo category có đếm số, lưới thẻ tỉ lệ 4:3, phân trang client 9 thẻ/lần, chống tràn ngang. | 🟢 **DONE** | Commit `72d9282`, QA 1440px & 375px đạt 0 overflow. |
+| **Phase 3** | Nâng cấp trang chi tiết `/du-an/:slug` theo wireframe: Breadcrumb + meta badge bar, ảnh lớn + thumbnail strip tương tác (bàn phím + aria), bảng thông tin tự ẩn dòng trống (UC6), mô tả công trình + cam kết nghiệm thu, thư viện ảnh thi công hiện trường, CTA dự toán + hotline + Zalo, 3 dự án liên quan, lightbox phóng to ảnh, và màn hình thân thiện chuẩn UC4 khi slug không tồn tại. | 🟢 **DONE** | `lint` pass, `build` pass, 178/178 tests PASS, Browser QA 1440px & 375px hoàn thành. |
+| **Phase 4** | Admin: Thêm 2 trường `generalContractor` và `apexRole`, kiểm tra upload ảnh & thư viện, điều khiển status & verified (UC4). | ⚪ **CHỜ DUYỆT ĐỂ LÀM** | Sẵn sàng triển khai sau khi duyệt Phase 3. |
+| **Phase 5** | SEO + Sitemap cho các slug dự án công khai, Schema.org `CreativeWork`, kiểm tra link cũ. | ⚪ Chưa làm | |
+| **Phase 6** | Nhập 3 dự án mẫu dạng chữ vào admin ở trạng thái nháp (`verified=false`). | ⚪ Chưa làm | |
+
 
 
 

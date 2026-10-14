@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import {
+  ArrowLeft,
   ArrowRight,
   Building2,
   Calendar,
@@ -8,6 +9,8 @@ import {
   FileCheck,
   FolderGit2,
   MapPin,
+  MessageSquareText,
+  ShieldAlert,
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
@@ -112,6 +115,63 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
     }
   };
 
+  // UC4: Nếu truy cập /du-an/:slug mà slug không tồn tại (hoặc chưa verified) -> Hiển thị thông báo thân thiện
+  if (initialProjectId && !activeProject) {
+    return (
+      <div className="min-h-screen w-full bg-neutral-50 py-10 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <nav aria-label="Breadcrumb" className="mb-6 flex items-center gap-2 text-xs text-slate-500">
+            <button
+              onClick={handleBackToList}
+              className="inline-flex items-center gap-1 font-semibold text-slate-700 transition-colors hover:text-red-600"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span>Danh sách dự án</span>
+            </button>
+            <span>/</span>
+            <span className="text-slate-400">Không tìm thấy dự án</span>
+          </nav>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-xs sm:p-12">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+              <ShieldAlert className="h-7 w-7" />
+            </div>
+
+            <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800">
+              <span>Đang kiểm duyệt hoặc liên kết thay đổi</span>
+            </div>
+
+            <h1 className="mt-4 text-xl font-black text-slate-900 sm:text-2xl">
+              Không tìm thấy dự án hoặc dự án đang trong quá trình cập nhật kiểm định
+            </h1>
+
+            <p className="mx-auto mt-3 max-w-xl text-xs leading-relaxed text-slate-600 sm:text-sm">
+              Dự án bạn tìm kiếm có thể chưa được xác minh nghiệm thu thực tế hoặc chưa hoàn tất văn bản chấp thuận công bố từ chủ đầu tư theo cam kết trung thực của APEX.
+            </p>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <button
+                onClick={handleBackToList}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-xs font-bold text-slate-800 transition-colors hover:border-red-600 hover:text-red-600"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Xem các dự án khác ({projects.length})</span>
+              </button>
+
+              <button
+                onClick={onOpenQuote}
+                className="inline-flex items-center gap-2 rounded-xl bg-red-600 px-5 py-2.5 text-xs font-bold text-white shadow-xs transition-colors hover:bg-red-700"
+              >
+                <MessageSquareText className="h-4 w-4" />
+                <span>Gửi yêu cầu dự toán</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Nếu đang xem chi tiết một dự án: hiển thị layout chi tiết
   if (activeProject) {
     return (
@@ -120,6 +180,14 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
           project={activeProject}
           onBack={handleBackToList}
           onOpenQuote={onOpenQuote}
+          onNavigate={onNavigate}
+          allProjects={projects}
+          onSelectProject={(p) => {
+            handleViewDetail(p);
+            if (typeof window !== 'undefined') {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
         />
       </div>
     );

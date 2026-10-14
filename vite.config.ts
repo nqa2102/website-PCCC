@@ -26,7 +26,11 @@ function devApiPlugin(): Plugin {
       completedYear: 2026,
       description: 'Cung cấp, lắp đặt và nghiệm thu hoàn thành toàn bộ hệ thống cửa thép chống cháy tiêu chuẩn EI70 - EI90 tại Tòa nhà đa năng KV I - Học viện Hậu Cần.',
       coverImage: '/src/assets/images/hero_fire_door_apex_1790648819738.webp',
-      gallery: [],
+      gallery: [
+        '/src/assets/images/product_fire_curtain_1790648858516.webp',
+        '/src/assets/images/product_fire_roller_shutter_1790648844563.webp',
+        '/src/assets/images/products/cua-kinh-ngan-chay-cover.webp',
+      ],
       status: 'published',
       verified: true,
       verifiedNote: 'Biên bản nghiệm thu hoàn thành 22/5/2026',
