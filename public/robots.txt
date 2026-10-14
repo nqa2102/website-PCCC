@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin
 Disallow: /api/
 
-Sitemap: https://apexdoor.net/sitemap.xml
+Sitemap: https://apexhome.vn/sitemap.xml

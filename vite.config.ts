@@ -50,7 +50,7 @@ function devApiPlugin(): Plugin {
         // 1. /api/admin/me
         if (pathname === '/api/admin/me') {
           return json(200, {
-            user: { id: 'usr-admin-dev', email: 'admin@apexdoor.net', role: 'admin', fullName: 'Quản trị viên APEX' }
+            user: { id: 'usr-admin-dev', email: 'admin@apexhome.vn', role: 'admin', fullName: 'Quản trị viên APEX' }
           });
         }
 

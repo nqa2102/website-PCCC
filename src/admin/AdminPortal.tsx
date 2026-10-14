@@ -26,7 +26,7 @@ export const AdminPortal = ({ onExit }: { onExit: () => void }) => {
       if (import.meta.env.DEV) {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('dev_auth') === 'admin') {
-          return { email: 'admin@apexdoor.net', role: 'admin', mode: 'remote' };
+          return { email: 'admin@apexhome.vn', role: 'admin', mode: 'remote' };
         }
       }
       const raw = window.localStorage.getItem(STORAGE_SESSION_KEY);
@@ -219,7 +219,7 @@ export const AdminPortal = ({ onExit }: { onExit: () => void }) => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="email@apexdoor.net"
+                    placeholder="email@apexhome.vn"
                     className="mt-1 h-11 w-full rounded border border-neutral-300 px-3 text-sm text-slate-900 outline-none transition focus:border-red-600 focus:ring-1 focus:ring-red-600"
                   />
                 </div>

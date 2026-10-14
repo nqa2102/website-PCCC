@@ -183,7 +183,7 @@ const SEO: Record<string, { title: string; description: string }> = {
 };
 
 // Tên miền chính thức: canonical/og luôn trỏ về đây, kể cả khi truy cập qua www hoặc *.vercel.app
-export const SITE_URL = 'https://apexdoor.net';
+export const SITE_URL = 'https://apexhome.vn';
 
 const setMeta = (selector: string, attribute: string, value: string) => {
   const element = document.querySelector<HTMLMetaElement>(selector);

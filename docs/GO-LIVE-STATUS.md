@@ -14,7 +14,7 @@
 | **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 9 Sản phẩm & Ảnh Thật)** | 9 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ (ankovina, 3ce). Đã xử lý & gắn 37 ảnh sản phẩm thật (VIỆC A), xóa 100% EXIF/GPS, tỷ lệ 4:5, gallery thumbnails, loại bỏ bản quyền G7. `certificationNo` để trống ("Đang cập nhật") chờ văn bản gốc. |
 | **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/:category`, `/san-pham/:category/:slug`, `/du-an`, `/du-an/:slug`. Schema.org `Product` và `CreativeWork`. **Đã hoàn thành Menu Sản phẩm Accordion (VIỆC B)**. |
 | **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử `scripts/test_integrity.js` đạt **169/169 PASS (100%)**, `npm run lint` PASS, `npm run build` PASS, Browser QA 1440px và 375px đạt chuẩn (không vỡ layout, không tràn ngang). |
-| **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Deploy production Vercel + alias `https://apexdoor.net`. Database Neon live. |
+| **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Deploy production Vercel + tên miền chính thức `https://apexhome.vn` (kèm alias `apexdoor.net`). Database Neon live. |
 | **GĐ6** | **Vận hành sau Go-live** | **P2** | ⚪ **NOT STARTED** | Quy trình backup tự động (Neon PITR) và phân quyền bảo trì. |
 | **GĐ-CAT** | **Trang chi tiết theo danh mục (6 Phase)** | **P1** | 🟡 **IN PROGRESS (Phase 0, 1, 2 & 3 DONE)** | Chuyển từ lưới sản phẩm con sang trang chi tiết danh mục (landing 6 khối theo mockup `chi-tiet-cua-thep.html`). Nhánh `feat/category-detail-page`. |
 
@@ -51,7 +51,7 @@
 | **3** | Lead từ website được lưu vào Neon Database | Biểu mẫu gọi `POST /api/leads` lưu trực tiếp bảng `leads` trong Neon | 🟢 **ĐẠT** | Endpoint `api/leads.ts` sẵn sàng, có honeypot chống bot spam. |
 | **4** | Có thông báo email khi có lead mới | Tích hợp gửi email tức thì qua Resend REST API trong `api/leads.ts` khi có cấu hình `RESEND_API_KEY` | 🟢 **ĐẠT** | Code tích hợp tại dòng 113-145 của `api/leads.ts`. |
 | **5** | Dữ liệu nội dung đồng bộ từ Neon | API `/api/public-content.ts` và hook `useLiveData()` tự động fetch và cập nhật dữ liệu mới nhất từ Neon khi online | 🟢 **ĐẠT** | Endpoint sẵn sàng, fallback tĩnh an toàn khi offline. |
-| **6** | Thông tin doanh nghiệp hiển thị đầy đủ, chính xác pháp lý | Tên pháp lý: Công ty TNHH Apex VN (APEX VN COMPANY LIMITED); ĐDPL: Nguyễn Thị Ngọc Anh - Giám đốc; Mã số doanh nghiệp: `0111651857` (đăng ký lần đầu 06/10/2026); Website: `https://apexdoor.net`; Email: `contact@apexdoor.net` (cần tạo hộp thư) | 🟢 **ĐẠT** | Đồng bộ tại `companyData.ts`, `Footer.tsx`, `PrivacyPage.tsx`, `index.html`. |
+| **6** | Thông tin doanh nghiệp hiển thị đầy đủ, chính xác pháp lý | Tên pháp lý: Công ty TNHH Apex VN (APEX VN COMPANY LIMITED); ĐDPL: Nguyễn Thị Ngọc Anh - Giám đốc; Mã số doanh nghiệp: `0111651857` (đăng ký lần đầu 06/10/2026); Website: `https://apexhome.vn`; Email: `contact@apexhome.vn` (cần tạo hộp thư) | 🟢 **ĐẠT** | Đồng bộ tại `companyData.ts`, `Footer.tsx`, `PrivacyPage.tsx`, `index.html`. |
 | **7** | Địa chỉ trụ sở và nhà máy chính xác | Trụ sở chính (theo GCN ĐKDN): Số 10 Ngõ 25 Đường 422B, Xã Sơn Đồng, TP. Hà Nội; Văn phòng: 11 Trần Thái Tông, Cầu Giấy, Hà Nội; Nhà máy: Thạch Thất và Đông Anh | 🟢 **ĐẠT** | Xóa sạch các địa chỉ mock cũ (Diamond Flower, Cityland, Apex Tower, Bitexco). |
 | **8** | Cam kết phản hồi trung thực, không khuếch đại | "Phản hồi trong 1-2 ngày" theo đúng quy chuẩn thực tế của công ty | 🟢 **ĐẠT** | Quét 0 kết quả cho cụm từ khuếch đại "15 phút". |
 | **9** | Case study dự án khách hàng lớn được trung hòa an toàn | Tên dự án tổng quát mang tính giải pháp kỹ thuật, không tự ý công bố nhãn hiệu bên thứ ba chưa ký duyệt văn bản | 🟢 **ĐẠT** | Đã chuẩn hóa danh mục dự án trong `mockData.ts`. |
@@ -111,8 +111,8 @@
 ---
 
 ### GĐ3 – SEO & Hoàn Thiện Kỹ Thuật
-- [ ] **Task 3.1 (Hạ tầng)**: Tên miền chính thức `apexdoor.net` (Mắt Bão, hạn 09/10/2027): đã cập nhật trong code; chờ gắn domain trên Vercel + DNS (xem Hướng dẫn thao tác ngoài, mục 5).
-  - *Trạng thái*: Chờ cung cấp domain và trỏ DNS.
+- [x] **Task 3.1 (Hạ tầng)**: Tên miền chính thức `apexhome.vn` (Mắt Bão): đã gắn trên Vercel `website-pccc`, cập nhật mã nguồn toàn diện; hướng dẫn trỏ DNS tại Mắt Bão.
+  - *Trạng thái*: Đã thêm trên Vercel và cấu hình mã nguồn sẵn sàng.
 - [x] **Task 3.2 (Code)**: Chuyển các thẻ điều hướng trong Header/Footer/Trang chủ sang thẻ `<a href>` semantic chuẩn SEO.
 - [x] **Task 3.3 (Code)**: Trang lỗi 404 tùy chỉnh mang nhận diện thương hiệu APEX ([`src/pages/NotFoundPage.tsx`](../src/pages/NotFoundPage.tsx)).
 - [x] **Task 3.4 (SEO)**: Cấu hình `sitemap.xml`, `robots.txt`, thẻ Open Graph `og-image.png` (1200x630) và Schema.org Organization/Product chuẩn xác.
@@ -221,7 +221,7 @@
 | **T6** | **Quản trị sản phẩm: Specs, Features, SEO** | Migration `20261012_product_features_and_long_desc.sql`; `SpecsEditor` 2 cột có gợi ý 9 nhóm; textarea tính năng nổi bật & mô tả chi tiết | 🟢 **PR #8 MERGED** |
 | **T7** | **Danh sách khách hàng: leadsTotal & CSV** | Cập nhật `leadsTotal` (+1/-1); endpoint `GET /api/leads?format=csv` xuất toàn bộ UTF-8 BOM cho Excel; bộ lọc Nguồn & Sản phẩm | 🟢 **PR #9 MERGED** |
 | **T8** | **Menu mobile 2 nhóm phẳng** | Khối danh sách 2 nhóm phẳng theo `PRODUCT_CATEGORY_GROUPS`, touch target $\ge 44$px, đóng menu tự động khi chọn | 🟢 **PR #10 MERGED** |
-| **PROD** | **Deploy Production & Fallback Tương Thích** | Cơ chế fallback tương thích ngược tự động cho bảng `products`; Deploy Production hoàn tất trên Vercel `apexdoor.net` với `isDatabaseLive: true` | 🟢 **PR #12 MERGED & LIVE** |
+| **PROD** | **Deploy Production & Fallback Tương Thích** | Cơ chế fallback tương thích ngược tự động cho bảng `products`; Deploy Production hoàn tất trên Vercel `apexhome.vn` với `isDatabaseLive: true` | 🟢 **PR #12 MERGED & LIVE** |
 | **IMG** | **Chuẩn Hóa Hình Ảnh 9 Dòng Sản Phẩm** | Cung cấp ảnh chụp sản phẩm công nghiệp sắc nét riêng biệt cho từng nhóm (cửa kính, tủ điện MSB/DB, thang máng cáp, tủ rack 42U, shelter, tủ nguồn outdoor), loại bỏ hoàn toàn việc dùng chung 1 ảnh cửa thép | 🟢 **HOÀN TẤT** |
 
 ---
@@ -235,14 +235,14 @@
 | **3** | **Chạy migration T5 & T6 trên Neon** | **ĐÃ XONG** | Đã chạy thành công `20261012_product_features_and_long_desc.sql` và `20261012_move_projects.sql` trên Neon SQL Editor. |
 | **4** | **Mắt Bão: Xác nhận thông tin chủ thể qua email** cho `apexdoor.net` | **ĐÃ XONG** | Đã xác thực thành công qua link RAA servlet của Mắt Bão (`Your email address has been verified successfully`). Tên miền an toàn tuyệt đối. |
 | **5** | **Mắt Bão: Hoàn tất bản khai "Chờ ký"** | Sớm | Ký điện tử hoặc nộp bản khai tên miền `apexdoor.net`, `apexdoor.cloud`. |
-| **6** | **Tạo hộp thư `contact@apexdoor.net`** | Trước khi chạy quảng cáo | Cấu hình hộp thư theo tên miền trên Mắt Bão / Google Workspace. |
-| **7** | **Resend Email API** | Trước khi chạy quảng cáo | Tạo tài khoản Resend, xác thực domain `apexdoor.net`, gắn `RESEND_API_KEY` và `NOTIFICATION_EMAIL` trên Vercel. |
+| **6** | **Tạo hộp thư `contact@apexhome.vn`** | Trước khi chạy quảng cáo | Cấu hình hộp thư theo tên miền trên Mắt Bão / Google Workspace. |
+| **7** | **Resend Email API** | Trước khi chạy quảng cáo | Tạo tài khoản Resend, xác thực domain `apexhome.vn`, gắn `RESEND_API_KEY` và `NOTIFICATION_EMAIL` trên Vercel. |
 | **8** | **Mã đo lường marketing (GTM / GA4 / Pixel)** | Trước khi chạy quảng cáo | Cấu hình các biến `VITE_GTM_ID`, `VITE_GA4_ID`, `VITE_FB_PIXEL_ID` trên Vercel Production và redeploy. |
 | **9** | **Nâng Vercel lên gói Pro** | Trước khi chạy quảng cáo | Gói Hobby chỉ phục vụ cá nhân/phi thương mại, nâng Pro để đảm bảo SLA thương mại. |
 | **10** | **Nhập danh mục ban đầu dạng nháp trong `/admin`** | Trước khi chạy quảng cáo | Vào `/admin` → Cấu hình → Nhập danh mục ban đầu → rà soát thông số kỹ thuật → Công bố. |
 | **11** | **Xóa lead thử nghiệm** | Bất kỳ lúc nào | Vào tab Khách cần tư vấn xóa bản ghi "KIỂM THỬ HỆ THỐNG – xin xóa". |
 | **12** | **Xác minh logo đối tác & chứng nhận kiểm định** | Trước khi chạy quảng cáo | Chỉ công bố đối tác và số chứng nhận kiểm định khi có hợp đồng/văn bản xác nhận lưu hành. |
-| **13** | **Google Search Console** | Hoàn thành sau T4 | Thêm `apexdoor.net` vào GSC và nộp sitemap: `https://apexdoor.net/sitemap.xml`. |
+| **13** | **Google Search Console** | Hoàn thành sau T4 | Thêm `apexhome.vn` vào GSC và nộp sitemap: `https://apexhome.vn/sitemap.xml`. |
 
 ---
 
