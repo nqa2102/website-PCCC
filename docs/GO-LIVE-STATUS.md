@@ -16,8 +16,31 @@
 | **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử `scripts/test_integrity.js` đạt **169/169 PASS (100%)**, `npm run lint` PASS, `npm run build` PASS, Browser QA 1440px và 375px đạt chuẩn (không vỡ layout, không tràn ngang). |
 | **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Deploy production Vercel + alias `https://apexdoor.net`. Database Neon live. |
 | **GĐ6** | **Vận hành sau Go-live** | **P2** | ⚪ **NOT STARTED** | Quy trình backup tự động (Neon PITR) và phân quyền bảo trì. |
+| **GĐ-CAT** | **Trang chi tiết theo danh mục (6 Phase)** | **P1** | 🟡 **IN PROGRESS (Phase 0 DONE)** | Chuyển từ lưới sản phẩm con sang trang chi tiết danh mục (landing 6 khối theo mockup `chi-tiet-cua-thep.html`). Nhánh `feat/category-detail-page`. |
 
 ---
+
+## 🚀 Kế Hoạch 6 Phase: Trang Chi Tiết Theo Danh Mục (Landing Page 9 Danh Mục)
+*Tài liệu kỹ thuật*: [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md) & mockup [`docs/mockup/chi-tiet-cua-thep.html`](./mockup/chi-tiet-cua-thep.html).
+
+- **Mục tiêu**: Đổi mô hình "danh mục → lưới nhiều sản phẩm con" sang **mỗi danh mục là 1 trang chi tiết** (landing 6 khối). Bấm danh mục ra thẳng trang chi tiết. Áp dụng cho cả 9 danh mục.
+- **Thứ tự 6 khối chuẩn theo mockup**:
+  1. Hero: Thư viện ảnh (trái) + tên + giá từ /m² + 3 điểm bán hàng + bảng tóm tắt quickSpec + CTA Báo giá & Zalo + Hotline.
+  2. Ưu điểm & công dụng (6 gạch đầu dòng + 4 thẻ công dụng).
+  3. Hình ảnh thực tế tại công trình (3 ảnh).
+  4. Bảng thông số kỹ thuật chi tiết (bảng đầy đủ).
+  5. Dự toán chi tiết cho 1 bộ (bảng vật tư) + thanh CTA bar.
+  6. Sản phẩm tương tự (3 thẻ danh mục liên quan).
+
+| Phase | Nội dung công việc | Trạng thái |
+|:---:|:---|:---:|
+| **Phase 0** | Khởi tạo nhánh `feat/category-detail-page`, khảo sát mã nguồn, cập nhật tiến độ, chốt mô hình dữ liệu. | 🟢 **DONE** |
+| **Phase 1** | Tạo `src/data/categoryDetails.ts`, điền đủ `cua-thep-ngan-chay` từ mockup, tạo khung rỗng 8 danh mục còn lại. | 🟡 Đang chuẩn bị |
+| **Phase 2** | Xây dựng component `src/pages/CategoryDetailPage.tsx` đúng 6 khối, thư viện ảnh thumbnail, tự ẩn khối rỗng. | ⚪ Chưa làm |
+| **Phase 3** | Đổi điều hướng: menu link thẳng trang chi tiết (bỏ accordion xổ con), `/san-pham` hiện lưới 9 thẻ danh mục. | ⚪ Chưa làm |
+| **Phase 4** | Điền nội dung cho 8 danh mục còn lại theo từng nhóm 2-3 danh mục (dừng duyệt từng nhóm). | ⚪ Chưa làm |
+| **Phase 5** | SEO (sitemap 9 URL danh mục, canonical, meta), dọn dẹp code cũ, kiểm tra integrity. | ⚪ Chưa làm |
+| **Phase 6** | QA tổng thể 1440px & 375px, kiểm tra liên kết, hoàn thiện bàn giao. | ⚪ Chưa làm |
 
 ## 🎯 Bảng Đối Chiếu 13 Tiêu Chí "Definition of Done" (DoD)
 
