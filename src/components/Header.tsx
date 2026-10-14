@@ -23,11 +23,6 @@ import { useLiveData } from '../admin/adminData';
 import { ApexBrandLogo } from './brand';
 import { pathForRoute, readRoute } from '../routing';
 import { PRODUCT_CATEGORY_GROUPS } from './products/ProductCategoryGrid';
-import {
-  groupProductsByVariant,
-  formatMenuProductName,
-  getCategorySubProducts,
-} from './products/productMenu';
 
 interface HeaderProps {
   activeTab: string;
@@ -51,8 +46,6 @@ export const Header: React.FC<HeaderProps> = ({
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   // Sau khi chọn 1 mục: ẩn menu tới khi chuột rời khỏi vùng menu (tránh hover giữ menu mở)
   const [productMenuSuppressed, setProductMenuSuppressed] = useState(false);
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [mobileExpandedCategory, setMobileExpandedCategory] = useState<string | null>(null);
   const productButtonRef = React.useRef<HTMLAnchorElement | null>(null);
   const [solutionDropdownOpen, setSolutionDropdownOpen] = useState(false);
   const [mobileProductExpanded, setMobileProductExpanded] = useState(false);
@@ -61,18 +54,11 @@ export const Header: React.FC<HeaderProps> = ({
   const openProductDropdown = () => {
     setProductDropdownOpen(true);
     setProductMenuSuppressed(false);
-    const route = readRoute();
-    if (route.tab === 'products' && route.category) {
-      setExpandedCategory(route.category);
-    } else {
-      setExpandedCategory(null);
-    }
   };
 
   const closeProductDropdown = () => {
     setProductDropdownOpen(false);
     setProductMenuSuppressed(false);
-    setExpandedCategory(null);
   };
 
   const handleNavClick = (
@@ -308,7 +294,7 @@ export const Header: React.FC<HeaderProps> = ({
                         }`} />
                       </a>
 
-                      {/* DESKTOP MENU SẢN PHẨM: Accordion xổ danh sách sản phẩm con */}
+                      {/* DESKTOP MENU SẢN PHẨM: 2 nhóm danh mục, link trực tiếp tới /san-pham/<slug> */}
                       <div
                         className={`absolute top-full left-0 z-50 w-[340px] max-h-[calc(100vh-140px)] overflow-y-auto overscroll-contain rounded-b-xl border border-neutral-200 bg-white p-2 shadow-xl ${
                           productMenuSuppressed
@@ -328,123 +314,39 @@ export const Header: React.FC<HeaderProps> = ({
                                 const cat = productCategories.find((c) => c.id === id);
                                 if (!cat) return null;
                                 const IconComponent = cat.icon;
-                                const catSubProducts = getCategorySubProducts(products, cat.id);
-                                const subProductCount = catSubProducts.length;
-                                const isCatExpanded = expandedCategory === cat.id;
-
-                                if (subProductCount === 0) {
-                                  return (
-                                    <li key={cat.id}>
-                                      <a
-                                        href={`/san-pham/${cat.id}`}
-                                        onClick={(e) => {
-                                          closeProductDropdown();
-                                          setProductMenuSuppressed(true);
-                                          (e.currentTarget as HTMLElement).blur();
-                                          handleNavClick(e, 'products', cat.id);
-                                        }}
-                                        className="group/item flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 text-[13px] font-medium text-slate-700 transition-colors hover:bg-neutral-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-red-600"
-                                      >
-                                        <IconComponent
-                                          className="h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover/item:text-red-600"
-                                          aria-hidden="true"
-                                        />
-                                        <span>{cat.name}</span>
-                                      </a>
-                                    </li>
-                                  );
-                                }
+                                const isCurrentCat = currentRoute.tab === 'products' && currentRoute.category === cat.id;
 
                                 return (
                                   <li key={cat.id}>
-                                    <button
-                                      type="button"
-                                      aria-expanded={isCatExpanded}
-                                      aria-controls={`desktop-menu-cat-${cat.id}`}
-                                      onClick={() => {
-                                        setExpandedCategory((prev) => (prev === cat.id ? null : cat.id));
+                                    <a
+                                      href={`/san-pham/${cat.id}`}
+                                      aria-current={isCurrentCat ? 'page' : undefined}
+                                      onClick={(e) => {
+                                        closeProductDropdown();
+                                        setProductMenuSuppressed(true);
+                                        (e.currentTarget as HTMLElement).blur();
+                                        handleNavClick(e, 'products', cat.id);
                                       }}
-                                      className="group/item flex w-full min-h-10 items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium text-slate-700 transition-colors hover:bg-neutral-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-red-600"
+                                      className={`group/item flex min-h-10 items-center justify-between rounded-lg px-3 py-2 text-[13px] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-red-600 ${
+                                        isCurrentCat
+                                          ? 'bg-red-50 font-semibold text-red-600'
+                                          : 'text-slate-700 hover:bg-neutral-100 hover:text-slate-950'
+                                      }`}
                                     >
                                       <div className="flex items-center gap-3">
                                         <IconComponent
                                           className={`h-4 w-4 shrink-0 transition-colors ${
-                                            isCatExpanded ? 'text-red-600' : 'text-slate-400 group-hover/item:text-red-600'
+                                            isCurrentCat ? 'text-red-600' : 'text-slate-400 group-hover/item:text-red-600'
                                           }`}
                                           aria-hidden="true"
                                         />
-                                        <span className="text-left">{cat.name}</span>
+                                        <span>{cat.name}</span>
                                       </div>
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-[11px] font-semibold text-slate-400">
-                                          {subProductCount}
-                                        </span>
-                                        <ChevronDown
-                                          className={`h-3.5 w-3.5 text-slate-400 transition-transform duration-200 motion-reduce:transition-none ${
-                                            isCatExpanded ? 'rotate-180 text-red-600' : ''
-                                          }`}
-                                          aria-hidden="true"
-                                        />
-                                      </div>
-                                    </button>
-
-                                    {isCatExpanded && (
-                                      <div
-                                        id={`desktop-menu-cat-${cat.id}`}
-                                        className="space-y-1.5 py-1 pl-10 pr-1"
-                                      >
-                                        {groupProductsByVariant(catSubProducts, cat.id).map((vGroup, gIdx) => (
-                                          <div key={gIdx} className="space-y-0.5">
-                                            {vGroup.label && (
-                                              <p className="px-2 pt-1 pb-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                                                {vGroup.label}
-                                              </p>
-                                            )}
-                                            <ul className="space-y-0.5">
-                                              {vGroup.products.map((prod) => {
-                                                const isCurrentProduct =
-                                                  currentRoute.tab === 'products' &&
-                                                  (currentRoute.itemId === prod.slug || currentRoute.itemId === prod.id);
-                                                return (
-                                                  <li key={prod.id}>
-                                                    <a
-                                                      href={`/san-pham/${cat.id}/${prod.slug || prod.id}`}
-                                                      aria-current={isCurrentProduct ? 'page' : undefined}
-                                                      onClick={(e) => {
-                                                        closeProductDropdown();
-                                                        setProductMenuSuppressed(true);
-                                                        (e.currentTarget as HTMLElement).blur();
-                                                        handleNavClick(e, 'products', cat.id, prod.id);
-                                                      }}
-                                                      className={`block min-h-9 rounded-md px-2.5 py-1.5 text-[13px] leading-snug transition-colors focus-visible:outline-2 focus-visible:outline-red-600 ${
-                                                        isCurrentProduct
-                                                          ? 'bg-red-50 font-bold text-red-600'
-                                                          : 'text-slate-700 hover:bg-neutral-100 hover:text-slate-950'
-                                                      }`}
-                                                    >
-                                                      <span className="line-clamp-2">{formatMenuProductName(prod.name)}</span>
-                                                    </a>
-                                                  </li>
-                                                );
-                                              })}
-                                            </ul>
-                                          </div>
-                                        ))}
-
-                                        <a
-                                          href={`/san-pham/${cat.id}`}
-                                          onClick={(e) => {
-                                            closeProductDropdown();
-                                            setProductMenuSuppressed(true);
-                                            (e.currentTarget as HTMLElement).blur();
-                                            handleNavClick(e, 'products', cat.id);
-                                          }}
-                                          className="mt-1 flex min-h-9 items-center justify-between rounded-md px-2.5 py-1.5 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 hover:text-red-800 focus-visible:outline-2 focus-visible:outline-red-600"
-                                        >
-                                          <span>Xem tổng quan {cat.name.toLowerCase()} →</span>
-                                        </a>
-                                      </div>
-                                    )}
+                                      <ChevronRight
+                                        className="h-3.5 w-3.5 text-slate-300 transition-transform group-hover/item:translate-x-0.5 group-hover/item:text-red-600"
+                                        aria-hidden="true"
+                                      />
+                                    </a>
                                   </li>
                                 );
                               })}
@@ -452,19 +354,21 @@ export const Header: React.FC<HeaderProps> = ({
                           </div>
                         ))}
 
-                        <a
-                          href="/san-pham"
-                          onClick={(e) => {
-                            closeProductDropdown();
-                            setProductMenuSuppressed(true);
-                            (e.currentTarget as HTMLElement).blur();
-                            handleNavClick(e, 'products');
-                          }}
-                          className="mt-1 flex min-h-10 items-center justify-between border-t border-neutral-100 px-3 pt-2 text-xs font-bold text-red-700 transition-colors hover:text-red-800 focus-visible:outline-2 focus-visible:outline-red-600"
-                        >
-                          <span>Xem tất cả sản phẩm</span>
-                          <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                        </a>
+                        <div className="mt-2 border-t border-neutral-100 pt-2 px-1">
+                          <a
+                            href="/san-pham"
+                            onClick={(e) => {
+                              closeProductDropdown();
+                              setProductMenuSuppressed(true);
+                              (e.currentTarget as HTMLElement).blur();
+                              handleNavClick(e, 'products');
+                            }}
+                            className="flex min-h-9 items-center justify-between rounded-lg bg-red-50/70 px-3 py-2 text-xs font-bold text-red-700 transition-colors hover:bg-red-100 hover:text-red-800 focus-visible:outline-2 focus-visible:outline-red-600"
+                          >
+                            <span>Xem toàn bộ 9 nhóm sản phẩm</span>
+                            <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                          </a>
+                        </div>
                       </div>
                     </div>
                   );
@@ -592,14 +496,7 @@ export const Header: React.FC<HeaderProps> = ({
                       </a>
                       <button
                         onClick={() => {
-                          const next = !mobileProductExpanded;
-                          setMobileProductExpanded(next);
-                          if (next) {
-                            const route = readRoute();
-                            if (route.tab === 'products' && route.category) {
-                              setMobileExpandedCategory(route.category);
-                            }
-                          }
+                          setMobileProductExpanded(!mobileProductExpanded);
                         }}
                         className="p-2 text-slate-500 hover:text-slate-800"
                         aria-label="Mở rộng danh mục sản phẩm"
@@ -608,7 +505,7 @@ export const Header: React.FC<HeaderProps> = ({
                       </button>
                     </div>
 
-                    {/* MOBILE DANH MỤC SẢN PHẨM: Accordion xổ danh sách con */}
+                    {/* MOBILE DANH MỤC SẢN PHẨM: 2 nhóm danh mục, link trực tiếp tới /san-pham/<slug> */}
                     {mobileProductExpanded && (
                       <div className="pl-1 pr-1 py-1 space-y-3 bg-neutral-50 rounded-xl my-1 border border-neutral-100">
                         {PRODUCT_CATEGORY_GROUPS.map((group) => (
@@ -616,114 +513,37 @@ export const Header: React.FC<HeaderProps> = ({
                             <p className="px-3 pt-2 pb-1 text-[11px] font-bold uppercase tracking-wider text-slate-500">
                               {group.label}
                             </p>
-                            <div className="space-y-2">
+                            <div className="space-y-1">
                               {group.ids.map((id) => {
                                 const cat = productCategories.find((c) => c.id === id);
                                 if (!cat) return null;
                                 const IconComponent = cat.icon;
-                                const catSubProducts = getCategorySubProducts(products, cat.id);
-                                const subProductCount = catSubProducts.length;
-                                const isMobileCatExpanded = mobileExpandedCategory === cat.id;
-
-                                if (subProductCount === 0) {
-                                  return (
-                                    <a
-                                      key={cat.id}
-                                      href={`/san-pham/${cat.id}`}
-                                      onClick={(e) => {
-                                        setMobileMenuOpen(false);
-                                        handleNavClick(e, 'products', cat.id);
-                                      }}
-                                      className="flex min-h-[44px] items-center gap-2.5 rounded-lg bg-white px-3 py-2.5 text-xs font-semibold text-slate-800 border border-neutral-100 transition-colors hover:text-red-600 hover:border-red-200 active:bg-neutral-100"
-                                    >
-                                      <IconComponent className="w-4 h-4 text-slate-400 shrink-0" />
-                                      <span className="flex-1 truncate">{cat.name}</span>
-                                      <ArrowRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-                                    </a>
-                                  );
-                                }
+                                const route = readRoute();
+                                const isCurrentCat = route.tab === 'products' && route.category === cat.id;
 
                                 return (
-                                  <div key={cat.id} className="space-y-1">
-                                    <button
-                                      type="button"
-                                      aria-expanded={isMobileCatExpanded}
-                                      aria-controls={`mobile-menu-cat-${cat.id}`}
-                                      onClick={() => {
-                                        setMobileExpandedCategory((prev) => (prev === cat.id ? null : cat.id));
-                                      }}
-                                      className="flex min-h-[44px] w-full items-center justify-between rounded-lg bg-white px-3 py-2.5 text-xs font-semibold text-slate-800 border border-neutral-100 transition-colors hover:text-red-600 hover:border-red-200 active:bg-neutral-100"
-                                    >
-                                      <div className="flex items-center gap-2.5">
-                                        <IconComponent className={`w-4 h-4 shrink-0 transition-colors ${
-                                          isMobileCatExpanded ? 'text-red-600' : 'text-slate-400'
-                                        }`} />
-                                        <span className="text-left font-semibold text-slate-800">{cat.name}</span>
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-[11px] font-semibold text-slate-400">{subProductCount}</span>
-                                        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 motion-reduce:transition-none ${
-                                          isMobileCatExpanded ? 'rotate-180 text-red-600' : ''
-                                        }`} />
-                                      </div>
-                                    </button>
-
-                                    {isMobileCatExpanded && (
-                                      <div
-                                        id={`mobile-menu-cat-${cat.id}`}
-                                        className="space-y-2 rounded-lg bg-neutral-100/70 p-2 my-1 pl-3"
-                                      >
-                                        {groupProductsByVariant(catSubProducts, cat.id).map((vGroup, gIdx) => (
-                                          <div key={gIdx} className="space-y-1">
-                                            {vGroup.label && (
-                                              <p className="px-2 pt-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
-                                                {vGroup.label}
-                                              </p>
-                                            )}
-                                            <div className="space-y-2">
-                                              {vGroup.products.map((prod) => {
-                                                const route = readRoute();
-                                                const isCurrent =
-                                                  route.tab === 'products' &&
-                                                  (route.itemId === prod.slug || route.itemId === prod.id);
-                                                return (
-                                                  <a
-                                                    key={prod.id}
-                                                    href={`/san-pham/${cat.id}/${prod.slug || prod.id}`}
-                                                    aria-current={isCurrent ? 'page' : undefined}
-                                                    onClick={(e) => {
-                                                      setMobileMenuOpen(false);
-                                                      handleNavClick(e, 'products', cat.id, prod.id);
-                                                    }}
-                                                    className={`flex min-h-[44px] items-center rounded-lg px-3 py-2.5 text-xs transition-colors ${
-                                                      isCurrent
-                                                        ? 'bg-red-50 font-bold text-red-600'
-                                                        : 'bg-white text-slate-800 hover:text-red-600 active:bg-neutral-50'
-                                                    }`}
-                                                  >
-                                                    <span className="line-clamp-2 leading-relaxed">
-                                                      {formatMenuProductName(prod.name)}
-                                                    </span>
-                                                  </a>
-                                                );
-                                              })}
-                                            </div>
-                                          </div>
-                                        ))}
-
-                                        <a
-                                          href={`/san-pham/${cat.id}`}
-                                          onClick={(e) => {
-                                            setMobileMenuOpen(false);
-                                            handleNavClick(e, 'products', cat.id);
-                                          }}
-                                          className="flex min-h-[44px] items-center justify-between rounded-lg bg-white/80 px-3 py-2 text-xs font-bold text-red-700 transition-colors hover:bg-white"
-                                        >
-                                          <span>Xem tổng quan {cat.name.toLowerCase()} →</span>
-                                        </a>
-                                      </div>
-                                    )}
-                                  </div>
+                                  <a
+                                    key={cat.id}
+                                    href={`/san-pham/${cat.id}`}
+                                    aria-current={isCurrentCat ? 'page' : undefined}
+                                    onClick={(e) => {
+                                      setMobileMenuOpen(false);
+                                      handleNavClick(e, 'products', cat.id);
+                                    }}
+                                    className={`flex min-h-[44px] items-center justify-between rounded-lg px-3 py-2.5 text-xs font-semibold border transition-colors ${
+                                      isCurrentCat
+                                        ? 'bg-red-50 text-red-600 border-red-200'
+                                        : 'bg-white text-slate-800 border-neutral-100 hover:text-red-600 hover:border-red-200 active:bg-neutral-100'
+                                    }`}
+                                  >
+                                    <div className="flex items-center gap-2.5">
+                                      <IconComponent
+                                        className={`w-4 h-4 shrink-0 ${isCurrentCat ? 'text-red-600' : 'text-slate-400'}`}
+                                      />
+                                      <span>{cat.name}</span>
+                                    </div>
+                                    <ArrowRight className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                                  </a>
                                 );
                               })}
                             </div>

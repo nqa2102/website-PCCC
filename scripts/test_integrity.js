@@ -238,8 +238,8 @@ const scanForCompetitorUrls = (dir) => {
 scanForCompetitorUrls(srcDir);
 assert(true, 'Toàn bộ mã nguồn src/ không chứa bất kỳ liên kết hay tài sản nào từ đối thủ (ankovina, 3ce)');
 
-// --- 7. Kiểm tra Menu Sản phẩm Accordion (VIỆC B) ---
-console.log('\n--- 7. Kiểm tra Menu Sản phẩm Accordion (VIỆC B) ---');
+// --- 7. Kiểm tra Menu Sản phẩm & Điều hướng Danh mục (Phase 3) ---
+console.log('\n--- 7. Kiểm tra Menu Sản phẩm & Điều hướng Danh mục (Phase 3) ---');
 
 const productMenuPath = path.join(rootDir, 'src', 'components', 'products', 'productMenu.ts');
 assert(fs.existsSync(productMenuPath), 'Module src/components/products/productMenu.ts tồn tại');
@@ -252,11 +252,14 @@ try {
 }
 
 const headerSource = fs.readFileSync(path.join(rootDir, 'src', 'components', 'Header.tsx'), 'utf8');
-assert(headerSource.includes('groupProductsByVariant'), 'Header.tsx sử dụng hàm groupProductsByVariant');
-assert(headerSource.includes('formatMenuProductName'), 'Header.tsx sử dụng hàm formatMenuProductName');
-assert(headerSource.includes('getCategorySubProducts'), 'Header.tsx sử dụng hàm getCategorySubProducts');
-assert(headerSource.includes('aria-expanded'), 'Header.tsx có aria-expanded cho accordion');
+assert(headerSource.includes('PRODUCT_CATEGORY_GROUPS'), 'Header.tsx sử dụng PRODUCT_CATEGORY_GROUPS cho 2 nhóm danh mục');
+assert(headerSource.includes('/san-pham/${cat.id}'), 'Header.tsx liên kết trực tiếp mỗi danh mục tới /san-pham/${cat.id}');
 assert(headerSource.includes('overscroll-contain'), 'Header.tsx có scrolling container chống tràn viewport');
+assert(!headerSource.includes('groupProductsByVariant'), 'Header.tsx không dùng accordion sản phẩm con (bỏ groupProductsByVariant theo Phase 3)');
+
+const productsPageSource = fs.readFileSync(path.join(rootDir, 'src', 'pages', 'ProductsPage.tsx'), 'utf8');
+assert(productsPageSource.includes('CategoryDetailPage'), 'ProductsPage.tsx tích hợp CategoryDetailPage cho trang chi tiết danh mục');
+assert(productsPageSource.includes('PRODUCT_CATEGORY_DEFINITIONS'), 'ProductsPage.tsx hiển thị lưới 9 dòng sản phẩm APEX');
 
 console.log('\n=============================================================');
 console.log(`KẾT QUẢ TỔNG QUAN: ${passedTests}/${totalTests} BÀI KIỂM THỬ THÀNH CÔNG (${Math.round((passedTests / totalTests) * 100)}%)`);
