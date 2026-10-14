@@ -159,8 +159,8 @@ const SEO: Record<string, { title: string; description: string }> = {
     description: 'Giải pháp cửa và phân khoang ngăn cháy cho chung cư, văn phòng, trung tâm thương mại, nhà xưởng, bệnh viện và khách sạn.',
   },
   projects: {
-    title: 'Hồ sơ dự án APEX Việt Nam',
-    description: 'Các dự án thực tế của APEX chỉ được công bố sau khi xác minh thông tin, hình ảnh và quyền sử dụng tư liệu.',
+    title: 'Dự án tiêu biểu & Hồ sơ năng lực | APEX Việt Nam',
+    description: 'Tổng hợp công trình dân dụng, thương mại và hạ tầng công nghiệp đã hoàn thành nghiệm thu PCCC thực tế do APEX Việt Nam thực hiện.',
   },
   documents: {
     title: 'Tài liệu kỹ thuật và hồ sơ kiểm định | APEX Việt Nam',

@@ -32,7 +32,7 @@ const PageFallback = () => (
 );
 
 export default function App() {
-  const { products } = useLiveData();
+  const { products, projects } = useLiveData();
   const initialRoute = useRef(readRoute()).current;
   const [isAdmin, setIsAdmin] = useState(() => initialRoute.tab === 'admin');
   const [activeTab, setActiveTab] = useState<string>(() => initialRoute.tab === 'admin' ? 'home' : initialRoute.tab);
@@ -89,12 +89,27 @@ export default function App() {
       } else {
         applySeo('products');
       }
+    } else if (activeTab === 'projects') {
+      if (targetProjectId) {
+        const prj = projects.find((p) => p.slug === targetProjectId || p.id === targetProjectId);
+        if (prj) {
+          applySeo('projects', prj.title, {
+            title: `${prj.title} | Dự án PCCC APEX Việt Nam`,
+            description: prj.description || `Hồ sơ nghiệm thu thực tế dự án ${prj.title} do APEX Việt Nam thực hiện.`,
+            image: prj.coverImage || prj.image,
+          });
+        } else {
+          applySeo('projects');
+        }
+      } else {
+        applySeo('projects');
+      }
     } else {
       applySeo(activeTab);
     }
     // Không đo lường trang quản trị
     if (!isAdmin) trackPageView();
-  }, [activeTab, isAdmin, targetProductId, targetProductCategory, targetProjectId, targetDocId, targetArticleId, products]);
+  }, [activeTab, isAdmin, targetProductId, targetProductCategory, targetProjectId, targetDocId, targetArticleId, products, projects]);
 
   // Tải mã đo lường nếu khách đã đồng ý từ lần trước; ghi nhận bấm gọi / Zalo
   useEffect(() => {

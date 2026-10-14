@@ -273,8 +273,17 @@
 - Chạy [`sql/migrations/20261012_move_projects.sql`](../sql/migrations/20261012_move_projects.sql) trong Neon SQL Editor.
 
 ### 4. Migration Thêm cột `features` & `long_description` cho bảng `products` (T6):
-- Chạy [`sql/migrations/20261012_product_features_and_long_desc.sql`](../sql/migrations/20261012_product_features_and_long_desc.sql) trong Neon SQL Editor:
+- Chạy [`sql/migrations/20261012_product_features_and_long_desc.sql`](../sql/migrations/20261012_product_features_and_long_desc.sql) trong Neon SQL Editor.
+
+### 5. Migration Thêm cột `general_contractor` & `apex_role` cho bảng `projects` (Phase 1):
+- Chạy [`sql/migrations/20261014_projects_contractor_role.sql`](../sql/migrations/20261014_projects_contractor_role.sql) trong Neon SQL Editor:
   ```sql
+  ALTER TABLE projects ADD COLUMN IF NOT EXISTS general_contractor TEXT;
+  ALTER TABLE projects ADD COLUMN IF NOT EXISTS apex_role TEXT;
+  ```
+
+### 6. Migration Nhập 3 dự án mẫu dạng nháp (Phase 6):
+- Chạy [`sql/migrations/20261014_seed_3_draft_projects.sql`](../sql/migrations/20261014_seed_3_draft_projects.sql) trong Neon SQL Editor để nạp 3 dự án mẫu ở trạng thái nháp (`verified = false`, chưa gắn ảnh).
 ---
 
 ## 🏗️ Kế Hoạch 7 Phase: Nâng Cấp Hồ Sơ Dự Án Tiêu Biểu (PROMPT-DU-AN.md)
@@ -288,8 +297,8 @@
 | **Phase 2** | Nâng cấp trang danh sách `/du-an` theo wireframe: Hero + số liệu thật (UC9), chip filter theo category có đếm số, lưới thẻ tỉ lệ 4:3, phân trang client 9 thẻ/lần, chống tràn ngang. | 🟢 **DONE** | Commit `72d9282`, QA 1440px & 375px đạt 0 overflow. |
 | **Phase 3** | Nâng cấp trang chi tiết `/du-an/:slug` theo wireframe: Breadcrumb + meta badge bar, ảnh lớn + thumbnail strip tương tác (bàn phím + aria), bảng thông tin tự ẩn dòng trống (UC6), mô tả công trình + cam kết nghiệm thu, thư viện ảnh thi công hiện trường, CTA dự toán + hotline + Zalo, 3 dự án liên quan, lightbox phóng to ảnh, và màn hình thân thiện chuẩn UC4 khi slug không tồn tại. | 🟢 **DONE** | `lint` pass, `build` pass, 178/178 tests PASS, Browser QA 1440px & 375px hoàn thành. |
 | **Phase 4** | Admin: Thêm 2 trường `generalContractor` và `apexRole`, cập nhật ô tìm kiếm dự án, hiển thị thông tin tổng thầu & vai trò trong danh sách, điều khiển status & verified, kiểm thử tạo dự án nháp và xác nhận bảo vệ UC4 hoạt động hoàn hảo. | 🟢 **DONE** | `lint` pass, `build` pass, 178/178 tests PASS, Browser QA tạo dự án nháp và xác nhận UC4 không hiển thị ngoài công khai. |
-| **Phase 5** | SEO + Sitemap cho các slug dự án công khai, Schema.org `CreativeWork`, kiểm tra link cũ. | ⚪ **CHỜ DUYỆT ĐỂ LÀM** | Sẵn sàng triển khai sau khi duyệt Phase 4. |
-| **Phase 6** | Nhập 3 dự án mẫu dạng chữ vào admin ở trạng thái nháp (`verified=false`). | ⚪ Chưa làm | |
+| **Phase 5** | SEO + Sitemap cho các slug dự án công khai, Schema.org `CreativeWork`, tối ưu title/meta/OG image cho `/du-an` và từng slug, kiểm tra tương thích link cũ không vỡ. | 🟢 **DONE** | `sitemap.xml`, `routing.ts`, `App.tsx` đồng bộ SEO động cho dự án, canonical sạch, test integrity PASS 100%. |
+| **Phase 6** | Nhập 3 dự án mẫu dạng chữ vào admin và database migration ở trạng thái nháp (`verified=false`, `status='draft'`, chưa gắn ảnh). Cung cấp file SQL an toàn idempotency để chủ dự án nạp trên Neon. | 🟢 **DONE** | Migration `20261014_seed_3_draft_projects.sql` tạo thành công; `vite.config.ts` nạp sẵn 3 dự án nháp chuẩn thông tin. |
 
 
 
