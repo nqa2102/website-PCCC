@@ -107,62 +107,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </ul>
           </div>
 
-          {/* Column 3: Solutions & Projects */}
+          {/* Column 3: Projects & Information */}
           <div className="space-y-3">
             <h4 className="text-xs font-bold text-white uppercase tracking-wider border-b border-slate-800 pb-2">
-              Giải Pháp Theo Công Trình
+              Dự Án & Năng Lực
             </h4>
             <ul className="space-y-2 text-neutral-400">
-              <li>
-                <a
-                  href="/giai-phap/chung-cu-can-ho"
-                  onClick={(e) => handleNavClick(e, 'solutions', 'chung-cu-can-ho')}
-                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
-                >
-                  <ChevronRight className="w-3 h-3 text-red-500" />
-                  <span>Chung cư, căn hộ cao tầng</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/giai-phap/van-phong-toa-nha"
-                  onClick={(e) => handleNavClick(e, 'solutions', 'van-phong-toa-nha')}
-                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
-                >
-                  <ChevronRight className="w-3 h-3 text-red-500" />
-                  <span>Văn phòng, tòa nhà thương mại</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/giai-phap/trung-tam-thuong-mai"
-                  onClick={(e) => handleNavClick(e, 'solutions', 'trung-tam-thuong-mai')}
-                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
-                >
-                  <ChevronRight className="w-3 h-3 text-red-500" />
-                  <span>Trung tâm thương mại & siêu thị</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/giai-phap/nha-xuong-khu-cong-nghiep"
-                  onClick={(e) => handleNavClick(e, 'solutions', 'nha-xuong-khu-cong-nghiep')}
-                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
-                >
-                  <ChevronRight className="w-3 h-3 text-red-500" />
-                  <span>Nhà xưởng, khu công nghiệp</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="/giai-phap/benh-vien-truong-hoc"
-                  onClick={(e) => handleNavClick(e, 'solutions', 'benh-vien-truong-hoc')}
-                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
-                >
-                  <ChevronRight className="w-3 h-3 text-red-500" />
-                  <span>Bệnh viện, trường học</span>
-                </a>
-              </li>
               <li>
                 <a
                   href="/du-an"
@@ -170,7 +120,47 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   className="hover:text-white transition-colors text-left flex items-center gap-1.5"
                 >
                   <ChevronRight className="w-3 h-3 text-red-500" />
-                  <span>Xem hồ sơ dự án tiêu biểu</span>
+                  <span>Hồ sơ dự án tiêu biểu</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/gioi-thieu"
+                  onClick={(e) => handleNavClick(e, 'about')}
+                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
+                >
+                  <ChevronRight className="w-3 h-3 text-red-500" />
+                  <span>Giới thiệu năng lực APEX</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/tai-lieu-ky-thuat"
+                  onClick={(e) => handleNavClick(e, 'documents')}
+                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
+                >
+                  <ChevronRight className="w-3 h-3 text-red-500" />
+                  <span>Tài liệu kỹ thuật & kiểm định</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/tin-tuc"
+                  onClick={(e) => handleNavClick(e, 'news')}
+                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
+                >
+                  <ChevronRight className="w-3 h-3 text-red-500" />
+                  <span>Kiến thức & quy chuẩn PCCC</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/lien-he"
+                  onClick={(e) => handleNavClick(e, 'contact')}
+                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
+                >
+                  <ChevronRight className="w-3 h-3 text-red-500" />
+                  <span>Liên hệ tư vấn kỹ thuật</span>
                 </a>
               </li>
             </ul>

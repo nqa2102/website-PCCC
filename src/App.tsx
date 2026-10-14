@@ -12,7 +12,6 @@ import { PRODUCT_CATEGORY_DEFINITIONS } from './components/products/ProductCateg
 
 const AboutPage = lazy(() => import('./pages/AboutPage').then((module) => ({ default: module.AboutPage })));
 const ProductsPage = lazy(() => import('./pages/ProductsPage').then((module) => ({ default: module.ProductsPage })));
-const SolutionsPage = lazy(() => import('./pages/SolutionsPage').then((module) => ({ default: module.SolutionsPage })));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage').then((module) => ({ default: module.ProjectsPage })));
 const TechnicalDocsPage = lazy(() => import('./pages/TechnicalDocsPage').then((module) => ({ default: module.TechnicalDocsPage })));
 const NewsPage = lazy(() => import('./pages/NewsPage').then((module) => ({ default: module.NewsPage })));
@@ -45,7 +44,6 @@ export default function App() {
   // Sub-item routing state
   const [targetProductId, setTargetProductId] = useState<string | undefined>(() => initialRoute.tab === 'products' ? initialRoute.itemId : undefined);
   const [targetProductCategory, setTargetProductCategory] = useState<string | undefined>(() => initialRoute.tab === 'products' ? initialRoute.category : undefined);
-  const [targetSolutionId, setTargetSolutionId] = useState<string | undefined>(() => initialRoute.tab === 'solutions' ? initialRoute.itemId : undefined);
   const [targetProjectId, setTargetProjectId] = useState<string | undefined>(() => initialRoute.tab === 'projects' ? initialRoute.itemId : undefined);
   const [targetDocId, setTargetDocId] = useState<string | undefined>(() => initialRoute.tab === 'documents' ? initialRoute.itemId : undefined);
   const [targetArticleId, setTargetArticleId] = useState<string | undefined>(() => initialRoute.tab === 'news' ? initialRoute.itemId : undefined);
@@ -96,7 +94,7 @@ export default function App() {
     }
     // Không đo lường trang quản trị
     if (!isAdmin) trackPageView();
-  }, [activeTab, isAdmin, targetProductId, targetProductCategory, targetSolutionId, targetProjectId, targetDocId, targetArticleId, products]);
+  }, [activeTab, isAdmin, targetProductId, targetProductCategory, targetProjectId, targetDocId, targetArticleId, products]);
 
   // Tải mã đo lường nếu khách đã đồng ý từ lần trước; ghi nhận bấm gọi / Zalo
   useEffect(() => {
@@ -108,7 +106,7 @@ export default function App() {
   // Scroll to top when changing tabs
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeTab, targetProductId, targetSolutionId, targetProjectId, targetDocId, targetArticleId]);
+  }, [activeTab, targetProductId, targetProjectId, targetDocId, targetArticleId]);
 
   const handleOpenQuote = (productType?: string) => {
     setQuotePreselectedProduct(productType);
@@ -126,7 +124,6 @@ export default function App() {
     setActiveTab(tab);
     setTargetProductId(undefined);
     setTargetProductCategory(undefined);
-    setTargetSolutionId(undefined);
     setTargetProjectId(undefined);
     setTargetDocId(undefined);
     setTargetArticleId(undefined);
@@ -137,8 +134,6 @@ export default function App() {
       if (route.itemId && (!cat || route.itemId !== cat)) {
         setTargetProductId(route.itemId);
       }
-    } else if (tab === 'solutions') {
-      setTargetSolutionId(route.itemId);
     } else if (tab === 'projects') {
       setTargetProjectId(route.itemId);
     } else if (tab === 'documents') {
@@ -171,9 +166,6 @@ export default function App() {
         onSelectProductCategory={(catId, prodId) => {
           handleNavigate('products', prodId, catId);
         }}
-        onSelectSolution={(solId) => {
-          handleNavigate('solutions', solId);
-        }}
       />
 
       {/* Main Page Content */}
@@ -201,15 +193,6 @@ export default function App() {
             initialCategory={targetProductCategory}
             initialProductId={targetProductId}
             onNavigate={handleNavigate}
-          />
-        )}
-
-        {activeTab === 'solutions' && (
-          <SolutionsPage
-            key={targetSolutionId || 'solutions'}
-            onOpenQuote={() => handleOpenQuote()}
-            onNavigate={handleNavigate}
-            initialSolutionId={targetSolutionId}
           />
         )}
 

@@ -32,11 +32,11 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({ onNavigate }) => {
       href: '/san-pham',
     },
     {
-      tab: 'solutions',
-      label: 'Giải pháp công trình',
-      desc: 'Giải pháp phân khoang cho chung cư, nhà xưởng, TTTM',
+      tab: 'projects',
+      label: 'Hồ sơ dự án',
+      desc: 'Công trình thực tế và hồ sơ năng lực tiêu biểu',
       icon: Compass,
-      href: '/giai-phap',
+      href: '/du-an',
     },
     {
       tab: 'documents',

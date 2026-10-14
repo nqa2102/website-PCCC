@@ -39,7 +39,7 @@ const TAB_PATHS: Record<string, string> = {
   home: '/',
   about: '/gioi-thieu',
   products: '/san-pham',
-  solutions: '/giai-phap',
+  solutions: '/san-pham',
   projects: '/du-an',
   documents: '/tai-lieu-ky-thuat',
   news: '/tin-tuc',
@@ -103,7 +103,13 @@ export const readRoute = (): AppRoute => {
 
   const itemId = segments[1] ? decodeURIComponent(segments.slice(1).join('/')) : undefined;
 
-  if (root === 'giai-phap') return { tab: 'solutions', itemId };
+  // Chuyển hướng sạch /giai-phap về /san-pham (đã bỏ tính năng giải pháp)
+  if (root === 'giai-phap') {
+    if (typeof window !== 'undefined' && window.history?.replaceState) {
+      window.history.replaceState({}, '', '/san-pham');
+    }
+    return { tab: 'products' };
+  }
   if (root === 'du-an') return { tab: 'projects', itemId };
   if (root === 'tai-lieu-ky-thuat') return { tab: 'documents', itemId };
   if (root === 'tin-tuc') return { tab: 'news', itemId };
@@ -129,7 +135,7 @@ export const pathForRoute = (tab: string, itemId?: string, category?: string) =>
   }
 
   if (tab === 'projects' && itemId) return `${base}/${encodeURIComponent(itemId)}`;
-  if (['solutions', 'documents', 'news'].includes(tab) && itemId) return `${base}/${encodeURIComponent(itemId)}`;
+  if (['documents', 'news'].includes(tab) && itemId) return `${base}/${encodeURIComponent(itemId)}`;
   return base;
 };
 

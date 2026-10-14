@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  AlertTriangle, ArrowRight, ArrowUpRight, Award, Building, Building2,
-  Calendar, CheckCircle2, Factory, FileCheck2, Flame, Hotel,
-  MapPin, MessageSquare, School, ShieldCheck, Store, Wrench,
+  ArrowRight, Award,
+  CheckCircle2, FileCheck2,
+  MapPin, MessageSquare, ShieldCheck, Wrench,
 } from 'lucide-react';
 import {
-  HERO_IMAGE, PARTNER_LOGOS, SOLUTIONS,
+  HERO_IMAGE, PARTNER_LOGOS,
 } from '../data/mockData';
 import { useLiveData } from '../admin/adminData';
 import { pathForRoute } from '../routing';
@@ -47,14 +47,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
     e.preventDefault();
     onNavigate(tab, itemId);
   };
-  const solutionIcons: Record<string, React.ElementType> = {
-    'chung-cu-can-ho': Building2,
-    'van-phong-toa-nha': Building,
-    'trung-tam-thuong-mai': Store,
-    'nha-xuong-khu-cong-nghiep': Factory,
-    'benh-vien-truong-hoc': School,
-    'khach-san-resort': Hotel,
-  };
 
   return (
     <div className="w-full bg-neutral-50">
@@ -81,7 +73,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
                 onClick={(e) => handleLink(e, 'products')}
                 className="flex min-h-12 items-center gap-2 bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700"
               >
-                Xem giải pháp <ArrowRight className="h-4 w-4" />
+                Xem sản phẩm <ArrowRight className="h-4 w-4" />
               </a>
               <button onClick={onOpenChat} className="flex min-h-12 items-center gap-2 border border-white/40 bg-black/15 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-slate-950">
                 Trao đổi với kỹ sư <MessageSquare className="h-4 w-4" />
@@ -169,59 +161,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
                 </li>
               ))}
             </ol>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-y border-slate-200 bg-[#f4f4f1] py-20 sm:py-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
-          <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-14">
-            <div className="lg:sticky lg:top-32 lg:self-start">
-              <span className="section-kicker">Giải pháp theo công trình</span>
-              <h2 className="section-title max-w-lg">Bắt đầu từ điểm có thể làm hỏng cả phương án PCCC.</h2>
-              <p className="mt-5 max-w-lg text-sm leading-7 text-slate-600 sm:text-base">
-                Một bộ cửa đúng sản phẩm nhưng sai vị trí, sai chiều mở hoặc thiếu phụ kiện vẫn có thể làm gián đoạn lối thoát nạn. APEX phân tích rủi ro trước khi chọn cấu hình.
-              </p>
-
-              <div className="mt-8 border-l-4 border-red-600 bg-white px-5 py-5 shadow-sm">
-                <p className="flex items-center gap-2 text-xs font-semibold uppercase text-red-700"><AlertTriangle className="h-4 w-4" />Ba điểm cần khóa ngay</p>
-                <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-700">
-                  <li>Khói và lửa lan qua hành lang, giếng trời hoặc khoảng mở lớn.</li>
-                  <li>Cửa cản trở luồng người, xe hàng hoặc vận hành thường ngày.</li>
-                  <li>Cấu hình thực tế không khớp hồ sơ thiết kế và vị trí lắp đặt.</li>
-                </ul>
-              </div>
-
-              <button onClick={() => onOpenQuote()} className="mt-7 flex min-h-11 items-center gap-2 bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700">
-                Trao đổi với kinh doanh <ArrowUpRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              {SOLUTIONS.map((solution) => {
-                const Icon = solutionIcons[solution.id] || Building;
-                return (
-                  <a
-                    key={solution.id}
-                    href={`/giai-phap/${solution.id}`}
-                    onClick={(e) => handleLink(e, 'solutions', solution.id)}
-                    className="group min-h-64 border border-slate-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:border-red-300 hover:shadow-md sm:p-6 block"
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <span className="flex h-11 w-11 items-center justify-center bg-slate-950 text-white transition-colors group-hover:bg-red-700"><Icon className="h-5 w-5" strokeWidth={1.7} /></span>
-                      <ArrowUpRight className="h-4 w-4 text-slate-400 transition-colors group-hover:text-red-700" />
-                    </div>
-                    <h3 className="mt-6 text-base font-semibold leading-6 text-slate-950">{solution.title}</h3>
-                    <p className="mt-3 text-xs font-semibold uppercase text-red-700">Rủi ro cần xử lý</p>
-                    <p className="mt-1 text-sm leading-6 text-slate-600">{solution.challenges[0]}</p>
-                    <div className="mt-4 flex items-start gap-2 border-t border-slate-100 pt-4 text-xs leading-5 text-slate-700">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                      <span>{solution.recommendedProducts[0]}</span>
-                    </div>
-                  </a>
-                );
-              })}
-            </div>
           </div>
         </div>
       </section>

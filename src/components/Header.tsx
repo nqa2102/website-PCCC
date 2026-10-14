@@ -47,9 +47,7 @@ export const Header: React.FC<HeaderProps> = ({
   // Sau khi chọn 1 mục: ẩn menu tới khi chuột rời khỏi vùng menu (tránh hover giữ menu mở)
   const [productMenuSuppressed, setProductMenuSuppressed] = useState(false);
   const productButtonRef = React.useRef<HTMLAnchorElement | null>(null);
-  const [solutionDropdownOpen, setSolutionDropdownOpen] = useState(false);
   const [mobileProductExpanded, setMobileProductExpanded] = useState(false);
-  const [mobileSolutionExpanded, setMobileSolutionExpanded] = useState(false);
 
   const openProductDropdown = () => {
     setProductDropdownOpen(true);
@@ -72,7 +70,6 @@ export const Header: React.FC<HeaderProps> = ({
     setActiveTab(tab);
     setMobileMenuOpen(false);
     closeProductDropdown();
-    setSolutionDropdownOpen(false);
     if (tab === 'products' && onSelectProductCategory) {
       if (itemId || productId) {
         onSelectProductCategory(itemId || '', productId);
@@ -87,7 +84,6 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'home', label: 'Trang chủ' },
     { id: 'about', label: 'Giới thiệu' },
     { id: 'products', label: 'Sản phẩm', hasDropdown: true },
-    { id: 'solutions', label: 'Giải pháp', hasDropdown: true },
     { id: 'projects', label: 'Dự án' },
     { id: 'documents', label: 'Tài liệu kỹ thuật' },
     { id: 'news', label: 'Tin tức' },
@@ -160,15 +156,6 @@ export const Header: React.FC<HeaderProps> = ({
     },
   ];
 
-  const solutionList = [
-    { id: 'chung-cu-can-ho', name: 'Chung cư, căn hộ cao tầng' },
-    { id: 'van-phong-toa-nha', name: 'Văn phòng, tòa nhà thương mại' },
-    { id: 'trung-tam-thuong-mai', name: 'Trung tâm thương mại & Siêu thị' },
-    { id: 'nha-xuong-khu-cong-nghiep', name: 'Nhà xưởng, khu công nghiệp' },
-    { id: 'benh-vien-truong-hoc', name: 'Bệnh viện, trường học' },
-    { id: 'khach-san-resort', name: 'Khách sạn, khu nghỉ dưỡng resort' },
-  ];
-
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-neutral-200 shadow-xs">
       {/* Top Banner Row */}
@@ -191,7 +178,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onOpenSearch}
               className="w-full pl-4 pr-10 py-2 text-xs bg-neutral-100 hover:bg-neutral-200/70 text-slate-800 rounded-full border border-neutral-200 flex items-center justify-between cursor-pointer transition-colors text-left"
             >
-              <span className="text-slate-400 truncate">Tìm kiếm sản phẩm, giải pháp, tài liệu...</span>
+              <span className="text-slate-400 truncate">Tìm kiếm sản phẩm, dự án, tài liệu...</span>
               <Search className="w-4 h-4 text-slate-400 shrink-0 ml-2" />
             </button>
           </div>
@@ -374,52 +361,6 @@ export const Header: React.FC<HeaderProps> = ({
                   );
                 }
 
-                if (item.id === 'solutions') {
-                  return (
-                    <div 
-                      key={item.id}
-                      className="relative group"
-                      onMouseEnter={() => setSolutionDropdownOpen(true)}
-                      onMouseLeave={() => setSolutionDropdownOpen(false)}
-                    >
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setSolutionDropdownOpen(!solutionDropdownOpen);
-                        }}
-                        className={`flex items-center gap-1 py-3 px-3 border-b-2 transition-colors cursor-pointer ${
-                          isActive 
-                            ? 'text-red-600 border-red-600' 
-                            : 'text-slate-700 border-transparent hover:text-red-600 group-hover:text-red-600'
-                        }`}
-                      >
-                        <span>{item.label}</span>
-                        <ChevronDown className="w-3.5 h-3.5" />
-                      </button>
-
-                      <div className={`absolute top-full left-0 w-80 bg-white border border-neutral-200 shadow-xl rounded-b-xl py-2 z-50 animate-in fade-in slide-in-from-top-1 duration-150 ${
-                        solutionDropdownOpen ? 'block' : 'hidden md:group-hover:block'
-                      }`}>
-                        <div className="px-3 py-1.5 text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                          Giải pháp theo loại công trình
-                        </div>
-                        {solutionList.map((sol) => (
-                          <a
-                            key={sol.id}
-                            href={`/giai-phap/${sol.id}`}
-                            onClick={(e) => handleNavClick(e, 'solutions', sol.id)}
-                            className="w-full text-left px-3.5 py-2 text-xs text-slate-700 hover:bg-neutral-50 hover:text-red-600 flex items-center justify-between"
-                          >
-                            <span>{sol.name}</span>
-                            <ChevronRight className="w-3 h-3 text-slate-400" />
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                }
-
                 return (
                   <a
                     key={item.id}
@@ -459,7 +400,7 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="w-full flex items-center justify-between px-3.5 py-2.5 text-xs bg-neutral-100 text-slate-600 rounded-xl border border-neutral-200"
             >
-              <span>Tìm kiếm sản phẩm, giải pháp, CAD...</span>
+              <span>Tìm kiếm sản phẩm, dự án, CAD...</span>
               <Search className="w-4 h-4 text-slate-400" />
             </button>
           </div>
@@ -561,47 +502,6 @@ export const Header: React.FC<HeaderProps> = ({
                           <span>Xem toàn bộ 9 nhóm sản phẩm</span>
                           <ArrowRight className="w-4 h-4" />
                         </a>
-                      </div>
-                    )}
-                  </div>
-                );
-              }
-
-              if (item.id === 'solutions') {
-                return (
-                  <div key={item.id} className="border-b border-neutral-100 pb-1">
-                    <div className="flex items-center justify-between">
-                      <a
-                        href="/giai-phap"
-                        onClick={(e) => handleNavClick(e, 'solutions')}
-                        className={`text-left px-3 py-2.5 rounded-lg text-sm font-semibold flex-1 ${
-                          activeTab === 'solutions' ? 'text-red-600 bg-red-50' : 'text-slate-800'
-                        }`}
-                      >
-                        Giải pháp công trình
-                      </a>
-                      <button
-                        onClick={() => setMobileSolutionExpanded(!mobileSolutionExpanded)}
-                        className="p-2 text-slate-500 hover:text-slate-800"
-                        aria-label="Mở rộng danh mục giải pháp"
-                      >
-                        <ChevronDown className={`w-4 h-4 transition-transform ${mobileSolutionExpanded ? 'rotate-180' : ''}`} />
-                      </button>
-                    </div>
-
-                    {mobileSolutionExpanded && (
-                      <div className="pl-4 pr-2 py-1 space-y-1 bg-neutral-50 rounded-lg my-1">
-                        {solutionList.map((sol) => (
-                          <a
-                            key={sol.id}
-                            href={`/giai-phap/${sol.id}`}
-                            onClick={(e) => handleNavClick(e, 'solutions', sol.id)}
-                            className="w-full text-left py-2 px-2 text-xs text-slate-700 hover:text-red-600 flex items-center justify-between"
-                          >
-                            <span>{sol.name}</span>
-                            <ChevronRight className="w-3 h-3 text-slate-400" />
-                          </a>
-                        ))}
                       </div>
                     )}
                   </div>
