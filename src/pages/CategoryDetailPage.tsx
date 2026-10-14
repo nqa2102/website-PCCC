@@ -15,6 +15,10 @@ import {
   ArrowRight,
   Award,
   Scan,
+  Zap,
+  Box,
+  Cpu,
+  Droplets,
 } from 'lucide-react';
 import { CATEGORY_DETAILS } from '../data/categoryDetails';
 import { useLiveData } from '../admin/adminData';
@@ -74,6 +78,14 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
       case 'ear':
       case 'volume':
         return <Volume2 className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
+      case 'zap':
+        return <Zap className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
+      case 'box':
+        return <Box className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
+      case 'cpu':
+        return <Cpu className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
+      case 'droplets':
+        return <Droplets className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
       default:
         return <CheckCircle2 className="h-5 w-5 text-emerald-600" aria-hidden="true" />;
     }
@@ -314,7 +326,9 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           <section className="mt-10">
             <h2 className="mb-4 flex items-center gap-2 text-[13px] font-bold tracking-wider uppercase text-red-700">
               <FileSpreadsheet className="h-4 w-4 text-red-700" aria-hidden="true" />
-              <span>3 · Bảng thông số kỹ thuật chi tiết</span>
+              <span>
+                {detail.projectImages && detail.projectImages.length > 0 ? '3' : '2'} · Bảng thông số kỹ thuật chi tiết
+              </span>
             </h2>
 
             <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs">
@@ -347,7 +361,9 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
           <section className="mt-10">
             <h2 className="mb-4 flex items-center gap-2 text-[13px] font-bold tracking-wider uppercase text-red-700">
               <Receipt className="h-4 w-4 text-red-700" aria-hidden="true" />
-              <span>4 · Dự toán chi tiết cho 1 bộ ({detail.quote.model})</span>
+              <span>
+                {detail.projectImages && detail.projectImages.length > 0 ? '4' : '3'} · Dự toán chi tiết cho 1 bộ ({detail.quote.model})
+              </span>
             </h2>
 
             <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-xs">

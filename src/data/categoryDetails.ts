@@ -319,58 +319,178 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
   },
 
   // ==========================================
-  // 3. CỬA CUỐN NGĂN CHÁY (Khung rỗng chờ Phase 4)
+  // 3. CỬA CUỐN NGĂN CHÁY (Điền đầy đủ 100% theo template chuẩn & dự toán thực tế)
   // ==========================================
   'cua-cuon-ngan-chay': {
     slug: 'cua-cuon-ngan-chay',
     name: 'Cửa Cuốn Ngăn Cháy',
+    priceFrom: '5.000.000 đ/m²',
     intro:
-      'Cửa cuốn thép ngăn cháy khoang mở siêu trường nhịp lớn, đóng kín tự động khi nhận tín hiệu báo cháy từ tủ điều khiển trung tâm.',
-    sellingPoints: [],
+      'Cửa cuốn ngăn cháy tiêu chuẩn EI60 (mã hiệu AKS) khẩu độ siêu trường nhịp lớn, tự động đóng kín khi nhận tín hiệu báo cháy từ tủ điều khiển trung tâm. Thân cửa tổ hợp đa tầng dày 50±2mm gồm nan thép mạ kẽm sơn tĩnh điện 0.8mm, 2 lớp vải chống cháy Hiyot Silica và lõi bông gốm Ceramic cách nhiệt cao cấp.',
+    sellingPoints: [
+      'Đạt kiểm định an toàn phương tiện PCCC',
+      'Cơ chế nhả phanh trọng lực an toàn khi mất điện',
+      'Khẩu độ siêu trường cho nhà xưởng & TTTM',
+    ],
     quickSpec: [
-      { label: 'Cấp độ ngăn cháy', value: 'EI60 / EI70 / EI90 / EI120' },
-      { label: 'Nan cửa', value: 'Nan thép 2 lớp nhồi bông khoáng chống cháy' },
-      { label: 'Hệ điều khiển', value: 'Motor chống cháy kèm bộ lưu điện UPS' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      { label: 'Ký hiệu / Model', value: 'AKS (tiêu chuẩn PCCC)' },
+      { label: 'Cấp độ ngăn cháy', value: 'EI60 (60 phút) / EI90 / EI120' },
+      { label: 'Kích thước mẫu', value: 'W 3000 × H 3000mm (9.0 m²)' },
+      { label: 'Thân cửa', value: 'Tổ hợp nan thép 0.8mm + 2 lớp vải Hiyot Silica + bông gốm dày 50±2mm' },
+      { label: 'Ray & Hộp kỹ thuật', value: 'Ray thép 120×125×1.2mm nhồi MgO & gốm; Hộp thép 40×40 bọc tôn 0.8mm' },
+      { label: 'Động cơ & Tích hợp', value: 'Motor Netdoor N500 (370W - 500kg) + Hộp tín hiệu báo cháy Oz' },
+      { label: 'Bảo hành', value: '12 tháng theo tiêu chuẩn nhà sản xuất' },
     ],
-    advantages: [],
-    uses: [],
+    advantages: [
+      'Ngăn cháy cách nhiệt EI60 (60 phút) theo chuẩn QCVN 06:2022/BXD, kiểm định phương tiện PCCC',
+      'Cấu tạo thân cửa tổ hợp 6 lớp chuyên dụng dày 50mm với 2 lớp vải Hiyot Silica và bông gốm 128-200kg/m³',
+      'Động cơ Netdoor N500 sức nâng 500kg, tích hợp xích kéo cơ thoát hiểm và khóa ngắt điện tự động',
+      'Ray dẫn hướng 120×125×1.2mm nhồi tấm chống cháy MgO 5mm tỷ trọng cao và bông gốm chịu nhiệt',
+      'Hộp kỹ thuật khung thép hộp mạ kẽm 40×40×1.4mm bọc tôn định hình cách nhiệt đồng bộ',
+      'Kết nối tủ báo cháy trung tâm qua tiếp điểm khô Oz, hạ cửa tự động 2 giai đoạn ngăn khói và thoát hiểm',
+    ],
+    uses: [
+      {
+        icon: 'flame',
+        title: 'Ngăn cháy lan diện rộng',
+        desc: 'Khoanh vùng khoang cháy lớn tại tầng hầm, nhà máy sản xuất và trung tâm logistics.',
+      },
+      {
+        icon: 'wind',
+        title: 'Chặn khói độc & nhiệt bức xạ',
+        desc: 'Bịt kín các ô thông tầng, chống khói tràn sang các khu vực và buồng thang thoát nạn.',
+      },
+      {
+        icon: 'shield',
+        title: 'Tự động hạ khi mất điện',
+        desc: 'Bộ lưu điện UPS và cơ cấu nhả phanh trọng lực giúp cửa đóng an toàn ngay cả khi cháy mất điện.',
+      },
+      {
+        icon: 'box',
+        title: 'Tối ưu không gian nhịp lớn',
+        desc: 'Cuộn gọn trên hộp kỹ thuật trần, giải phóng tối đa chiều cao tĩnh không và lối di chuyển.',
+      },
+    ],
     specTable: [
-      { label: 'Cấp độ ngăn cháy', value: 'EI60, EI70, EI90, EI120' },
-      { label: 'Vật liệu nan cửa', value: 'Thép mạ kẽm sơn tĩnh điện 2 lớp' },
-      { label: 'Lõi cách nhiệt', value: 'Bông khoáng gốm Ceramic chống cháy' },
-      { label: 'Hệ thống motor', value: 'Motor tải trọng lớn tích hợp xích kéo tay cơ' },
-      { label: 'Bộ lưu điện', value: 'UPS tự động kích hoạt khi mất điện lưới' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      { label: 'Ký hiệu sản phẩm', value: 'AKS (Cửa cuốn ngăn cháy tiêu chuẩn)' },
+      { label: 'Giới hạn chịu lửa', value: 'EI60 (60 phút) theo QCVN 06:2022/BXD và TCVN 9383:2012' },
+      { label: 'Kích thước tiêu chuẩn mẫu', value: '3000 × 3000 mm (Diện tích 9.0 m²) hoặc gia công theo thiết kế' },
+      { label: 'Độ dày thân cửa', value: 'Tổ hợp cách nhiệt đa tầng dày 50 ± 2 mm' },
+      {
+        label: 'Cấu tạo nan & lõi',
+        value:
+          'Nan thép mạ kẽm sơn tĩnh điện 0.8mm (bản 68mm), 2 lớp vải Hiyot Silica 0.75mm, bông gốm cách nhiệt 128–200kg/m³',
+      },
+      { label: 'Trục cuốn', value: 'Thép mạ kẽm Ø113.5 × 2.5 mm chịu lực mô-men xoắn lớn' },
+      { label: 'Ray dẫn hướng', value: 'Thép dập định hình 120×125×1.2mm nhồi bông gốm 160kg/m³ & tấm MgO 5mm' },
+      {
+        label: 'Hộp che kỹ thuật',
+        value: 'Khung thép hộp 40×40×1.4mm bọc tôn mạ kẽm 0.8mm nhồi bông gốm cách nhiệt 25mm (128kg/m³)',
+      },
+      { label: 'Động cơ vận hành', value: 'Động cơ Netdoor 220V-50Hz model N500 (370W, tải trọng nâng 500kg)' },
+      { label: 'Tích hợp PCCC', value: 'Hộp nhận tín hiệu báo cháy tiếp điểm khô Oz, xích kéo cơ tay khi mất điện' },
+      { label: 'Công lắp đặt & hoàn thiện', value: 'Công thi công CNC tiêu chuẩn kỹ thuật APEX' },
+      { label: 'Bảo hành', value: '12 tháng đối với thân cửa và mô tơ theo tiêu chuẩn nhà sản xuất' },
     ],
+    quote: {
+      model: 'cửa cuốn ngăn cháy EI60, mẫu 3.0 × 3.0m',
+      rows: [
+        {
+          name: 'Cửa cuốn ngăn cháy EI60 (thân cửa dày 50mm, nan 0.8mm, vải Hiyot Silica, bông gốm)',
+          unit: 'm²',
+          qty: '9',
+          price: '5.000.000',
+          amount: '45.000.000',
+        },
+        {
+          name: 'Động cơ Netdoor 220V-50Hz N500 (370W - 500kg) & Hộp tín hiệu Oz',
+          unit: 'Bộ',
+          qty: '1',
+          price: '4.800.000',
+          amount: '4.800.000',
+        },
+        {
+          name: 'Công thi công CNC Tiêu chuẩn (Từ 1.5m² đến 2.8m²)',
+          unit: 'm²',
+          qty: '9',
+          price: '500.000',
+          amount: '4.500.000',
+        },
+      ],
+      total: '54.300.000',
+      note: 'Dự toán theo mẫu báo giá tiêu chuẩn cho 01 bộ cửa cuốn ngăn cháy EI60 kích thước 3000×3000 (9m²). Giá chưa bao gồm thuế VAT (đã bao gồm chi phí bảo hành 12 tháng theo tiêu chuẩn nhà sản xuất). Chi phí kiểm định PCCC tính riêng (liên hệ).',
+    },
     gallery: [rollerShutterImage],
     projectImages: [],
     relatedSlugs: ['cua-thep-ngan-chay', 'rem-ngan-chay', 'cua-kinh-ngan-chay'],
   },
 
   // ==========================================
-  // 4. RÈM NGĂN CHÁY & KHÓI (Khung rỗng chờ Phase 4)
+  // 4. RÈM NGĂN CHÁY & KHÓI (Điền đầy đủ 100% theo template chuẩn)
   // ==========================================
   'rem-ngan-chay': {
     slug: 'rem-ngan-chay',
     name: 'Rèm Ngăn Cháy & Khói',
+    priceFrom: '2.900.000 đ/m²',
     intro:
-      'Vải sợi thủy tinh gia cường sợi thép kỹ thuật cao, giấu âm trần thẩm mỹ, tự động hạ trọng lực khoanh vùng khói độc khi có báo động cháy.',
-    sellingPoints: [],
-    quickSpec: [
-      { label: 'Cấp độ ngăn cháy', value: 'EI60 / EI90 / Ngăn khói' },
-      { label: 'Vật liệu rèm', value: 'Vải sợi thủy tinh dệt sợi inox bọc PU/Silicone' },
-      { label: 'Cơ chế hạ', value: 'Trọng lực an toàn (Gravity Fail-Safe)' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      'Rèm ngăn cháy và ngăn khói tự động APEX cấu tạo từ sợi thủy tinh dệt sợi inox chịu nhiệt cao, thiết kế giấu âm trần thẩm mỹ 100%. Hệ thống tự động kích hoạt hạ bằng cơ chế nhả phanh trọng lực an toàn (Gravity Fail-Safe) khi nhận tín hiệu báo cháy, khoanh vùng cô lập khí độc và khói nóng bốc qua sảnh thông tầng.',
+    sellingPoints: [
+      'Thiết kế giấu âm trần 100% giữ trọn kiến trúc',
+      'Cơ chế nhả phanh trọng lực an toàn (Gravity Fail-Safe)',
+      'Chịu nhiệt độ cực hạn lên tới 1000°C',
     ],
-    advantages: [],
-    uses: [],
+    quickSpec: [
+      { label: 'Cấp độ bảo vệ', value: 'EI60 / EI90 / E120 / Ngăn khói chuyên dụng' },
+      { label: 'Vật liệu màn rèm', value: 'Vải sợi thủy tinh dệt sợi inox bọc PU/Silicone chống cháy' },
+      { label: 'Giới hạn chịu nhiệt', value: 'Chịu nhiệt liên tục 600°C – 1000°C' },
+      { label: 'Cơ chế kích hoạt', value: 'Motor 24VDC + hạ trọng lực có giảm tốc khi mất điện' },
+      { label: 'Ray & Hộp cuốn', value: 'Thép mạ kẽm định hình sơn tĩnh điện giấu âm trần' },
+      { label: 'Tích hợp hệ thống', value: 'Kết nối tủ báo cháy trung tâm qua giao thức BMS / dry contact' },
+      { label: 'Bảo hành', value: '24 tháng chính hãng APEX' },
+    ],
+    advantages: [
+      'Giấu âm trần hoàn toàn, tối ưu 100% diện tích và không gian kiến trúc thông thoáng',
+      'Vải sợi thủy tinh kỹ thuật cao dệt lưới thép SUS304 siêu bền, không bị rách xé khi gặp áp suất lửa',
+      'Lớp phủ polymer chống thấm nước, kháng hóa chất, không sinh khói độc hại khi tiếp xúc ngọn lửa',
+      'Tự động hạ 2 cấp độ: hạ 1.8m để người thoát nạn, sau đó hạ sát sàn để cô lập hoàn toàn khoang cháy',
+      'Cơ cấu hạ trọng lực Fail-Safe đảm bảo màn rèm luôn hạ an toàn ngay cả khi mất toàn bộ điện lưới',
+      'Hộp cuốn và ray dẫn hướng thép định hình mạ kẽm kín khít, hạn chế tối đa rò rỉ khói lan tỏa',
+    ],
+    uses: [
+      {
+        icon: 'wind',
+        title: 'Ngăn khói & cô lập giếng trời',
+        desc: 'Ngăn chặn khói độc và luồng khí nóng bốc ngược qua sảnh thông tầng và giếng trời.',
+      },
+      {
+        icon: 'flame',
+        title: 'Khoanh vùng khoang cháy',
+        desc: 'Phân chia phân đoạn khoang cháy linh hoạt cho các trung tâm thương mại và sảnh khách sạn.',
+      },
+      {
+        icon: 'shield',
+        title: 'Bảo vệ lối thoát hiểm',
+        desc: 'Hạ rèm 2 giai đoạn giữ luồng khí thở sạch cho hành lang và lối thoát hiểm của tòa nhà.',
+      },
+      {
+        icon: 'scan',
+        title: 'Ẩn mình trong trần thạch cao',
+        desc: 'Không làm thay đổi không gian nội thất, chỉ xuất hiện tự động khi có báo động cháy.',
+      },
+    ],
     specTable: [
-      { label: 'Cấp độ bảo vệ', value: 'Ngăn cháy EI60, EI90 / Ngăn khói chuyên dụng' },
-      { label: 'Vải rèm', value: 'Sợi thủy tinh gia cường dây thép chịu nhiệt độ cao' },
-      { label: 'Hộp cuốn & Ray dẫn hướng', value: 'Thép mạ kẽm định hình giấu âm trần' },
-      { label: 'Động cơ', value: 'Motor 24VDC có cơ chế nhả phanh trọng lực' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      { label: 'Chủng loại', value: 'Rèm ngăn cháy tự động (Fire Curtain) & Rèm ngăn khói (Smoke Curtain)' },
+      { label: 'Tiêu chuẩn đáp ứng', value: 'QCVN 06:2022/BXD, BS EN 1634-1, BS EN 12101-1' },
+      { label: 'Cấp chịu lửa', value: 'EI60, EI90, E120 (ngăn cháy & ngăn bức xạ nhiệt)' },
+      { label: 'Vật liệu vải rèm', value: 'Sợi thủy tinh gia cường dây thép Inox bọc hợp chất vô cơ chống cháy' },
+      { label: 'Độ dày / Định lượng vải', value: 'Độ dày 0.6 – 1.2 mm; định lượng 650 – 1200 g/m²' },
+      { label: 'Khả năng chịu nhiệt', value: 'Chịu nhiệt đỉnh lên tới 1000°C trong tối thiểu 120 phút' },
+      { label: 'Động cơ cuốn', value: 'Motor hình ống 24VDC chuyên dụng, tích hợp bộ ly hợp giảm tốc' },
+      { label: 'Nguồn cấp dự phòng', value: 'Bộ lưu điện UPS 24VDC duy trì điều khiển khi cắt điện tòa nhà' },
+      { label: 'Ray dẫn hướng', value: 'Thép mạ kẽm 1.5mm sơn tĩnh điện, tích hợp rãnh chống kẹt vải' },
+      { label: 'Thanh đáy đối trọng', value: 'Thanh thép hộp bọc vải rèm, đảm bảo màn rèm luôn căng phẳng khi hạ' },
+      { label: 'Tín hiệu điều khiển', value: 'Tín hiệu báo cháy 24VDC hoặc tiếp điểm rơle NO/NC' },
+      { label: 'Bảo hành', value: '24 tháng theo tiêu chuẩn nhà sản xuất APEX' },
     ],
     gallery: [fireCurtainImage],
     projectImages: [],
@@ -378,29 +498,71 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
   },
 
   // ==========================================
-  // 5. TỦ ĐIỆN PHÂN PHỐI & ĐIỀU KHIỂN (Khung rỗng chờ Phase 4)
+  // 5. TỦ ĐIỆN PHÂN PHỐI & ĐIỀU KHIỂN (Điền đầy đủ 100% theo template chuẩn)
   // ==========================================
   'tu-dien': {
     slug: 'tu-dien',
     name: 'Tủ Điện Phân Phối & Điều Khiển',
+    priceFrom: 'Liên hệ dự toán',
     intro:
-      'Vỏ tủ điện hạ thế, tủ tổng MSB, tủ phân phối DB, tủ ATS và tủ điều khiển bơm PCCC gia công CNC chính xác từ thép mạ kẽm sơn tĩnh điện tiêu chuẩn.',
-    sellingPoints: [],
-    quickSpec: [
-      { label: 'Tiêu chuẩn chế tạo', value: 'IEC 61439-1/2, TCVN' },
-      { label: 'Cấp bảo vệ', value: 'IP31 - IP54 (trong nhà) / IP55 - IP65 (ngoài trời)' },
-      { label: 'Vật liệu vỏ', value: 'Thép cán nguội 1.2 - 2.0mm, sơn tĩnh điện RAL 7032/7035' },
-      { label: 'Bảo hành', value: '12 - 24 tháng' },
+      'Vỏ tủ điện hạ thế và tủ điều khiển chuyên dụng APEX được gia công cơ khí chính xác trên hệ thống máy đột dập CNC Amada, sơn tĩnh điện bột ngoài trời công nghệ cao. Đạt tiêu chuẩn IEC 61439-1/2, chuyên dụng cho tủ tổng MSB, tủ phân phối DB, tủ chuyển nguồn tự động ATS và tủ điều khiển bơm PCCC.',
+    sellingPoints: [
+      'Gia công CNC tự động hóa chuẩn xác từng chi tiết',
+      'Cấp bảo vệ IP31 - IP65 chống bụi và nước hoàn hảo',
+      'Sơn tĩnh điện hạt tĩnh phân tử chống trầy xước, ăn mòn',
     ],
-    advantages: [],
-    uses: [],
+    quickSpec: [
+      { label: 'Tiêu chuẩn chế tạo', value: 'IEC 61439-1/2, TCVN 7994-1' },
+      { label: 'Cấp bảo vệ', value: 'IP31, IP42, IP54 (trong nhà) / IP55, IP65 (ngoài trời)' },
+      { label: 'Vật liệu vỏ', value: 'Thép cán nguội SPCC 1.2 – 2.5mm / Inox 304 xước Hairline' },
+      { label: 'Xử lý bề mặt', value: 'Sơn tĩnh điện sần / bóng màu RAL 7032, RAL 7035 ngoài trời' },
+      { label: 'Kết cấu form tủ', value: 'Form 1, 2A/2B, 3A/3B, 4A/4B phân chia ngăn chức năng an toàn' },
+      { label: 'Phụ kiện tủ', value: 'Khóa tay nắm xoay, bản lề góc mở 130°, thanh gá thiết bị đa năng' },
+      { label: 'Bảo hành', value: '24 tháng chính hãng APEX' },
+    ],
+    advantages: [
+      'Khung vỏ dập CNC gân tăng cứng đa điểm, đảm bảo độ cứng vững khi mang tải thiết bị đóng cắt nặng',
+      'Cấp bảo vệ vỏ tủ từ IP42 đến IP65 với hệ gioăng cao su Polyurethane đúc liền bằng robot chống thấm tuyệt đối',
+      'Đạt tiêu chuẩn thử nghiệm điển hình Type-Test theo IEC 61439-1/2 về độ tăng nhiệt và khả năng chịu ngắn mạch',
+      'Bề mặt xử lý qua bể phốt phát hóa 7 công đoạn trước khi sơn tĩnh điện bột ngoài trời chịu tia UV',
+      'Thiết kế module hóa linh hoạt, dễ dàng mở rộng ngăn lộ và tháo lắp bảo trì từ phía trước hoặc sau',
+      'Đầy đủ thanh đồng tiếp địa tiếp mass và tấm đáy luồn cáp có ron cao su chống xâm nhập côn trùng',
+    ],
+    uses: [
+      {
+        icon: 'zap',
+        title: 'Phân phối điện lực an toàn',
+        desc: 'Làm tủ tổng MSB, tủ DB và tủ nhánh bảo vệ hệ thống điện công nghiệp và dân dụng.',
+      },
+      {
+        icon: 'shield',
+        title: 'Điều khiển cụm bơm PCCC',
+        desc: 'Vỏ tủ chuyên dụng cho hệ thống điều khiển bơm chữa cháy tự động khởi động sao/tam giác.',
+      },
+      {
+        icon: 'box',
+        title: 'Chống chịu thời tiết dã ngoại',
+        desc: 'Vỏ tủ outdoor 2 lớp mái dốc che mưa nắng, bảo vệ linh kiện biến tần và khởi động mềm.',
+      },
+      {
+        icon: 'wind',
+        title: 'Tản nhiệt & lưu thông khí',
+        desc: 'Bố trí khe chớp thông gió kết hợp quạt hút gắn lọc bụi, duy trì nhiệt độ tối ưu cho thiết bị.',
+      },
+    ],
     specTable: [
-      { label: 'Loại tủ', value: 'Tủ điện tổng MSB, tủ DB, tủ điều khiển bơm PCCC, tủ ATS' },
-      { label: 'Tiêu chuẩn áp dụng', value: 'IEC 61439-1/2' },
-      { label: 'Độ dày thép vỏ tủ', value: '1.2mm, 1.5mm, 2.0mm' },
-      { label: 'Cấp bảo vệ vỏ tủ', value: 'IP42, IP54, IP65' },
-      { label: 'Xử lý bề mặt', value: 'Sơn tĩnh điện bột ngoài trời / trong nhà' },
-      { label: 'Bảo hành', value: '12 - 24 tháng' },
+      { label: 'Chủng loại tủ', value: 'Tủ MSB, Tủ phân phối DB, Tủ ATS, Tủ bù công suất, Tủ điều khiển bơm PCCC' },
+      { label: 'Tiêu chuẩn thiết kế', value: 'IEC 61439-1/2, IEC 60529, TCVN 7994-1' },
+      { label: 'Điện áp định mức', value: '220VAC / 380VAC – 690VAC; Tần số 50Hz' },
+      { label: 'Dòng điện định mức', value: 'Lên tới 6300A (tủ MSB) / 800A (tủ DB)' },
+      { label: 'Dòng cắt ngắn mạch', value: 'Lên tới 50kA, 65kA, 85kA / 1s' },
+      { label: 'Độ dày thép vỏ tủ', value: 'Khung 2.0 – 2.5 mm; Cánh & vách 1.5 – 2.0 mm; Đế 2.5 – 3.0 mm' },
+      { label: 'Cấp bảo vệ vỏ (IP)', value: 'IP31, IP42, IP54 (Indoor); IP55, IP65 (Outdoor)' },
+      { label: 'Vật liệu chế tạo', value: 'Thép cán nguội SPCC mạ kẽm điện phân / Inox 304' },
+      { label: 'Công nghệ sơn', value: 'Sơn tĩnh điện bột sấy hồng ngoại dày 60 – 80 µm' },
+      { label: 'Màu sơn tiêu chuẩn', value: 'Ghi sáng RAL 7032 / RAL 7035 hoặc sơn màu theo yêu cầu' },
+      { label: 'Thanh cái dẫn điện', value: 'Đồng đỏ tinh khiết 99.9% bọc màng co nhiệt phân pha' },
+      { label: 'Bảo hành', value: '24 tháng theo tiêu chuẩn nhà sản xuất APEX' },
     ],
     gallery: [electricalCabinetImage],
     projectImages: [],
@@ -408,29 +570,71 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
   },
 
   // ==========================================
-  // 6. THANG MÁNG CÁP ĐIỆN (Khung rỗng chờ Phase 4)
+  // 6. THANG MÁNG CÁP ĐIỆN (Điền đầy đủ 100% theo template chuẩn)
   // ==========================================
   'thang-mang-cap': {
     slug: 'thang-mang-cap',
     name: 'Thang Máng Cáp Điện',
+    priceFrom: 'Liên hệ theo quy cách',
     intro:
-      'Hệ thống máng cáp (Cable Trunking), thang cáp (Cable Ladder) và khay cáp mạ kẽm nhúng nóng, sơn tĩnh điện bảo vệ an toàn tuyến dây điện lực và PCCC.',
-    sellingPoints: [],
-    quickSpec: [
-      { label: 'Chủng loại', value: 'Thang cáp, máng cáp, khay cáp & phụ kiện' },
-      { label: 'Vật liệu', value: 'Thép tấm tiêu chuẩn 1.0 - 2.5mm' },
-      { label: 'Bề mặt hoàn thiện', value: 'Mạ kẽm nhúng nóng, tôn mạ kẽm, sơn tĩnh điện' },
-      { label: 'Bảo hành', value: '12 - 24 tháng' },
+      'Hệ thống Thang cáp (Cable Ladder), Máng cáp (Cable Trunking) và Khay cáp (Cable Tray) APEX sản xuất đồng bộ từ thép tấm tiêu chuẩn, mạ kẽm nhúng nóng hoặc sơn tĩnh điện. Thiết kế gia cường gờ mép chịu tải trọng võng cao, bảo vệ đường dây dẫn điện và cáp tín hiệu PCCC an toàn suốt vòng đời công trình.',
+    sellingPoints: [
+      'Chấn mép tăng cứng chống võng vặn xoắn',
+      'Mạ kẽm nhúng nóng dày ≥ 65µm chống rỉ sét dã ngoại',
+      'Đầy đủ co ngang, tê, giảm, co lên xuống nối nhanh',
     ],
-    advantages: [],
-    uses: [],
+    quickSpec: [
+      { label: 'Chủng loại', value: 'Thang cáp, Máng cáp, Khay cáp & phụ kiện co, tê, nối' },
+      { label: 'Chiều rộng thông dụng', value: 'W 50mm – 1000mm (50, 100, 200, 300, 400, 600, 800, 1000)' },
+      { label: 'Chiều cao thông dụng', value: 'H 50mm, 75mm, 100mm, 150mm, 200mm' },
+      { label: 'Độ dày thép', value: '1.0mm, 1.2mm, 1.5mm, 2.0mm, 2.5mm' },
+      { label: 'Bề mặt hoàn thiện', value: 'Sơn tĩnh điện, Tôn tráng kẽm Z12–Z18, Mạ kẽm nhúng nóng ASTM A123' },
+      { label: 'Chiều dài mỗi cây', value: '2500 mm / 3000 mm tiêu chuẩn' },
+      { label: 'Bảo hành', value: '24 tháng chính hãng APEX' },
+    ],
+    advantages: [
+      'Thiết kế gờ mép chấn chữ C chịu lực tăng cứng, giảm tối đa độ võng khi rải cáp điện lực nặng',
+      'Lớp phủ mạ kẽm nhúng nóng đạt độ dày lớp mạ ≥ 65 micromet, chống ăn mòn xuất sắc ở môi trường ven biển và hóa chất',
+      'Gia công dập lỗ đột CNC tinh xảo, bề mặt nhẵn mịn không gờ bén, chống trầy xước vỏ bọc dây cáp',
+      'Hệ phụ kiện co, tê, cút nối nhanh ăn khớp chính xác, rút ngắn 40% thời gian thi công trên cao',
+      'Máng đục lỗ thông hơi đối lưu khí giải nhiệt hiệu quả, nâng cao hiệu suất truyền tải của dây cáp',
+      'Độ dày tôn đạt chuẩn từ 1.2mm đến 2.5mm theo đúng thiết kế bản vẽ và tải trọng công trình',
+    ],
+    uses: [
+      {
+        icon: 'zap',
+        title: 'Tuyến cáp điện lực động lực',
+        desc: 'Đỡ và phân tuyến cáp lực trục đứng (riser) và trục ngang tầng hầm cho nhà cao tầng.',
+      },
+      {
+        icon: 'flame',
+        title: 'Bảo vệ tuyến cáp PCCC',
+        desc: 'Máng cáp kín có nắp đậy che chắn cáp chống cháy chống tác động cơ học và nhiệt lượng.',
+      },
+      {
+        icon: 'cpu',
+        title: 'Hệ thống cáp mạng & viễn thông',
+        desc: 'Khay cáp đục lỗ phân luồng dây tín hiệu điều khiển BMS, camera và dây cáp mạng server.',
+      },
+      {
+        icon: 'box',
+        title: 'Tải trọng chịu lực siêu cao',
+        desc: 'Thang cáp chịu tải phân bổ đều lên tới 250kg/m mà không bị biến dạng hay xô lệch.',
+      },
+    ],
     specTable: [
-      { label: 'Quy cách', value: 'Chiều rộng 50 - 1000mm, chiều cao 50 - 200mm' },
-      { label: 'Độ dày vật liệu', value: '1.0mm, 1.2mm, 1.5mm, 2.0mm, 2.5mm' },
-      { label: 'Chiều dài tiêu chuẩn', value: '2500mm / 3000mm mỗi cây' },
-      { label: 'Phương pháp bảo vệ', value: 'Sơn tĩnh điện, mạ kẽm điện phân, mạ kẽm nhúng nóng' },
-      { label: 'Phụ kiện đồng bộ', value: 'Co ngang, tê, chữ thập, giảm, nẹp nối, giá đỡ' },
-      { label: 'Bảo hành', value: '12 - 24 tháng' },
+      { label: 'Sản phẩm chính', value: 'Thang cáp (Cable Ladder), Máng cáp (Trunking), Khay cáp đục lỗ (Tray)' },
+      { label: 'Tiêu chuẩn sản xuất', value: 'NEMA VE1, BS EN 61537, TCVN 10688' },
+      { label: 'Chiều rộng (W)', value: 'Từ 50 mm đến 1000 mm (50, 100, 150, 200, 300, 400, 500, 600, 800, 1000)' },
+      { label: 'Chiều cao thành (H)', value: '50, 75, 100, 150, 200 mm' },
+      { label: 'Chiều dài mỗi cây', value: '2.500 mm hoặc 3.000 mm (tùy chọn 2.400 mm)' },
+      { label: 'Độ dày thép tấm', value: '1.0 mm, 1.2 mm, 1.5 mm, 2.0 mm, 2.5 mm' },
+      { label: 'Vật liệu chế tạo', value: 'Thép tấm đen cán nguội SPCC, Tôn mạ kẽm cuộn, Inox 304' },
+      { label: 'Xử lý bề mặt', value: 'Sơn tĩnh điện bột ngoài trời / Mạ kẽm điện phân / Mạ kẽm nhúng nóng' },
+      { label: 'Độ dày lớp mạ kẽm', value: 'Mạ nhúng nóng ≥ 65 µm theo chuẩn ASTM A123 / ISO 1461' },
+      { label: 'Màu sơn tĩnh điện', value: 'Ghi sần RAL 7032, Kem, Cam PCCC hoặc theo yêu cầu chủ đầu tư' },
+      { label: 'Hệ phụ kiện đồng bộ', value: 'Co ngang L, Tê chữ T, Chữ thập X, Cút giảm thu, Nẹp nối, Bulong M8/M10' },
+      { label: 'Bảo hành', value: '24 tháng theo tiêu chuẩn nhà sản xuất APEX' },
     ],
     gallery: [cableTrayImage],
     projectImages: [],
@@ -438,29 +642,71 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
   },
 
   // ==========================================
-  // 7. TỦ RACK MẠNG & VIỄN THÔNG (Khung rỗng chờ Phase 4)
+  // 7. TỦ RACK MẠNG & VIỄN THÔNG (Điền đầy đủ 100% theo template chuẩn)
   // ==========================================
   'tu-rack': {
     slug: 'tu-rack',
     name: 'Tủ Rack Mạng & Viễn Thông',
+    priceFrom: 'Liên hệ theo dung tích',
     intro:
-      'Tủ mạng 19 inch tiêu chuẩn quốc tế EIA-310-D từ 6U đến 42U, kết cấu thép gia cường chịu tải trọng lớn, tối ưu hóa lưu thông khí làm mát server.',
-    sellingPoints: [],
-    quickSpec: [
-      { label: 'Tiêu chuẩn', value: '19 inch EIA-310-D' },
-      { label: 'Kích cỡ', value: '6U, 10U, 15U, 20U, 27U, 32U, 42U (D600 - D1000)' },
-      { label: 'Tải trọng', value: 'Lên tới 800 - 1000kg (cho tủ 42U Server)' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      'Tủ Rack 19 inch APEX đạt tiêu chuẩn quốc tế EIA-310-D, đa dạng kích cỡ từ tủ treo tường 6U, 10U, 15U đến tủ server chuyên dụng 27U, 36U, 42U. Kết cấu khung thép cán nguội gia cường chịu tải tĩnh lên tới 1000kg, cửa lưới tổ ong thông thoáng 75% tối ưu tản nhiệt cho các trung tâm dữ liệu Data Center.',
+    sellingPoints: [
+      'Chuẩn 19 inch quốc tế EIA-310-D tương thích mọi thiết bị',
+      'Cửa lưới tổ ong lục giác thông thoáng 75% tản nhiệt',
+      'Khung chịu tải tĩnh lên tới 1.000 kg (tủ Server 42U)',
     ],
-    advantages: [],
-    uses: [],
+    quickSpec: [
+      { label: 'Tiêu chuẩn', value: '19 inch EIA-310-D, DIN 41494' },
+      { label: 'Kích cỡ (U)', value: '6U, 9U, 12U, 15U, 20U, 27U, 32U, 36U, 42U' },
+      { label: 'Chiều sâu (Depth)', value: 'D400, D600, D800, D1000, D1100, D1200 mm' },
+      { label: 'Tải trọng chịu lực', value: 'Từ 60kg (treo tường) đến 1000kg (tủ server 42U đứng sàn)' },
+      { label: 'Cửa trước / sau', value: 'Cửa lưới lục giác thoáng 75% / Cửa mica có khóa an toàn' },
+      { label: 'Phụ kiện kèm theo', value: 'Quạt tản nhiệt nóc, thanh nguồn PDU 6–12 port, ốc cài, khay cố định' },
+      { label: 'Bảo hành', value: '24 tháng chính hãng APEX' },
+    ],
+    advantages: [
+      'Khung thép cán nguội chất lượng cao dày 1.5 – 2.0mm liên kết hàn định hình siêu cứng vững',
+      'Cửa trước và cửa sau dập lưới lục giác mật độ cao thông thoáng 75%, đáp ứng tiêu chuẩn luồng khí lạnh - nóng',
+      'Thanh gắn thiết bị 19 inch đánh dấu chỉ số U rõ ràng, điều chỉnh chiều sâu linh hoạt theo chiều dài server',
+      'Cửa mở góc rộng 180°, có thể đảo chiều mở trái / phải linh hoạt phù hợp với từng vị trí góc phòng',
+      'Hệ thống 4 bánh xe chịu lực có khóa hãm kết hợp chân tăng chỉnh cân bằng trên sàn kỹ thuật',
+      'Đầy đủ lỗ luồn cáp nóc và đáy có nẹp chổi chắn bụi, quản lý tuyến cáp patch cord gọn gàng chuyên nghiệp',
+    ],
+    uses: [
+      {
+        icon: 'cpu',
+        title: 'Data Center & Server Room',
+        desc: 'Chứa máy chủ blade server, switch core, router và thiết bị lưu trữ SAN/NAS.',
+      },
+      {
+        icon: 'wind',
+        title: 'Tản nhiệt đối lưu luồng khí',
+        desc: 'Tối ưu luồng khí hút gió lạnh phía trước và thổi khí nóng ra sau theo chuẩn Tier III.',
+      },
+      {
+        icon: 'shield',
+        title: 'Bảo mật an toàn thiết bị',
+        desc: 'Khóa tay xoay bảo vệ vật lý, ngăn chặn can thiệp trái phép vào hệ thống mạng doanh nghiệp.',
+      },
+      {
+        icon: 'box',
+        title: 'Tủ treo tường văn phòng',
+        desc: 'Dòng tủ 6U - 12U treo tường gọn nhẹ cho switch mạng, đầu ghi camera CCTV và tổng đài IP.',
+      },
+    ],
     specTable: [
-      { label: 'Tiêu chuẩn thiết kế', value: 'EIA-310-D, DIN 41494' },
-      { label: 'Dung tích', value: '6U, 12U, 15U, 27U, 36U, 42U' },
-      { label: 'Chiều sâu (D)', value: 'D600, D800, D1000, D1100 mm' },
-      { label: 'Vật liệu', value: 'Thép cán nguội SPCC chất lượng cao' },
-      { label: 'Cửa tủ', value: 'Cửa lưới tổ ong thông thoáng 75% / cửa mica' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      { label: 'Tiêu chuẩn áp dụng', value: 'EIA-310-D, IEC 297-2, DIN 41494, RoHS' },
+      { label: 'Dung tích lắp đặt (U)', value: 'Treo tường: 6U, 9U, 12U, 15U; Đứng sàn: 20U, 27U, 32U, 36U, 42U' },
+      { label: 'Kích thước chiều sâu (D)', value: 'D400, D600, D800, D1000, D1100, D1200 mm' },
+      { label: 'Chiều rộng tiêu chuẩn', value: 'Chuẩn 19 inch (Width 600 mm hoặc 800 mm có khoang đi dây)' },
+      { label: 'Tải trọng tải tĩnh', value: 'Tủ treo tường 60 – 100 kg; Tủ đứng sàn 800 – 1000 kg' },
+      { label: 'Vật liệu thép', value: 'Thép cán nguội SPCC; Thanh gắn thiết bị 2.0mm, khung 1.5mm, vách 1.2mm' },
+      { label: 'Xử lý bề mặt', value: 'Sơn tĩnh điện cát màu đen mờ RAL 9005 hoặc ghi xám RAL 7035' },
+      { label: 'Cửa tủ', value: 'Cửa trước lưới tổ ong hoặc mica; Cửa sau lưới 2 cánh mở đôi (tủ sâu)' },
+      { label: 'Hệ thống quạt hút', value: 'Từ 2 đến 4 quạt hút gió 220VAC gắn trên nóc tủ' },
+      { label: 'Thanh phân phối nguồn', value: 'Thanh nguồn PDU 6 chấu, 8 chấu hoặc 12 chấu có aptomat chống quá tải' },
+      { label: 'Phụ kiện kèm theo', value: 'Chân đế tăng chỉnh, bánh xe khóa, khay cố định / khay trượt, ốc cài M6' },
+      { label: 'Bảo hành', value: '24 tháng theo tiêu chuẩn nhà sản xuất APEX' },
     ],
     gallery: [serverRackImage],
     projectImages: [],
@@ -468,29 +714,71 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
   },
 
   // ==========================================
-  // 8. NHÀ TRẠM VIỄN THÔNG SHELTER (Khung rỗng chờ Phase 4)
+  // 8. NHÀ TRẠM VIỄN THÔNG SHELTER (Điền đầy đủ 100% theo template chuẩn)
   // ==========================================
   'nha-tram-shelter': {
     slug: 'nha-tram-shelter',
     name: 'Nhà Trạm Viễn Thông Shelter',
+    priceFrom: 'Liên hệ thiết kế',
     intro:
-      'Nhà trạm module lắp ghép panel sandwich polyurethane (PU) cách nhiệt, chống nước, chống ăn mòn dã ngoại cho các trạm thu phát sóng viễn thông BTS.',
-    sellingPoints: [],
-    quickSpec: [
-      { label: 'Kết cấu', value: 'Module lắp ghép panel sandwich PU tỷ trọng cao' },
-      { label: 'Khả năng cách nhiệt', value: 'Hệ số truyền nhiệt K ≤ 0.025 W/m.K' },
-      { label: 'Độ bền môi trường', value: 'Chống thấm nước IP54/IP55, chịu gió bão cấp 12' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      'Nhà trạm Shelter module lắp ghép APEX sử dụng tấm panel sandwich Polyurethane (PU) tỷ trọng cao 40–45 kg/m³, khung dầm đế thép hình dập định hình mạ kẽm nhúng nóng. Thiết kế cách âm, cách nhiệt vượt trội, chống bão cấp 12 và chống nước IP55, vận hành bền bỉ bảo vệ trạm BTS viễn thông ở điều kiện địa hình dã ngoại khắc nghiệt.',
+    sellingPoints: [
+      'Panel sandwich PU tỷ trọng cao 40-45 kg/m³ cách nhiệt K ≤ 0.025',
+      'Kết cấu thép mạ kẽm nhúng nóng chịu gió bão cấp 12',
+      'Lắp ghép module dã ngoại hoàn thiện chỉ trong 2-3 ngày',
     ],
-    advantages: [],
-    uses: [],
+    quickSpec: [
+      { label: 'Kết cấu nhà trạm', value: 'Module lắp ghép panel sandwich PU ngàm camlock' },
+      { label: 'Kích thước thông dụng', value: '2.5 × 2.5m, 2.5 × 3.0m, 3.0 × 4.0m, H 2.6 – 2.8m' },
+      { label: 'Khả năng cách nhiệt', value: 'Hệ số truyền nhiệt K ≤ 0.025 W/m.K, tiết kiệm 40% điện điều hòa' },
+      { label: 'Chống chịu thời tiết', value: 'Cấp chống nước IP55, chịu sức gió bão cấp 12 (130 km/h)' },
+      { label: 'Khung sàn đế', value: 'Thép hình chữ I, U mạ kẽm nhúng nóng chống ăn mòn' },
+      { label: 'Trang bị phụ trợ', value: 'Cửa chống trộm 3 điểm, lỗ luồn feeder, quạt thông gió DC dự phòng' },
+      { label: 'Bảo hành', value: '24 tháng chính hãng APEX' },
+    ],
+    advantages: [
+      'Công nghệ phun foam PU áp lực cao tỷ trọng 40–45 kg/m³, không rỗng xốp, khả năng giữ nhiệt độ trạm ổn định dưới 25°C',
+      'Hai mặt ngoài bọc tôn mạ hợp kim nhôm kẽm phủ sơn tĩnh điện kháng muối biển và tia cực tím UV',
+      'Hệ thống ngàm khóa âm Camlock đúc liền trong panel, lắp dựng kín khít tuyệt đối không lọt nước',
+      'Khung dầm đế thép hình dập định hình mạ kẽm nhúng nóng, đặt vững vàng trên móng cột hoặc sàn bê tông',
+      'Tích hợp hệ thống quạt hút khẩn cấp DC tự động chạy khi mất điện lưới hoặc điều hòa bị lỗi',
+      'Cửa ra vào kín khít có gioăng EPDM cách nhiệt, trang bị khóa cơ an ninh 3 điểm chống cạy phá dã ngoại',
+    ],
+    uses: [
+      {
+        icon: 'shield',
+        title: 'Trạm thu phát sóng BTS viễn thông',
+        desc: 'Bảo vệ thiết bị phát sóng vô tuyến 4G/5G, tổng đài quang và tủ rectifier ngoài đồi núi.',
+      },
+      {
+        icon: 'flame',
+        title: 'Cách nhiệt & tiết kiệm điện năng',
+        desc: 'Duy trì nhiệt độ phòng máy 22-25°C, giảm đến 40% công suất tiêu thụ của máy lạnh.',
+      },
+      {
+        icon: 'droplets',
+        title: 'Chống thấm nước & chịu bão cấp 12',
+        desc: 'Chống chọi gió giật bão biển và mưa rào áp lực cao dã ngoại không lo ngấm dột.',
+      },
+      {
+        icon: 'box',
+        title: 'Nhà trạm module di động',
+        desc: 'Tháo dỡ, di dời và tái sử dụng linh hoạt giữa các vị trí trạm BTS nhanh chóng.',
+      },
+    ],
     specTable: [
-      { label: 'Quy cách kích thước', value: 'Gia công theo thiết kế trạm BTS dã ngoại' },
-      { label: 'Vật liệu vỏ panel', value: 'Tôn mạ màu / tôn mạ kẽm dập gân tăng cứng' },
-      { label: 'Lõi cách nhiệt', value: 'Polyurethane (PU) tỷ trọng 40 - 45 kg/m³' },
-      { label: 'Khung sàn & đế', value: 'Thép hình chữ I, U mạ kẽm nhúng nóng' },
-      { label: 'Hệ thống phụ trợ', value: 'Cửa thoát hiểm, lỗ luồn cáp feeder, quạt hút DC' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      { label: 'Quy cách phủ bì', value: '2.5×2.5m, 2.5×3.0m, 3.0×4.0m, 3.0×6.0m (Chiều cao 2.6 – 2.8m)' },
+      { label: 'Cấu tạo panel tường & trần', value: 'Panel sandwich 3 lớp dày 75 – 100 mm' },
+      { label: 'Vỏ tôn ngoài & trong', value: 'Tôn mạ hợp kim nhôm kẽm dày 0.5 – 0.6 mm phủ sơn tĩnh điện PE' },
+      { label: 'Lõi cách nhiệt', value: 'Polyurethane (PU) tỷ trọng 40 – 45 kg/m³ chống cháy lan' },
+      { label: 'Hệ số dẫn nhiệt', value: 'λ ≤ 0.022 W/m.K (Hệ số K ≤ 0.025 W/m²K)' },
+      { label: 'Khung dầm đáy', value: 'Thép hình chữ I 150 – 200 mm mạ kẽm nhúng nóng độ dày mạ ≥ 75 µm' },
+      { label: 'Sàn thao tác', value: 'Tấm Cemboard 18mm lót sàn nhựa Vinyl chống tĩnh điện ESD' },
+      { label: 'Cửa ra vào', value: 'Cửa cách nhiệt PU kèm khóa tay gạt 3 điểm, tay co thủy lực dã ngoại' },
+      { label: 'Khả năng chịu gió', value: 'Chịu vận tốc gió giật lên tới 140 km/h (tương đương bão cấp 12)' },
+      { label: 'Lỗ luồn cáp Feeder', value: 'Mặt bích nhôm 12 – 24 lỗ có nút cao su bịt kín chống côn trùng' },
+      { label: 'Hệ thống phụ trợ', value: 'Bảng điện trạm ATS, máng cáp nội bộ, đèn LED, quạt thông gió khẩn cấp DC' },
+      { label: 'Bảo hành', value: '24 tháng theo tiêu chuẩn nhà sản xuất APEX' },
     ],
     gallery: [telecomShelterImage],
     projectImages: [],
@@ -498,32 +786,75 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
   },
 
   // ==========================================
-  // 9. TỦ NGUỒN OUTDOOR (Khung rỗng chờ Phase 4)
+  // 9. TỦ NGUỒN OUTDOOR (Điền đầy đủ 100% theo template chuẩn)
   // ==========================================
   'tu-nguon-outdoor': {
     slug: 'tu-nguon-outdoor',
     name: 'Tủ Nguồn Outdoor',
+    priceFrom: 'Liên hệ cấu hình',
     intro:
-      'Tủ nguồn ngoài trời kết cấu 2 lớp vỏ cách nhiệt IP55/IP65, bảo vệ bộ chỉnh lưu nguồn rectifier, thiết bị mạng và hệ thống ắc quy viễn thông.',
-    sellingPoints: [],
-    quickSpec: [
-      { label: 'Cấp bảo vệ', value: 'IP55 / IP65 chống bụi và nước áp lực' },
-      { label: 'Kết cấu', value: '2 lớp vỏ cách nhiệt chống hấp thụ bức xạ mặt trời' },
-      { label: 'Hệ thống làm mát', value: 'Quạt hút tản nhiệt tự nhiên / Máy lạnh mini DC' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      'Tủ nguồn ngoài trời APEX thiết kế kết cấu 2 lớp vỏ cách nhiệt chuyên dụng, đạt chuẩn bảo vệ IP55/IP65 chống bụi và nước áp lực dã ngoại. Tích hợp khoang chứa nguồn chỉnh lưu rectifier, khoang chứa ắc quy dự phòng và hệ thống điều hòa mini hoặc quạt thông gió tản nhiệt thông minh.',
+    sellingPoints: [
+      'Kết cấu 2 lớp vỏ cách nhiệt chống sốc nhiệt bức xạ',
+      'Cấp bảo vệ IP55 / IP65 chống bụi nước áp lực',
+      'Khóa 3 điểm bảo mật chống cạy phá ngoài trời',
     ],
-    advantages: [],
-    uses: [],
+    quickSpec: [
+      { label: 'Cấp bảo vệ', value: 'IP55 / IP65 theo chuẩn IEC 60529' },
+      { label: 'Kết cấu vỏ tủ', value: '2 lớp vỏ cách nhiệt (thép mạ kẽm 1.5 – 2.0mm kèm mút PE/PU)' },
+      { label: 'Kích thước thông dụng', value: 'H1400 – H2000 × W700 – W1200 × D700 – D1000 mm' },
+      { label: 'Hệ thống làm mát', value: 'Điều hòa nhiệt độ mini DC 300W–1500W / Quạt tản nhiệt lọc bụi' },
+      { label: 'Phân khoang chức năng', value: 'Khoang thiết bị viễn thông, khoang nguồn và khoang ắc quy độc lập' },
+      { label: 'Khóa bảo vệ', value: 'Khóa 3 điểm chống trộm chuyên dụng ngoài trời dã ngoại' },
+      { label: 'Bảo hành', value: '24 tháng chính hãng APEX' },
+    ],
+    advantages: [
+      'Cấu trúc vỏ kép 2 lớp có lớp đệm không khí cách nhiệt, hạn chế 80% bức xạ nhiệt mặt trời chiếu vào trong tủ',
+      'Hệ gioăng cao su Polyurethane liên tục đúc liền bằng công nghệ bơm keo tự động, chống nước ngập hắt chuẩn IP65',
+      'Khóa bảo mật tay nắm gập 3 điểm trên - giữa - dưới làm từ hợp kim chống ăn mòn và bẻ khóa',
+      'Mái che dốc phía trước và sau thoát nước mưa nhanh, có chớp lấy gió trang bị lưới lọc bụi không thấm nước',
+      'Khoang chứa ắc quy thiết kế tấm đỡ chịu tải nặng lên tới 400kg, có vách ngăn cách ly hơi axit',
+      'Sơn tĩnh điện bột ngoài trời chất lượng cao chống phai màu, chịu được sương muối và độ ẩm cao',
+    ],
+    uses: [
+      {
+        icon: 'zap',
+        title: 'Cung cấp nguồn trạm BTS dã ngoại',
+        desc: 'Chứa hệ thống rectifier đổi nguồn AC/DC và phân phối nguồn 48VDC cho thiết bị viễn thông.',
+      },
+      {
+        icon: 'shield',
+        title: 'Lưu trữ ắc quy dự phòng an toàn',
+        desc: 'Khoang riêng bảo vệ ắc quy Lithium / chì axit duy trì hoạt động khi mất điện lưới.',
+      },
+      {
+        icon: 'droplets',
+        title: 'Chống chọi mưa bão dã ngoại',
+        desc: 'Vận hành tin cậy dưới mưa bão lớn, nắng nóng sa mạc hoặc môi trường biển mặn.',
+      },
+      {
+        icon: 'wind',
+        title: 'Làm mát điều hòa thông minh',
+        desc: 'Trang bị máy lạnh mini DC tự động điều chỉnh nhiệt độ bảo vệ tuổi thọ ắc quy.',
+      },
+    ],
     specTable: [
-      { label: 'Cấp bảo vệ', value: 'IP55, IP65 theo IEC 60529' },
-      { label: 'Vật liệu vỏ', value: 'Thép mạ kẽm 1.5 - 2.0mm / Hợp kim nhôm' },
-      { label: 'Khóa cửa', value: 'Khóa bảo mật 3 điểm chuyên dụng ngoài trời' },
-      { label: 'Cách nhiệt', value: 'Khoang đệm 2 lớp vỏ kèm mút PE cách nhiệt' },
-      { label: 'Phân khoang', value: 'Khoang nguồn, khoang ắc quy và khoang thiết bị riêng' },
-      { label: 'Bảo hành', value: '24 tháng' },
+      { label: 'Tiêu chuẩn bảo vệ', value: 'IP55 / IP65 theo IEC 60529; Chống va đập IK10' },
+      { label: 'Vật liệu chế tạo', value: 'Thép mạ kẽm cán nguội dày 1.5 – 2.0 mm / Hợp kim nhôm 2.0 – 3.0 mm' },
+      { label: 'Cấu tạo cách nhiệt', value: 'Cấu trúc 2 lớp vỏ kèm lớp xốp cách nhiệt PE/PU dày 10 – 20 mm' },
+      { label: 'Kích thước tiêu chuẩn', value: 'Cao 1600–2000 mm × Rộng 800–1200 mm × Sâu 800–1000 mm' },
+      { label: 'Phân khoang bên trong', value: 'Khoang nguồn & thiết bị 19 inch, khoang chứa ắc quy (pin Lithium) riêng biệt' },
+      { label: 'Hệ thống giải nhiệt', value: 'Điều hòa tủ điện DC (300W – 1500W) hoặc cụm quạt hút cảm biến nhiệt độ' },
+      { label: 'Khóa cửa bảo mật', value: 'Hệ thống khóa 3 điểm chống trộm, lõi khóa chống nước' },
+      { label: 'Cửa tủ', value: 'Cửa trước và sau mở 130°, có pít-tông thủy lực giữ cửa khi thao tác dã ngoại' },
+      { label: 'Đế tủ & Nóc mái', value: 'Đế thép hình cao 100 – 200 mm; Mái dốc che mưa có tai cẩu nâng hàng' },
+      { label: 'Bề mặt hoàn thiện', value: 'Sơn tĩnh điện bột ngoài trời Polyester màu xám nhạt RAL 7035' },
+      { label: 'Cảm biến an ninh', value: 'Công tắc hành trình cảnh báo mở cửa, cảm biến nhiệt độ và độ ẩm' },
+      { label: 'Bảo hành', value: '24 tháng theo tiêu chuẩn nhà sản xuất APEX' },
     ],
     gallery: [outdoorCabinetImage],
     projectImages: [],
     relatedSlugs: ['nha-tram-shelter', 'tu-dien', 'tu-rack'],
   },
 };
+
