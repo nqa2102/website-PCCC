@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   ArrowRight, Award,
-  CheckCircle2, FileCheck2,
+  CheckCircle2, FileCheck2, Flame,
   MapPin, MessageSquare, ShieldCheck, Wrench,
 } from 'lucide-react';
 import {
