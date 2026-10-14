@@ -577,7 +577,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
   }), [search, state.products, statusFilter]);
 
   const filteredProjects = useMemo(() => (state.projects || []).filter((project) => {
-    const matchesSearch = `${project.title} ${project.clientName || ''} ${project.location || ''} ${project.category || ''} ${project.slug}`.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = `${project.title} ${project.clientName || ''} ${project.generalContractor || ''} ${project.apexRole || ''} ${project.location || ''} ${project.category || ''} ${project.slug}`.toLowerCase().includes(search.toLowerCase());
     return matchesSearch && (statusFilter === 'all' || project.status === statusFilter);
   }), [search, state.projects, statusFilter]);
 
@@ -1390,8 +1390,15 @@ const ProjectsTable = ({
                   <div className="min-w-0">
                     <strong className="block truncate text-slate-950 font-bold">{project.title}</strong>
                     <span className="block truncate text-[11px] text-slate-500">
-                      {project.clientName ? `Chủ đầu tư: ${project.clientName}` : `Slug: /${project.slug}`}
+                      {project.clientName ? `CĐT: ${project.clientName}` : ''}
+                      {project.generalContractor ? ` · Tổng thầu: ${project.generalContractor}` : ''}
+                      {!project.clientName && !project.generalContractor ? `Slug: /${project.slug}` : ''}
                     </span>
+                    {project.apexRole && (
+                      <span className="block truncate text-[10px] text-amber-700 font-medium">
+                        Vai trò: {project.apexRole}
+                      </span>
+                    )}
                   </div>
                 </div>
               </td>
@@ -2325,6 +2332,12 @@ const ProjectEditor = ({
       <Field label="Khách hàng / Chủ đầu tư (để trống nếu bảo mật tên)">
         <input className={fieldClass} value={data.clientName || ''} onChange={(e) => set('clientName', e.target.value)} placeholder="Để trống nếu chưa được phép nêu tên" />
       </Field>
+      <Field label="Tổng thầu xây dựng / MEP (để trống nếu chưa rõ)">
+        <input className={fieldClass} value={data.generalContractor || ''} onChange={(e) => set('generalContractor', e.target.value)} placeholder="Ví dụ: Tổng công ty 789/BQP, Coteccons, Ricons..." />
+      </Field>
+      <Field label="Vai trò APEX tại dự án *" wide>
+        <input className={fieldClass} value={data.apexRole || ''} onChange={(e) => set('apexRole', e.target.value)} placeholder="Ví dụ: Nghiệm thu hoàn thành gói cửa chống cháy / Cung cấp & thi công..." />
+      </Field>
       <Field label="Địa điểm công trình">
         <input className={fieldClass} value={data.location || ''} onChange={(e) => set('location', e.target.value)} placeholder="Hà Nội, Bắc Ninh, TP.HCM..." />
       </Field>
@@ -2623,6 +2636,8 @@ const newProject = (): AdminProject => ({
   slug: '',
   category: 'cua-thep-ngan-chay',
   clientName: '',
+  generalContractor: '',
+  apexRole: '',
   location: '',
   completedYear: new Date().getFullYear(),
   description: '',

@@ -239,7 +239,7 @@ function devApiPlugin(): Plugin {
             company: devCompany,
             products: devProducts,
             documents: devDocuments,
-            projects: devProjects,
+            projects: devProjects.filter((p) => p.verified === true && p.status === 'published'),
             contents: devContents,
           });
         }

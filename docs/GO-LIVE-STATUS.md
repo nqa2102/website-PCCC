@@ -287,8 +287,8 @@
 | **Phase 1** | Bổ sung 2 cột `general_contractor` & `apex_role` với migration an toàn idempotency, fallback SELECT API chống crash, cập nhật types và automated integrity tests. | 🟢 **DONE** | Commit `6472f54`, 178/178 test integrity PASS. |
 | **Phase 2** | Nâng cấp trang danh sách `/du-an` theo wireframe: Hero + số liệu thật (UC9), chip filter theo category có đếm số, lưới thẻ tỉ lệ 4:3, phân trang client 9 thẻ/lần, chống tràn ngang. | 🟢 **DONE** | Commit `72d9282`, QA 1440px & 375px đạt 0 overflow. |
 | **Phase 3** | Nâng cấp trang chi tiết `/du-an/:slug` theo wireframe: Breadcrumb + meta badge bar, ảnh lớn + thumbnail strip tương tác (bàn phím + aria), bảng thông tin tự ẩn dòng trống (UC6), mô tả công trình + cam kết nghiệm thu, thư viện ảnh thi công hiện trường, CTA dự toán + hotline + Zalo, 3 dự án liên quan, lightbox phóng to ảnh, và màn hình thân thiện chuẩn UC4 khi slug không tồn tại. | 🟢 **DONE** | `lint` pass, `build` pass, 178/178 tests PASS, Browser QA 1440px & 375px hoàn thành. |
-| **Phase 4** | Admin: Thêm 2 trường `generalContractor` và `apexRole`, kiểm tra upload ảnh & thư viện, điều khiển status & verified (UC4). | ⚪ **CHỜ DUYỆT ĐỂ LÀM** | Sẵn sàng triển khai sau khi duyệt Phase 3. |
-| **Phase 5** | SEO + Sitemap cho các slug dự án công khai, Schema.org `CreativeWork`, kiểm tra link cũ. | ⚪ Chưa làm | |
+| **Phase 4** | Admin: Thêm 2 trường `generalContractor` và `apexRole`, cập nhật ô tìm kiếm dự án, hiển thị thông tin tổng thầu & vai trò trong danh sách, điều khiển status & verified, kiểm thử tạo dự án nháp và xác nhận bảo vệ UC4 hoạt động hoàn hảo. | 🟢 **DONE** | `lint` pass, `build` pass, 178/178 tests PASS, Browser QA tạo dự án nháp và xác nhận UC4 không hiển thị ngoài công khai. |
+| **Phase 5** | SEO + Sitemap cho các slug dự án công khai, Schema.org `CreativeWork`, kiểm tra link cũ. | ⚪ **CHỜ DUYỆT ĐỂ LÀM** | Sẵn sàng triển khai sau khi duyệt Phase 4. |
 | **Phase 6** | Nhập 3 dự án mẫu dạng chữ vào admin ở trạng thái nháp (`verified=false`). | ⚪ Chưa làm | |
 
 
