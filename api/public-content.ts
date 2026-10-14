@@ -96,13 +96,27 @@ export default async function handler(req: any, res: any) {
       `.catch(() => []),
       sql`
         SELECT 
-          id, title, slug, client_name as "clientName", category,
-          location, completed_year as "completedYear", description,
+          id, title, slug, client_name as "clientName",
+          general_contractor as "generalContractor", apex_role as "apexRole",
+          category, location, completed_year as "completedYear", description,
           cover_image as "coverImage", gallery, status, verified
         FROM projects
         WHERE verified = true AND status = 'published'
         ORDER BY completed_year DESC NULLS LAST, created_at DESC
-      `.catch(() => []),
+      `.catch(async (err: any) => {
+        // Fallback tương thích nếu database Neon chưa chạy migration general_contractor/apex_role
+        console.warn('Truy vấn projects fallback về schema cũ:', err?.message || err);
+        return await sql`
+          SELECT 
+            id, title, slug, client_name as "clientName",
+            '' as "generalContractor", '' as "apexRole",
+            category, location, completed_year as "completedYear", description,
+            cover_image as "coverImage", gallery, status, verified
+          FROM projects
+          WHERE verified = true AND status = 'published'
+          ORDER BY completed_year DESC NULLS LAST, created_at DESC
+        `.catch(() => []);
+      }),
     ]);
 
     return res.status(200).json({

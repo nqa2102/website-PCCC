@@ -58,6 +58,8 @@ export interface Project {
   category: string;
   categoryLabel: string;
   clientName?: string;
+  generalContractor?: string;
+  apexRole?: string;
   location: string;
   completedYear?: number;
   scale?: string;

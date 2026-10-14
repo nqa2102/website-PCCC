@@ -65,6 +65,8 @@ export interface AdminProject {
   title: string;
   slug: string;
   clientName?: string;
+  generalContractor?: string;
+  apexRole?: string;
   category?: ProductCategory | string;
   location?: string;
   completedYear?: number;

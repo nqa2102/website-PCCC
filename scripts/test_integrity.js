@@ -196,6 +196,18 @@ assert(migrationSql.includes('create table if not exists projects'), 'Migration 
 assert(migrationSql.includes('verified') && migrationSql.includes('default false'), 'Bảng projects có cột verified với default false');
 assert(migrationSql.includes('verified_note'), 'Bảng projects có cột verified_note');
 
+// Kiểm tra migration bổ sung trường Tổng thầu và Vai trò APEX (Phase 1)
+const contractorRoleMigrationPath = path.join(rootDir, 'sql', 'migrations', '20261014_projects_contractor_role.sql');
+assert(fs.existsSync(contractorRoleMigrationPath), 'Migration 20261014_projects_contractor_role.sql tồn tại');
+const contractorRoleSql = fs.readFileSync(contractorRoleMigrationPath, 'utf8').toLowerCase();
+assert(contractorRoleSql.includes('general_contractor') && contractorRoleSql.includes('apex_role'), 'Migration thêm 2 cột general_contractor và apex_role');
+
+const adminTypesContent = fs.readFileSync(path.join(rootDir, 'src', 'admin', 'adminTypes.ts'), 'utf8');
+assert(adminTypesContent.includes('generalContractor?: string') && adminTypesContent.includes('apexRole?: string'), 'AdminProject có 2 trường generalContractor và apexRole');
+
+const srcTypesContent = fs.readFileSync(path.join(rootDir, 'src', 'types', 'index.ts'), 'utf8');
+assert(srcTypesContent.includes('generalContractor?: string') && srcTypesContent.includes('apexRole?: string'), 'Project interface có 2 trường generalContractor và apexRole');
+
 // 6.2 Đồng bộ 9 Category slugs
 const expectedCategories = [
   'cua-thep-ngan-chay',

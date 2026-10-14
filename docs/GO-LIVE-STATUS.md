@@ -1,4 +1,4 @@
-﻿# Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
+# Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
 *Cập nhật lần cuối: 13/10/2026 (Hoàn thành VIỆC A — Xử lý 37 ảnh sản phẩm thật, WebP tối ưu, xóa sạch EXIF, gắn Cover 4:5 và Thư viện ảnh Gallery cho 9 sản phẩm Cửa thép và Cửa kính ngăn cháy, loại bỏ vi phạm bản quyền 3CElectric; và VIỆC B — Đổi logic Menu Sản phẩm dạng accordion xổ xuống trực tiếp, gom nhóm biến thể theo số cánh & cấp EI, deep link thẳng trang chi tiết, auto-expand theo route, mobile tap targets >= 44px)*  
 *Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-ANH-VA-MENU-SAN-PHAM.md`](./PROMPT-ANH-VA-MENU-SAN-PHAM.md), [`docs/anh-san-pham-phan-loai.md`](./anh-san-pham-phan-loai.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
@@ -223,6 +223,7 @@
 | **T8** | **Menu mobile 2 nhóm phẳng** | Khối danh sách 2 nhóm phẳng theo `PRODUCT_CATEGORY_GROUPS`, touch target $\ge 44$px, đóng menu tự động khi chọn | 🟢 **PR #10 MERGED** |
 | **PROD** | **Deploy Production & Fallback Tương Thích** | Cơ chế fallback tương thích ngược tự động cho bảng `products`; Deploy Production hoàn tất trên Vercel `apexhome.vn` với `isDatabaseLive: true` | 🟢 **PR #12 MERGED & LIVE** |
 | **IMG** | **Chuẩn Hóa Hình Ảnh 9 Dòng Sản Phẩm** | Cung cấp ảnh chụp sản phẩm công nghiệp sắc nét riêng biệt cho từng nhóm (cửa kính, tủ điện MSB/DB, thang máng cáp, tủ rack 42U, shelter, tủ nguồn outdoor), loại bỏ hoàn toàn việc dùng chung 1 ảnh cửa thép | 🟢 **HOÀN TẤT** |
+| **PJ-P0/P1** | **Dự án: Phase 0 & Phase 1 (Schema & Đồng bộ)** | Nhánh `feat/projects-showcase`. Bổ sung `general_contractor` (Tổng thầu) & `apex_role` (Vai trò APEX) cho `projects`. Fallback an toàn (zero-crash) trong `public-content.ts` và `admin/projects.ts`. 178/178 test pass | 🟢 **DONE** |
 
 ---
 
@@ -233,6 +234,7 @@
 | **1** | **T0 — Chạy SQL khôi phục Production** | **ĐÃ XONG** | Đã chạy migration trên Neon store `noisy-rain-90838361`, `isDatabaseLive: true`. |
 | **2** | **Chạy migration rate limits** | Đã sẵn sàng | File `sql/migrations/20261012_lead_rate_limits.sql` chạy trên Neon SQL Editor. |
 | **3** | **Chạy migration T5 & T6 trên Neon** | **ĐÃ XONG** | Đã chạy thành công `20261012_product_features_and_long_desc.sql` và `20261012_move_projects.sql` trên Neon SQL Editor. |
+| **3b** | **Chạy migration bổ sung trường Dự án (Phase 1)** | Sẵn sàng chạy | Chạy `sql/migrations/20261014_projects_contractor_role.sql` trên Neon SQL Editor (`ALTER TABLE projects ADD COLUMN IF NOT EXISTS general_contractor TEXT; ALTER TABLE projects ADD COLUMN IF NOT EXISTS apex_role TEXT;`). |
 | **4** | **Mắt Bão: Xác nhận thông tin chủ thể qua email** cho `apexhome.vn` | **ĐÃ XONG** | Đã xác thực thành công qua link RAA servlet của Mắt Bão (`Your email address has been verified successfully`). Tên miền an toàn tuyệt đối. |
 | **5** | **Mắt Bão: Hoàn tất bản khai "Chờ ký"** | Sớm | Ký điện tử hoặc nộp bản khai tên miền `apexhome.vn`, `apexdoor.cloud`. |
 | **6** | **Tạo hộp thư `contact@apexhome.vn`** | Trước khi chạy quảng cáo | Cấu hình hộp thư theo tên miền trên Mắt Bão / Google Workspace. |

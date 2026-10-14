@@ -85,6 +85,8 @@ CREATE TABLE IF NOT EXISTS projects (
   title           TEXT NOT NULL,
   slug            TEXT NOT NULL UNIQUE,
   client_name     TEXT,
+  general_contractor TEXT,
+  apex_role       TEXT,
   category        TEXT,
   location        TEXT,
   completed_year  INTEGER,

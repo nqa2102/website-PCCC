@@ -268,6 +268,8 @@ const mapProjects = (_items: AdminContent[], projectRecords: any[] = []): Projec
         categoryLabel: catLabel,
         clientName: p.clientName || '',
         client: p.clientName || '',
+        generalContractor: p.generalContractor || '',
+        apexRole: p.apexRole || '',
         location: p.location || '',
         completedYear: p.completedYear,
         year: p.completedYear ? String(p.completedYear) : '',

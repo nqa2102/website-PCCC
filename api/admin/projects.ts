@@ -8,16 +8,33 @@ export default async function handler(req: any, res: any) {
 
     try {
       const sql = getDb();
-      const rows = await sql`
-        SELECT 
-          id, title, slug, client_name as "clientName", category,
-          location, completed_year as "completedYear", description,
-          cover_image as "coverImage", gallery, status, verified,
-          verified_note as "verifiedNote", created_at as "createdAt",
-          updated_at as "updatedAt"
-        FROM projects
-        ORDER BY created_at DESC
-      `;
+      let rows;
+      try {
+        rows = await sql`
+          SELECT 
+            id, title, slug, client_name as "clientName",
+            general_contractor as "generalContractor", apex_role as "apexRole",
+            category, location, completed_year as "completedYear", description,
+            cover_image as "coverImage", gallery, status, verified,
+            verified_note as "verifiedNote", created_at as "createdAt",
+            updated_at as "updatedAt"
+          FROM projects
+          ORDER BY created_at DESC
+        `;
+      } catch (colErr: any) {
+        console.warn('Fallback admin projects query không có cột mới:', colErr?.message || colErr);
+        rows = await sql`
+          SELECT 
+            id, title, slug, client_name as "clientName",
+            '' as "generalContractor", '' as "apexRole",
+            category, location, completed_year as "completedYear", description,
+            cover_image as "coverImage", gallery, status, verified,
+            verified_note as "verifiedNote", created_at as "createdAt",
+            updated_at as "updatedAt"
+          FROM projects
+          ORDER BY created_at DESC
+        `;
+      }
       return res.status(200).json({ projects: rows });
     } catch (err: any) {
       console.error('Lỗi lấy danh sách dự án admin:', err);
@@ -67,35 +84,71 @@ export default async function handler(req: any, res: any) {
       const sql = getDb();
       const galleryJson = JSON.stringify(Array.isArray(p.gallery) ? p.gallery : []);
 
-      await sql`
-        INSERT INTO projects (
-          id, title, slug, client_name, category, location, completed_year,
-          description, cover_image, gallery, status, verified, verified_note,
-          updated_at
-        ) VALUES (
-          ${p.id}, ${p.title}, ${p.slug}, ${p.clientName || null},
-          ${p.category || null}, ${p.location || null},
-          ${p.completedYear ? Number(p.completedYear) : null},
-          ${p.description || null}, ${p.coverImage || null},
-          ${galleryJson}::jsonb, ${p.status || 'draft'},
-          ${isSettingVerified}, ${isSettingVerified ? verifiedNote : null},
-          NOW()
-        )
-        ON CONFLICT (id) DO UPDATE SET
-          title = EXCLUDED.title,
-          slug = EXCLUDED.slug,
-          client_name = EXCLUDED.client_name,
-          category = EXCLUDED.category,
-          location = EXCLUDED.location,
-          completed_year = EXCLUDED.completed_year,
-          description = EXCLUDED.description,
-          cover_image = EXCLUDED.cover_image,
-          gallery = EXCLUDED.gallery,
-          status = EXCLUDED.status,
-          verified = EXCLUDED.verified,
-          verified_note = EXCLUDED.verified_note,
-          updated_at = NOW()
-      `;
+      try {
+        await sql`
+          INSERT INTO projects (
+            id, title, slug, client_name, general_contractor, apex_role, category, location, completed_year,
+            description, cover_image, gallery, status, verified, verified_note,
+            updated_at
+          ) VALUES (
+            ${p.id}, ${p.title}, ${p.slug}, ${p.clientName || null},
+            ${p.generalContractor || null}, ${p.apexRole || null},
+            ${p.category || null}, ${p.location || null},
+            ${p.completedYear ? Number(p.completedYear) : null},
+            ${p.description || null}, ${p.coverImage || null},
+            ${galleryJson}::jsonb, ${p.status || 'draft'},
+            ${isSettingVerified}, ${isSettingVerified ? verifiedNote : null},
+            NOW()
+          )
+          ON CONFLICT (id) DO UPDATE SET
+            title = EXCLUDED.title,
+            slug = EXCLUDED.slug,
+            client_name = EXCLUDED.client_name,
+            general_contractor = EXCLUDED.general_contractor,
+            apex_role = EXCLUDED.apex_role,
+            category = EXCLUDED.category,
+            location = EXCLUDED.location,
+            completed_year = EXCLUDED.completed_year,
+            description = EXCLUDED.description,
+            cover_image = EXCLUDED.cover_image,
+            gallery = EXCLUDED.gallery,
+            status = EXCLUDED.status,
+            verified = EXCLUDED.verified,
+            verified_note = EXCLUDED.verified_note,
+            updated_at = NOW()
+        `;
+      } catch (colErr: any) {
+        console.warn('Fallback lưu admin projects khi chưa có 2 cột mới:', colErr?.message || colErr);
+        await sql`
+          INSERT INTO projects (
+            id, title, slug, client_name, category, location, completed_year,
+            description, cover_image, gallery, status, verified, verified_note,
+            updated_at
+          ) VALUES (
+            ${p.id}, ${p.title}, ${p.slug}, ${p.clientName || null},
+            ${p.category || null}, ${p.location || null},
+            ${p.completedYear ? Number(p.completedYear) : null},
+            ${p.description || null}, ${p.coverImage || null},
+            ${galleryJson}::jsonb, ${p.status || 'draft'},
+            ${isSettingVerified}, ${isSettingVerified ? verifiedNote : null},
+            NOW()
+          )
+          ON CONFLICT (id) DO UPDATE SET
+            title = EXCLUDED.title,
+            slug = EXCLUDED.slug,
+            client_name = EXCLUDED.client_name,
+            category = EXCLUDED.category,
+            location = EXCLUDED.location,
+            completed_year = EXCLUDED.completed_year,
+            description = EXCLUDED.description,
+            cover_image = EXCLUDED.cover_image,
+            gallery = EXCLUDED.gallery,
+            status = EXCLUDED.status,
+            verified = EXCLUDED.verified,
+            verified_note = EXCLUDED.verified_note,
+            updated_at = NOW()
+        `;
+      }
 
       return res.status(200).json({ ok: true, id: p.id });
     } catch (err: any) {
