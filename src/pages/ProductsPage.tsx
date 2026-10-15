@@ -184,7 +184,10 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
 
                 const IconComponent = catDef.icon;
                 const coverImage = detail?.gallery?.[0];
-                const priceFrom = detail?.priceFrom;
+                const liveProduct = products.find(
+                  (p) => p.slug === catId || p.id === catId || (p.category === catId && p.priceEstimate && p.priceEstimate !== 'Liên hệ')
+                );
+                const priceFrom = liveProduct?.priceEstimate || detail?.priceFrom;
                 const quickSpecs = detail?.quickSpec?.slice(0, 3) || [];
 
                 return (
@@ -223,7 +226,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                         </span>
                         {priceFrom && (
                           <span className="rounded-md bg-red-600 px-2.5 py-1 text-xs font-bold text-white shadow-xs">
-                            Từ {priceFrom}
+                            {priceFrom.startsWith('Từ') ? priceFrom : `Từ ${priceFrom}`}
                           </span>
                         )}
                       </div>

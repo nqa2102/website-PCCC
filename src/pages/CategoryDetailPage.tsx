@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   ShieldCheck,
   CheckCircle2,
@@ -34,8 +34,62 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
   onOpenQuote,
   onNavigate,
 }) => {
-  const { company } = useLiveData();
+  const { company, products } = useLiveData();
   const detail = CATEGORY_DETAILS[slug];
+
+  // Lấy sản phẩm tương ứng từ cơ sở dữ liệu admin nếu admin đã cập nhật giá
+  const liveProduct = useMemo(() => {
+    return products.find(
+      (p) => p.slug === slug || p.id === slug || (p.category === slug && p.priceEstimate && p.priceEstimate !== 'Liên hệ')
+    );
+  }, [products, slug]);
+
+  const effectivePriceFrom = liveProduct?.priceEstimate || detail?.priceFrom;
+
+  // Tự động tính lại bảng dự toán bóc tách 1 bộ mẫu khi admin sửa đơn giá trong admin
+  const effectiveQuote = useMemo(() => {
+    if (!detail?.quote) return null;
+    if (!effectivePriceFrom || effectivePriceFrom === 'Liên hệ') {
+      return detail.quote;
+    }
+
+    // Trích xuất số đơn giá (vd: "Từ 1.950.000 đ/m²" -> "1.950.000")
+    const match = effectivePriceFrom.match(/([0-9]{1,3}(?:\.[0-9]{3})+)/);
+    if (!match) return detail.quote;
+
+    const unitPriceStr = match[1];
+    const unitPriceNum = parseInt(unitPriceStr.replace(/\./g, ''), 10);
+    if (!unitPriceNum || isNaN(unitPriceNum)) return detail.quote;
+
+    const firstRow = detail.quote.rows[0];
+    const qtyNum = parseFloat(firstRow.qty) || 1.98;
+    const amountNum = Math.round(qtyNum * unitPriceNum);
+    const amountStr = amountNum.toLocaleString('vi-VN').replace(/,/g, '.');
+
+    let accessoriesTotal = 0;
+    detail.quote.rows.slice(1).forEach((r) => {
+      const a = parseInt(r.amount.replace(/\./g, ''), 10) || 0;
+      accessoriesTotal += a;
+    });
+
+    const newTotalNum = amountNum + accessoriesTotal;
+    const newTotalStr = newTotalNum.toLocaleString('vi-VN').replace(/,/g, '.');
+
+    const updatedRows = [
+      {
+        ...firstRow,
+        price: unitPriceStr,
+        amount: amountStr,
+      },
+      ...detail.quote.rows.slice(1),
+    ];
+
+    return {
+      ...detail.quote,
+      rows: updatedRows,
+      total: newTotalStr,
+    };
+  }, [detail?.quote, effectivePriceFrom]);
 
   const [activeImgIdx, setActiveImgIdx] = useState(0);
 
@@ -167,9 +221,9 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
             </h1>
 
             {/* Giá từ (ẩn nếu rỗng) */}
-            {detail.priceFrom && (
+            {effectivePriceFrom && (
               <p className="mb-3 text-[15px] text-slate-500">
-                Từ <b className="text-xl font-bold text-red-700 sm:text-2xl">{detail.priceFrom}</b>{' '}
+                {effectivePriceFrom.startsWith('Từ') ? '' : 'Từ '}<b className="text-xl font-bold text-red-700 sm:text-2xl">{effectivePriceFrom}</b>{' '}
                 <span className="text-xs font-normal text-slate-400">(chưa gồm VAT)</span>
               </p>
             )}
@@ -357,12 +411,12 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
         {/* =========================================================================
             KHỐI 5: DỰ TOÁN CHI TIẾT CHO 1 BỘ HOẶC THANH CTA BÁO GIÁ
            ========================================================================= */}
-        {detail.quote ? (
+        {effectiveQuote ? (
           <section className="mt-10">
             <h2 className="mb-4 flex items-center gap-2 text-[13px] font-bold tracking-wider uppercase text-red-700">
               <Receipt className="h-4 w-4 text-red-700" aria-hidden="true" />
               <span>
-                {detail.projectImages && detail.projectImages.length > 0 ? '4' : '3'} · Dự toán chi tiết cho 1 bộ ({detail.quote.model})
+                {detail.projectImages && detail.projectImages.length > 0 ? '4' : '3'} · Dự toán chi tiết cho 1 bộ ({effectiveQuote.model})
               </span>
             </h2>
 
@@ -378,7 +432,7 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {detail.quote.rows.map((row, i) => (
+                  {effectiveQuote.rows.map((row, i) => (
                     <tr
                       key={i}
                       className="border-b border-slate-100 transition-colors hover:bg-slate-50/50"
@@ -397,7 +451,7 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
                       Cộng 01 bộ (VNĐ)
                     </td>
                     <td className="px-4 py-3 text-right text-base tabular-nums text-red-700">
-                      {detail.quote.total}
+                      {effectiveQuote.total}
                     </td>
                   </tr>
                 </tbody>
@@ -405,8 +459,8 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
             </div>
 
             {/* Ghi chú dưới bảng giá */}
-            {detail.quote.note && (
-              <p className="mt-2 text-xs italic text-slate-500">* {detail.quote.note}</p>
+            {effectiveQuote.note && (
+              <p className="mt-2 text-xs italic text-slate-500">* {effectiveQuote.note}</p>
             )}
 
             {/* Thanh CTA Bar */}

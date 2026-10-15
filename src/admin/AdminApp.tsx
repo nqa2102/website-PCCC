@@ -1333,6 +1333,7 @@ const ProductsTable = ({
           <th className="px-6 py-3">Sản phẩm</th>
           <th className="px-4 py-3">Nhóm danh mục</th>
           <th className="px-4 py-3">Chịu lửa</th>
+          <th className="px-4 py-3">Đơn giá tham khảo</th>
           <th className="px-4 py-3">Tiêu chuẩn</th>
           <th className="px-4 py-3">Trạng thái</th>
           <th className="px-4 py-3">Cập nhật</th>
@@ -1348,6 +1349,9 @@ const ProductsTable = ({
             </td>
             <td className="px-4 py-3 font-medium text-slate-700">{product.categoryName}</td>
             <td className="px-4 py-3 font-semibold text-red-700">{product.fireRating}</td>
+            <td className="px-4 py-3 font-bold text-red-700 whitespace-nowrap">
+              {product.priceEstimate || 'Liên hệ'}
+            </td>
             <td className="max-w-[220px] px-4 py-3 text-slate-600 truncate">{product.standard}</td>
             <td className="px-4 py-3"><Badge {...PUBLISH_STATUS[product.status]} /></td>
             <td className="px-4 py-3 text-slate-500">{localDate(product.updatedAt)}</td>
@@ -2222,8 +2226,49 @@ const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; can
       <Field label="Bảo hành">
         <input className={fieldClass} value={data.warranty} onChange={(e) => set('warranty', e.target.value)} />
       </Field>
-      <Field label="Giá tham khảo / Ước tính">
-        <input className={fieldClass} value={data.priceEstimate || ''} onChange={(e) => set('priceEstimate', e.target.value)} placeholder="Liên hệ / Từ 1.800.000 đ/m²" />
+      <Field label="Đơn giá tham khảo / Hiển thị công khai">
+        <div className="space-y-1.5">
+          <input
+            className={fieldClass}
+            value={data.priceEstimate || ''}
+            onChange={(e) => set('priceEstimate', e.target.value)}
+            placeholder="Ví dụ: Từ 1.950.000 đ/m² hoặc Liên hệ"
+          />
+          <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500">
+            <span className="font-medium text-slate-600">Gợi ý nhanh:</span>
+            <button
+              type="button"
+              onClick={() => set('priceEstimate', 'Từ 1.950.000 đ/m²')}
+              className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 hover:bg-slate-200 hover:text-red-700 transition-colors"
+            >
+              1.950.000 đ/m²
+            </button>
+            <button
+              type="button"
+              onClick={() => set('priceEstimate', 'Từ 1.600.000 đ/m²')}
+              className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 hover:bg-slate-200 hover:text-red-700 transition-colors"
+            >
+              1.600.000 đ/m²
+            </button>
+            <button
+              type="button"
+              onClick={() => set('priceEstimate', 'Từ 4.300.000 đ/m²')}
+              className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 hover:bg-slate-200 hover:text-red-700 transition-colors"
+            >
+              4.300.000 đ/m²
+            </button>
+            <button
+              type="button"
+              onClick={() => set('priceEstimate', 'Liên hệ')}
+              className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 hover:bg-slate-200 hover:text-red-700 transition-colors"
+            >
+              Liên hệ
+            </button>
+          </div>
+          <p className="text-[10px] text-slate-400">
+            Tự động đồng bộ ra thẻ sản phẩm và tiêu đề trang chi tiết ngoài website mà không cần sửa code.
+          </p>
+        </div>
       </Field>
       <Field label="Trạng thái">
         <StatusSelect value={data.status} canPublish={canPublish} onChange={(value) => set('status', value)} />
