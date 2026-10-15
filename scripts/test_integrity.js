@@ -279,7 +279,7 @@ assert(!headerSource.includes('groupProductsByVariant'), 'Header.tsx không dùn
 
 const productsPageSource = fs.readFileSync(path.join(rootDir, 'src', 'pages', 'ProductsPage.tsx'), 'utf8');
 assert(productsPageSource.includes('CategoryDetailPage'), 'ProductsPage.tsx tích hợp CategoryDetailPage cho trang chi tiết danh mục');
-assert(productsPageSource.includes('PRODUCT_CATEGORY_DEFINITIONS'), 'ProductsPage.tsx hiển thị lưới 9 dòng sản phẩm APEX');
+assert(productsPageSource.includes('PRODUCT_CATEGORY_DEFINITIONS') && productsPageSource.includes('10 Dòng Sản Phẩm Ngăn Cháy'), 'ProductsPage.tsx hiển thị tiêu đề và lưới 10 dòng sản phẩm APEX');
 
 console.log('\n=============================================================');
 console.log(`KẾT QUẢ TỔNG QUAN: ${passedTests}/${totalTests} BÀI KIỂM THỬ THÀNH CÔNG (${Math.round((passedTests / totalTests) * 100)}%)`);

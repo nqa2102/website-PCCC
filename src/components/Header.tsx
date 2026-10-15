@@ -359,7 +359,7 @@ export const Header: React.FC<HeaderProps> = ({
                             }}
                             className="flex min-h-9 items-center justify-between rounded-lg bg-red-50/70 px-3 py-2 text-xs font-bold text-red-700 transition-colors hover:bg-red-100 hover:text-red-800 focus-visible:outline-2 focus-visible:outline-red-600"
                           >
-                            <span>Xem toàn bộ 9 nhóm sản phẩm</span>
+                            <span>Xem toàn bộ 10 nhóm sản phẩm</span>
                             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                           </a>
                         </div>

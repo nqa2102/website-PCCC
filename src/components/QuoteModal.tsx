@@ -381,7 +381,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
             <h2 className="text-xl sm:text-2xl font-bold text-white">Yêu cầu bảng báo giá kỹ thuật</h2>
           </div>
           <p className="mt-1 text-xs text-slate-300">
-            Cung cấp cấu hình thực tế của 9 nhóm sản phẩm để nhận phương án báo giá và hồ sơ kiểm định tương ứng.
+            Cung cấp cấu hình thực tế của 10 nhóm sản phẩm để nhận phương án báo giá và hồ sơ kiểm định tương ứng.
           </p>
 
           {/* Tab selector */}
@@ -493,10 +493,10 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
               </div>
             )}
 
-            {/* Bước 1: Chọn sản phẩm (9 nhóm chia 2 cụm rõ ràng) */}
+            {/* Bước 1: Chọn sản phẩm (10 nhóm chia 2 cụm rõ ràng) */}
             <div>
               <span className="block font-bold text-slate-900 uppercase tracking-wider mb-2">
-                1. Nhóm sản phẩm quan tâm (9 nhóm)
+                1. Nhóm sản phẩm quan tâm (10 nhóm)
               </span>
 
               <div className="space-y-3">

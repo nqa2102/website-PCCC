@@ -93,7 +93,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                 <span>Hệ thống sản phẩm APEX Việt Nam</span>
               </div>
               <h1 className="mt-2 text-2xl font-black text-slate-950 sm:text-3xl lg:text-4xl">
-                9 Dòng Sản Phẩm Ngăn Cháy & Cơ Điện
+                10 Dòng Sản Phẩm Ngăn Cháy & Cơ Điện
               </h1>
               <p className="mt-2.5 text-sm sm:text-base leading-relaxed text-slate-600">
                 APEX sản xuất và gia công trực tiếp theo hồ sơ thiết kế, bản vẽ kỹ thuật và kích thước khảo sát thực tế tại công trình. Đầy đủ kiểm định PCCC, hồ sơ nghiệm thu và tiêu chuẩn kiểm soát chất lượng nghiêm ngặt.
@@ -129,7 +129,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
                   : 'border border-slate-200 bg-white text-slate-700 hover:border-red-600 hover:text-red-700'
               }`}
             >
-              Tất cả 9 dòng sản phẩm
+              Tất cả 10 dòng sản phẩm
             </button>
             {PRODUCT_CATEGORY_GROUPS.map((group) => {
               const active = activeGroupFilter === group.label;
@@ -152,7 +152,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
         </div>
       </div>
 
-      {/* 2. Lưới 9 Thẻ Danh Mục Sản Phẩm */}
+      {/* 2. Lưới 10 Thẻ Danh Mục Sản Phẩm */}
       <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8 space-y-12">
         {filteredGroups.map((group) => (
           <section key={group.label} aria-labelledby={`group-title-${group.label}`}>
