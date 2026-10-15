@@ -52,7 +52,7 @@ flowchart TD
 
 #### Khối 1 — Hero & QuickSpec
 * **Ảnh cover:** Tỉ lệ dọc `4:5` (1200×1500px), thấy trọn cánh và khung cửa, nền gọn gàng.
-* **Giá từ:** `2.150.000 đ/m²` (chưa gồm VAT).
+* **Giá từ:** `1.600.000 đ/m²` (chưa gồm VAT).
 * **3 Cam kết bán hàng (Selling Points):**
   1. Đạt kiểm định PCCC EI60 – EI90 theo QCVN 06:2022/BXD.
   2. Công nghệ in truyền nhiệt vân gỗ 3D bền màu trên 15 năm.
@@ -95,16 +95,13 @@ flowchart TD
 #### Khối 5 — Dự toán mẫu bóc tách cho 1 bộ cửa căn hộ chuẩn (0.9 × 2.2m)
 | Hạng mục | ĐVT | SL | Đơn giá (đ) | Thành tiền (đ) |
 | :--- | :---: | :---: | :---: | :---: |
-| Cửa thép vân gỗ EI70 (Cánh + Khung dày 50mm, thép 0.8/1.2mm) | m² | 1.98 | 2.150.000 | 4.257.000 |
-| Bản lề Inox SUS304 chịu lực 4 vòng bi | Cái | 3 | 95.000 | 285.000 |
-| Khóa cơ tay gạt an toàn Inox 304 | Bộ | 1 | 650.000 | 650.000 |
-| Tay co thủy lực tải trọng 65–85kg | Bộ | 1 | 520.000 | 520.000 |
-| Mắt thần quan sát góc rộng 180° | Cái | 1 | 90.000 | 90.000 |
-| Gioăng cao su giảm chấn & gioăng ngăn khói nở nhiệt | Bộ | 1 | 150.000 | 150.000 |
-| Nhân công lắp đặt, bắn keo bọt PCCC và hoàn thiện | Bộ | 1 | 550.000 | 550.000 |
-| **Cộng 01 bộ cửa hoàn chỉnh (VNĐ)** | | | | **6.502.000** |
+| Cửa thép vân gỗ ngăn cháy tiêu chuẩn 60 phút, kích thước 900×2200 | m² | 1.98 | 1.600.000 | 3.168.000 |
+| Bản lề inox | cái | 4 | 60.000 | 240.000 |
+| Doorsill inox | md | 0.9 | 180.000 | 162.000 |
+| Khóa cửa MZ16-304C | Bộ | 1 | 400.000 | 400.000 |
+| **Cộng 01 bộ cửa mẫu (VNĐ)** | | | | **3.970.000** |
 
-*Ghi chú: Đơn giá tạm tính cho 1 bộ mẫu tại Hà Nội, chưa gồm thuế VAT 8% hoặc 10%. Với công trình số lượng lớn, chiết khấu dự án từ 5% – 12%.*
+*Ghi chú: Dự toán mẫu cho 1 bộ cửa kích thước 900×2200 (chưa gồm tay co thủy lực Oval và chi phí công thi công). Giá chính xác căn cứ theo khối lượng, bản vẽ và phụ kiện thực tế của công trình.*
 
 #### Khối 6 — Danh mục liên quan
 * Liên kết chéo: `cua-thep-ngan-chay`, `cua-kinh-ngan-chay`, `rem-ngan-chay`.
@@ -164,7 +161,7 @@ CÁC BƯỚC THỰC HIỆN:
 
 2. Cập nhật mã nguồn hệ thống:
    - src/types/index.ts: Cập nhật ProductCategory union type thêm 'cua-thep-van-go'.
-   - src/data/categoryDetails.ts: Thêm đầy đủ 6 khối dữ liệu cho 'cua-thep-van-go' đúng theo bảng tiêu chuẩn (Giá từ 2.150.000 đ/m², quickSpec 7 dòng, 6 advantages, 4 uses, specTable, bảng dự toán bóc tách 1 bộ mẫu 6.502.000 đ, relatedSlugs).
+   - src/data/categoryDetails.ts: Thêm đầy đủ 6 khối dữ liệu cho 'cua-thep-van-go' đúng theo bảng tiêu chuẩn (Giá từ 1.600.000 đ/m², quickSpec 7 dòng, 6 advantages, 4 uses, specTable, bảng dự toán bóc tách 1 bộ mẫu 3.970.000 đ theo báo giá thực tế, relatedSlugs).
    - src/components/products/ProductCategoryGrid.tsx: Thêm vào PRODUCT_CATEGORY_DEFINITIONS thuộc Nhóm 1 (Cửa & Giải Pháp Ngăn Cháy).
    - src/routing.ts: Cập nhật Set PRODUCT_CATEGORIES, PRODUCT_CATEGORY_LABELS, SEO meta description.
    - src/data/mockData.ts & src/data/initialProducts.json: Thêm sản phẩm con mẫu (Cửa thép vân gỗ 1 cánh EI70, Cửa thép vân gỗ 2 cánh EI90).
