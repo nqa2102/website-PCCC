@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Award, Building2, Calendar, CheckCircle2, MapPin } from 'lucide-react';
+import { ArrowRight, Award, Building2, Calendar, MapPin } from 'lucide-react';
 import type { Project } from '../../types';
 
 interface ProjectCardProps {
@@ -59,12 +59,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             <span className="rounded bg-red-600 px-2.5 py-1 text-[10px] font-bold uppercase text-white shadow-xs">
               {project.categoryLabel || 'Dự án thực tế'}
             </span>
-            {project.verified && (
-              <span className="inline-flex items-center gap-1 rounded bg-emerald-600/90 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-xs">
-                <CheckCircle2 className="h-3 w-3" />
-                <span>Đã xác minh</span>
-              </span>
-            )}
           </div>
 
           {/* Location & Year footer on image */}

@@ -5,7 +5,6 @@ import {
   Award,
   Building2,
   Calendar,
-  CheckCircle2,
   FileCheck,
   HardHat,
   Layers,
@@ -13,7 +12,6 @@ import {
   MessageCircle,
   MessageSquareText,
   PhoneCall,
-  ShieldCheck,
   UserCheck,
   ZoomIn,
   X,
@@ -165,12 +163,6 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
           <span className="rounded-md bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white shadow-xs">
             {categoryName}
           </span>
-          {project.verified && (
-            <span className="inline-flex items-center gap-1 rounded-md bg-emerald-600 px-2.5 py-1 text-xs font-bold text-white shadow-xs">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>Đã xác minh nghiệm thu thực tế</span>
-            </span>
-          )}
         </div>
 
         <h1 className="mt-3 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl lg:text-4xl">
@@ -268,24 +260,6 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
             <div className="mt-4 space-y-3 text-xs leading-relaxed text-slate-700 sm:text-sm">
               <p className="whitespace-pre-line">{project.description}</p>
             </div>
-
-            {/* Hộp cam kết thẩm định nghiệm thu */}
-            {project.verified && (
-              <div className="mt-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 text-xs text-emerald-950">
-                <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" />
-                <div className="space-y-1">
-                  <strong className="font-bold text-slate-900">Cam kết xác minh nghiệm thu thực tế</strong>
-                  <p className="text-emerald-800">
-                    Hồ sơ công trình này đã được APEX kiểm duyệt đối chiếu theo biên bản nghiệm thu PCCC và thỏa thuận công bố tư liệu với chủ đầu tư. Tuyệt đối không sao chép thông tin từ bên thứ ba.
-                  </p>
-                  {project.verifiedNote && (
-                    <p className="font-mono text-[11px] text-emerald-700 pt-1 border-t border-emerald-200/60 mt-1">
-                      Căn cứ xác minh: {project.verifiedNote}
-                    </p>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Thư viện ảnh thi công & nghiệm thu hiện trường (phần còn lại của gallery) */}
