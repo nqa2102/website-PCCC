@@ -356,37 +356,63 @@ const PROJECT_CATEGORY_LABELS: Record<Project['category'], string> = {
 };
 
 const mapProjects = (_items: AdminContent[], projectRecords: any[] = []): Project[] => {
-  // Chỉ lấy từ bảng projects chuyên biệt (chỉ lấy verified = true và status = 'published')
-  if (!projectRecords || projectRecords.length === 0) {
-    return [];
-  }
+  // Bản đồ ảnh bìa chất lượng cao từ INITIAL_PROJECTS
+  const coverMap = new Map<string, string>();
+  INITIAL_PROJECTS.forEach((ip) => {
+    if (ip.coverImage) {
+      coverMap.set(ip.id, ip.coverImage);
+      if (ip.slug) coverMap.set(ip.slug, ip.coverImage);
+    }
+  });
 
-  return projectRecords
-    .filter((p) => p.verified && p.status === 'published')
-    .map((p) => {
-      const catKey = p.category || '';
-      const catLabel = PRODUCT_CATEGORY_LABELS[catKey as keyof typeof PRODUCT_CATEGORY_LABELS] || p.category || 'Dự án tiêu biểu';
-      return {
-        id: p.id,
-        title: p.title,
-        slug: p.slug,
-        category: catKey,
-        categoryLabel: catLabel,
-        clientName: p.clientName || '',
-        client: p.clientName || '',
-        generalContractor: p.generalContractor || '',
-        apexRole: p.apexRole || '',
-        location: p.location || '',
-        completedYear: p.completedYear,
-        year: p.completedYear ? String(p.completedYear) : '',
-        description: p.description || '',
-        image: p.coverImage || HERO_IMAGE,
-        coverImage: p.coverImage || undefined,
-        gallery: Array.isArray(p.gallery) ? p.gallery : [],
-        verified: Boolean(p.verified),
-        verifiedNote: p.verifiedNote || '',
-      };
-    });
+  const validRecords = (projectRecords || []).filter(
+    (p) => p.verified && p.status === 'published' && p.id !== 'prj-toa-an-quang-ninh' && p.slug !== 'toa-an-tinh-quang-ninh'
+  );
+
+  const mapped: Project[] = validRecords.map((p) => {
+    const catKey = p.category || '';
+    const catLabel = PRODUCT_CATEGORY_LABELS[catKey as keyof typeof PRODUCT_CATEGORY_LABELS] || p.category || 'Dự án tiêu biểu';
+    const localCover = coverMap.get(p.id) || (p.slug ? coverMap.get(p.slug) : undefined);
+    const finalCover = localCover || p.coverImage || undefined;
+    return {
+      id: p.id,
+      title: p.title,
+      slug: p.slug,
+      category: catKey,
+      categoryLabel: catLabel,
+      clientName: p.clientName || '',
+      client: p.clientName || '',
+      generalContractor: p.generalContractor || '',
+      apexRole: p.apexRole || '',
+      location: p.location || '',
+      completedYear: p.completedYear,
+      completedDate: p.completedYear ? `Năm ${p.completedYear}` : '',
+      year: p.completedYear ? String(p.completedYear) : '',
+      description: p.description || '',
+      image: finalCover || HERO_IMAGE,
+      coverImage: finalCover,
+      gallery: Array.isArray(p.gallery) && p.gallery.length ? p.gallery : (finalCover ? [finalCover] : []),
+      verified: Boolean(p.verified),
+      verifiedNote: p.verifiedNote || '',
+    };
+  });
+
+  // Bổ sung các dự án thực tế còn thiếu từ INITIAL_PROJECTS để luôn đủ 5 dự án thực tế
+  const seenIds = new Set<string>();
+  mapped.forEach((p) => {
+    seenIds.add(p.id);
+    if (p.slug) seenIds.add(p.slug);
+  });
+
+  (INITIAL_PROJECTS as unknown as Project[]).forEach((ip) => {
+    if (!seenIds.has(ip.id) && (!ip.slug || !seenIds.has(ip.slug))) {
+      mapped.push(ip);
+      seenIds.add(ip.id);
+      if (ip.slug) seenIds.add(ip.slug);
+    }
+  });
+
+  return mapped;
 };
 
 const mapNews = (items: AdminContent[]): NewsArticle[] => {
