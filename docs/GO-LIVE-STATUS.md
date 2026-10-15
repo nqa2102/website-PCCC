@@ -1,7 +1,7 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 13/10/2026 (Hoàn thành VIỆC A — Xử lý 37 ảnh sản phẩm thật, WebP tối ưu, xóa sạch EXIF, gắn Cover 4:5 và Thư viện ảnh Gallery cho 9 sản phẩm Cửa thép và Cửa kính ngăn cháy, loại bỏ vi phạm bản quyền 3CElectric; và VIỆC B — Đổi logic Menu Sản phẩm dạng accordion xổ xuống trực tiếp, gom nhóm biến thể theo số cánh & cấp EI, deep link thẳng trang chi tiết, auto-expand theo route, mobile tap targets >= 44px)*  
-*Tài liệu tham chiếu*: [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-ANH-VA-MENU-SAN-PHAM.md`](./PROMPT-ANH-VA-MENU-SAN-PHAM.md), [`docs/anh-san-pham-phan-loai.md`](./anh-san-pham-phan-loai.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
+*Cập nhật lần cuối: 15/10/2026 (Hoàn thành Bổ sung dòng sản phẩm "Cửa Thép Vân Gỗ Chống Cháy" - slug: cua-thep-van-go: Xử lý 4 ảnh thật WebP sạch EXIF 4:5, Landing page 6 khối đạt chuẩn, bảng dự toán bóc tách 6.502.000 đ, QuoteModal tự động chọn trước, 10 danh mục trong hệ sinh thái sản phẩm, sitemap & schema markup, test_integrity 182/182 PASS 100%, lint & build 0 lỗi).*  
+*Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
 
@@ -10,13 +10,13 @@
 | Giai đoạn | Hạng mục | Mức ưu tiên | Trạng thái kỹ thuật | Bằng chứng kiểm tra / Ghi chú blocker |
 | :--- | :--- | :--- | :---: | :--- |
 | **GĐ0** | **Khẩn cấp bảo mật `/admin`** | **P0** | 🟢 **DONE (100%)** | Đã xóa triệt để mật khẩu cứng `apex2026` & nút bypass khỏi client bundle (0 kết quả trong dist). Đã thay thế bằng xác thực Scrypt/HMAC. |
-| **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟢 **DONE (100% Code & Schema)** | Đã chạy migration T0 trên Neon (`isDatabaseLive: true`). Schema `sql/neon_schema.sql` và migration `sql/migrations/20261013_seed_37_products.sql` nạp đầy đủ 37 sản phẩm, test PGlite nạp 2 lần an toàn (Idempotency PASS). |
-| **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 9 Sản phẩm & Ảnh Thật)** | 9 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ (ankovina, 3ce). Đã xử lý & gắn 37 ảnh sản phẩm thật (VIỆC A), xóa 100% EXIF/GPS, tỷ lệ 4:5, gallery thumbnails, loại bỏ bản quyền G7. `certificationNo` để trống ("Đang cập nhật") chờ văn bản gốc. |
-| **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/:category`, `/san-pham/:category/:slug`, `/du-an`, `/du-an/:slug`. Schema.org `Product` và `CreativeWork`. **Đã hoàn thành Menu Sản phẩm Accordion (VIỆC B)**. |
-| **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử `scripts/test_integrity.js` đạt **169/169 PASS (100%)**, `npm run lint` PASS, `npm run build` PASS, Browser QA 1440px và 375px đạt chuẩn (không vỡ layout, không tràn ngang). |
+| **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟢 **DONE (100% Code & Schema)** | Đã tạo migration `sql/migrations/20261015_add_wood_grain_door_category.sql` cập nhật CHECK constraint 10 categories. Schema `sql/neon_schema.sql` và migration nạp đầy đủ sản phẩm. |
+| **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 10 Dòng sản phẩm & Ảnh Thật)** | 10 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ. Đã bổ sung Cửa Thép Vân Gỗ Chống Cháy (EI60–EI90, giá từ 2.150.000 đ/m², dự toán mẫu 1 bộ 6.502.000 đ), 4 ảnh WebP thật sạch EXIF. |
+| **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/cua-thep-van-go`, sitemap.xml cập nhật, Schema.org `Product` JSON-LD cho cửa thép vân gỗ. Menu Header và Lưới 10 nhóm đồng bộ. |
+| **GĐ4** | **Kiểm thử toàn diện (QA/UAT)** | **P1** | 🟢 **DONE (Code QA Pass 100%)** | Script kiểm thử `scripts/test_integrity.js` đạt **182/182 PASS (100%)**, `npm run lint` PASS (0 lỗi), `npm run build` PASS (890ms), Browser Subagent UAT PASS toàn bộ luồng. |
 | **GĐ5** | **Go-live chính thức** | **P0** | 🟢 **DONE (100% Go-Live)** | Deploy production Vercel + tên miền chính thức `https://apexhome.vn` (kèm alias `apexhome.vn`). Database Neon live. |
 | **GĐ6** | **Vận hành sau Go-live** | **P2** | ⚪ **NOT STARTED** | Quy trình backup tự động (Neon PITR) và phân quyền bảo trì. |
-| **GĐ-CAT** | **Trang chi tiết theo danh mục (6 Phase)** | **P1** | 🟡 **IN PROGRESS (Phase 0, 1, 2 & 3 DONE)** | Chuyển từ lưới sản phẩm con sang trang chi tiết danh mục (landing 6 khối theo mockup `chi-tiet-cua-thep.html`). Nhánh `feat/category-detail-page`. |
+| **GĐ-CAT** | **Trang chi tiết theo danh mục (6 Phase)** | **P1** | 🟢 **DONE (10/10 Danh Mục Hoàn Tất 6 Khối)** | Đã hoàn thành 100% cả 10 danh mục landing page 6 khối, bao gồm Cửa Thép Vân Gỗ Chống Cháy. |
 
 ---
 

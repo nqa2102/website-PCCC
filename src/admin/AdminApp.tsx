@@ -114,6 +114,7 @@ const PUBLISH_STATUS: Record<PublishStatus, { label: string; classes: string }> 
 
 const PRODUCT_CATEGORY_CHOICES = [
   { id: 'cua-thep-ngan-chay', name: 'Cửa thép ngăn cháy' },
+  { id: 'cua-thep-van-go', name: 'Cửa thép vân gỗ chống cháy' },
   { id: 'cua-kinh-ngan-chay', name: 'Cửa kính ngăn cháy' },
   { id: 'cua-cuon-ngan-chay', name: 'Cửa cuốn ngăn cháy' },
   { id: 'rem-ngan-chay', name: 'Rèm ngăn cháy' },
@@ -1992,6 +1993,7 @@ const LeadEditor = ({ data, onChange }: { data: AdminLead; onChange: (data: Admi
 
 const SPEC_SUGGESTIONS_BY_GROUP: Record<string, string[]> = {
   'cua-thep-ngan-chay': ['Độ dày thép khung', 'Độ dày thép cánh', 'Lõi cách nhiệt', 'Phụ kiện tiêu chuẩn', 'Giới hạn chịu lửa', 'Sơn hoàn thiện'],
+  'cua-thep-van-go': ['Độ dày thép khung', 'Độ dày thép cánh', 'Lõi cách nhiệt', 'Bề mặt vân gỗ 3D', 'Phụ kiện tiêu chuẩn', 'Giới hạn chịu lửa'],
   'cua-kinh-ngan-chay': ['Độ dày kính', 'Cấu tạo kính chống cháy', 'Khung viền', 'Giới hạn chịu lửa', 'Keo chống cháy', 'Bản lề sàn'],
   'cua-cuon-ngan-chay': ['Độ dày nan cửa', 'Vật liệu nan', 'Động cơ & Bình lưu điện', 'Hộp kỹ thuật', 'Giới hạn chịu lửa', 'Cảm biến an toàn'],
   'rem-ngan-chay': ['Vải sợi thủy tinh tráng PU', 'Tủ điều khiển rèm', 'Động cơ rèm', 'Vận tốc cuộn', 'Giới hạn chịu lửa'],

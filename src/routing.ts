@@ -6,6 +6,7 @@ export interface AppRoute {
 
 export const PRODUCT_CATEGORIES = new Set([
   'cua-thep-ngan-chay',
+  'cua-thep-van-go',
   'cua-kinh-ngan-chay',
   'cua-cuon-ngan-chay',
   'rem-ngan-chay',
@@ -25,6 +26,7 @@ export const LEGACY_CATEGORY_MAP: Record<string, string> = {
 
 export const PRODUCT_CATEGORY_LABELS: Record<string, string> = {
   'cua-thep-ngan-chay': 'Cửa thép ngăn cháy',
+  'cua-thep-van-go': 'Cửa thép vân gỗ chống cháy',
   'cua-kinh-ngan-chay': 'Cửa kính ngăn cháy',
   'cua-cuon-ngan-chay': 'Cửa cuốn ngăn cháy',
   'rem-ngan-chay': 'Rèm ngăn cháy',

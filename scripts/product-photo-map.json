@@ -229,5 +229,30 @@
     "product": "cua-kinh-ngan-chay",
     "role": "gallery",
     "index": 4
+  },
+  {
+    "source": "1791877528992",
+    "product": "cua-thep-van-go",
+    "role": "cover",
+    "fit": "cover",
+    "position": "center"
+  },
+  {
+    "source": "1791877528986",
+    "product": "cua-thep-van-go",
+    "role": "gallery",
+    "index": 2
+  },
+  {
+    "source": "1791877528978",
+    "product": "cua-thep-van-go",
+    "role": "gallery",
+    "index": 3
+  },
+  {
+    "source": "1791877528984",
+    "product": "cua-thep-van-go",
+    "role": "gallery",
+    "index": 4
   }
 ]

@@ -13,6 +13,12 @@ import cuaThepProj1 from '../assets/images/products/cua-thep-ngan-chay-2.webp';
 import cuaThepProj2 from '../assets/images/products/cua-thep-ngan-chay-3.webp';
 import cuaThepProj3 from '../assets/images/products/cua-thep-ngan-chay-4.webp';
 
+// Ảnh sản phẩm thật Cửa Thép Vân Gỗ Chống Cháy
+import cuaThepVanGoCover from '../assets/images/products/cua-thep-van-go-cover.webp';
+import cuaThepVanGoProj1 from '../assets/images/products/cua-thep-van-go-2.webp';
+import cuaThepVanGoProj2 from '../assets/images/products/cua-thep-van-go-3.webp';
+import cuaThepVanGoProj3 from '../assets/images/products/cua-thep-van-go-4.webp';
+
 // Ảnh sản phẩm thật Cửa Kính Ngăn Cháy
 import cuaKinhCover from '../assets/images/products/cua-kinh-ngan-chay-cover.webp';
 import cuaKinhEi60Cover from '../assets/images/products/cua-kinh-ngan-chay-ei60-cover.webp';
@@ -176,7 +182,133 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
       cuaThepEi120Cover,
     ],
     projectImages: [cuaThepProj1, cuaThepProj2, cuaThepProj3],
-    relatedSlugs: ['cua-kinh-ngan-chay', 'cua-cuon-ngan-chay', 'rem-ngan-chay'],
+    relatedSlugs: ['cua-thep-van-go', 'cua-kinh-ngan-chay', 'cua-cuon-ngan-chay'],
+  },
+
+  // ==========================================
+  // 1B. CỬA THÉP VÂN GỖ CHỐNG CHÁY (Category Landing Page 6 khối)
+  // ==========================================
+  'cua-thep-van-go': {
+    slug: 'cua-thep-van-go',
+    name: 'Cửa Thép Vân Gỗ Chống Cháy',
+    priceFrom: '2.150.000 đ/m²',
+    intro:
+      'Cửa thép vân gỗ chống cháy 1 cánh và 2 cánh, dập huỳnh định hình và sơn in chuyển nhiệt 3D vân gỗ tự nhiên sang trọng. Đạt kiểm định PCCC EI60 – EI90 theo QCVN 06:2022/BXD, cách âm 35–40dB, không cong vênh hay mối mọt, lý tưởng cho căn hộ, biệt thự và khách sạn.',
+    sellingPoints: [
+      'Đạt kiểm định PCCC EI60 – EI90 theo QCVN 06:2022/BXD',
+      'Công nghệ in truyền nhiệt vân gỗ 3D bền màu trên 15 năm',
+      'Chống cong vênh, mối mọt, cách âm và ngăn khói tuyệt đối',
+    ],
+    quickSpec: [
+      { label: 'Cấp độ ngăn cháy', value: 'EI60 / EI70 / EI90' },
+      { label: 'Loại cửa', value: '1 cánh đơn & 2 cánh đôi (đều hoặc lệch)' },
+      { label: 'Cánh cửa', value: 'Dày 50mm, thép mạ điện cán nguội 0.8 – 1.0mm (JIS G3141)' },
+      { label: 'Khung cửa', value: 'Thép cán nguội 1.2 – 1.5mm, hèm tăng cứng 1.5 – 2.0mm' },
+      { label: 'Lõi cách nhiệt', value: 'Tấm Magie Oxit (MgO) / ERON chống cháy, tỷ trọng 350–450 kg/m³' },
+      { label: 'Bề mặt', value: 'Sơn tĩnh điện in chuyển nhiệt vân gỗ tự nhiên (Lim, Gõ đỏ, Sồi, Óc chó)' },
+      { label: 'Bảo hành', value: '36 tháng' },
+    ],
+    advantages: [
+      'Khả năng chịu lửa EI60 – EI90, đã thử nghiệm và cấp giấy chứng nhận kiểm định PCCC',
+      'Bề mặt vân gỗ tinh xảo, chân thực, khắc phục hoàn toàn nhược điểm co ngót, ẩm mốc, mối mọt của gỗ tự nhiên',
+      'Thép tấm mạ điện tiêu chuẩn JIS G3141 chống gỉ sét, kết cấu hàn gia cường chống xệ cánh',
+      'Hệ gioăng cao su chống va đập kết hợp gioăng ngăn khói nở nhiệt, tự phồng bịt kín khe cửa khi gặp nhiệt độ cao',
+      'Khả năng cách âm vượt trội (35–40dB), đóng mở êm nhẹ nhờ bản lề inox 304 4 vòng bi',
+      'Tương thích hoàn toàn với các dòng khóa thông minh (vân tay, thẻ từ, mật mã) và khóa cơ an toàn',
+    ],
+    uses: [
+      {
+        icon: 'flame',
+        title: 'Ngăn lửa & khói độc',
+        desc: 'Đóng kín khoang cháy căn hộ, ngăn khói độc xâm nhập hành lang thoát nạn.',
+      },
+      {
+        icon: 'volume',
+        title: 'Cách âm & tiêu âm',
+        desc: 'Tạo không gian yên tĩnh tuyệt đối cho căn hộ và phòng ngủ gia đình.',
+      },
+      {
+        icon: 'scan',
+        title: 'Thẩm mỹ kiến trúc',
+        desc: 'Đem lại vẻ đẹp ấm cúng, sang trọng, hài hòa với nội thất gỗ cao cấp.',
+      },
+      {
+        icon: 'shield',
+        title: 'Bền vững & an ninh',
+        desc: 'Lõi thép kiên cố chống cạy phá, chống trộm, không biến dạng sau nhiều năm sử dụng.',
+      },
+    ],
+    specTable: [
+      { label: 'Tiêu chuẩn áp dụng', value: 'QCVN 06:2022/BXD, QCVN 03:2023/BCA, TCVN 9383:2012' },
+      { label: 'Kích thước chế tạo', value: 'Sản xuất theo kích thước ô chờ thực tế (rộng 700–1200mm/cánh, cao 1900–2400mm)' },
+      { label: 'Cấp độ ngăn cháy', value: 'EI60 / EI70 / EI90' },
+      { label: 'Vật liệu khung & cánh', value: 'Thép mạ điện cán nguội JIS G3141 (cánh 0.8–1.0mm, khung 1.2–1.5mm)' },
+      { label: 'Độ dày cánh cửa', value: '50mm (± 2%)' },
+      { label: 'Lớp cách nhiệt', value: 'Tấm Magie Oxit (MgO) / ERON không chứa amiăng, không sinh khói độc khi tiếp xúc lửa' },
+      { label: 'Công nghệ vân gỗ', value: 'Sơn lót tĩnh điện chống gỉ → Dán màng in vân gỗ → Hút chân không truyền nhiệt → Phủ bóng Nano chống trầy xước' },
+      { label: 'Gioăng chặn khói', value: 'Gioăng cao su EPDM giảm chấn kết hợp gioăng ngăn khói nở nhiệt chuyên dụng' },
+      { label: 'Phụ kiện tiêu chuẩn', value: 'Bản lề inox SUS304 4 vòng bi (3–4 cái/cánh), khóa tay gạt Inox / khóa điện tử, tay co thủy lực King/Dorma, mắt thần 180°' },
+      { label: 'Bảo hành kỹ thuật', value: '36 tháng đối với bề mặt vân gỗ, 24 tháng đối với phụ kiện' },
+    ],
+    quote: {
+      model: 'cửa 1 cánh căn hộ chuẩn, KT 0.9 × 2.2m',
+      rows: [
+        {
+          name: 'Cửa thép vân gỗ EI70 (Cánh + Khung dày 50mm, thép 0.8/1.2mm)',
+          unit: 'm²',
+          qty: '1.98',
+          price: '2.150.000',
+          amount: '4.257.000',
+        },
+        {
+          name: 'Bản lề Inox SUS304 chịu lực 4 vòng bi',
+          unit: 'Cái',
+          qty: '3',
+          price: '95.000',
+          amount: '285.000',
+        },
+        {
+          name: 'Khóa cơ tay gạt an toàn Inox 304',
+          unit: 'Bộ',
+          qty: '1',
+          price: '650.000',
+          amount: '650.000',
+        },
+        {
+          name: 'Tay co thủy lực tải trọng 65–85kg',
+          unit: 'Bộ',
+          qty: '1',
+          price: '520.000',
+          amount: '520.000',
+        },
+        {
+          name: 'Mắt thần quan sát góc rộng 180°',
+          unit: 'Cái',
+          qty: '1',
+          price: '90.000',
+          amount: '90.000',
+        },
+        {
+          name: 'Gioăng cao su giảm chấn & gioăng ngăn khói nở nhiệt',
+          unit: 'Bộ',
+          qty: '1',
+          price: '150.000',
+          amount: '150.000',
+        },
+        {
+          name: 'Nhân công lắp đặt, bắn keo bọt PCCC và hoàn thiện',
+          unit: 'Bộ',
+          qty: '1',
+          price: '550.000',
+          amount: '550.000',
+        },
+      ],
+      total: '6.502.000',
+      note: 'Đơn giá tạm tính cho 1 bộ mẫu tại Hà Nội, chưa gồm thuế VAT 8% hoặc 10%. Với công trình số lượng lớn, chiết khấu dự án từ 5% – 12%.',
+    },
+    gallery: [cuaThepVanGoCover, cuaThepVanGoProj1, cuaThepVanGoProj2, cuaThepVanGoProj3],
+    projectImages: [cuaThepVanGoProj1, cuaThepVanGoProj2, cuaThepVanGoProj3],
+    relatedSlugs: ['cua-thep-ngan-chay', 'cua-kinh-ngan-chay', 'rem-ngan-chay'],
   },
 
   // ==========================================

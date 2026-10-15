@@ -99,6 +99,13 @@ export const Header: React.FC<HeaderProps> = ({
       shortDesc: 'Khung cánh thép gia cường, lõi cách nhiệt không cháy, ngăn lửa và khói độc.',
     },
     {
+      id: 'cua-thep-van-go',
+      name: 'Cửa thép vân gỗ chống cháy',
+      icon: DoorClosed,
+      tag: 'Thẩm Mỹ & An Toàn',
+      shortDesc: 'Vân gỗ 3D sang trọng, chống cháy EI60–EI90, cách âm 35–40dB, thay thế cửa gỗ tự nhiên.',
+    },
+    {
       id: 'cua-kinh-ngan-chay',
       name: 'Cửa kính ngăn cháy',
       icon: Scan,
@@ -499,7 +506,7 @@ export const Header: React.FC<HeaderProps> = ({
                           }}
                           className="flex min-h-[44px] items-center justify-between rounded-lg bg-red-50/70 px-3 py-2 text-xs font-bold text-red-700 transition-colors hover:bg-red-100 hover:text-red-800"
                         >
-                          <span>Xem toàn bộ 9 nhóm sản phẩm</span>
+                          <span>Xem toàn bộ 10 nhóm sản phẩm</span>
                           <ArrowRight className="w-4 h-4" />
                         </a>
                       </div>

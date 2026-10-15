@@ -23,7 +23,13 @@
   </url>
   <url>
     <loc>https://apexhome.vn/san-pham/cua-thep-ngan-chay</loc>
-    <lastmod>2026-10-12</lastmod>
+    <lastmod>2026-10-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://apexhome.vn/san-pham/cua-thep-van-go</loc>
+    <lastmod>2026-10-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

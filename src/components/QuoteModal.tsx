@@ -57,6 +57,16 @@ export const QUOTE_CONFIG_BY_CATEGORY: Record<ProductCategory, CategoryQuoteConf
     hasLeafType: true,
     hasDoorAccessories: true,
   },
+  'cua-thep-van-go': {
+    id: 'cua-thep-van-go',
+    name: 'Cửa Thép Vân Gỗ',
+    group: 'fire-protection',
+    defaultRating: 'EI70',
+    defaultW: 900,
+    defaultH: 2200,
+    hasLeafType: true,
+    hasDoorAccessories: true,
+  },
   'cua-kinh-ngan-chay': {
     id: 'cua-kinh-ngan-chay',
     name: 'Cửa Kính Ngăn Cháy',

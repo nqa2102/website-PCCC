@@ -4,6 +4,7 @@ export type PublishStatus = 'draft' | 'review' | 'published' | 'internal';
 
 export type ProductCategory =
   | 'cua-thep-ngan-chay'
+  | 'cua-thep-van-go'
   | 'cua-kinh-ngan-chay'
   | 'cua-cuon-ngan-chay'
   | 'rem-ngan-chay'

@@ -30,6 +30,13 @@ export const PRODUCT_CATEGORY_DEFINITIONS: CategoryInfo[] = [
     tag: 'PCCC Công Trình',
   },
   {
+    id: 'cua-thep-van-go',
+    name: 'Cửa Thép Vân Gỗ',
+    shortDesc: 'Vân gỗ 3D sang trọng, chống cháy EI60–EI90, cách âm 35–40dB, thay thế cửa gỗ tự nhiên.',
+    icon: DoorClosed,
+    tag: 'Thẩm Mỹ & An Toàn',
+  },
+  {
     id: 'cua-kinh-ngan-chay',
     name: 'Cửa Kính Ngăn Cháy',
     shortDesc: 'Hệ khung chịu lực kết hợp kính ngăn cháy đa tầng, lấy sáng và thẩm mỹ.',
@@ -87,9 +94,9 @@ export const PRODUCT_CATEGORY_DEFINITIONS: CategoryInfo[] = [
   },
 ];
 
-// 9 nhóm chia theo nhu cầu người mua; dùng chung cho menu Sản phẩm và trang danh mục
+// 10 nhóm chia theo nhu cầu người mua; dùng chung cho menu Sản phẩm và trang danh mục
 export const PRODUCT_CATEGORY_GROUPS: { label: string; ids: ProductCategory[] }[] = [
-  { label: 'Giải pháp ngăn cháy', ids: ['cua-thep-ngan-chay', 'cua-kinh-ngan-chay', 'cua-cuon-ngan-chay', 'rem-ngan-chay'] },
+  { label: 'Giải pháp ngăn cháy', ids: ['cua-thep-ngan-chay', 'cua-thep-van-go', 'cua-kinh-ngan-chay', 'cua-cuon-ngan-chay', 'rem-ngan-chay'] },
   { label: 'Cơ điện & viễn thông', ids: ['tu-dien', 'thang-mang-cap', 'tu-rack', 'nha-tram-shelter', 'tu-nguon-outdoor'] },
 ];
 
@@ -112,7 +119,7 @@ export const ProductCategoryGrid: React.FC<ProductCategoryGridProps> = ({
             Hệ sinh thái sản phẩm APEX
           </span>
           <h2 className="text-lg font-bold text-slate-900 sm:text-xl">
-            9 Dòng sản phẩm sản xuất & cung ứng
+            10 Dòng sản phẩm sản xuất & cung ứng
           </h2>
         </div>
         {selectedCategory !== 'all' && (
@@ -120,7 +127,7 @@ export const ProductCategoryGrid: React.FC<ProductCategoryGridProps> = ({
             onClick={() => onSelectCategory('all')}
             className="text-xs font-semibold text-red-600 hover:underline"
           >
-            Xem tất cả (9 nhóm)
+            Xem tất cả (10 nhóm)
           </button>
         )}
       </div>

@@ -202,15 +202,23 @@ assert(fs.existsSync(contractorRoleMigrationPath), 'Migration 20261014_projects_
 const contractorRoleSql = fs.readFileSync(contractorRoleMigrationPath, 'utf8').toLowerCase();
 assert(contractorRoleSql.includes('general_contractor') && contractorRoleSql.includes('apex_role'), 'Migration thêm 2 cột general_contractor và apex_role');
 
+// Kiểm tra migration bổ sung dòng sản phẩm Cửa thép vân gỗ
+const woodGrainMigrationPath = path.join(rootDir, 'sql', 'migrations', '20261015_add_wood_grain_door_category.sql');
+assert(fs.existsSync(woodGrainMigrationPath), 'Migration 20261015_add_wood_grain_door_category.sql tồn tại');
+const woodGrainSql = fs.readFileSync(woodGrainMigrationPath, 'utf8').toLowerCase();
+assert(woodGrainSql.includes('cua-thep-van-go') && woodGrainSql.includes('products_category_check'), 'Migration cập nhật CHECK constraint cho cua-thep-van-go');
+
 const adminTypesContent = fs.readFileSync(path.join(rootDir, 'src', 'admin', 'adminTypes.ts'), 'utf8');
 assert(adminTypesContent.includes('generalContractor?: string') && adminTypesContent.includes('apexRole?: string'), 'AdminProject có 2 trường generalContractor và apexRole');
 
 const srcTypesContent = fs.readFileSync(path.join(rootDir, 'src', 'types', 'index.ts'), 'utf8');
 assert(srcTypesContent.includes('generalContractor?: string') && srcTypesContent.includes('apexRole?: string'), 'Project interface có 2 trường generalContractor và apexRole');
+assert(srcTypesContent.includes("'cua-thep-van-go'"), "ProductCategory union type chứa 'cua-thep-van-go'");
 
-// 6.2 Đồng bộ 9 Category slugs
+// 6.2 Đồng bộ 10 Category slugs
 const expectedCategories = [
   'cua-thep-ngan-chay',
+  'cua-thep-van-go',
   'cua-kinh-ngan-chay',
   'cua-cuon-ngan-chay',
   'rem-ngan-chay',
