@@ -2300,6 +2300,65 @@ const ProductPriceInput: React.FC<{
   );
 };
 
+/* --- GALLERY EDITOR --- */
+const GalleryEditor = ({
+  label,
+  images,
+  onChange,
+}: {
+  label?: string;
+  images: string[];
+  onChange: (images: string[]) => void;
+}) => {
+  const [newUrl, setNewUrl] = useState('');
+
+  const addImage = (url: string) => {
+    const trimmed = url.trim();
+    if (trimmed && !images.includes(trimmed)) {
+      onChange([...images, trimmed]);
+      setNewUrl('');
+    }
+  };
+
+  const removeImage = (index: number) => {
+    onChange(images.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="sm:col-span-2 space-y-2 border-t border-neutral-200 pt-3">
+      <label className="block text-xs font-semibold text-slate-700">
+        {label || 'Bộ sưu tập hình ảnh'} ({images.length} ảnh)
+      </label>
+      {images.length > 0 && (
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5">
+          {images.map((img, idx) => (
+            <div key={idx} className="group relative aspect-video overflow-hidden rounded border border-neutral-200 bg-neutral-100">
+              <img src={img} alt="" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => removeImage(idx)}
+                className="absolute right-1 top-1 rounded bg-slate-900/80 p-1 text-white hover:bg-red-600 transition-colors"
+                title="Xóa ảnh này"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      <UploadField
+        label={label ? `Thêm ảnh vào ${label.toLowerCase()}` : 'Thêm ảnh vào bộ sưu tập'}
+        kind="images"
+        value={newUrl}
+        onChange={(url) => {
+          if (url) addImage(url);
+        }}
+        placeholder="Tải ảnh lên hoặc dán URL ảnh vào đây"
+      />
+    </div>
+  );
+};
+
 /* --- PRODUCT EDITOR --- */
 const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; canPublish: boolean; onChange: (data: AdminProduct) => void }) => {
   const set = (field: keyof AdminProduct, value: string | number | boolean) => onChange({ ...data, [field]: value });
@@ -2405,6 +2464,21 @@ const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; can
         <textarea className={textareaClass} value={data.standard} onChange={(e) => set('standard', e.target.value)} />
       </Field>
       <UploadField label="Ảnh đại diện" kind="images" value={data.image || ''} onChange={(url) => set('image', url)} placeholder="Tải ảnh lên hoặc dán URL ảnh" />
+
+      {/* BỘ SƯU TẬP ẢNH CHI TIẾT SẢN PHẨM (Slider đầu trang) */}
+      <GalleryEditor
+        label="Bộ sưu tập ảnh chi tiết sản phẩm (Slider đầu trang)"
+        images={Array.isArray(data.gallery) ? data.gallery : []}
+        onChange={(gallery) => onChange({ ...data, gallery })}
+      />
+
+      {/* HÌNH ẢNH THỰC TẾ TẠI CÔNG TRÌNH */}
+      <GalleryEditor
+        label="Hình ảnh thực tế thi công tại công trình (Khối 3)"
+        images={Array.isArray(data.projectImages) ? data.projectImages : []}
+        onChange={(projectImages) => onChange({ ...data, projectImages })}
+      />
+
       <Field label="Tiêu đề SEO" wide>
         <input className={fieldClass} value={data.seoTitle} onChange={(e) => set('seoTitle', e.target.value)} />
       </Field>
@@ -2415,63 +2489,6 @@ const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; can
         <input type="checkbox" checked={data.featured} onChange={(e) => set('featured', e.target.checked)} className="h-4 w-4 text-red-600" />
         Hiển thị ở nhóm sản phẩm nổi bật trang chủ
       </label>
-    </div>
-  );
-};
-
-/* --- GALLERY EDITOR --- */
-const GalleryEditor = ({
-  images,
-  onChange,
-}: {
-  images: string[];
-  onChange: (images: string[]) => void;
-}) => {
-  const [newUrl, setNewUrl] = useState('');
-
-  const addImage = (url: string) => {
-    const trimmed = url.trim();
-    if (trimmed && !images.includes(trimmed)) {
-      onChange([...images, trimmed]);
-      setNewUrl('');
-    }
-  };
-
-  const removeImage = (index: number) => {
-    onChange(images.filter((_, i) => i !== index));
-  };
-
-  return (
-    <div className="sm:col-span-2 space-y-2 border-t border-neutral-200 pt-3">
-      <label className="block text-xs font-semibold text-slate-700">
-        Bộ sưu tập hình ảnh công trình ({images.length} ảnh)
-      </label>
-      {images.length > 0 && (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-5">
-          {images.map((img, idx) => (
-            <div key={idx} className="group relative aspect-video overflow-hidden rounded border border-neutral-200 bg-neutral-100">
-              <img src={img} alt="" className="h-full w-full object-cover" />
-              <button
-                type="button"
-                onClick={() => removeImage(idx)}
-                className="absolute right-1 top-1 rounded bg-slate-900/80 p-1 text-white hover:bg-red-600 transition-colors"
-                title="Xóa ảnh này"
-              >
-                <X className="h-3.5 w-3.5" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-      <UploadField
-        label="Thêm ảnh vào bộ sưu tập"
-        kind="images"
-        value={newUrl}
-        onChange={(url) => {
-          if (url) addImage(url);
-        }}
-        placeholder="Tải ảnh lên hoặc dán URL ảnh vào đây"
-      />
     </div>
   );
 };

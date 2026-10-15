@@ -5,6 +5,7 @@ import type { Product, TechnicalDoc, Project, NewsArticle } from '../types';
 import type { AdminCompany, AdminContent, AdminDocument, AdminProduct, AdminProject, WebsiteLeadInput } from './adminTypes';
 import { trackLead } from '../lib/tracking';
 import { PRODUCT_CATEGORY_LABELS } from '../routing';
+import { CATEGORY_DETAILS } from '../data/categoryDetails';
 
 // Thông tin doanh nghiệp đã xác minh theo giấy chứng nhận ĐKDN, dùng để điền sẵn khi Neon chưa có bản ghi cấu hình.
 export const createDefaultAdminCompany = (): AdminCompany => ({
@@ -134,31 +135,43 @@ export const createInitialCatalog = (): {
 } => {
   const now = new Date().toISOString().slice(0, 16);
   return {
-    products: PRODUCTS.map((product, index) => ({
-      id: product.id,
-      name: product.name,
-      slug: product.slug || product.id,
-      category: product.category,
-      categoryName: product.categoryName,
-      fireRating: product.fireRating || '',
-      certificationNo: product.certificationNo || '',
-      specs: (product.specs || {}) as Record<string, string>,
-      features: product.features || [],
-      longDescription: product.longDescription || product.description,
-      shortDescription: product.description,
-      material: product.specs?.material || '',
-      standard: product.specs?.standard || '',
-      warranty: product.specs?.warranty || '',
-      featured: Boolean(product.popular),
-      status: 'published',
-      sortOrder: index + 1,
-      seoTitle: `${product.name} | APEX Việt Nam`,
-      seoDescription: product.description,
-      imageAlt: `${product.name} APEX`,
-      image: product.image,
-      priceEstimate: product.priceEstimate || 'Liên hệ',
-      updatedAt: now,
-    })),
+    products: PRODUCTS.map((product, index) => {
+      const detail = CATEGORY_DETAILS[product.slug || product.id] || CATEGORY_DETAILS[product.category];
+      const initialGallery = Array.isArray(product.gallery) && product.gallery.length > 0
+        ? product.gallery
+        : (detail?.gallery && detail.gallery.length > 0 ? detail.gallery : (product.image ? [product.image] : []));
+      const initialProjectImages = Array.isArray((product as any).projectImages) && (product as any).projectImages.length > 0
+        ? (product as any).projectImages
+        : (detail?.projectImages || []);
+
+      return {
+        id: product.id,
+        name: product.name,
+        slug: product.slug || product.id,
+        category: product.category,
+        categoryName: product.categoryName,
+        fireRating: product.fireRating || '',
+        certificationNo: product.certificationNo || '',
+        specs: (product.specs || {}) as Record<string, string>,
+        features: product.features || [],
+        longDescription: product.longDescription || product.description,
+        shortDescription: product.description,
+        material: product.specs?.material || '',
+        standard: product.specs?.standard || '',
+        warranty: product.specs?.warranty || '',
+        featured: Boolean(product.popular),
+        status: 'published',
+        sortOrder: index + 1,
+        seoTitle: `${product.name} | APEX Việt Nam`,
+        seoDescription: product.description,
+        imageAlt: `${product.name} APEX`,
+        image: product.image,
+        gallery: initialGallery,
+        projectImages: initialProjectImages,
+        priceEstimate: product.priceEstimate || 'Liên hệ',
+        updatedAt: now,
+      };
+    }),
     documents: TECHNICAL_DOCS.map((document) => ({
       id: document.id,
       title: document.title,
@@ -267,6 +280,8 @@ const mapProducts = (items: AdminProduct[]): Product[] => {
           features: Array.isArray(ap.features) && ap.features.length > 0 ? ap.features : orig.features,
           popular: ap.featured,
           image: ap.image || orig.image,
+          gallery: Array.isArray(ap.gallery) && ap.gallery.length > 0 ? ap.gallery : orig.gallery,
+          projectImages: Array.isArray(ap.projectImages) && ap.projectImages.length > 0 ? ap.projectImages : (orig as any)?.projectImages,
           priceEstimate: ap.priceEstimate || orig.priceEstimate || 'Liên hệ',
           seoTitle: ap.seoTitle || orig.seoTitle,
           seoDescription: ap.seoDescription || orig.seoDescription,
@@ -304,6 +319,8 @@ const mapProducts = (items: AdminProduct[]): Product[] => {
         },
         features: Array.isArray(ap.features) ? ap.features : [],
         image: ap.image || PRODUCTS[0]?.image || '',
+        gallery: Array.isArray(ap.gallery) && ap.gallery.length > 0 ? ap.gallery : (ap.image ? [ap.image] : []),
+        projectImages: Array.isArray(ap.projectImages) ? ap.projectImages : [],
         priceEstimate: ap.priceEstimate || 'Liên hệ',
         popular: ap.featured,
       };

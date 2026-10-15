@@ -115,8 +115,15 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
     );
   }
 
-  const galleryImages = detail.gallery && detail.gallery.length > 0 ? detail.gallery : [];
+  // Lấy danh sách ảnh gallery động từ liveProduct nếu admin đã cập nhật trong admin
+  const liveGallery = liveProduct?.gallery && liveProduct.gallery.length > 0 ? liveProduct.gallery : null;
+  const galleryImages = liveGallery || (detail.gallery && detail.gallery.length > 0 ? detail.gallery : []);
   const currentImage = galleryImages[activeImgIdx] || galleryImages[0];
+
+  const liveProjectImages = (liveProduct as any)?.projectImages && (liveProduct as any).projectImages.length > 0
+    ? (liveProduct as any).projectImages
+    : null;
+  const effectiveProjectImages = liveProjectImages || (detail.projectImages && detail.projectImages.length > 0 ? detail.projectImages : []);
 
   const renderUseIcon = (iconName: string) => {
     switch (iconName) {
@@ -348,7 +355,7 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
         {/* =========================================================================
             KHỐI 3: HÌNH ẢNH THỰC TẾ TẠI CÔNG TRÌNH (3 ảnh - tự ẩn nếu rỗng)
            ========================================================================= */}
-        {detail.projectImages && detail.projectImages.length > 0 && (
+        {effectiveProjectImages && effectiveProjectImages.length > 0 && (
           <section className="mt-10">
             <h2 className="mb-4 flex items-center gap-2 text-[13px] font-bold tracking-wider uppercase text-red-700">
               <Camera className="h-4 w-4 text-red-700" aria-hidden="true" />
@@ -356,7 +363,7 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
             </h2>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-              {detail.projectImages.map((img, i) => (
+              {effectiveProjectImages.map((img, i) => (
                 <div
                   key={i}
                   className="aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs"
@@ -381,7 +388,7 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
             <h2 className="mb-4 flex items-center gap-2 text-[13px] font-bold tracking-wider uppercase text-red-700">
               <FileSpreadsheet className="h-4 w-4 text-red-700" aria-hidden="true" />
               <span>
-                {detail.projectImages && detail.projectImages.length > 0 ? '3' : '2'} · Bảng thông số kỹ thuật chi tiết
+                {effectiveProjectImages && effectiveProjectImages.length > 0 ? '3' : '2'} · Bảng thông số kỹ thuật chi tiết
               </span>
             </h2>
 
@@ -416,7 +423,7 @@ export const CategoryDetailPage: React.FC<CategoryDetailPageProps> = ({
             <h2 className="mb-4 flex items-center gap-2 text-[13px] font-bold tracking-wider uppercase text-red-700">
               <Receipt className="h-4 w-4 text-red-700" aria-hidden="true" />
               <span>
-                {detail.projectImages && detail.projectImages.length > 0 ? '4' : '3'} · Dự toán chi tiết cho 1 bộ ({effectiveQuote.model})
+                {effectiveProjectImages && effectiveProjectImages.length > 0 ? '4' : '3'} · Dự toán chi tiết cho 1 bộ ({effectiveQuote.model})
               </span>
             </h2>
 

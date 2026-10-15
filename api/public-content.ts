@@ -40,7 +40,8 @@ export default async function handler(req: any, res: any) {
           specs, features, long_description as "longDescription",
           featured, status, sort_order as "sortOrder",
           seo_title as "seoTitle", seo_description as "seoDescription",
-          image_alt as "imageAlt", image, price_estimate as "priceEstimate"
+          image_alt as "imageAlt", image, gallery, project_images as "projectImages",
+          price_estimate as "priceEstimate"
         FROM products
         WHERE status = 'published'
         ORDER BY sort_order ASC, name ASC
@@ -55,7 +56,8 @@ export default async function handler(req: any, res: any) {
             specs, '[]'::jsonb as features, short_description as "longDescription",
             featured, status, sort_order as "sortOrder",
             seo_title as "seoTitle", seo_description as "seoDescription",
-            image_alt as "imageAlt", image, price_estimate as "priceEstimate"
+            image_alt as "imageAlt", image, '[]'::jsonb as gallery, '[]'::jsonb as "projectImages",
+            price_estimate as "priceEstimate"
           FROM products
           WHERE status = 'published'
           ORDER BY sort_order ASC, name ASC

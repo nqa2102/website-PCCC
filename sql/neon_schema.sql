@@ -71,6 +71,8 @@ CREATE TABLE IF NOT EXISTS products (
   seo_description TEXT,
   image_alt VARCHAR(255),
   image TEXT,
+  gallery JSONB DEFAULT '[]'::jsonb,
+  project_images JSONB DEFAULT '[]'::jsonb,
   price_estimate VARCHAR(100),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

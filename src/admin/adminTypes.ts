@@ -57,6 +57,8 @@ export interface AdminProduct {
   seoDescription: string;
   imageAlt: string;
   image?: string;
+  gallery?: string[];
+  projectImages?: string[];
   priceEstimate?: string;
   updatedAt: string;
 }

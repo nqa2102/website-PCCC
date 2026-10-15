@@ -282,23 +282,24 @@
   ALTER TABLE projects ADD COLUMN IF NOT EXISTS apex_role TEXT;
   ```
 
-### 6. Migration Nhập 3 dự án mẫu dạng nháp (Phase 6):
-- Chạy [`sql/migrations/20261014_seed_3_draft_projects.sql`](../sql/migrations/20261014_seed_3_draft_projects.sql) trong Neon SQL Editor để nạp 3 dự án mẫu ở trạng thái nháp (`verified = false`, chưa gắn ảnh).
+### 7. Migration Thêm cột `gallery` & `project_images` cho bảng `products`:
+- Chạy [`sql/migrations/20261015_add_product_gallery_columns.sql`](../sql/migrations/20261015_add_product_gallery_columns.sql) trong Neon SQL Editor (hoặc API `api/admin/products.ts` tự động chạy khi lưu):
+  ```sql
+  ALTER TABLE products ADD COLUMN IF NOT EXISTS gallery JSONB DEFAULT '[]'::jsonb;
+  ALTER TABLE products ADD COLUMN IF NOT EXISTS project_images JSONB DEFAULT '[]'::jsonb;
+  ```
+
 ---
 
-## 🏗️ Kế Hoạch 7 Phase: Nâng Cấp Hồ Sơ Dự Án Tiêu Biểu (PROMPT-DU-AN.md)
-*Tài liệu kỹ thuật*: [`docs/PROMPT-DU-AN.md`](./PROMPT-DU-AN.md) & [`AGENTS.md`](../AGENTS.md).
-- **Mục tiêu**: Chuẩn hóa toàn bộ hệ thống trưng bày và quản trị dự án thực tế của APEX, tuân thủ nguyên tắc trung thực tuyệt đối: không sao chép đối thủ, không tự bịa số liệu, chỉ công bố dự án có hồ sơ nghiệm thu thực tế (`verified = true`).
-
-| Phase | Nội dung công việc | Trạng thái | Bằng chứng kiểm thử |
-|:---:|:---|:---:|:---|
-| **Phase 0** | Khởi tạo nhánh `feat/projects-showcase`, rà soát kiến trúc Neon, API, types, lập kế hoạch. | 🟢 **DONE** | Lập plan chi tiết, người dùng phê duyệt. |
-| **Phase 1** | Bổ sung 2 cột `general_contractor` & `apex_role` với migration an toàn idempotency, fallback SELECT API chống crash, cập nhật types và automated integrity tests. | 🟢 **DONE** | Commit `6472f54`, 178/178 test integrity PASS. |
-| **Phase 2** | Nâng cấp trang danh sách `/du-an` theo wireframe: Hero + số liệu thật (UC9), chip filter theo category có đếm số, lưới thẻ tỉ lệ 4:3, phân trang client 9 thẻ/lần, chống tràn ngang. | 🟢 **DONE** | Commit `72d9282`, QA 1440px & 375px đạt 0 overflow. |
-| **Phase 3** | Nâng cấp trang chi tiết `/du-an/:slug` theo wireframe: Breadcrumb + meta badge bar, ảnh lớn + thumbnail strip tương tác (bàn phím + aria), bảng thông tin tự ẩn dòng trống (UC6), mô tả công trình + cam kết nghiệm thu, thư viện ảnh thi công hiện trường, CTA dự toán + hotline + Zalo, 3 dự án liên quan, lightbox phóng to ảnh, và màn hình thân thiện chuẩn UC4 khi slug không tồn tại. | 🟢 **DONE** | `lint` pass, `build` pass, 178/178 tests PASS, Browser QA 1440px & 375px hoàn thành. |
-| **Phase 4** | Admin: Thêm 2 trường `generalContractor` và `apexRole`, cập nhật ô tìm kiếm dự án, hiển thị thông tin tổng thầu & vai trò trong danh sách, điều khiển status & verified, kiểm thử tạo dự án nháp và xác nhận bảo vệ UC4 hoạt động hoàn hảo. | 🟢 **DONE** | `lint` pass, `build` pass, 178/178 tests PASS, Browser QA tạo dự án nháp và xác nhận UC4 không hiển thị ngoài công khai. |
-| **Phase 5** | SEO + Sitemap cho các slug dự án công khai, Schema.org `CreativeWork`, tối ưu title/meta/OG image cho `/du-an` và từng slug, kiểm tra tương thích link cũ không vỡ. | 🟢 **DONE** | `sitemap.xml`, `routing.ts`, `App.tsx` đồng bộ SEO động cho dự án, canonical sạch, test integrity PASS 100%. |
-| **Phase 6** | Nhập 3 dự án tiêu biểu thực tế đã nghiệm thu hoàn thành của APEX lên hệ thống và tự động nạp vào Neon Database ở trạng thái công khai (`status='published'`, `verified=true`, kèm ảnh thực tế). Tự động khởi tạo dữ liệu trên Neon khi API public-content được kích hoạt. | 🟢 **DONE** | Tự động hóa nạp dữ liệu Neon qua `api/public-content.ts` (Idempotent 100%); `adminData.ts` & `vite.config.ts` đồng bộ ảnh thực tế và trạng thái công khai; 178/178 tests PASS; Build PASS. |
+## 🎨 Nâng Cấp Quản Trị Toàn Bộ Ảnh Sản Phẩm (2026-10-15)
+- **Yêu cầu người dùng**: Cho phép trong trang quản trị admin đối với sản phẩm cập nhật tất cả các ảnh (ảnh đại diện, bộ sưu tập slider chi tiết và ảnh thi công thực tế tại công trình) theo mong muốn thay vì chỉ đổi 1 ảnh đại diện.
+- **Thực hiện**:
+  1. Mở rộng `AdminProduct` và `Product` types thêm `gallery?: string[]` và `projectImages?: string[]`.
+  2. Bổ sung 2 cột `gallery` và `project_images` trong schema Neon và migration tự động trong `api/admin/products.ts`, lấy ra qua `api/public-content.ts`.
+  3. Pre-fill sẵn `initialGallery` và `initialProjectImages` trong `adminData.ts` từ `categoryDetails.ts` để khi mở form, admin đã có sẵn toàn bộ ảnh hiện hữu của sản phẩm.
+  4. Nâng cấp `GalleryEditor` trong `AdminApp.tsx` hỗ trợ nhãn tùy biến, nhúng 2 trình quản lý bộ ảnh (Slider đầu trang chi tiết và Hình ảnh thi công tại công trình) ngay dưới trường Ảnh đại diện. Cho phép upload file qua Vercel Blob, dán URL, xem thumbnail và xóa từng ảnh dễ dàng.
+  5. Đồng bộ `CategoryDetailPage.tsx` ưu tiên hiển thị ảnh từ `liveProduct.gallery` và `liveProduct.projectImages`.
+  6. Kết quả kiểm thử: `npm run lint` PASS, 186/186 test integrity PASS, `npm run build` PASS, Browser Subagent UAT PASS.
 
 
 

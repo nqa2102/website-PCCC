@@ -32,6 +32,7 @@ export interface Product {
   features: string[];
   image: string;
   gallery?: string[];
+  projectImages?: string[];
   priceEstimate: string;
   popular?: boolean;
   seoTitle?: string;
