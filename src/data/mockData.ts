@@ -256,7 +256,7 @@ export const PRODUCTS: Product[] = [
     image: cuaThepVanGoCover,
     gallery: [cuaThepVanGoCover, cuaThepVanGoProj1, cuaThepVanGoProj2, cuaThepVanGoProj3],
     imageAlt: 'Cửa thép vân gỗ chống cháy 1 cánh dập huỳnh panel căn hộ cao cấp – APEX',
-    priceEstimate: 'Từ 1.600.000 đ/m²',
+    priceEstimate: 'Từ 1.950.000 đ/m²',
     popular: true
   },
   {

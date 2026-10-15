@@ -191,7 +191,7 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
   'cua-thep-van-go': {
     slug: 'cua-thep-van-go',
     name: 'Cửa Thép Vân Gỗ Chống Cháy',
-    priceFrom: '1.600.000 đ/m²',
+    priceFrom: '1.950.000 đ/m²',
     intro:
       'Cửa thép vân gỗ chống cháy 1 cánh và 2 cánh, dập huỳnh định hình và sơn in chuyển nhiệt 3D vân gỗ tự nhiên sang trọng. Đạt kiểm định PCCC EI60 – EI90 theo QCVN 06:2022/BXD, cách âm 35–40dB, không cong vênh hay mối mọt, lý tưởng cho căn hộ, biệt thự và khách sạn.',
     sellingPoints: [
@@ -257,8 +257,8 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
           name: 'Cửa thép vân gỗ ngăn cháy tiêu chuẩn 60 phút, kích thước 900×2200',
           unit: 'm²',
           qty: '1.98',
-          price: '1.600.000',
-          amount: '3.168.000',
+          price: '1.950.000',
+          amount: '3.861.000',
         },
         {
           name: 'Bản lề inox',
@@ -282,7 +282,7 @@ export const CATEGORY_DETAILS: Record<string, CategoryDetail> = {
           amount: '400.000',
         },
       ],
-      total: '3.970.000',
+      total: '4.663.000',
       note: 'Dự toán mẫu cho 1 bộ cửa kích thước 900×2200 (chưa gồm tay co thủy lực Oval và chi phí công thi công). Giá chính xác căn cứ theo khối lượng, bản vẽ và phụ kiện thực tế của công trình.',
     },
     gallery: [cuaThepVanGoCover, cuaThepVanGoProj1, cuaThepVanGoProj2, cuaThepVanGoProj3],

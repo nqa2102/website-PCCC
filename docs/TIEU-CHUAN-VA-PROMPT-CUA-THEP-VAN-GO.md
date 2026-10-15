@@ -52,7 +52,7 @@ flowchart TD
 
 #### Khối 1 — Hero & QuickSpec
 * **Ảnh cover:** Tỉ lệ dọc `4:5` (1200×1500px), thấy trọn cánh và khung cửa, nền gọn gàng.
-* **Giá từ:** `1.600.000 đ/m²` (chưa gồm VAT).
+* **Giá từ:** `1.950.000 đ/m²` (chưa gồm VAT).
 * **3 Cam kết bán hàng (Selling Points):**
   1. Đạt kiểm định PCCC EI60 – EI90 theo QCVN 06:2022/BXD.
   2. Công nghệ in truyền nhiệt vân gỗ 3D bền màu trên 15 năm.
@@ -95,11 +95,11 @@ flowchart TD
 #### Khối 5 — Dự toán mẫu bóc tách cho 1 bộ cửa căn hộ chuẩn (0.9 × 2.2m)
 | Hạng mục | ĐVT | SL | Đơn giá (đ) | Thành tiền (đ) |
 | :--- | :---: | :---: | :---: | :---: |
-| Cửa thép vân gỗ ngăn cháy tiêu chuẩn 60 phút, kích thước 900×2200 | m² | 1.98 | 1.600.000 | 3.168.000 |
+| Cửa thép vân gỗ ngăn cháy tiêu chuẩn 60 phút, kích thước 900×2200 | m² | 1.98 | 1.950.000 | 3.861.000 |
 | Bản lề inox | cái | 4 | 60.000 | 240.000 |
 | Doorsill inox | md | 0.9 | 180.000 | 162.000 |
 | Khóa cửa MZ16-304C | Bộ | 1 | 400.000 | 400.000 |
-| **Cộng 01 bộ cửa mẫu (VNĐ)** | | | | **3.970.000** |
+| **Cộng 01 bộ cửa mẫu (VNĐ)** | | | | **4.663.000** |
 
 *Ghi chú: Dự toán mẫu cho 1 bộ cửa kích thước 900×2200 (chưa gồm tay co thủy lực Oval và chi phí công thi công). Giá chính xác căn cứ theo khối lượng, bản vẽ và phụ kiện thực tế của công trình.*
 
