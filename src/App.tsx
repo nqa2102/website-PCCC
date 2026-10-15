@@ -9,6 +9,7 @@ import { HomePage } from './pages/HomePage';
 import { applySeo, isProductCategory, normalizeCategory, pathForRoute, readRoute, type AppRoute } from './routing';
 import { useLiveData } from './admin/adminData';
 import { PRODUCT_CATEGORY_DEFINITIONS } from './components/products/ProductCategoryGrid';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const AboutPage = lazy(() => import('./pages/AboutPage').then((module) => ({ default: module.AboutPage })));
 const ProductsPage = lazy(() => import('./pages/ProductsPage').then((module) => ({ default: module.ProductsPage })));
@@ -185,72 +186,74 @@ export default function App() {
 
       {/* Main Page Content */}
       <main className="flex-1 pb-16 sm:pb-0">
-        <Suspense fallback={<PageFallback />}>
-        {activeTab === 'home' && (
-          <HomePage
-            onNavigate={handleNavigate}
-            onOpenQuote={handleOpenQuote}
-            onOpenChat={() => setChatModalOpen(true)}
-          />
-        )}
+        <ErrorBoundary>
+          <Suspense fallback={<PageFallback />}>
+          {activeTab === 'home' && (
+            <HomePage
+              onNavigate={handleNavigate}
+              onOpenQuote={handleOpenQuote}
+              onOpenChat={() => setChatModalOpen(true)}
+            />
+          )}
 
-        {activeTab === 'about' && (
-          <AboutPage
-            onOpenQuote={() => handleOpenQuote()}
-            onNavigate={handleNavigate}
-          />
-        )}
+          {activeTab === 'about' && (
+            <AboutPage
+              onOpenQuote={() => handleOpenQuote()}
+              onNavigate={handleNavigate}
+            />
+          )}
 
-        {activeTab === 'products' && (
-          <ProductsPage
-            key={`${targetProductCategory || 'all'}-${targetProductId || 'list'}`}
-            onOpenQuote={handleOpenQuote}
-            initialCategory={targetProductCategory}
-            initialProductId={targetProductId}
-            onNavigate={handleNavigate}
-          />
-        )}
+          {activeTab === 'products' && (
+            <ProductsPage
+              key={`${targetProductCategory || 'all'}-${targetProductId || 'list'}`}
+              onOpenQuote={handleOpenQuote}
+              initialCategory={targetProductCategory}
+              initialProductId={targetProductId}
+              onNavigate={handleNavigate}
+            />
+          )}
 
-        {activeTab === 'projects' && (
-          <ProjectsPage
-            key={targetProjectId || 'projects'}
-            onOpenQuote={() => handleOpenQuote()}
-            initialProjectId={targetProjectId}
-            onNavigate={handleNavigate}
-          />
-        )}
+          {activeTab === 'projects' && (
+            <ProjectsPage
+              key={targetProjectId || 'projects'}
+              onOpenQuote={() => handleOpenQuote()}
+              initialProjectId={targetProjectId}
+              onNavigate={handleNavigate}
+            />
+          )}
 
-        {activeTab === 'documents' && (
-          <TechnicalDocsPage
-            key={targetDocId || 'documents'}
-            onOpenQuote={() => handleOpenQuote()}
-            initialDocId={targetDocId}
-          />
-        )}
+          {activeTab === 'documents' && (
+            <TechnicalDocsPage
+              key={targetDocId || 'documents'}
+              onOpenQuote={() => handleOpenQuote()}
+              initialDocId={targetDocId}
+            />
+          )}
 
-        {activeTab === 'news' && (
-          <NewsPage
-            key={targetArticleId || 'news'}
-            onOpenQuote={() => handleOpenQuote()}
-            initialArticleId={targetArticleId}
-          />
-        )}
+          {activeTab === 'news' && (
+            <NewsPage
+              key={targetArticleId || 'news'}
+              onOpenQuote={() => handleOpenQuote()}
+              initialArticleId={targetArticleId}
+            />
+          )}
 
-        {activeTab === 'contact' && (
-          <ContactPage
-            onOpenQuote={() => handleOpenQuote()}
-            onNavigate={handleNavigate}
-          />
-        )}
+          {activeTab === 'contact' && (
+            <ContactPage
+              onOpenQuote={() => handleOpenQuote()}
+              onNavigate={handleNavigate}
+            />
+          )}
 
-        {activeTab === 'privacy' && (
-          <PrivacyPage onNavigate={handleNavigate} />
-        )}
+          {activeTab === 'privacy' && (
+            <PrivacyPage onNavigate={handleNavigate} />
+          )}
 
-        {activeTab === 'not-found' && (
-          <NotFoundPage onNavigate={handleNavigate} />
-        )}
-        </Suspense>
+          {activeTab === 'not-found' && (
+            <NotFoundPage onNavigate={handleNavigate} />
+          )}
+          </Suspense>
+        </ErrorBoundary>
       </main>
 
       {/* Corporate Footer */}

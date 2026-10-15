@@ -51,6 +51,24 @@ const TAB_PATHS: Record<string, string> = {
   'not-found': '/404',
 };
 
+export const PROJECT_SLUG_ALIASES: Record<string, string> = {
+  'benh-vien-tim-ha-noi': 'benh-vien-tim-ha-noi-co-so-2',
+  'benh-vien-tim-hn': 'benh-vien-tim-ha-noi-co-so-2',
+  'prj-benh-vien-tim-hn': 'benh-vien-tim-ha-noi-co-so-2',
+  'toa-nha-da-nang-kv-i-hoc-vien-hau-can': 'hoc-vien-hau-can',
+  'hoc-vien-hau-can-kv1': 'hoc-vien-hau-can',
+  'prj-hoc-vien-hau-can': 'hoc-vien-hau-can',
+  'dien-luc-yen-bai': 'cong-ty-dien-luc-yen-bai',
+  'prj-dien-luc-yen-bai': 'cong-ty-dien-luc-yen-bai',
+  'nha-may-astarte': 'nha-may-astarte-viet-nam',
+  'prj-nha-may-astarte': 'nha-may-astarte-viet-nam',
+  'toa-an-tinh-quang-ninh': 'vien-kiem-sat-tinh-quang-ninh',
+  'toa-an-quang-ninh': 'vien-kiem-sat-tinh-quang-ninh',
+  'prj-vien-kiem-sat-quang-ninh': 'vien-kiem-sat-tinh-quang-ninh',
+  'truong-lien-cap-tay-ha-noi': 'benh-vien-tim-ha-noi-co-so-2',
+  'nha-may-pegatron-hai-phong': 'nha-may-astarte-viet-nam',
+};
+
 export const normalizeCategory = (cat?: string | null): string | undefined => {
   if (!cat) return undefined;
   if (PRODUCT_CATEGORIES.has(cat)) return cat;
@@ -112,7 +130,16 @@ export const readRoute = (): AppRoute => {
     }
     return { tab: 'products' };
   }
-  if (root === 'du-an') return { tab: 'projects', itemId };
+  if (root === 'du-an') {
+    const rawId = itemId ? decodeURIComponent(itemId).replace(/\/$/, '') : undefined;
+    const resolvedId = rawId ? (PROJECT_SLUG_ALIASES[rawId] || rawId) : undefined;
+    if (rawId && resolvedId && rawId !== resolvedId) {
+      if (typeof window !== 'undefined' && window.history?.replaceState) {
+        window.history.replaceState({}, '', `/du-an/${encodeURIComponent(resolvedId)}`);
+      }
+    }
+    return { tab: 'projects', itemId: resolvedId };
+  }
   if (root === 'tai-lieu-ky-thuat') return { tab: 'documents', itemId };
   if (root === 'tin-tuc') return { tab: 'news', itemId };
   if (root === 'lien-he') return { tab: 'contact' };

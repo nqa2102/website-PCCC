@@ -366,7 +366,7 @@ const mapProjects = (_items: AdminContent[], projectRecords: any[] = []): Projec
   });
 
   const validRecords = (projectRecords || []).filter(
-    (p) => p.verified && p.status === 'published' && p.id !== 'prj-toa-an-quang-ninh' && p.slug !== 'toa-an-tinh-quang-ninh'
+    (p) => p && p.verified && p.status === 'published' && p.id !== 'prj-toa-an-quang-ninh' && p.slug !== 'toa-an-tinh-quang-ninh'
   );
 
   const mapped: Project[] = validRecords.map((p) => {
@@ -400,12 +400,14 @@ const mapProjects = (_items: AdminContent[], projectRecords: any[] = []): Projec
   // Bổ sung các dự án thực tế còn thiếu từ INITIAL_PROJECTS để luôn đủ 5 dự án thực tế
   const seenIds = new Set<string>();
   mapped.forEach((p) => {
-    seenIds.add(p.id);
-    if (p.slug) seenIds.add(p.slug);
+    if (p) {
+      seenIds.add(p.id);
+      if (p.slug) seenIds.add(p.slug);
+    }
   });
 
   (INITIAL_PROJECTS as unknown as Project[]).forEach((ip) => {
-    if (!seenIds.has(ip.id) && (!ip.slug || !seenIds.has(ip.slug))) {
+    if (ip && !seenIds.has(ip.id) && (!ip.slug || !seenIds.has(ip.slug))) {
       mapped.push(ip);
       seenIds.add(ip.id);
       if (ip.slug) seenIds.add(ip.slug);

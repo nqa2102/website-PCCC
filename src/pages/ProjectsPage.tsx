@@ -18,7 +18,7 @@ import { useLiveData, INITIAL_PROJECTS } from '../admin/adminData';
 import type { Project } from '../types';
 import { ProjectCard } from '../components/projects/ProjectCard';
 import { ProjectDetailLayout } from '../components/projects/ProjectDetailLayout';
-import { PRODUCT_CATEGORY_LABELS } from '../routing';
+import { PRODUCT_CATEGORY_LABELS, PROJECT_SLUG_ALIASES } from '../routing';
 
 interface ProjectsPageProps {
   onOpenQuote: () => void;
@@ -42,20 +42,19 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
+  const resolveProject = (idOrSlug?: string): Project | null => {
+    if (!idOrSlug) return null;
+    const cleanId = idOrSlug.replace(/\/$/, '');
+    const target = PROJECT_SLUG_ALIASES[cleanId] || cleanId;
+    return projects.find((p) => p && (p.id === target || p.slug === target || p.id === cleanId || p.slug === cleanId)) || null;
+  };
+
   const [activeProject, setActiveProject] = useState<Project | null>(() => {
-    if (initialProjectId) {
-      return projects.find((p) => p.id === initialProjectId || p.slug === initialProjectId) || null;
-    }
-    return null;
+    return resolveProject(initialProjectId);
   });
 
   useEffect(() => {
-    if (initialProjectId) {
-      const found = projects.find((p) => p.id === initialProjectId || p.slug === initialProjectId);
-      setActiveProject(found || null);
-    } else {
-      setActiveProject(null);
-    }
+    setActiveProject(resolveProject(initialProjectId));
   }, [initialProjectId, projects]);
 
   // Bộ lọc danh mục dựa trên các dự án thực tế hiện có trong database
