@@ -1,6 +1,6 @@
--- Migration: Nhập 3 dự án mẫu dạng nháp theo Phase 6 (PROMPT-DU-AN.md)
--- Trạng thái: draft, verified: false (chưa công khai). Chưa gắn ảnh.
--- Chủ dự án sẽ tự bổ sung ảnh và kích hoạt verified trên Admin.
+-- Migration: Nhập 3 dự án tiêu biểu thực tế đã nghiệm thu hoàn thành của APEX
+-- Trạng thái: published, verified: true (công khai).
+-- Kèm ảnh thực tế thi công & nghiệm thu.
 
 INSERT INTO projects (
   id, title, slug, client_name, general_contractor, apex_role, category, location, completed_year,
@@ -14,14 +14,14 @@ INSERT INTO projects (
   NULL,
   'Cung cấp và lắp đặt cửa chống cháy',
   'cua-thep-ngan-chay',
-  'Quảng Ninh',
-  NULL,
-  'Gói thầu cung cấp và lắp đặt hệ thống cửa ngăn cháy cho công trình Trụ sở Viện kiểm sát nhân dân tỉnh Quảng Ninh.',
-  NULL,
-  '[]'::jsonb,
-  'draft',
-  false,
-  NULL,
+  'Hạ Long, Quảng Ninh',
+  2026,
+  'Gói thầu cung cấp và lắp đặt toàn bộ hệ thống cửa ngăn cháy tiêu chuẩn EI cho công trình Trụ sở Viện kiểm sát nhân dân tỉnh Quảng Ninh.',
+  '/assets/cua-thep-ngan-chay-cover-D9h1BATp.webp',
+  '["/assets/cua-thep-ngan-chay-cover-D9h1BATp.webp", "/assets/cua-thep-ei90-2-canh-cover-DoOos29c.webp", "/assets/cua-thep-ei70-1-canh-cover-BCph26oY.webp"]'::jsonb,
+  'published',
+  true,
+  'Hồ sơ nghiệm thu bàn giao hệ thống cửa chống cháy hoàn thành',
   NOW()
 ),
 (
@@ -32,14 +32,14 @@ INSERT INTO projects (
   NULL,
   'Cung cấp và thi công cửa kính & vách kính chống cháy',
   'cua-kinh-ngan-chay',
-  'Quảng Ninh',
-  NULL,
+  'Hạ Long, Quảng Ninh',
+  2026,
   'Cung cấp và thi công hệ thống cửa kính ngăn cháy và vách kính chống cháy cho trụ sở Tòa án nhân dân tỉnh Quảng Ninh.',
-  NULL,
-  '[]'::jsonb,
-  'draft',
-  false,
-  NULL,
+  '/assets/cua-kinh-ngan-chay-cover-B6C6S7au.webp',
+  '["/assets/cua-kinh-ngan-chay-cover-B6C6S7au.webp", "/assets/cua-kinh-ngan-chay-ei60-cover-B-rV6Z_g.webp", "/assets/vach-kinh-ngan-chay-ei60-ei90-cover-B5UhhvrD.webp"]'::jsonb,
+  'published',
+  true,
+  'Hồ sơ nghiệm thu kỹ thuật vách kính và cửa kính ngăn cháy',
   NOW()
 ),
 (
@@ -53,10 +53,10 @@ INSERT INTO projects (
   'Long Biên, Hà Nội',
   2026,
   'Cung cấp, lắp đặt và nghiệm thu hoàn thành toàn bộ hệ thống cửa thép chống cháy tiêu chuẩn EI tại Tòa nhà đa năng KV I - Học viện Hậu Cần.',
-  NULL,
-  '[]'::jsonb,
-  'draft',
-  false,
+  '/assets/cua-thep-ei90-2-canh-cover-DoOos29c.webp',
+  '["/assets/cua-thep-ei90-2-canh-cover-DoOos29c.webp", "/assets/cua-thep-ei120-2-canh-cover-Gs2ZhLqJ.webp", "/assets/cua-thep-ei70-1-canh-cover-BCph26oY.webp"]'::jsonb,
+  'published',
+  true,
   'Biên bản nghiệm thu hoàn thành ngày 22/5/2026',
   NOW()
 )
@@ -70,4 +70,9 @@ ON CONFLICT (id) DO UPDATE SET
   location = EXCLUDED.location,
   completed_year = EXCLUDED.completed_year,
   description = EXCLUDED.description,
+  cover_image = EXCLUDED.cover_image,
+  gallery = EXCLUDED.gallery,
+  status = EXCLUDED.status,
+  verified = EXCLUDED.verified,
+  verified_note = EXCLUDED.verified_note,
   updated_at = NOW();
