@@ -11,14 +11,12 @@ import {
   FileCheck,
   FileText,
   HardHat,
-  Layers,
   MapPin,
   MessageCircle,
   MessageSquareText,
   PhoneCall,
   ShieldCheck,
   Sparkles,
-  UserCheck,
   ZoomIn,
   X,
 } from 'lucide-react';
@@ -51,28 +49,17 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
   const hotlineHref = company?.hotlineHref || COMPANY_INFO.hotlineHref;
   const zaloHref = company?.zaloHref || COMPANY_INFO.zaloHref;
 
-  // Lấy dữ liệu case study hoàn chỉnh (dựa trên slug hoặc tự động fallback sinh động)
+  // Lấy dữ liệu case study đầy đủ của dự án (từ projectDetails.ts)
   const caseStudy = useMemo(() => getProjectCaseStudy(project), [project]);
 
-  // Danh sách ảnh từ photoStory
+  // Danh sách ảnh thực tế từ photoStory
   const photoList = useMemo(() => {
-    if (caseStudy.photoStory && caseStudy.photoStory.length > 0) {
-      return caseStudy.photoStory;
-    }
-    const cover = project.coverImage || project.image;
-    const gallery = Array.isArray(project.gallery) ? project.gallery : [];
-    const urls = Array.from(new Set([cover, ...gallery].filter(Boolean))) as string[];
-    return urls.map((url, idx) => ({
-      url,
-      title: `Hình ảnh thi công tại ${project.title} (${idx + 1})`,
-      caption: `Ghi nhận quá trình thi công và nghiệm thu thực tế hạng mục tại công trình.`,
-      tag: idx === 0 ? 'Toàn cảnh' : 'Hiện trường',
-    }));
-  }, [caseStudy, project]);
+    return caseStudy.photoStory || [];
+  }, [caseStudy]);
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  // Đóng lightbox khi ấn ESC hoặc phím mũi tên chuyển ảnh
+  // Phím tắt bàn phím cho Lightbox xem ảnh lớn
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (lightboxIndex === null) return;
@@ -88,7 +75,7 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxIndex, photoList.length]);
 
-  // Schema.org CreativeWork cho dự án
+  // Schema.org CreativeWork cho bài viết dự án
   useEffect(() => {
     const schemaScript = document.createElement('script');
     schemaScript.type = 'application/ld+json';
@@ -97,23 +84,23 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
     const schemaData: Record<string, any> = {
       '@context': 'https://schema.org',
       '@type': 'CreativeWork',
-      name: project.title,
-      description: project.description || caseStudy.contextLead,
+      name: caseStudy.title || project.title,
+      description: caseStudy.contextIntro || project.description,
       creator: {
         '@type': 'Organization',
         name: 'Công ty TNHH Apex VN',
       },
     };
 
-    if (project.location) {
+    if (caseStudy.location || project.location) {
       schemaData.contentLocation = {
         '@type': 'Place',
-        name: project.location,
+        name: caseStudy.location || project.location,
       };
     }
 
-    if (project.completedYear || project.year) {
-      schemaData.dateCreated = String(project.completedYear || project.year);
+    if (caseStudy.completedYear) {
+      schemaData.dateCreated = String(caseStudy.completedYear);
     }
 
     if (photoList[0]?.url) {
@@ -129,103 +116,198 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
     };
   }, [project, caseStudy, photoList]);
 
-  // Danh sách 3 dự án khác cùng danh mục hoặc liên quan
+  // 3 dự án thực tế khác để khách hàng tham khảo tiếp
   const relatedProjects = useMemo(() => {
-    const otherProjects = allProjects.filter(
-      (p) => p.id !== project.id && p.slug !== project.slug
-    );
-    const sameCat = otherProjects.filter((p) => p.category === project.category);
-    const diffCat = otherProjects.filter((p) => p.category !== project.category);
-    return [...sameCat, ...diffCat].slice(0, 3);
+    return allProjects
+      .filter((p) => p.id !== project.id && p.slug !== project.slug)
+      .slice(0, 3);
   }, [allProjects, project]);
 
-  const categoryName = PRODUCT_CATEGORY_LABELS[project.category] || project.categoryLabel || project.category || 'Cửa ngăn cháy';
+  const categoryName = PRODUCT_CATEGORY_LABELS[project.category] || project.categoryLabel || 'Cửa thép ngăn cháy';
 
   return (
-    <article className="min-h-screen bg-slate-50/50 pb-20">
+    <article className="min-h-screen bg-neutral-100/60 pb-20">
       {/* 1. Thanh Breadcrumb điều hướng */}
-      <div className="border-b border-slate-200/80 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-3.5 sm:px-6 lg:px-8">
+      <div className="border-b border-slate-200 bg-white">
+        <div className="mx-auto max-w-4xl px-4 py-3 sm:px-6">
           <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
             <button
               onClick={onBack}
               className="inline-flex items-center gap-1 font-semibold text-slate-700 transition-colors hover:text-red-600"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
-              <span>Dự án thi công</span>
+              <span>Dự án đã thi công</span>
             </button>
             <span>/</span>
             <span className="font-medium text-slate-600">{categoryName}</span>
             <span>/</span>
-            <span className="max-w-[240px] truncate font-bold text-slate-900 sm:max-w-md">
-              {project.title}
+            <span className="max-w-[280px] truncate font-bold text-slate-900 sm:max-w-md">
+              {caseStudy.title}
             </span>
           </nav>
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 sm:pt-10 lg:px-8">
-        {/* 2. Tiêu Đề Bài Báo Cáo Công Trình & Huy Hiệu Chứng Nhận */}
-        <header className="mb-8 border-b border-slate-200/80 pb-8 sm:mb-10 sm:pb-10">
-          <div className="flex flex-wrap items-center gap-2.5">
-            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-600/20">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-              <span>Đã nghiệm thu PCCC hoàn thành</span>
-            </span>
-            <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-xs">
-              {categoryName}
-            </span>
-            {(project.completedYear || project.year) && (
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                Bàn giao năm {project.completedYear || project.year}
+      {/* 2. BỐ CỤC TRẢI DÀI LIỀN MẠCH TRONG 1 TRANG (Continuous Single-Page Article Layout) */}
+      <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6 sm:py-10">
+        <div className="rounded-3xl border border-slate-200/90 bg-white p-6 shadow-xs sm:p-10 lg:p-12">
+          {/* Header bài viết công trình */}
+          <header className="border-b border-slate-100 pb-8">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 ring-1 ring-emerald-600/20">
+                <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                <span>Đã nghiệm thu PCCC hoàn thành</span>
               </span>
-            )}
-          </div>
+              <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
+                {categoryName}
+              </span>
+              <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                Năm hoàn thành: {caseStudy.completedYear}
+              </span>
+            </div>
 
-          <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl lg:text-4xl lg:leading-tight">
-            Cung cấp & thi công hệ thống {categoryName.toLowerCase()} cho dự án {project.title}
-          </h1>
+            <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-950 sm:text-3xl lg:text-4xl lg:leading-tight">
+              Cung cấp và thi công cửa ngăn cháy dự án {caseStudy.title}
+            </h1>
 
-          <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base lg:max-w-4xl">
-            {caseStudy.subtitle}
-          </p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base">
+              Hồ sơ ghi nhận quá trình sản xuất, lắp đặt và nghiệm thu hoàn thành gói thầu {categoryName.toLowerCase()} do APEX Việt Nam trực tiếp triển khai tại công trình.
+            </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs font-medium text-slate-600 sm:text-sm">
-            {project.location && (
+            <div className="mt-5 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-600 sm:text-sm">
               <div className="flex items-center gap-1.5">
                 <MapPin className="h-4 w-4 text-red-600 shrink-0" />
-                <span>Địa điểm: <strong>{project.location}</strong></span>
+                <span>Địa điểm: <strong className="text-slate-900">{caseStudy.location}</strong></span>
               </div>
-            )}
-            {project.clientName && (
               <div className="flex items-center gap-1.5">
                 <Building2 className="h-4 w-4 text-slate-400 shrink-0" />
-                <span>Chủ đầu tư: <strong>{project.clientName}</strong></span>
+                <span>Chủ đầu tư: <strong className="text-slate-900">{caseStudy.clientName}</strong></span>
               </div>
-            )}
-            {project.generalContractor && (
               <div className="flex items-center gap-1.5">
-                <HardHat className="h-4 w-4 text-slate-400 shrink-0" />
-                <span>Tổng thầu: <strong>{project.generalContractor}</strong></span>
+                <Award className="h-4 w-4 text-amber-600 shrink-0" />
+                <span>Nhà thầu thi công: <strong className="text-slate-900">APEX Việt Nam</strong></span>
               </div>
-            )}
-            <div className="flex items-center gap-1.5">
-              <Award className="h-4 w-4 text-amber-600 shrink-0" />
-              <span>Đơn vị thực hiện: <strong>APEX Việt Nam</strong></span>
             </div>
-          </div>
-        </header>
+          </header>
 
-        {/* 3. Khung Bố Cục 2 Cột: Nội dung bài viết công trình (Trái) & Factsheet + Box hỗ trợ (Phải) */}
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-12">
-          {/* CỘT TRÁI (8 CỘT): Toàn bộ nội dung triển khai, hạng mục cung cấp & phóng sự ảnh hiện trường */}
-          <div className="space-y-10 lg:col-span-8">
+          {/* 3. BẢNG HỒ SƠ THÔNG TIN DỰ ÁN (100% Thuần Việt, dạng bảng kẻ ngang sạch sẽ, không đóng khung hộp) */}
+          <section className="mt-8 border-b border-slate-100 pb-8">
+            <h2 className="flex items-center gap-2 text-base font-black uppercase tracking-wider text-slate-900 sm:text-lg">
+              <FileCheck className="h-5 w-5 text-red-600" />
+              <span>Thông tin tổng quan dự án</span>
+            </h2>
+
+            <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200/90 bg-slate-50/50">
+              <table className="w-full text-left text-xs sm:text-sm">
+                <tbody className="divide-y divide-slate-200/80">
+                  <tr>
+                    <td className="w-1/3 bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:w-1/4 sm:px-6">
+                      Tên dự án / Công trình
+                    </td>
+                    <td className="px-4 py-3 font-bold text-slate-950 sm:px-6">
+                      {caseStudy.title}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:px-6">
+                      Chủ đầu tư
+                    </td>
+                    <td className="px-4 py-3 font-medium text-slate-900 sm:px-6">
+                      {caseStudy.clientName}
+                    </td>
+                  </tr>
+
+                  {caseStudy.generalContractor && (
+                    <tr>
+                      <td className="bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:px-6">
+                        Tổng thầu thi công
+                      </td>
+                      <td className="px-4 py-3 font-medium text-slate-900 sm:px-6">
+                        {caseStudy.generalContractor}
+                      </td>
+                    </tr>
+                  )}
+
+                  <tr>
+                    <td className="bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:px-6">
+                      Địa chỉ công trình
+                    </td>
+                    <td className="px-4 py-3 font-medium text-slate-900 sm:px-6">
+                      {caseStudy.location}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:px-6">
+                      Gói thầu thực hiện
+                    </td>
+                    <td className="px-4 py-3 font-medium text-slate-900 sm:px-6">
+                      {caseStudy.tenderPackage}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:px-6">
+                      Hạng mục APEX cung cấp
+                    </td>
+                    <td className="px-4 py-3 font-bold text-red-600 sm:px-6">
+                      {categoryName} và phụ kiện PCCC đồng bộ
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:px-6">
+                      Thời gian hoàn thành
+                    </td>
+                    <td className="px-4 py-3 font-medium text-slate-900 sm:px-6">
+                      {caseStudy.acceptanceDate}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:px-6">
+                      Tiêu chuẩn nghiệm thu PCCC
+                    </td>
+                    <td className="px-4 py-3 font-medium text-emerald-700 sm:px-6">
+                      QCVN 06:2022/BXD, QCVN 03:2023/BCA, TCVN 9383:2012
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="bg-slate-100/70 px-4 py-3 font-semibold text-slate-600 sm:px-6">
+                      Tình trạng công trình
+                    </td>
+                    <td className="px-4 py-3 font-bold text-emerald-700 sm:px-6">
+                      Đã nghiệm thu hoàn thành, bàn giao đưa vào khai thác sử dụng
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          {/* 4. NỘI DUNG TRIỂN KHAI THỰC TẾ: Bối cảnh & Yêu cầu công trình */}
+          <section className="mt-8 border-b border-slate-100 pb-8">
+            <h2 className="text-lg font-black text-slate-950 sm:text-xl">
+              1. Bối cảnh công trình và yêu cầu an toàn PCCC
+            </h2>
+
+            <div className="mt-4 space-y-3.5 text-xs leading-relaxed text-slate-700 sm:text-sm">
+              <p className="font-medium text-slate-900">
+                {caseStudy.contextIntro}
+              </p>
+              <p>
+                {caseStudy.contextChallenge}
+              </p>
+            </div>
+
             {/* Ảnh đại diện nổi bật của công trình */}
             {photoList[0] && (
-              <figure className="space-y-2">
+              <figure className="mt-6 space-y-2">
                 <div
                   onClick={() => setLightboxIndex(0)}
-                  className="group relative aspect-[16/10] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 shadow-md transition-all hover:shadow-lg"
+                  className="group relative aspect-[16/10] w-full cursor-zoom-in overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 shadow-sm"
                 >
                   <img
                     src={photoList[0].url}
@@ -234,311 +316,181 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
                     loading="eager"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-80" />
-                  <div className="absolute top-3 left-3 rounded-lg bg-red-600/90 px-3 py-1 text-xs font-bold text-white shadow-xs backdrop-blur-xs">
-                    Ảnh thực tế tại công trình
-                  </div>
                   <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-lg bg-black/70 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-xs">
                     <ZoomIn className="h-3.5 w-3.5" />
                     <span>Xem ảnh lớn</span>
                   </div>
                 </div>
-                <figcaption className="text-center text-xs italic text-slate-500 sm:text-left">
-                  {photoList[0].title} — {photoList[0].caption}
+                <figcaption className="text-center text-xs text-slate-500 italic">
+                  Hình 1: {photoList[0].title} — {photoList[0].caption}
                 </figcaption>
               </figure>
             )}
+          </section>
 
-            {/* Mục 1: Bối cảnh công trình & Yêu cầu kỹ thuật */}
-            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
-              <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-100 text-xs font-black text-red-600">
-                  01
-                </span>
-                <h2 className="text-lg font-black text-slate-950 sm:text-xl">
-                  Bối cảnh công trình & Yêu cầu kỹ thuật
-                </h2>
-              </div>
+          {/* 5. HẠNG MỤC CHI TIẾT APEX CUNG CẤP & LẮP ĐẶT */}
+          <section className="mt-8 border-b border-slate-100 pb-8">
+            <h2 className="text-lg font-black text-slate-950 sm:text-xl">
+              2. Các hạng mục APEX cung cấp và thi công tại dự án
+            </h2>
 
-              <div className="mt-4 space-y-3.5 text-xs leading-relaxed text-slate-700 sm:text-sm">
-                <p className="font-medium text-slate-900">
-                  {caseStudy.contextLead}
-                </p>
-                <p className="text-slate-600">
-                  {caseStudy.contextBody}
-                </p>
-              </div>
+            <p className="mt-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
+              Căn cứ theo hồ sơ thiết kế bản vẽ thi công và nghiệm thu thực tế, APEX Việt Nam đã sản xuất, vận chuyển và hoàn thiện các hạng mục sau:
+            </p>
 
-              {/* Tiêu chuẩn PCCC áp dụng */}
-              <div className="mt-6 rounded-xl border border-slate-100 bg-slate-50/70 p-4 sm:p-5">
-                <h3 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 sm:text-sm">
-                  <FileText className="h-4 w-4 text-red-600" />
-                  <span>Quy chuẩn & Tiêu chuẩn PCCC áp dụng:</span>
-                </h3>
-                <ul className="mt-3 space-y-2 text-xs text-slate-700 sm:text-sm">
-                  {caseStudy.standards.map((std, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
-                      <span>{std}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            {/* Mục 2: Hạng mục APEX cung cấp cho dự án */}
-            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
-              <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-100 text-xs font-black text-red-600">
-                  02
-                </span>
-                <h2 className="text-lg font-black text-slate-950 sm:text-xl">
-                  Hạng mục APEX cung cấp & thi công tại dự án
-                </h2>
-              </div>
-
-              <p className="mt-4 text-xs leading-relaxed text-slate-600 sm:text-sm">
-                {caseStudy.scopeIntro}
-              </p>
-
-              {/* Bảng danh sách thiết bị & vị trí lắp đặt */}
-              <div className="mt-5 space-y-3">
-                {caseStudy.suppliedItems.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex flex-col gap-2 rounded-xl border border-slate-200/80 bg-slate-50/50 p-4 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:flex-row sm:items-start sm:justify-between"
-                  >
-                    <div className="space-y-1 sm:max-w-[70%]">
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white">
-                          {idx + 1}
-                        </span>
-                        <h4 className="font-bold text-slate-900 text-sm">
-                          {item.name}
-                        </h4>
-                      </div>
-                      <p className="text-xs text-slate-600 pl-7">
-                        {item.spec}
-                      </p>
+            {/* Danh sách các hạng mục */}
+            <div className="mt-5 space-y-4">
+              {caseStudy.suppliedItems.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-4 sm:p-5"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-600 text-xs font-bold text-white">
+                        {idx + 1}
+                      </span>
+                      <h3 className="font-bold text-slate-950 text-sm sm:text-base">
+                        {item.name}
+                      </h3>
                     </div>
-
                     {item.locationScope && (
-                      <div className="pl-7 sm:pl-0 sm:text-right">
-                        <span className="inline-block rounded-md bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 shadow-2xs border border-slate-200">
-                          {item.locationScope}
-                        </span>
-                      </div>
+                      <span className="hidden rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 sm:inline-block">
+                        {item.locationScope}
+                      </span>
                     )}
                   </div>
-                ))}
-              </div>
 
-              {/* Điểm nổi bật về giải pháp kỹ thuật */}
-              <div className="mt-6 rounded-xl border border-blue-100 bg-blue-50/50 p-4 sm:p-5">
-                <h3 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-900 sm:text-sm">
-                  <Sparkles className="h-4 w-4 text-blue-600" />
-                  <span>Giải pháp kỹ thuật & Ưu thế triển khai:</span>
-                </h3>
-                <ul className="mt-3 space-y-2 text-xs text-slate-700 sm:text-sm">
-                  {caseStudy.technicalHighlights.map((hl, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600" />
-                      <span>{hl}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
+                  <p className="mt-2 text-xs leading-relaxed text-slate-600 pl-8.5 sm:text-sm">
+                    {item.spec}
+                  </p>
 
-            {/* Mục 3: Phóng sự hình ảnh thực tế tại công trình */}
-            <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs sm:p-8">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-100 text-xs font-black text-red-600">
-                    03
-                  </span>
-                  <h2 className="text-lg font-black text-slate-950 sm:text-xl">
-                    Một số hình ảnh thực tế thi công tại dự án
-                  </h2>
-                </div>
-                <span className="hidden text-xs text-slate-400 sm:inline">Bấm vào ảnh để phóng to</span>
-              </div>
-
-              <p className="mt-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
-                Hình ảnh thực tế tại công trình ghi nhận quá trình gia công, vận chuyển, lắp đặt các hệ thống{' '}
-                <strong className="text-slate-900">{categoryName.toLowerCase()}</strong> và kiểm tra phụ kiện đồng bộ trước khi tiến hành nghiệm thu bàn giao.
-              </p>
-
-              {/* Lưới ảnh hiện trường có Caption chi tiết */}
-              <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
-                {photoList.map((photo, idx) => (
-                  <figure
-                    key={idx}
-                    className="group cursor-zoom-in space-y-2 rounded-xl border border-slate-200/90 bg-slate-50/60 p-3 transition-all hover:border-red-600/50 hover:bg-white hover:shadow-md"
-                    onClick={() => setLightboxIndex(idx)}
-                  >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-900">
-                      <img
-                        src={photo.url}
-                        alt={photo.title}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-slate-950/20 opacity-0 transition-opacity group-hover:opacity-100" />
-                      {photo.tag && (
-                        <span className="absolute top-2.5 left-2.5 rounded-md bg-black/60 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-xs">
-                          {photo.tag}
-                        </span>
-                      )}
-                      <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-[11px] font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100 backdrop-blur-xs">
-                        <ZoomIn className="h-3 w-3" />
-                        <span>Phóng to</span>
-                      </div>
+                  {item.locationScope && (
+                    <div className="mt-2 text-xs font-medium text-slate-600 pl-8.5 sm:hidden">
+                      <span className="text-slate-400">Vị trí: </span>
+                      <span className="text-slate-800">{item.locationScope}</span>
                     </div>
-                    <figcaption className="space-y-1 px-1">
-                      <h4 className="text-xs font-bold text-slate-900 line-clamp-1 group-hover:text-red-600">
-                        {photo.title}
-                      </h4>
-                      <p className="text-[11px] leading-relaxed text-slate-500 line-clamp-2">
-                        {photo.caption}
-                      </p>
-                    </figcaption>
-                  </figure>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Yêu cầu thi công lắp đặt thực tế */}
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/40 p-5">
+              <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-900 sm:text-sm">
+                <Sparkles className="h-4 w-4 text-red-600" />
+                <span>Yêu cầu kỹ thuật thi công thực tế tại công trình:</span>
+              </h3>
+              <ul className="mt-3 space-y-2 text-xs text-slate-700 sm:text-sm">
+                {caseStudy.installationNotes.map((note, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-red-600" />
+                    <span>{note}</span>
+                  </li>
                 ))}
-              </div>
-            </section>
+              </ul>
+            </div>
+          </section>
 
-            {/* Mục 4: Đánh giá nghiệm thu & Kết luận */}
-            <section className="rounded-2xl border border-emerald-200/80 bg-linear-to-b from-emerald-50/50 to-white p-6 shadow-xs sm:p-8">
-              <div className="flex items-center gap-2">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-600 text-xs font-black text-white">
-                  04
-                </span>
-                <h2 className="text-lg font-black text-slate-950 sm:text-xl">
-                  Kết quả nghiệm thu & Bàn giao đưa vào sử dụng
-                </h2>
-              </div>
+          {/* 6. PHÓNG SỰ HÌNH ẢNH THỰC TẾ THI CÔNG TẠI CÔNG TRÌNH */}
+          <section className="mt-8 border-b border-slate-100 pb-8">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-black text-slate-950 sm:text-xl">
+                3. Hình ảnh thực tế thi công và nghiệm thu tại công trình
+              </h2>
+              <span className="text-xs text-slate-400">Bấm ảnh để phóng to</span>
+            </div>
 
-              <div className="mt-4 space-y-3.5 text-xs leading-relaxed text-slate-700 sm:text-sm">
-                <p>{caseStudy.handoverSummary}</p>
-              </div>
+            <p className="mt-3 text-xs leading-relaxed text-slate-600 sm:text-sm">
+              Toàn bộ hình ảnh dưới đây được chụp thực tế trong quá trình cán bộ kỹ thuật APEX tiến hành lắp đặt, căn chỉnh phụ kiện và nghiệm thu tại {caseStudy.title}:
+            </p>
 
-              {/* Box chứng thực nghiệm thu */}
-              <div className="mt-5 grid grid-cols-1 gap-3.5 rounded-xl border border-emerald-200 bg-white p-4.5 sm:grid-cols-2">
-                <div className="space-y-1">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Tình trạng nghiệm thu
-                  </span>
-                  <div className="flex items-center gap-1.5 font-bold text-emerald-700">
-                    <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
-                    <span>{caseStudy.inspectionResults.statusText}</span>
+            {/* Lưới ảnh trải dài 2 cột sắc nét, có Caption rõ ràng */}
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {photoList.slice(1).map((photo, idx) => (
+                <figure
+                  key={idx}
+                  onClick={() => setLightboxIndex(idx + 1)}
+                  className="group cursor-zoom-in space-y-2 rounded-2xl border border-slate-200/90 bg-slate-50/50 p-3 transition-all hover:border-red-600/50 hover:bg-white hover:shadow-md"
+                >
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-slate-900">
+                    <img
+                      src={photo.url}
+                      alt={photo.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-slate-950/20 opacity-0 transition-opacity group-hover:opacity-100" />
+                    {photo.tag && (
+                      <span className="absolute top-2.5 left-2.5 rounded-md bg-black/60 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-xs">
+                        {photo.tag}
+                      </span>
+                    )}
+                    <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-[11px] font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100 backdrop-blur-xs">
+                      <ZoomIn className="h-3 w-3" />
+                      <span>Phóng to</span>
+                    </div>
                   </div>
-                </div>
+                  <figcaption className="space-y-0.5 px-1">
+                    <h3 className="text-xs font-bold text-slate-900 group-hover:text-red-600">
+                      {photo.title}
+                    </h3>
+                    <p className="text-[11px] leading-relaxed text-slate-500">
+                      {photo.caption}
+                    </p>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </section>
 
-                <div className="space-y-1">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Căn cứ nghiệm thu
-                  </span>
-                  <div className="font-semibold text-slate-800">
-                    {caseStudy.inspectionResults.standardReference}
-                  </div>
-                </div>
+          {/* 7. KẾT QUẢ NGHIỆM THU & BÀN GIAO ĐƯA VÀO SỬ DỤNG */}
+          <section className="mt-8 border-b border-slate-100 pb-8">
+            <h2 className="text-lg font-black text-slate-950 sm:text-xl">
+              4. Kết quả nghiệm thu và bàn giao đưa vào sử dụng
+            </h2>
 
-                <div className="space-y-1 sm:col-span-2 border-t border-slate-100 pt-3">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                    Cam kết bảo hành công trình
-                  </span>
-                  <div className="text-xs text-slate-700 font-medium">
-                    {caseStudy.warrantyText}
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-
-          {/* CỘT PHẢI (4 CỘT): Khung Factsheet dự án, Form/CTA nhận báo giá dự án, Hotline, Zalo */}
-          <aside className="space-y-6 lg:col-span-4">
-            {/* 1. KHUNG HỒ SƠ TỔNG QUAN DỰ ÁN (Project Factsheet) */}
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6 lg:sticky lg:top-24">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <div className="flex items-center gap-2">
-                  <FileCheck className="h-5 w-5 text-red-600" />
-                  <h3 className="text-sm font-black uppercase tracking-wider text-slate-900">
-                    Hồ sơ dự án thi công
-                  </h3>
-                </div>
-                <span className="rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
-                  Hoàn thành
-                </span>
-              </div>
-
-              {/* Danh sách thông số chi tiết */}
-              <dl className="mt-4 divide-y divide-slate-100 text-xs">
-                <div className="py-2.5">
-                  <dt className="text-slate-400 font-medium">Dự án / Project:</dt>
-                  <dd className="mt-0.5 font-bold text-slate-900 text-sm">{project.title}</dd>
-                </div>
-
-                {project.clientName && (
-                  <div className="py-2.5">
-                    <dt className="text-slate-400 font-medium">Chủ đầu tư / Investor:</dt>
-                    <dd className="mt-0.5 font-semibold text-slate-800">{project.clientName}</dd>
-                  </div>
-                )}
-
-                {project.generalContractor && (
-                  <div className="py-2.5">
-                    <dt className="text-slate-400 font-medium">Tổng thầu / General Contractor:</dt>
-                    <dd className="mt-0.5 font-semibold text-slate-800">{project.generalContractor}</dd>
-                  </div>
-                )}
-
-                <div className="py-2.5">
-                  <dt className="text-slate-400 font-medium">Gói thầu / Tender Package:</dt>
-                  <dd className="mt-0.5 font-semibold text-slate-800">{caseStudy.tenderPackage}</dd>
-                </div>
-
-                {project.location && (
-                  <div className="py-2.5">
-                    <dt className="text-slate-400 font-medium">Địa chỉ / Address:</dt>
-                    <dd className="mt-0.5 font-semibold text-slate-800">{project.location}</dd>
-                  </div>
-                )}
-
-                <div className="py-2.5">
-                  <dt className="text-slate-400 font-medium">Hạng mục APEX cung cấp:</dt>
-                  <dd className="mt-0.5 font-bold text-red-600">{categoryName}</dd>
-                </div>
-
-                <div className="py-2.5">
-                  <dt className="text-slate-400 font-medium">Năm hoàn thành & Nghiệm thu:</dt>
-                  <dd className="mt-0.5 font-semibold text-slate-900">
-                    Năm {project.completedYear || project.year || 2026}
-                  </dd>
-                </div>
-
-                <div className="py-2.5">
-                  <dt className="text-slate-400 font-medium">Tiêu chuẩn nghiệm thu PCCC:</dt>
-                  <dd className="mt-0.5 font-semibold text-emerald-700">QCVN 06:2022/BXD & TCVN 9383:2012</dd>
-                </div>
-              </dl>
-
-              {/* 2. KHỐI KÊU GỌI HÀNH ĐỘNG DÀNH CHO DỰ ÁN TƯƠNG TỰ */}
-              <div className="mt-6 border-t border-slate-100 pt-5 space-y-3">
-                <div className="rounded-xl bg-slate-50 p-3.5 text-center">
-                  <p className="text-xs font-semibold text-slate-700">
-                    Bạn đang lập dự toán hoặc chào thầu cho công trình tương tự?
+            <div className="mt-4 rounded-2xl border border-emerald-200/80 bg-emerald-50/40 p-5 sm:p-6">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-emerald-600" />
+                <div className="space-y-2 text-xs text-slate-700 sm:text-sm">
+                  <p className="font-semibold text-emerald-950">
+                    {caseStudy.acceptanceResult}
                   </p>
-                  <p className="mt-1 text-[11px] text-slate-500">
-                    Gửi bản vẽ hoặc bóc tách khối lượng để kỹ sư APEX tư vấn phương án kỹ thuật và báo giá nhanh trong 1–2 ngày.
-                  </p>
+                  <div className="flex flex-wrap gap-y-1 gap-x-6 text-xs text-slate-600 pt-2 border-t border-emerald-200/60">
+                    <div>
+                      <span>Thời điểm nghiệm thu: </span>
+                      <strong className="text-slate-900">{caseStudy.acceptanceDate}</strong>
+                    </div>
+                    <div>
+                      <span>Chính sách bảo hành: </span>
+                      <strong className="text-slate-900">{caseStudy.warrantyPeriod}</strong>
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </div>
+          </section>
 
+          {/* 8. KHUNG LIÊN HỆ TƯ VẤN & BÁO GIÁ DỰ ÁN TƯƠNG TỰ */}
+          <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50/80 p-6 sm:p-8">
+            <div className="text-center sm:text-left sm:flex sm:items-center sm:justify-between sm:gap-6">
+              <div className="space-y-1.5 sm:max-w-xl">
+                <h3 className="text-base font-black text-slate-950 sm:text-lg">
+                  Bạn đang chuẩn bị dự toán hoặc hồ sơ chào thầu cho công trình tương tự?
+                </h3>
+                <p className="text-xs text-slate-600 sm:text-sm leading-relaxed">
+                  Quý Chủ đầu tư, Tổng thầu hoặc Tư vấn thiết kế có thể gửi bản vẽ thiết kế hoặc bảng bóc tách khối lượng để kỹ sư APEX tư vấn phương án kỹ thuật và báo giá nhanh trong 1–2 ngày.
+                </p>
+              </div>
+
+              <div className="mt-5 sm:mt-0 flex flex-col gap-2.5 sm:w-64 shrink-0">
                 <button
                   onClick={onOpenQuote}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-colors hover:bg-red-700"
                 >
                   <MessageSquareText className="h-4 w-4" />
-                  <span>Nhận báo giá dự án tương tự</span>
+                  <span>Nhận báo giá dự án</span>
                 </button>
 
                 <div className="grid grid-cols-2 gap-2">
@@ -557,29 +509,18 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
                     className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-blue-200 bg-blue-50 py-2.5 text-xs font-bold text-blue-800 transition-colors hover:bg-blue-100"
                   >
                     <MessageCircle className="h-3.5 w-3.5 text-blue-600" />
-                    <span>Chat Zalo kỹ sư</span>
+                    <span>Chat Zalo</span>
                   </a>
                 </div>
               </div>
-
-              {/* 3. CAM KẾT NĂNG LỰC NHÀ THẦU */}
-              <div className="mt-5 rounded-xl border border-amber-200/80 bg-amber-50/70 p-3.5 text-[11px] text-amber-950">
-                <div className="flex items-center gap-1.5 font-bold">
-                  <ShieldCheck className="h-3.5 w-3.5 text-amber-700 shrink-0" />
-                  <span>Hồ sơ năng lực tham chiếu dự thầu</span>
-                </div>
-                <p className="mt-1 text-amber-900 leading-relaxed">
-                  Cung cấp trọn bộ hồ sơ kiểm định đốt mẫu PCCC, chứng chỉ xuất xưởng CO/CQ và năng lực nhà máy cho các đơn vị tư vấn và tổng thầu.
-                </p>
-              </div>
             </div>
-          </aside>
+          </section>
         </div>
 
-        {/* 4. Khối Các Dự Án Thực Tế Khác Đã Hoàn Thành */}
+        {/* 9. CÁC DỰ ÁN THI CÔNG KHÁC CỦA APEX */}
         {relatedProjects.length > 0 && (
-          <section className="mt-16 border-t border-slate-200/80 pt-12 sm:mt-20 sm:pt-14">
-            <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <section className="mt-12 sm:mt-16">
+            <div className="mb-6 flex items-center justify-between">
               <div>
                 <span className="text-xs font-bold uppercase tracking-wider text-red-600">
                   Hồ sơ công trình thực tế
@@ -619,7 +560,7 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
         )}
       </div>
 
-      {/* 5. LIGHTBOX XEM ẢNH HIỆN TRƯỜNG FULLSCREEN */}
+      {/* 10. LIGHTBOX XEM ẢNH FULLSCREEN */}
       {lightboxIndex !== null && photoList[lightboxIndex] && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-xs animate-in fade-in"
@@ -662,7 +603,7 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
             </button>
           )}
 
-          {/* Khung ảnh chính & Caption */}
+          {/* Khung ảnh & Chú thích */}
           <div
             className="relative flex max-h-[90vh] max-w-5xl flex-col items-center overflow-hidden rounded-2xl bg-slate-950 p-2 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
@@ -679,8 +620,8 @@ export const ProjectDetailLayout: React.FC<ProjectDetailLayoutProps> = ({
               <p className="mt-1 text-xs text-slate-300">
                 {photoList[lightboxIndex].caption}
               </p>
-              <span className="mt-2 inline-block rounded bg-white/10 px-2 py-0.5 text-[11px] text-slate-400">
-                Ảnh {lightboxIndex + 1} / {photoList.length} — {project.title}
+              <span className="mt-2 inline-block rounded bg-white/10 px-2.5 py-0.5 text-[11px] text-slate-400">
+                Ảnh {lightboxIndex + 1} / {photoList.length} — {caseStudy.title}
               </span>
             </div>
           </div>

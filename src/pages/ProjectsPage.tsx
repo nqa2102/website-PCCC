@@ -14,7 +14,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import { useLiveData } from '../admin/adminData';
+import { useLiveData, INITIAL_PROJECTS } from '../admin/adminData';
 import type { Project } from '../types';
 import { ProjectCard } from '../components/projects/ProjectCard';
 import { ProjectDetailLayout } from '../components/projects/ProjectDetailLayout';
@@ -33,7 +33,12 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({
   initialProjectId,
   onNavigate,
 }) => {
-  const { projects } = useLiveData();
+  const { projects: liveProjects } = useLiveData();
+
+  const projects = useMemo(() => {
+    if (liveProjects && liveProjects.length > 0) return liveProjects;
+    return INITIAL_PROJECTS as unknown as Project[];
+  }, [liveProjects]);
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 

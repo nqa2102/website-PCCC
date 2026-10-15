@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 15/10/2026 (Hoàn thành Bổ sung dòng sản phẩm "Cửa Thép Vân Gỗ Chống Cháy" - slug: cua-thep-van-go: Xử lý 4 ảnh thật WebP sạch EXIF 4:5, Landing page 6 khối đạt chuẩn, bảng dự toán bóc tách 6.502.000 đ, QuoteModal tự động chọn trước, 10 danh mục trong hệ sinh thái sản phẩm, sitemap & schema markup, test_integrity 182/182 PASS 100%, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 15/10/2026 (Hoàn thành Chuẩn hóa 5 Dự án Thi công thực tế theo thư mục ảnh `D:\ELMICH\Apex-pccc\ảnh\ảnh website pccc`: 50 ảnh WebP công trường thật sạch EXIF, bố cục trải dài liền mạch 1 trang thuần Việt 100% không song ngữ "/address", phóng sự ảnh kèm chú thích hiện trường & Lightbox fullscreen, tích hợp Neon SQL seed & mock API, test_integrity 184/184 PASS 100%, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
