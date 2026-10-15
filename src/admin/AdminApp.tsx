@@ -192,6 +192,7 @@ const EmptyState = ({ label }: { label: string }) => (
 const createEmptyState = (): AdminState => ({
   leads: [],
   products: [],
+  projects: [],
   documents: [],
   contents: [],
   company: createDefaultAdminCompany(),
@@ -389,33 +390,59 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     setToast('Đã lưu thay đổi vào Neon Database.');
   };
 
-  // Nhập danh mục ban đầu (sản phẩm, hồ sơ, bài viết) ở trạng thái nháp, bỏ qua mục đã có
+  // Nhập danh mục ban đầu (sản phẩm, dự án, hồ sơ, bài viết) ở trạng thái nháp, bỏ qua mục đã có
   const handleImportCatalog = async () => {
     const catalog = createInitialCatalog();
     const products = catalog.products.filter((item) => !state.products.some((p) => p.id === item.id || p.slug === item.slug));
     const documents = catalog.documents.filter((item) => !state.documents.some((d) => d.id === item.id));
     const contents = catalog.contents.filter((item) => !state.contents.some((c) => c.id === item.id));
-    const total = products.length + documents.length + contents.length;
+    const projects = (catalog.projects || []).filter((item) => !state.projects.some((p) => p.id === item.id || p.slug === item.slug));
+    const total = products.length + documents.length + contents.length + projects.length;
     if (!total) {
-      setToast('Danh mục ban đầu đã có đầy đủ trong Neon Database.');
+      setToast('Danh mục ban đầu đã có đầy đủ trong cơ sở dữ liệu.');
       return;
     }
-    if (!window.confirm(`Nhập ${total} mục (${products.length} sản phẩm, ${documents.length} hồ sơ, ${contents.length} bài viết) vào Neon ở trạng thái NHÁP?\nCác mục chỉ hiển thị trên website sau khi được rà soát và chuyển sang "Đã công bố".`)) return;
+    if (!window.confirm(`Nhập ${total} mục (${products.length} sản phẩm, ${projects.length} dự án, ${documents.length} hồ sơ, ${contents.length} bài viết) vào hệ thống ở trạng thái NHÁP?\nCác mục chỉ hiển thị trên website sau khi được rà soát và chuyển sang "Đã công bố".`)) return;
     try {
       await Promise.all([
         ...products.map((item) => saveRemoteProduct(item)),
+        ...projects.map((item) => saveRemoteProject(item)),
         ...documents.map((item) => saveRemoteDocument(item)),
         ...contents.map((item) => saveRemoteContent(item)),
       ]);
       setState(recordActivity({
         ...state,
         products: [...state.products, ...products],
+        projects: [...state.projects, ...projects],
         documents: [...documents, ...state.documents],
         contents: [...contents, ...state.contents],
       }, 'Nhập danh mục ban đầu (nháp)', `${total} mục`));
       setToast(`Đã nhập ${total} mục ở trạng thái nháp.`);
     } catch (err) {
       setRemoteError(`Nhập danh mục chưa hoàn tất: ${errorMessage(err, 'lỗi không xác định')}. Bấm "Làm mới" để xem dữ liệu đã lưu.`);
+    }
+  };
+
+  // Khởi tạo 3 dự án mẫu ban đầu ở trạng thái bản nháp (Phase 6)
+  const handleSeedProjects = async () => {
+    const catalog = createInitialCatalog();
+    const projectsToSeed = (catalog.projects || []).filter(
+      (item) => !state.projects.some((p) => p.id === item.id || p.slug === item.slug)
+    );
+    if (!projectsToSeed.length) {
+      setToast('Các dự án mẫu đã có sẵn trong danh sách quản trị.');
+      return;
+    }
+    if (!window.confirm(`Khởi tạo ${projectsToSeed.length} dự án mẫu ban đầu (ở trạng thái bản nháp, chưa công khai)?\nBạn có thể tải ảnh lên và chuyển sang "Đã công bố" sau khi kiểm tra.`)) return;
+    try {
+      await Promise.all(projectsToSeed.map((p) => saveRemoteProject(p)));
+      setState(recordActivity({
+        ...state,
+        projects: [...state.projects, ...projectsToSeed],
+      }, 'Khởi tạo dự án mẫu', `${projectsToSeed.length} dự án nháp`));
+      setToast(`Đã khởi tạo thành công ${projectsToSeed.length} dự án mẫu ở trạng thái nháp!`);
+    } catch (err) {
+      setToast(`Lỗi khi khởi tạo dự án: ${errorMessage(err, 'không xác định')}`);
     }
   };
 
@@ -809,12 +836,25 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
               statusFilter={statusFilter}
               onStatusFilter={setStatusFilter}
               statusOptions={Object.entries(PUBLISH_STATUS).map(([value, item]) => ({ value, label: item.label }))}
+              extraAction={
+                state.projects.length === 0 ? (
+                  <button
+                    onClick={handleSeedProjects}
+                    className="flex min-h-10 items-center justify-center gap-1.5 border border-slate-300 bg-white px-3.5 text-xs font-bold text-slate-800 transition-colors hover:border-red-600 hover:text-red-600"
+                    title="Nạp 3 dự án mẫu ban đầu ở trạng thái nháp"
+                  >
+                    <RefreshCw className="h-3.5 w-3.5 text-slate-500" />
+                    <span>Nạp 3 dự án mẫu (Nháp)</span>
+                  </button>
+                ) : undefined
+              }
               onAdd={() => setEditor({ type: 'project', data: newProject() })}
             >
               <ProjectsTable
                 projects={filteredProjects}
                 onEdit={(data) => setEditor({ type: 'project', data })}
                 onDelete={(proj) => requestDelete({ type: 'project', id: proj.id, name: proj.title })}
+                onSeedInitial={handleSeedProjects}
               />
             </DataSection>
           )}
@@ -1354,10 +1394,12 @@ const ProjectsTable = ({
   projects,
   onEdit,
   onDelete,
+  onSeedInitial,
 }: {
   projects: AdminProject[];
   onEdit: (project: AdminProject) => void;
   onDelete: (project: AdminProject) => void;
+  onSeedInitial?: () => void;
 }) => projects.length ? (
   <div className="overflow-x-auto">
     <table className="w-full min-w-[960px] text-left text-xs">
@@ -1442,7 +1484,30 @@ const ProjectsTable = ({
       </tbody>
     </table>
   </div>
-) : <EmptyState label="dự án" />;
+) : (
+  <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-neutral-100 text-slate-400">
+      <Building2 className="h-7 w-7" />
+    </div>
+    <h3 className="mt-4 text-base font-bold text-slate-900">
+      Chưa có dự án nào trong hệ thống
+    </h3>
+    <p className="mx-auto mt-1.5 max-w-md text-xs leading-relaxed text-slate-500">
+      Hệ thống đã chuẩn bị sẵn 3 hồ sơ dự án mẫu theo đúng biên bản nghiệm thu thực tế (ở trạng thái bản nháp). Bạn có thể bấm nút dưới đây để nạp nhanh vào danh mục quản trị.
+    </p>
+    <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+      {onSeedInitial && (
+        <button
+          onClick={onSeedInitial}
+          className="inline-flex min-h-10 items-center gap-2 bg-red-700 px-5 text-xs font-bold text-white transition-colors hover:bg-red-800"
+        >
+          <RefreshCw className="h-4 w-4" />
+          <span>Nạp nhanh 3 dự án mẫu (Trạng thái nháp)</span>
+        </button>
+      )}
+    </div>
+  </div>
+);
 
 /* --- DOCUMENTS TABLE --- */
 const DocumentsTable = ({

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { COMPANY_INFO } from '../data/companyData';
 import { PRODUCTS, TECHNICAL_DOCS, NEWS_ARTICLES, HERO_IMAGE } from '../data/mockData';
 import type { Product, TechnicalDoc, Project, NewsArticle } from '../types';
-import type { AdminCompany, AdminContent, AdminDocument, AdminProduct, WebsiteLeadInput } from './adminTypes';
+import type { AdminCompany, AdminContent, AdminDocument, AdminProduct, AdminProject, WebsiteLeadInput } from './adminTypes';
 import { trackLead } from '../lib/tracking';
 import { PRODUCT_CATEGORY_LABELS } from '../routing';
 
@@ -23,10 +23,72 @@ export const createDefaultAdminCompany = (): AdminCompany => ({
   defaultSeoDescription: 'Tư vấn, sản xuất và cung ứng cửa thép, cửa cuốn, cửa kính và rèm ngăn cháy cho công trình trên toàn quốc.',
 });
 
+// Danh sách 3 dự án mẫu ban đầu ở trạng thái nháp (Phase 6), chưa công khai
+export const INITIAL_PROJECTS: AdminProject[] = [
+  {
+    id: 'prj-vien-kiem-sat-quang-ninh',
+    title: 'Viện kiểm sát nhân dân tỉnh Quảng Ninh',
+    slug: 'vien-kiem-sat-tinh-quang-ninh',
+    category: 'cua-thep-ngan-chay',
+    clientName: 'Viện kiểm sát nhân dân tỉnh Quảng Ninh',
+    generalContractor: '',
+    apexRole: 'Cung cấp và lắp đặt cửa chống cháy',
+    location: 'Quảng Ninh',
+    completedYear: undefined,
+    description: 'Gói thầu cung cấp và lắp đặt hệ thống cửa ngăn cháy cho công trình Trụ sở Viện kiểm sát nhân dân tỉnh Quảng Ninh.',
+    coverImage: '',
+    gallery: [],
+    status: 'draft',
+    verified: false,
+    verifiedNote: '',
+    updatedAt: new Date().toISOString().slice(0, 16),
+  },
+  {
+    id: 'prj-toa-an-quang-ninh',
+    title: 'Tòa án nhân dân tỉnh Quảng Ninh',
+    slug: 'toa-an-tinh-quang-ninh',
+    category: 'cua-kinh-ngan-chay',
+    clientName: 'Tòa án nhân dân tỉnh Quảng Ninh',
+    generalContractor: '',
+    apexRole: 'Cung cấp và thi công cửa kính & vách kính chống cháy',
+    location: 'Quảng Ninh',
+    completedYear: undefined,
+    description: 'Cung cấp và thi công hệ thống cửa kính ngăn cháy và vách kính chống cháy cho trụ sở Tòa án nhân dân tỉnh Quảng Ninh.',
+    coverImage: '',
+    gallery: [],
+    status: 'draft',
+    verified: false,
+    verifiedNote: '',
+    updatedAt: new Date().toISOString().slice(0, 16),
+  },
+  {
+    id: 'prj-hoc-vien-hau-can',
+    title: 'Tòa nhà đa năng KV I – Học viện Hậu Cần',
+    slug: 'toa-nha-da-nang-kv-i-hoc-vien-hau-can',
+    category: 'cua-thep-ngan-chay',
+    clientName: 'Học viện Hậu Cần',
+    generalContractor: 'Tổng công ty 789/BQP',
+    apexRole: 'Nghiệm thu hoàn thành gói cửa chống cháy',
+    location: 'Long Biên, Hà Nội',
+    completedYear: 2026,
+    description: 'Cung cấp, lắp đặt và nghiệm thu hoàn thành toàn bộ hệ thống cửa thép chống cháy tiêu chuẩn EI tại Tòa nhà đa năng KV I - Học viện Hậu Cần.',
+    coverImage: '',
+    gallery: [],
+    status: 'draft',
+    verified: false,
+    verifiedNote: 'Biên bản nghiệm thu hoàn thành ngày 22/5/2026',
+    updatedAt: new Date().toISOString().slice(0, 16),
+  },
+];
+
 // Danh mục ban đầu để admin chủ động nhập vào Neon. Mọi bản ghi ở trạng thái NHÁP:
 // chỉ hiển thị trên website sau khi người có thẩm quyền rà soát và chuyển sang "published".
-// Không bao gồm dự án vì danh sách dự án mẫu chưa được xác minh.
-export const createInitialCatalog = (): { products: AdminProduct[]; documents: AdminDocument[]; contents: AdminContent[] } => {
+export const createInitialCatalog = (): {
+  products: AdminProduct[];
+  documents: AdminDocument[];
+  contents: AdminContent[];
+  projects: AdminProject[];
+} => {
   const now = new Date().toISOString().slice(0, 16);
   return {
     products: PRODUCTS.map((product, index) => ({
@@ -89,6 +151,7 @@ export const createInitialCatalog = (): { products: AdminProduct[]; documents: A
       content: art.content,
       image: art.image,
     })),
+    projects: INITIAL_PROJECTS,
   };
 };
 
