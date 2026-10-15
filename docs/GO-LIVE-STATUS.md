@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 15/10/2026 (Hoàn thành Khắc phục triệt để lỗi trắng trang & Tối ưu ổn định Production: Tích hợp ErrorBoundary bắt lỗi render, tự động reload khi gặp Vite preload/chunk mismatch sau khi deploy mới, bổ sung PROJECT_SLUG_ALIASES tự động điều hướng link cũ/mới của 5 dự án thực tế, test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 15/10/2026 (Hoàn thành Nâng cấp Trình nhập Giá Sản phẩm Admin: Bỏ toàn bộ nút chọn giá mẫu cố định, thay bằng ô điền số tiền tự do trực tiếp bằng VNĐ có định dạng hàng nghìn tự động, hỗ trợ chọn đơn vị tính linh hoạt (/m², /bộ, /chiếc, /mét dài), tùy chọn báo giá liên hệ và bản xem trước tức thì, tự động đồng bộ ra ngoài website; test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---

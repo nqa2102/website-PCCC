@@ -2174,6 +2174,132 @@ const SpecsEditor = ({
   );
 };
 
+/* --- PRODUCT PRICE INPUT (CHO PHÉP ĐIỀN SỐ TIỀN TRỰC TIẾP) --- */
+const ProductPriceInput: React.FC<{
+  value?: string;
+  onChange: (val: string) => void;
+  fieldClass: string;
+}> = ({ value = '', onChange, fieldClass }) => {
+  // Trích xuất số tiền và đơn vị từ chuỗi hiện có (vd: "Từ 1.950.000 đ/m²")
+  const parsePrice = (str: string) => {
+    if (!str || str.toLowerCase().includes('liên hệ')) {
+      return { rawNumber: '', unit: 'đ/m²', isContact: true };
+    }
+    const match = str.match(/([0-9]{1,3}(?:\.[0-9]{3})+|[0-9]+)/);
+    const rawNumber = match ? match[1].replace(/\./g, '') : '';
+
+    let unit = 'đ/m²';
+    if (str.includes('đ/bộ') || str.includes('/bộ')) unit = 'đ/bộ';
+    else if (str.includes('đ/mét') || str.includes('đ/m') || str.includes('/m')) unit = 'đ/mét';
+    else if (str.includes('đ/chiếc') || str.includes('/chiếc') || str.includes('/cái')) unit = 'đ/chiếc';
+
+    return { rawNumber, unit, isContact: false };
+  };
+
+  const [parsed, setParsed] = useState(() => parsePrice(value));
+
+  useEffect(() => {
+    setParsed(parsePrice(value));
+  }, [value]);
+
+  const handleNumberInput = (inputStr: string) => {
+    // Chỉ giữ lại chữ số
+    const cleanDigits = inputStr.replace(/[^0-9]/g, '');
+    if (!cleanDigits) {
+      setParsed((prev) => ({ ...prev, rawNumber: '', isContact: true }));
+      onChange('Liên hệ');
+      return;
+    }
+
+    const num = parseInt(cleanDigits, 10);
+    const formatted = num.toLocaleString('vi-VN').replace(/,/g, '.');
+    const newPrice = `Từ ${formatted} ${parsed.unit}`;
+    setParsed((prev) => ({ ...prev, rawNumber: cleanDigits, isContact: false }));
+    onChange(newPrice);
+  };
+
+  const handleUnitChange = (newUnit: string) => {
+    setParsed((prev) => ({ ...prev, unit: newUnit }));
+    if (parsed.rawNumber && !parsed.isContact) {
+      const num = parseInt(parsed.rawNumber, 10);
+      const formatted = num.toLocaleString('vi-VN').replace(/,/g, '.');
+      onChange(`Từ ${formatted} ${newUnit}`);
+    }
+  };
+
+  const handleToggleContact = (contact: boolean) => {
+    if (contact) {
+      setParsed((prev) => ({ ...prev, isContact: true }));
+      onChange('Liên hệ');
+    } else {
+      if (parsed.rawNumber) {
+        const num = parseInt(parsed.rawNumber, 10);
+        const formatted = num.toLocaleString('vi-VN').replace(/,/g, '.');
+        setParsed((prev) => ({ ...prev, isContact: false }));
+        onChange(`Từ ${formatted} ${parsed.unit}`);
+      } else {
+        setParsed((prev) => ({ ...prev, isContact: false }));
+      }
+    }
+  };
+
+  const displayFormatted = parsed.rawNumber
+    ? parseInt(parsed.rawNumber, 10).toLocaleString('vi-VN').replace(/,/g, '.')
+    : '';
+
+  return (
+    <div className="space-y-2">
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <input
+            type="text"
+            className={`${fieldClass} pr-14 font-semibold text-slate-900 ${parsed.isContact ? 'bg-slate-50 text-slate-400' : ''}`}
+            value={parsed.isContact ? '' : displayFormatted}
+            onChange={(e) => handleNumberInput(e.target.value)}
+            disabled={parsed.isContact}
+            placeholder={parsed.isContact ? 'Đang để mức giá: Liên hệ' : 'Điền số tiền (ví dụ: 1950000)'}
+          />
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">
+            VNĐ
+          </span>
+        </div>
+
+        <select
+          value={parsed.unit}
+          disabled={parsed.isContact}
+          onChange={(e) => handleUnitChange(e.target.value)}
+          className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-semibold text-slate-700 shadow-xs focus:border-red-600 focus:outline-hidden disabled:bg-slate-100 disabled:text-slate-400"
+          title="Chọn đơn vị tính cho đơn giá"
+        >
+          <option value="đ/m²">/ m² (mét vuông)</option>
+          <option value="đ/bộ">/ bộ</option>
+          <option value="đ/chiếc">/ chiếc</option>
+          <option value="đ/mét">/ mét dài</option>
+        </select>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+        <label className="flex items-center gap-1.5 cursor-pointer text-slate-700 select-none">
+          <input
+            type="checkbox"
+            checked={parsed.isContact}
+            onChange={(e) => handleToggleContact(e.target.checked)}
+            className="rounded border-slate-300 text-red-600 focus:ring-red-500"
+          />
+          <span>Báo giá theo khảo sát ("Liên hệ")</span>
+        </label>
+
+        <div className="text-[11px] font-medium text-slate-500">
+          Hiển thị ra web:{' '}
+          <strong className="text-red-700 font-bold">
+            {value || 'Liên hệ'}
+          </strong>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* --- PRODUCT EDITOR --- */
 const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; canPublish: boolean; onChange: (data: AdminProduct) => void }) => {
   const set = (field: keyof AdminProduct, value: string | number | boolean) => onChange({ ...data, [field]: value });
@@ -2226,49 +2352,12 @@ const ProductEditor = ({ data, canPublish, onChange }: { data: AdminProduct; can
       <Field label="Bảo hành">
         <input className={fieldClass} value={data.warranty} onChange={(e) => set('warranty', e.target.value)} />
       </Field>
-      <Field label="Đơn giá tham khảo / Hiển thị công khai">
-        <div className="space-y-1.5">
-          <input
-            className={fieldClass}
-            value={data.priceEstimate || ''}
-            onChange={(e) => set('priceEstimate', e.target.value)}
-            placeholder="Ví dụ: Từ 1.950.000 đ/m² hoặc Liên hệ"
-          />
-          <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-500">
-            <span className="font-medium text-slate-600">Gợi ý nhanh:</span>
-            <button
-              type="button"
-              onClick={() => set('priceEstimate', 'Từ 1.950.000 đ/m²')}
-              className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 hover:bg-slate-200 hover:text-red-700 transition-colors"
-            >
-              1.950.000 đ/m²
-            </button>
-            <button
-              type="button"
-              onClick={() => set('priceEstimate', 'Từ 1.600.000 đ/m²')}
-              className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 hover:bg-slate-200 hover:text-red-700 transition-colors"
-            >
-              1.600.000 đ/m²
-            </button>
-            <button
-              type="button"
-              onClick={() => set('priceEstimate', 'Từ 4.300.000 đ/m²')}
-              className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 hover:bg-slate-200 hover:text-red-700 transition-colors"
-            >
-              4.300.000 đ/m²
-            </button>
-            <button
-              type="button"
-              onClick={() => set('priceEstimate', 'Liên hệ')}
-              className="rounded bg-slate-100 px-1.5 py-0.5 text-slate-700 hover:bg-slate-200 hover:text-red-700 transition-colors"
-            >
-              Liên hệ
-            </button>
-          </div>
-          <p className="text-[10px] text-slate-400">
-            Tự động đồng bộ ra thẻ sản phẩm và tiêu đề trang chi tiết ngoài website mà không cần sửa code.
-          </p>
-        </div>
+      <Field label="Đơn giá sản phẩm (Điền số tiền) *" wide>
+        <ProductPriceInput
+          value={data.priceEstimate}
+          onChange={(val) => set('priceEstimate', val)}
+          fieldClass={fieldClass}
+        />
       </Field>
       <Field label="Trạng thái">
         <StatusSelect value={data.status} canPublish={canPublish} onChange={(value) => set('status', value)} />
