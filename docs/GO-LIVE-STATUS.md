@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 15/10/2026 (Hoàn thành Nâng cấp Trình nhập Giá Sản phẩm Admin: Bỏ toàn bộ nút chọn giá mẫu cố định, thay bằng ô điền số tiền tự do trực tiếp bằng VNĐ có định dạng hàng nghìn tự động, hỗ trợ chọn đơn vị tính linh hoạt (/m², /bộ, /chiếc, /mét dài), tùy chọn báo giá liên hệ và bản xem trước tức thì, tự động đồng bộ ra ngoài website; test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 16/10/2026 (Ẩn đường dẫn / nút "Quản trị" ở chân trang (Footer), ngăn người dùng thông thường bấm vào cổng admin; kiểm thử test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -9,7 +9,7 @@
 
 | Giai đoạn | Hạng mục | Mức ưu tiên | Trạng thái kỹ thuật | Bằng chứng kiểm tra / Ghi chú blocker |
 | :--- | :--- | :--- | :---: | :--- |
-| **GĐ0** | **Khẩn cấp bảo mật `/admin`** | **P0** | 🟢 **DONE (100%)** | Đã xóa triệt để mật khẩu cứng `apex2026` & nút bypass khỏi client bundle (0 kết quả trong dist). Đã thay thế bằng xác thực Scrypt/HMAC. |
+| **GĐ0** | **Khẩn cấp bảo mật `/admin`** | **P0** | 🟢 **DONE (100%)** | Đã xóa triệt để mật khẩu cứng & nút bypass; xóa link Quản trị công khai ở Footer; bảo vệ bằng Scrypt/HMAC. |
 | **GĐ1** | **Hạ tầng & Dữ liệu (Neon + API)** | **P0/P1** | 🟢 **DONE (100% Code & Schema)** | Đã tạo migration `sql/migrations/20261015_add_wood_grain_door_category.sql` cập nhật CHECK constraint 10 categories. Schema `sql/neon_schema.sql` và migration nạp đầy đủ sản phẩm. |
 | **GĐ2** | **Nội dung & Pháp lý thực tế** | **P1** | 🟢 **DONE (100% 10 Dòng sản phẩm & Ảnh Thật)** | 10 Dòng sản phẩm APEX nội dung gốc, không copy đối thủ. Đã bổ sung Cửa Thép Vân Gỗ Chống Cháy (EI60–EI90, giá từ 1.950.000 đ/m², dự toán mẫu 1 bộ thực tế 4.663.000 đ), 4 ảnh WebP thật sạch EXIF. |
 | **GĐ3** | **SEO & Hoàn thiện kỹ thuật** | **P1/P2** | 🟢 **DONE (100% Code & Assets)** | Điều hướng semantic `<a href>`, routing `/san-pham/cua-thep-van-go`, sitemap.xml cập nhật, Schema.org `Product` JSON-LD cho cửa thép vân gỗ. Menu Header và Lưới 10 nhóm đồng bộ. |
@@ -74,6 +74,9 @@
   - *Trạng thái*: Chờ thao tác trên Vercel Project Settings.
 - [x] **Task 0.4 (Code & Build)**: Build production (`npm run build`) và quét xác nhận không còn chuỗi `apex2026` trong `dist/`.
   - *Bằng chứng*: Quét ripgrep trên toàn bộ `dist/assets/*.js` và `src/` đều trả về 0 kết quả (sạch 100%).
+- [x] **Task 0.5 (Code & UI)**: Ẩn entry point công khai vào cổng quản trị `/admin` khỏi chân trang (`src/components/Footer.tsx`).
+  - *Kết quả*: Đã xóa nút / đường dẫn "Quản trị" ở thanh điều hướng dưới cùng của trang web để khách vãng lai không click nhầm vào. Quản trị viên chỉ truy cập trực tiếp qua đường dẫn `/admin`.
+  - *Kiểm thử*: `npm run lint` PASS, `npm run build` PASS, `test_integrity.js` 186/186 PASS.
 
 ---
 

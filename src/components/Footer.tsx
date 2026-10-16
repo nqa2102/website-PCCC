@@ -247,15 +247,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </button>
               </>
             )}
-            <span>·</span>
-            <a
-              href="/admin"
-              onClick={(e) => handleNavClick(e, 'admin')}
-              className="text-neutral-400 hover:text-red-400 transition-colors"
-              title="Cổng quản trị APEX"
-            >
-              Quản trị
-            </a>
           </div>
         </div>
       </div>
