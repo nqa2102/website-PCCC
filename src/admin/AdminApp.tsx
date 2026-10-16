@@ -447,7 +447,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
     }
   };
 
-  // Đồng bộ toàn bộ 37 sản phẩm tiêu chuẩn vào cơ sở dữ liệu
+  // Đồng bộ toàn bộ 40 sản phẩm tiêu chuẩn vào cơ sở dữ liệu
   const handleSeedAllProducts = async () => {
     const catalog = createInitialCatalog();
     const products = catalog.products;
@@ -812,10 +812,10 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
                   type="button"
                   onClick={handleSeedAllProducts}
                   className="flex min-h-10 items-center justify-center gap-1.5 border border-neutral-300 bg-white px-3 text-xs font-bold text-slate-700 hover:bg-neutral-50 transition-colors cursor-pointer"
-                  title="Nạp hoặc đồng bộ toàn bộ 37 sản phẩm tiêu chuẩn vào cơ sở dữ liệu"
+                  title="Nạp hoặc đồng bộ toàn bộ 40 sản phẩm tiêu chuẩn vào cơ sở dữ liệu"
                 >
                   <RefreshCw className="h-3.5 w-3.5 text-blue-600" />
-                  Đồng bộ 37 sản phẩm
+                  Đồng bộ 40 sản phẩm
                 </button>
               }
             >
@@ -1379,7 +1379,7 @@ const ProductsTable = ({
     <Package className="mx-auto h-10 w-10 text-slate-300 mb-3" />
     <h3 className="text-sm font-bold text-slate-900">Chưa có sản phẩm trong cơ sở dữ liệu</h3>
     <p className="mt-1 text-xs text-slate-500 max-w-md mx-auto">
-      Hệ thống quản trị hiện chưa có bản ghi sản phẩm nào. Bạn có thể nạp nhanh toàn bộ 37 sản phẩm tiêu chuẩn của 9 nhóm danh mục để bắt đầu chỉnh sửa, xóa hoặc thêm mới.
+      Hệ thống quản trị hiện chưa có bản ghi sản phẩm nào. Bạn có thể nạp nhanh toàn bộ 40 sản phẩm tiêu chuẩn của 10 nhóm danh mục để bắt đầu chỉnh sửa, xóa hoặc thêm mới.
     </p>
     {onSeed && (
       <button
@@ -1388,7 +1388,7 @@ const ProductsTable = ({
         className="mt-4 inline-flex items-center gap-2 rounded bg-red-700 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-red-800 transition-colors cursor-pointer"
       >
         <RefreshCw className="h-4 w-4" />
-        Nạp 37 sản phẩm tiêu chuẩn vào Admin
+        Nạp 40 sản phẩm tiêu chuẩn vào Admin
       </button>
     )}
   </div>

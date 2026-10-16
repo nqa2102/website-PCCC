@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 16/10/2026 (Ẩn đường dẫn / nút "Quản trị" ở chân trang (Footer), ngăn người dùng thông thường bấm vào cổng admin; kiểm thử test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 16/10/2026 (Sửa triệt để lỗi đồng bộ 40 sản phẩm trong Admin: tự động bổ sung CHECK constraint 10 nhóm danh mục và các cột mở rộng trong Neon DB, đồng bộ nút và thông báo 40 sản phẩm; test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -93,6 +93,9 @@
 - [x] **Task 1.4 (Code)**: Thay thế hoàn toàn các lệnh gọi Supabase bằng API fetch tới `/api/admin/*` và `/api/public-content`.
   - *Bằng chứng*: Gỡ sạch Supabase client khỏi bundle; bundle JavaScript giảm từ 541 kB xuống 328 kB; không còn import `@supabase/supabase-js` trong code thực thi.
 - [x] **Task 1.5 (Code)**: Cập nhật hàm `appendWebsiteLead` và hook `useLiveData` trong [`src/admin/adminData.ts`](../src/admin/adminData.ts) sang đồng bộ Neon API.
+- [x] **Task 1.6 (Backend & Admin Code)**: Tự động cập nhật CHECK constraint và các cột mở rộng cho 40 sản phẩm / 10 nhóm danh mục trong [`api/admin/products.ts`](../api/admin/products.ts).
+  - *Kết quả*: Sửa triệt để lỗi vi phạm ràng buộc `products_category_check` khi đồng bộ 40 sản phẩm (gồm 3 sản phẩm Cửa Thép Vân Gỗ `cua-thep-van-go`). Đồng bộ hóa nhãn nút "Đồng bộ 40 sản phẩm" và các thông báo trong [`src/admin/AdminApp.tsx`](../src/admin/AdminApp.tsx).
+  - *Kiểm thử*: `npm run lint` PASS, `npm run build` PASS, `test_integrity.js` 186/186 PASS.
 
 ---
 

@@ -72,16 +72,35 @@ export default async function handler(req: any, res: any) {
     try {
       const sql = getDb();
 
-      // Đảm bảo các cột mở rộng specs/features/long_description/gallery/project_images đã tồn tại
-      try {
-        await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS certification_no TEXT;`;
-        await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS specs JSONB DEFAULT '{}'::jsonb;`;
-        await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS features JSONB DEFAULT '[]'::jsonb;`;
-        await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS long_description TEXT;`;
-        await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS gallery JSONB DEFAULT '[]'::jsonb;`;
-        await sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS project_images JSONB DEFAULT '[]'::jsonb;`;
-      } catch {
-        // Bỏ qua nếu quyền hạn database bị hạn chế
+      // Đảm bảo các cột mở rộng và CHECK constraint hỗ trợ đầy đủ 10 nhóm danh mục (kể cả cua-thep-van-go)
+      const ensureDdl = [
+        sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS certification_no TEXT;`,
+        sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS specs JSONB DEFAULT '{}'::jsonb;`,
+        sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS features JSONB DEFAULT '[]'::jsonb;`,
+        sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS long_description TEXT;`,
+        sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS gallery JSONB DEFAULT '[]'::jsonb;`,
+        sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS project_images JSONB DEFAULT '[]'::jsonb;`,
+        sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS price_estimate VARCHAR(100);`,
+        sql`ALTER TABLE products DROP CONSTRAINT IF EXISTS products_category_check;`,
+        sql`ALTER TABLE products ADD CONSTRAINT products_category_check CHECK (category IN (
+          'cua-thep-ngan-chay',
+          'cua-thep-van-go',
+          'cua-kinh-ngan-chay',
+          'cua-cuon-ngan-chay',
+          'rem-ngan-chay',
+          'tu-dien',
+          'thang-mang-cap',
+          'tu-rack',
+          'nha-tram-shelter',
+          'tu-nguon-outdoor'
+        )) NOT VALID;`,
+      ];
+      for (const query of ensureDdl) {
+        try {
+          await query;
+        } catch (schemaErr: any) {
+          console.warn('Cảnh báo migration sản phẩm:', schemaErr?.message || schemaErr);
+        }
       }
 
       const categoryMap: Record<string, string> = {
@@ -185,7 +204,8 @@ export default async function handler(req: any, res: any) {
       return res.status(200).json({ ok: true, id: items[0].id });
     } catch (err: any) {
       console.error('Lỗi lưu sản phẩm:', err);
-      return res.status(500).json({ error: 'DatabaseError', message: 'Không thể lưu thông tin sản phẩm.' });
+      const detail = err?.message || 'Không thể lưu thông tin sản phẩm.';
+      return res.status(500).json({ error: 'DatabaseError', message: `Không thể lưu thông tin sản phẩm: ${detail}` });
     }
   }
 
