@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 16/10/2026 (Sửa triệt để lỗi đồng bộ 40 sản phẩm trong Admin: tự động bổ sung CHECK constraint 10 nhóm danh mục và các cột mở rộng trong Neon DB, đồng bộ nút và thông báo 40 sản phẩm; test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 16/10/2026 (Hoàn thiện tìm kiếm sản phẩm key-by-key tiếng Việt không dấu/có dấu trong Admin, xóa text Neon Database trên header; test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -306,6 +306,20 @@
   4. Nâng cấp `GalleryEditor` trong `AdminApp.tsx` hỗ trợ nhãn tùy biến, nhúng 2 trình quản lý bộ ảnh (Slider đầu trang chi tiết và Hình ảnh thi công tại công trình) ngay dưới trường Ảnh đại diện. Cho phép upload file qua Vercel Blob, dán URL, xem thumbnail và xóa từng ảnh dễ dàng.
   5. Đồng bộ `CategoryDetailPage.tsx` ưu tiên hiển thị ảnh từ `liveProduct.gallery` và `liveProduct.projectImages`.
   6. Kết quả kiểm thử: `npm run lint` PASS, 186/186 test integrity PASS, `npm run build` PASS, Browser Subagent UAT PASS.
+
+---
+
+## 🔍 Hoàn Thiện Tìm Kiếm Sản Phẩm Key-by-Key & Xóa Huy Hiệu Neon DB (2026-10-16)
+- **Yêu cầu người dùng**:
+  1. Trong trang quản trị `/admin` -> tính năng Sản phẩm: Ô tìm kiếm sản phẩm đang chưa cho phép tìm kiếm key by key (gõ đến đâu lọc tức thì đến đó, hỗ trợ tiếng Việt có dấu/không dấu, tìm kiếm theo nhiều từ khóa rời rạc).
+  2. Xóa bỏ text/huy hiệu "Đã kết nối Neon Database" trên giao diện quản trị.
+- **Thực hiện**:
+  1. **Chuẩn hóa tìm kiếm tiếng Việt đa từ khóa**: Bổ sung hàm `normalizeVietnamese` (bỏ dấu NFD, chuyển `đ/Đ` thành `d`) và hàm `matchesSearch(targetText, query)` hỗ trợ bóc tách query thành từng token từ khóa, tìm kiếm linh hoạt trên mọi trường thông tin của sản phẩm (tên, danh mục, cấp chống cháy EI, slug, tiêu chuẩn, vật liệu, khoảng giá, mô tả ngắn).
+  2. **Gõ realtime key-by-key**: Chuyển input tìm kiếm thành type `text`, cập nhật tức thì theo state `search`, bổ sung nút xóa nhanh `X` khi có từ khóa.
+  3. **Phân tách trạng thái rỗng**: Cập nhật `ProductsTable` nhận thêm `totalProductsCount` và `searchQuery`. Khi tìm kiếm không ra kết quả, hiển thị thông báo "Không tìm thấy sản phẩm phù hợp" kèm nút "Xóa từ khóa tìm kiếm" thay vì hiển thị nhầm thông báo "Chưa có sản phẩm trong cơ sở dữ liệu".
+  4. **Xóa text/huy hiệu "Đã kết nối Neon Database"**: Xóa hoàn toàn badge tĩnh "Đã kết nối Neon Database" trên Header quản trị (chỉ cảnh báo khi có lỗi `remoteError`). Xóa tiền tố `Neon DB · ...` ở thanh Sidebar, chỉ giữ chức vụ tài khoản ("Quản trị viên").
+  5. **Kiểm thử**: `npm run lint` PASS, `npm run build` PASS (931ms), `scripts/test_integrity.js` PASS 186/186 (100%).
+
 
 
 

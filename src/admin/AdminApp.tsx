@@ -202,6 +202,32 @@ const createEmptyState = (): AdminState => ({
 
 const errorMessage = (err: unknown, fallback: string) => (err instanceof Error && err.message ? err.message : fallback);
 
+// Chuẩn hóa chuỗi tìm kiếm tiếng Việt (bỏ dấu, chuyển chữ thường, thay đ/Đ thành d)
+export const normalizeVietnamese = (str: string = ''): string => {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'd');
+};
+
+// Tìm kiếm đa từ khóa không phân biệt dấu tiếng Việt (key by key matching)
+export const matchesSearch = (targetText: string = '', query: string = ''): boolean => {
+  if (!query || !query.trim()) return true;
+  const normalizedTarget = normalizeVietnamese(targetText);
+  const rawTarget = targetText.toLowerCase();
+  
+  // Tách từ khóa theo khoảng trắng (hỗ trợ tìm nhiều từ rời rạc: "cua ei70", "van go 1 canh", "thep 120")
+  const tokens = query.trim().split(/\s+/).filter(Boolean);
+  
+  return tokens.every((token) => {
+    const normToken = normalizeVietnamese(token);
+    const rawToken = token.toLowerCase();
+    return normalizedTarget.includes(normToken) || rawTarget.includes(rawToken);
+  });
+};
+
 export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', userRole = 'admin', onSignOut }) => {
   const [state, setState] = useState<AdminState>(createEmptyState);
   const [view, setView] = useState<AdminView>('dashboard');
@@ -591,32 +617,33 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
   const navLabel = NAV_ITEMS.find((item) => item.id === view)?.label || 'Quản trị';
 
   const filteredLeads = useMemo(() => state.leads.filter((lead) => {
-    const matchesSearch = `${lead.fullName} ${lead.phone} ${lead.company} ${lead.projectName} ${lead.productInterest}`.toLowerCase().includes(search.toLowerCase());
+    const target = `${lead.fullName} ${lead.phone} ${lead.email || ''} ${lead.company || ''} ${lead.projectName || ''} ${lead.productInterest || ''} ${lead.message || ''}`;
+    const matchesQuery = matchesSearch(target, search);
     const matchesStatus = statusFilter === 'all' || lead.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || lead.priority === priorityFilter;
     const matchesSource = sourceFilter === 'all' || (lead.source || '').toLowerCase().includes(sourceFilter.toLowerCase());
     const matchesProductInterest = productInterestFilter === 'all' || (lead.productInterest || '').toLowerCase().includes(productInterestFilter.toLowerCase());
-    return matchesSearch && matchesStatus && matchesPriority && matchesSource && matchesProductInterest;
+    return matchesQuery && matchesStatus && matchesPriority && matchesSource && matchesProductInterest;
   }), [search, state.leads, statusFilter, priorityFilter, sourceFilter, productInterestFilter]);
 
   const filteredProducts = useMemo(() => state.products.filter((product) => {
-    const matchesSearch = `${product.name} ${product.categoryName} ${product.fireRating} ${product.slug}`.toLowerCase().includes(search.toLowerCase());
-    return matchesSearch && (statusFilter === 'all' || product.status === statusFilter);
+    const target = `${product.name} ${product.categoryName} ${product.fireRating} ${product.slug} ${product.category} ${product.standard || ''} ${product.material || ''} ${product.priceEstimate || ''} ${product.shortDescription || ''}`;
+    return matchesSearch(target, search) && (statusFilter === 'all' || product.status === statusFilter);
   }), [search, state.products, statusFilter]);
 
   const filteredProjects = useMemo(() => (state.projects || []).filter((project) => {
-    const matchesSearch = `${project.title} ${project.clientName || ''} ${project.generalContractor || ''} ${project.apexRole || ''} ${project.location || ''} ${project.category || ''} ${project.slug}`.toLowerCase().includes(search.toLowerCase());
-    return matchesSearch && (statusFilter === 'all' || project.status === statusFilter);
+    const target = `${project.title} ${project.clientName || ''} ${project.generalContractor || ''} ${project.apexRole || ''} ${project.location || ''} ${project.category || ''} ${project.slug}`;
+    return matchesSearch(target, search) && (statusFilter === 'all' || project.status === statusFilter);
   }), [search, state.projects, statusFilter]);
 
   const filteredDocuments = useMemo(() => state.documents.filter((document) => {
-    const matchesSearch = `${document.title} ${document.code} ${document.standard} ${document.owner} ${document.productGroup}`.toLowerCase().includes(search.toLowerCase());
-    return matchesSearch && (statusFilter === 'all' || document.status === statusFilter);
+    const target = `${document.title} ${document.code} ${document.standard || ''} ${document.owner || ''} ${document.productGroup || ''}`;
+    return matchesSearch(target, search) && (statusFilter === 'all' || document.status === statusFilter);
   }), [search, state.documents, statusFilter]);
 
   const filteredContents = useMemo(() => state.contents.filter((content) => {
-    const matchesSearch = `${content.title} ${content.type} ${content.owner} ${content.summary}`.toLowerCase().includes(search.toLowerCase());
-    return matchesSearch && (statusFilter === 'all' || content.status === statusFilter);
+    const target = `${content.title} ${content.type || ''} ${content.owner || ''} ${content.summary || ''}`;
+    return matchesSearch(target, search) && (statusFilter === 'all' || content.status === statusFilter);
   }), [search, state.contents, statusFilter]);
 
   if (remoteLoading) return <div className="flex min-h-screen items-center justify-center gap-3 bg-[#f3f5f4] text-sm font-semibold text-slate-700"><LoaderCircle className="h-5 w-5 animate-spin text-red-700" />Đang tải trung tâm dữ liệu APEX...</div>;
@@ -660,7 +687,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
             <span className="min-w-0 flex-1">
               <strong className="block truncate text-xs">{userEmail || 'Quản trị viên APEX'}</strong>
               <span className="text-[10px] text-emerald-100/60 block truncate">
-                {`Neon DB · ${userRole}`}
+                {userRole === 'admin' ? 'Quản trị viên' : userRole}
               </span>
             </span>
           </div>
@@ -690,10 +717,12 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
               <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin text-red-600' : ''}`} />
               <span className="hidden sm:inline">Làm mới</span>
             </button>
-            <span className={`hidden items-center gap-2 border px-3 py-2 text-xs font-medium md:flex ${remoteError ? 'border-red-200 bg-red-50 text-red-900' : 'border-emerald-200 bg-emerald-50 text-emerald-900'}`}>
-              {remoteError ? <AlertTriangle className="h-4 w-4 text-red-600" /> : <ShieldCheck className="h-4 w-4 text-emerald-600" />}
-              {remoteError ? 'Lỗi kết nối Neon Database' : 'Đã kết nối Neon Database'}
-            </span>
+            {remoteError && (
+              <span className="hidden items-center gap-2 border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-900 md:flex">
+                <AlertTriangle className="h-4 w-4 text-red-600" />
+                Lỗi kết nối cơ sở dữ liệu
+              </span>
+            )}
             <button onClick={onExit} className="hidden min-h-10 items-center gap-2 border border-neutral-300 bg-white px-3 text-xs font-semibold text-slate-800 hover:bg-neutral-50 sm:flex">
               Xem website<ChevronRight className="h-4 w-4" />
             </button>
@@ -821,6 +850,8 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
             >
               <ProductsTable
                 products={filteredProducts}
+                totalProductsCount={state.products.length}
+                searchQuery={search}
                 onEdit={(data) => setEditor({ type: 'product', data })}
                 onDelete={(prod) => requestDelete({ type: 'product', id: prod.id, name: prod.name })}
                 onSeed={handleSeedAllProducts}
@@ -1186,11 +1217,22 @@ const DataSection = ({
         <span className="sr-only">Tìm kiếm</span>
         <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-slate-400" />
         <input
+          type="text"
           value={search}
           onChange={(event) => onSearch(event.target.value)}
-          placeholder="Tìm theo tên, mã, số điện thoại, công trình..."
-          className="h-10 w-full border border-neutral-300 bg-white pl-9 pr-3 text-sm outline-none focus:border-red-600"
+          placeholder="Tìm nhanh theo tên, mã, tiêu chuẩn, số điện thoại..."
+          className="h-10 w-full border border-neutral-300 bg-white pl-9 pr-9 text-sm outline-none focus:border-red-600 transition-colors"
         />
+        {search && (
+          <button
+            type="button"
+            onClick={() => onSearch('')}
+            className="absolute right-2.5 top-2.5 p-1 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
+            title="Xóa từ khóa tìm kiếm"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </label>
       <select
         value={statusFilter}
@@ -1317,82 +1359,106 @@ const LeadsTable = ({
 /* --- PRODUCTS TABLE --- */
 const ProductsTable = ({
   products,
+  totalProductsCount = 0,
+  searchQuery = '',
   onEdit,
   onDelete,
   onSeed,
 }: {
   products: AdminProduct[];
+  totalProductsCount?: number;
+  searchQuery?: string;
   onEdit: (product: AdminProduct) => void;
   onDelete: (product: AdminProduct) => void;
   onSeed?: () => void;
-}) => products.length ? (
-  <div className="overflow-x-auto">
-    <table className="w-full min-w-[860px] text-left text-xs">
-      <thead>
-        <tr className="border-b border-neutral-200 bg-neutral-50 text-[10px] uppercase text-slate-500">
-          <th className="px-6 py-3">Sản phẩm</th>
-          <th className="px-4 py-3">Nhóm danh mục</th>
-          <th className="px-4 py-3">Chịu lửa</th>
-          <th className="px-4 py-3">Đơn giá tham khảo</th>
-          <th className="px-4 py-3">Tiêu chuẩn</th>
-          <th className="px-4 py-3">Trạng thái</th>
-          <th className="px-4 py-3">Cập nhật</th>
-          <th className="px-4 py-3 text-right">Thao tác</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-neutral-100">
-        {products.map((product) => (
-          <tr key={product.id} className="hover:bg-neutral-50 transition-colors">
-            <td className="px-6 py-3">
-              <strong className="block text-slate-950 font-bold">{product.name}</strong>
-              <span className="text-[11px] text-slate-400 font-mono">/{product.slug}{product.featured ? ' · ⭐ Nổi bật' : ''}</span>
-            </td>
-            <td className="px-4 py-3 font-medium text-slate-700">{product.categoryName}</td>
-            <td className="px-4 py-3 font-semibold text-red-700">{product.fireRating}</td>
-            <td className="px-4 py-3 font-bold text-red-700 whitespace-nowrap">
-              {product.priceEstimate || 'Liên hệ'}
-            </td>
-            <td className="max-w-[220px] px-4 py-3 text-slate-600 truncate">{product.standard}</td>
-            <td className="px-4 py-3"><Badge {...PUBLISH_STATUS[product.status]} /></td>
-            <td className="px-4 py-3 text-slate-500">{localDate(product.updatedAt)}</td>
-            <td className="px-4 py-3 text-right">
-              <div className="flex items-center justify-end gap-2">
-                <button onClick={() => onEdit(product)} className="font-bold text-red-700 hover:underline cursor-pointer">
-                  Sửa
-                </button>
-                <button
-                  onClick={() => onDelete(product)}
-                  className="text-slate-400 hover:text-red-700 p-1 transition-colors cursor-pointer"
-                  title="Xóa sản phẩm"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-) : (
-  <div className="px-6 py-12 text-center">
-    <Package className="mx-auto h-10 w-10 text-slate-300 mb-3" />
-    <h3 className="text-sm font-bold text-slate-900">Chưa có sản phẩm trong cơ sở dữ liệu</h3>
-    <p className="mt-1 text-xs text-slate-500 max-w-md mx-auto">
-      Hệ thống quản trị hiện chưa có bản ghi sản phẩm nào. Bạn có thể nạp nhanh toàn bộ 40 sản phẩm tiêu chuẩn của 10 nhóm danh mục để bắt đầu chỉnh sửa, xóa hoặc thêm mới.
-    </p>
-    {onSeed && (
-      <button
-        type="button"
-        onClick={onSeed}
-        className="mt-4 inline-flex items-center gap-2 rounded bg-red-700 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-red-800 transition-colors cursor-pointer"
-      >
-        <RefreshCw className="h-4 w-4" />
-        Nạp 40 sản phẩm tiêu chuẩn vào Admin
-      </button>
-    )}
-  </div>
-);
+}) => {
+  if (products.length > 0) {
+    return (
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[860px] text-left text-xs">
+          <thead>
+            <tr className="border-b border-neutral-200 bg-neutral-50 text-[10px] uppercase text-slate-500">
+              <th className="px-6 py-3">Sản phẩm</th>
+              <th className="px-4 py-3">Nhóm danh mục</th>
+              <th className="px-4 py-3">Chịu lửa</th>
+              <th className="px-4 py-3">Đơn giá tham khảo</th>
+              <th className="px-4 py-3">Tiêu chuẩn</th>
+              <th className="px-4 py-3">Trạng thái</th>
+              <th className="px-4 py-3">Cập nhật</th>
+              <th className="px-4 py-3 text-right">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-neutral-100">
+            {products.map((product) => (
+              <tr key={product.id} className="hover:bg-neutral-50 transition-colors">
+                <td className="px-6 py-3">
+                  <strong className="block text-slate-950 font-bold">{product.name}</strong>
+                  <span className="text-[11px] text-slate-400 font-mono">/{product.slug}{product.featured ? ' · ⭐ Nổi bật' : ''}</span>
+                </td>
+                <td className="px-4 py-3 font-medium text-slate-700">{product.categoryName}</td>
+                <td className="px-4 py-3 font-semibold text-red-700">{product.fireRating}</td>
+                <td className="px-4 py-3 font-bold text-red-700 whitespace-nowrap">
+                  {product.priceEstimate || 'Liên hệ'}
+                </td>
+                <td className="max-w-[220px] px-4 py-3 text-slate-600 truncate">{product.standard}</td>
+                <td className="px-4 py-3"><Badge {...PUBLISH_STATUS[product.status]} /></td>
+                <td className="px-4 py-3 text-slate-500">{localDate(product.updatedAt)}</td>
+                <td className="px-4 py-3 text-right">
+                  <div className="flex items-center justify-end gap-2">
+                    <button onClick={() => onEdit(product)} className="font-bold text-red-700 hover:underline cursor-pointer">
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => onDelete(product)}
+                      className="text-slate-400 hover:text-red-700 p-1 transition-colors cursor-pointer"
+                      title="Xóa sản phẩm"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  if (searchQuery.trim() || totalProductsCount > 0) {
+    return (
+      <div className="px-6 py-12 text-center">
+        <Search className="mx-auto h-10 w-10 text-slate-300 mb-3" />
+        <h3 className="text-sm font-bold text-slate-900">Không tìm thấy sản phẩm phù hợp</h3>
+        <p className="mt-1 text-xs text-slate-500 max-w-md mx-auto">
+          {searchQuery.trim()
+            ? `Không có sản phẩm nào khớp với từ khóa "${searchQuery}". Hãy thử tìm kiếm bằng từ khóa khác hoặc bấm nút xóa.`
+            : 'Không có sản phẩm nào phù hợp với bộ lọc đã chọn.'}
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="px-6 py-12 text-center">
+      <Package className="mx-auto h-10 w-10 text-slate-300 mb-3" />
+      <h3 className="text-sm font-bold text-slate-900">Chưa có sản phẩm trong cơ sở dữ liệu</h3>
+      <p className="mt-1 text-xs text-slate-500 max-w-md mx-auto">
+        Hệ thống quản trị hiện chưa có bản ghi sản phẩm nào. Bạn có thể nạp nhanh toàn bộ 40 sản phẩm tiêu chuẩn của 10 nhóm danh mục để bắt đầu chỉnh sửa, xóa hoặc thêm mới.
+      </p>
+      {onSeed && (
+        <button
+          type="button"
+          onClick={onSeed}
+          className="mt-4 inline-flex items-center gap-2 rounded bg-red-700 px-4 py-2.5 text-xs font-bold text-white shadow hover:bg-red-800 transition-colors cursor-pointer"
+        >
+          <RefreshCw className="h-4 w-4" />
+          Nạp 40 sản phẩm tiêu chuẩn vào Admin
+        </button>
+      )}
+    </div>
+  );
+};
 
 /* --- PROJECTS TABLE --- */
 const ProjectsTable = ({
