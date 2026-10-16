@@ -108,7 +108,7 @@ export default function App() {
     }
     // Không đo lường trang quản trị
     if (!isAdmin) trackPageView();
-  }, [activeTab, isAdmin, targetProductId, targetProductCategory, targetProjectId, targetDocId, targetArticleId, products, projects]);
+  }, [activeTab, isAdmin, targetProductId, targetProductCategory, targetProjectId, targetArticleId, products, projects]);
 
   // Tải mã đo lường nếu khách đã đồng ý từ lần trước; ghi nhận bấm gọi / Zalo
   useEffect(() => {
@@ -120,7 +120,7 @@ export default function App() {
   // Scroll to top when changing tabs
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeTab, targetProductId, targetProjectId, targetDocId, targetArticleId]);
+  }, [activeTab, targetProductId, targetProjectId, targetArticleId]);
 
   const handleOpenQuote = (productType?: string) => {
     setQuotePreselectedProduct(productType);
@@ -139,7 +139,6 @@ export default function App() {
     setTargetProductId(undefined);
     setTargetProductCategory(undefined);
     setTargetProjectId(undefined);
-    setTargetDocId(undefined);
     setTargetArticleId(undefined);
 
     if (tab === 'products') {

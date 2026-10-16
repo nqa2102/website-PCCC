@@ -3,7 +3,7 @@
     { "source": "/api/admin/logout", "destination": "/api/admin/login?action=logout" },
     { "source": "/api/products", "destination": "/api/public-content" },
     { "source": "/api/projects", "destination": "/api/public-content" },
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/((?!api/|assets/).*)", "destination": "/index.html" }
   ],
   "headers": [
     {

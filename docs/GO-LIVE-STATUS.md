@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 16/10/2026 (Gỡ bỏ tính năng tài liệu kỹ thuật khỏi website theo yêu cầu người dùng; chuyển hướng sạch /tai-lieu-ky-thuat về /san-pham; test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 16/10/2026 (Khắc phục triệt để lỗi ReferenceError targetDocId gây treo thông báo cập nhật phiên bản mới trong ErrorBoundary; kiểm thử Edge headless pass 100%, test_integrity 186/186 PASS, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -333,6 +333,23 @@
   6. **Routing & Điều hướng**: Đường dẫn `/tai-lieu-ky-thuat` tự động chuyển hướng (client redirect) về `/san-pham`, tránh vỡ liên kết nếu người dùng có bookmark cũ.
   7. **SEO Sitemap**: Xóa URL `/tai-lieu-ky-thuat` khỏi `public/sitemap.xml`.
   8. **Kiểm thử**: `npm run lint` PASS (0 lỗi), `npm run build` PASS, `scripts/test_integrity.js` PASS 186/186 (100%).
+
+---
+
+## 🛠️ Khắc Phục Triệt Để Lỗi "Hệ Thống Vừa Cập Nhật Phiên Bản Mới" (2026-10-16)
+- **Vấn đề**: Người dùng truy cập trang bị thông báo "Hệ thống vừa cập nhật phiên bản mới" trong ErrorBoundary và khi ấn nút "Tải lại trang" không thể vào được.
+- **Nguyên nhân cốt lõi**:
+  1. Trong commit trước khi gỡ bỏ tính năng tài liệu kỹ thuật, `targetDocId` và `setTargetDocId` vẫn còn sót lại trong dependency array của `useEffect` (dòng 111, 123) và trong `applyRouteState` (dòng 142) của `src/App.tsx`.
+  2. Khi runtime khởi chạy, lỗi `ReferenceError: targetDocId is not defined` phát sinh làm crash component `<App />`.
+  3. `ErrorBoundary` trước đây gán nhãn thông báo chung cho mọi lỗi là "Hệ thống vừa cập nhật phiên bản mới", đồng thời hàm reload trước đây chỉ gọi `window.location.reload()` thông thường mà không phá vỡ cache (`?_v=...`), dẫn đến vòng lặp vô hạn.
+  4. Quy tắc rewrite `/((?!api/).*)` trong `vercel.json` vô tình rewrite cả static chunk không tồn tại thành `index.html`.
+- **Giải pháp xử lý**:
+  1. **Làm sạch triệt để `src/App.tsx`**: Xóa toàn bộ tàn dư của `targetDocId` và `setTargetDocId` trong `useEffect` và `applyRouteState`.
+  2. **Nâng cấp `src/components/ErrorBoundary.tsx`**: Phân tách rõ ràng giữa `ChunkLoadError` (cập nhật phiên bản) và lỗi hiển thị thông thường; cơ chế `forceReload` tự động thêm param `_v=Date.now()` để bypass 100% cache trình duyệt khi người dùng bấm "Tải lại trang" hoặc "Về trang chủ".
+  3. **Cập nhật `src/main.tsx`**: Listener `vite:preloadError` tự động dùng cache-busting URL để reload khi có bản build mới.
+  4. **Cập nhật `vercel.json`**: Rewrite loại trừ thư mục `assets/` (`/((?!api/|assets/).*)`) để các tệp tĩnh không bị rewrite nhầm thành HTML.
+  5. **Kiểm thử**: `npm run lint` (`tsc --noEmit`) 0 lỗi, `npm run build` PASS, Edge headless preview test xác nhận trang chủ render thành công 100% không còn thông báo lỗi, `scripts/test_integrity.js` PASS 186/186 (100%).
+
 
 
 

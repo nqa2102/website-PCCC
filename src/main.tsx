@@ -15,7 +15,9 @@ if (typeof window !== 'undefined') {
     const now = Date.now();
     if (now - lastReload > 10000) {
       sessionStorage.setItem('apex_vite_preload_reload_ts', String(now));
-      window.location.reload();
+      const url = new URL(window.location.href);
+      url.searchParams.set('_v', String(now));
+      window.location.replace(url.toString());
     }
   });
 }

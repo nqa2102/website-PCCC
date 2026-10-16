@@ -42,18 +42,29 @@ export class ErrorBoundary extends Component<Props, State> {
       const now = Date.now();
       if (now - lastReload > 10000) {
         sessionStorage.setItem('apex_chunk_reload_ts', String(now));
-        window.location.reload();
+        this.forceReload();
       }
     }
   }
 
-  handleReload = () => {
+  forceReload = () => {
     sessionStorage.removeItem('apex_chunk_reload_ts');
-    window.location.reload();
+    sessionStorage.removeItem('apex_vite_preload_reload_ts');
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('_v', String(Date.now()));
+      window.location.replace(url.toString());
+    }
+  };
+
+  handleReload = () => {
+    this.forceReload();
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    sessionStorage.removeItem('apex_chunk_reload_ts');
+    sessionStorage.removeItem('apex_vite_preload_reload_ts');
+    window.location.href = '/?_v=' + Date.now();
   };
 
   render() {
@@ -61,6 +72,8 @@ export class ErrorBoundary extends Component<Props, State> {
       if (this.props.fallback) {
         return this.props.fallback;
       }
+
+      const isChunk = isChunkLoadFailed(this.state.error);
 
       return (
         <div className="flex min-h-[60vh] w-full items-center justify-center bg-neutral-50 px-4 py-16">
@@ -70,11 +83,13 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             <h2 className="text-lg font-black text-slate-900 sm:text-xl">
-              Hệ thống vừa cập nhật phiên bản mới
+              {isChunk ? 'Hệ thống vừa cập nhật phiên bản mới' : 'Đã xảy ra sự cố hiển thị'}
             </h2>
 
             <p className="mt-2 text-xs leading-relaxed text-slate-600 sm:text-sm">
-              Trang web vừa nhận được bản phát hành cập nhật mới từ máy chủ. Vui lòng tải lại trang để tải phiên bản mới nhất.
+              {isChunk
+                ? 'Trang web vừa nhận được bản phát hành cập nhật mới từ máy chủ. Vui lòng bấm tải lại để tải bản mới nhất.'
+                : 'Một phần tử trên trang gặp lỗi tạm thời. Vui lòng bấm tải lại trang hoặc quay về trang chủ.'}
             </p>
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
