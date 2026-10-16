@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Compass, FileText, Phone, ArrowLeft, Search, ShieldAlert, Layers } from 'lucide-react';
+import { Home, Compass, Phone, ArrowLeft, Search, ShieldAlert, Layers } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
 import { pathForRoute } from '../routing';
 
@@ -39,11 +39,11 @@ export const NotFoundPage: React.FC<NotFoundPageProps> = ({ onNavigate }) => {
       href: '/du-an',
     },
     {
-      tab: 'documents',
-      label: 'Tài liệu kỹ thuật',
-      desc: 'Tra cứu catalog, tiêu chuẩn và hồ sơ chứng nhận',
-      icon: FileText,
-      href: '/tai-lieu-ky-thuat',
+      tab: 'contact',
+      label: 'Liên hệ tư vấn',
+      desc: 'Hỗ trợ kỹ thuật, khảo sát công trình và báo giá',
+      icon: Phone,
+      href: '/lien-he',
     },
   ];
 

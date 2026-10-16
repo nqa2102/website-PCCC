@@ -153,11 +153,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenQuote, onNavigate })
 
               <div className="pt-4 flex flex-wrap gap-3">
                 <button
-                  onClick={() => onNavigate('documents')}
+                  onClick={() => onNavigate('products')}
                   className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg transition-colors flex items-center gap-2"
                 >
-                  <FileCheck className="w-4 h-4" />
-                   <span>Yêu cầu tài liệu kỹ thuật</span>
+                  <ShieldCheck className="w-4 h-4" />
+                   <span>Xem danh mục sản phẩm</span>
                 </button>
                 <button
                   onClick={onOpenQuote}

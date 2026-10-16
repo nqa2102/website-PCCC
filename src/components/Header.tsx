@@ -85,7 +85,6 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'about', label: 'Giới thiệu' },
     { id: 'products', label: 'Sản phẩm', hasDropdown: true },
     { id: 'projects', label: 'Dự án' },
-    { id: 'documents', label: 'Tài liệu kỹ thuật' },
     { id: 'news', label: 'Tin tức' },
     { id: 'contact', label: 'Liên hệ' },
   ];

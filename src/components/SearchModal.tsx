@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { X, Search, FileText, ArrowRight, ShieldCheck, Box } from 'lucide-react';
+import { X, Search, ArrowRight, ShieldCheck, Box } from 'lucide-react';
 import { useLiveData } from '../admin/adminData';
 
 interface SearchModalProps {
@@ -13,14 +13,14 @@ export const SearchModal: React.FC<SearchModalProps> = ({
   onClose,
   onNavigate
 }) => {
-  const { products, documents, projects } = useLiveData();
+  const { products, projects } = useLiveData();
   const [searchTerm, setSearchTerm] = useState('');
 
   const searchResults = useMemo(() => {
     if (!searchTerm.trim()) {
       return {
-        products: products.slice(0, 3),
-        docs: documents.slice(0, 2),
+        products: products.slice(0, 4),
+        projects: projects.slice(0, 2),
         isDefault: true
       };
     }
@@ -33,12 +33,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({
            (p.fireRating && p.fireRating.toLowerCase().includes(query))
     );
 
-    const matchedDocs = documents.filter(
-      d => d.title.toLowerCase().includes(query) ||
-           d.code.toLowerCase().includes(query) ||
-           d.description.toLowerCase().includes(query)
-    );
-
     const matchedProjects = projects.filter(
       p => p.title.toLowerCase().includes(query) ||
            (p.itemsSupplied && p.itemsSupplied.toLowerCase().includes(query)) ||
@@ -47,11 +41,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
     return {
       products: matchedProducts,
-      docs: matchedDocs,
       projects: matchedProjects,
       isDefault: false
     };
-  }, [searchTerm, products, documents, projects]);
+  }, [searchTerm, products, projects]);
 
   if (!isOpen) return null;
 
@@ -126,42 +119,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
             </div>
           )}
 
-          {/* Technical Docs */}
-          {searchResults.docs && searchResults.docs.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                <span>Tài liệu & Tiêu chuẩn PCCC</span>
-                <span>{searchResults.docs.length} kết quả</span>
-              </div>
-              <div className="space-y-1.5">
-                {searchResults.docs.map((doc) => (
-                  <button
-                    key={doc.id}
-                    onClick={() => {
-                      onNavigate('documents', doc.id);
-                      onClose();
-                    }}
-                    className="w-full text-left p-2.5 rounded-lg hover:bg-neutral-50 flex items-center justify-between border border-transparent hover:border-neutral-200 transition-colors group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-md bg-red-50 flex items-center justify-center text-red-600 shrink-0">
-                        <FileText className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="font-semibold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-1">
-                          {doc.title}
-                        </div>
-                        <div className="text-[11px] text-slate-500">
-                          {doc.code} · {doc.categoryLabel}
-                        </div>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-red-600 transition-transform group-hover:translate-x-0.5" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+
 
           {/* Projects */}
           {searchResults.projects && searchResults.projects.length > 0 && (
@@ -202,7 +160,6 @@ export const SearchModal: React.FC<SearchModalProps> = ({
 
           {/* Empty state */}
           {searchResults.products.length === 0 && 
-           searchResults.docs.length === 0 && 
            (!searchResults.projects || searchResults.projects.length === 0) && (
             <div className="text-center py-8 text-slate-500">
               <p>Không tìm thấy kết quả phù hợp với "{searchTerm}".</p>

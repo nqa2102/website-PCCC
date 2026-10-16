@@ -133,16 +133,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   <span>Giới thiệu năng lực APEX</span>
                 </a>
               </li>
-              <li>
-                <a
-                  href="/tai-lieu-ky-thuat"
-                  onClick={(e) => handleNavClick(e, 'documents')}
-                  className="hover:text-white transition-colors text-left flex items-center gap-1.5"
-                >
-                  <ChevronRight className="w-3 h-3 text-red-500" />
-                  <span>Tài liệu kỹ thuật & kiểm định</span>
-                </a>
-              </li>
+
               <li>
                 <a
                   href="/tin-tuc"
@@ -204,14 +195,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             © {new Date().getFullYear()} {company.legalNameUpper}. Mã số doanh nghiệp: {company.taxCode} do Sở Tài chính TP. Hà Nội cấp ngày {company.registeredDate}. Đại diện pháp luật: {company.representative} - {company.representativeTitle}.
           </div>
           <div className="flex items-center gap-4">
-            <a
-              href="/tai-lieu-ky-thuat"
-              onClick={(e) => handleNavClick(e, 'documents')}
-              className="hover:text-neutral-300"
-            >
-              Xem hồ sơ kỹ thuật
-            </a>
-            <span>·</span>
+
             <a
               href="/gioi-thieu"
               onClick={(e) => handleNavClick(e, 'about')}

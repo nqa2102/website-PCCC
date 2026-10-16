@@ -14,7 +14,6 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 const AboutPage = lazy(() => import('./pages/AboutPage').then((module) => ({ default: module.AboutPage })));
 const ProductsPage = lazy(() => import('./pages/ProductsPage').then((module) => ({ default: module.ProductsPage })));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage').then((module) => ({ default: module.ProjectsPage })));
-const TechnicalDocsPage = lazy(() => import('./pages/TechnicalDocsPage').then((module) => ({ default: module.TechnicalDocsPage })));
 const NewsPage = lazy(() => import('./pages/NewsPage').then((module) => ({ default: module.NewsPage })));
 const ContactPage = lazy(() => import('./pages/ContactPage').then((module) => ({ default: module.ContactPage })));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((module) => ({ default: module.PrivacyPage })));
@@ -46,7 +45,6 @@ export default function App() {
   const [targetProductId, setTargetProductId] = useState<string | undefined>(() => initialRoute.tab === 'products' ? initialRoute.itemId : undefined);
   const [targetProductCategory, setTargetProductCategory] = useState<string | undefined>(() => initialRoute.tab === 'products' ? initialRoute.category : undefined);
   const [targetProjectId, setTargetProjectId] = useState<string | undefined>(() => initialRoute.tab === 'projects' ? initialRoute.itemId : undefined);
-  const [targetDocId, setTargetDocId] = useState<string | undefined>(() => initialRoute.tab === 'documents' ? initialRoute.itemId : undefined);
   const [targetArticleId, setTargetArticleId] = useState<string | undefined>(() => initialRoute.tab === 'news' ? initialRoute.itemId : undefined);
 
   useEffect(() => {
@@ -152,8 +150,6 @@ export default function App() {
       }
     } else if (tab === 'projects') {
       setTargetProjectId(route.itemId);
-    } else if (tab === 'documents') {
-      setTargetDocId(route.itemId);
     } else if (tab === 'news') {
       setTargetArticleId(route.itemId);
     }
@@ -222,13 +218,7 @@ export default function App() {
             />
           )}
 
-          {activeTab === 'documents' && (
-            <TechnicalDocsPage
-              key={targetDocId || 'documents'}
-              onOpenQuote={() => handleOpenQuote()}
-              initialDocId={targetDocId}
-            />
-          )}
+
 
           {activeTab === 'news' && (
             <NewsPage

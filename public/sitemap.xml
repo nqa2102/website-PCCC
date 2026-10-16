@@ -89,12 +89,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://apexhome.vn/tai-lieu-ky-thuat</loc>
-    <lastmod>2026-10-12</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
+
   <url>
     <loc>https://apexhome.vn/tin-tuc</loc>
     <lastmod>2026-10-12</lastmod>

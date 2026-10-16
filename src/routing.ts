@@ -43,7 +43,7 @@ const TAB_PATHS: Record<string, string> = {
   products: '/san-pham',
   solutions: '/san-pham',
   projects: '/du-an',
-  documents: '/tai-lieu-ky-thuat',
+  documents: '/san-pham',
   news: '/tin-tuc',
   contact: '/lien-he',
   privacy: '/chinh-sach-bao-mat',
@@ -140,7 +140,12 @@ export const readRoute = (): AppRoute => {
     }
     return { tab: 'projects', itemId: resolvedId };
   }
-  if (root === 'tai-lieu-ky-thuat') return { tab: 'documents', itemId };
+  if (root === 'tai-lieu-ky-thuat') {
+    if (typeof window !== 'undefined' && window.history?.replaceState) {
+      window.history.replaceState({}, '', '/san-pham');
+    }
+    return { tab: 'products' };
+  }
   if (root === 'tin-tuc') return { tab: 'news', itemId };
   if (root === 'lien-he') return { tab: 'contact' };
   if (root === 'chinh-sach-bao-mat') return { tab: 'privacy' };
@@ -164,7 +169,7 @@ export const pathForRoute = (tab: string, itemId?: string, category?: string) =>
   }
 
   if (tab === 'projects' && itemId) return `${base}/${encodeURIComponent(itemId)}`;
-  if (['documents', 'news'].includes(tab) && itemId) return `${base}/${encodeURIComponent(itemId)}`;
+  if (tab === 'news' && itemId) return `${base}/${encodeURIComponent(itemId)}`;
   return base;
 };
 

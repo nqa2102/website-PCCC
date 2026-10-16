@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 16/10/2026 (Hoàn thiện tìm kiếm sản phẩm key-by-key tiếng Việt không dấu/có dấu trong Admin, xóa text Neon Database trên header; test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 16/10/2026 (Gỡ bỏ tính năng tài liệu kỹ thuật khỏi website theo yêu cầu người dùng; chuyển hướng sạch /tai-lieu-ky-thuat về /san-pham; test_integrity 186/186 PASS 100%, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -319,6 +319,21 @@
   3. **Phân tách trạng thái rỗng**: Cập nhật `ProductsTable` nhận thêm `totalProductsCount` và `searchQuery`. Khi tìm kiếm không ra kết quả, hiển thị thông báo "Không tìm thấy sản phẩm phù hợp" kèm nút "Xóa từ khóa tìm kiếm" thay vì hiển thị nhầm thông báo "Chưa có sản phẩm trong cơ sở dữ liệu".
   4. **Xóa text/huy hiệu "Đã kết nối Neon Database"**: Xóa hoàn toàn badge tĩnh "Đã kết nối Neon Database" trên Header quản trị (chỉ cảnh báo khi có lỗi `remoteError`). Xóa tiền tố `Neon DB · ...` ở thanh Sidebar, chỉ giữ chức vụ tài khoản ("Quản trị viên").
   5. **Kiểm thử**: `npm run lint` PASS, `npm run build` PASS (931ms), `scripts/test_integrity.js` PASS 186/186 (100%).
+
+---
+
+## 🗑️ Gỡ Bỏ Tính Năng Tài Liệu Kỹ Thuật Khỏi Website (2026-10-16)
+- **Yêu cầu người dùng**: Tại website bỏ tính năng tài liệu kỹ thuật đi vì không cần thiết nữa.
+- **Thực hiện**:
+  1. **Header**: Xóa mục "Tài liệu kỹ thuật" khỏi `navItems` (cả desktop menu và mobile drawer menu).
+  2. **Footer**: Xóa đường dẫn "Tài liệu kỹ thuật & kiểm định" ở cột Quick Links và "Xem hồ sơ kỹ thuật" ở thanh chân trang (bottom bar).
+  3. **Trang Giới thiệu (AboutPage)**: Chuyển nút hành động từ "Yêu cầu tài liệu kỹ thuật" sang "Xem danh mục sản phẩm" (`onNavigate('products')`).
+  4. **Trang 404 (NotFoundPage)**: Chuyển thẻ điều hướng từ tài liệu kỹ thuật sang "Liên hệ tư vấn" (`/lien-he`).
+  5. **Hộp tìm kiếm (SearchModal)**: Gỡ bỏ việc truy vấn, hiển thị khối kết quả "Tài liệu & Tiêu chuẩn PCCC" và làm sạch trạng thái kết quả rỗng.
+  6. **Routing & Điều hướng**: Đường dẫn `/tai-lieu-ky-thuat` tự động chuyển hướng (client redirect) về `/san-pham`, tránh vỡ liên kết nếu người dùng có bookmark cũ.
+  7. **SEO Sitemap**: Xóa URL `/tai-lieu-ky-thuat` khỏi `public/sitemap.xml`.
+  8. **Kiểm thử**: `npm run lint` PASS (0 lỗi), `npm run build` PASS, `scripts/test_integrity.js` PASS 186/186 (100%).
+
 
 
 
