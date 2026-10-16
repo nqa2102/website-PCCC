@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 16/10/2026 (Khắc phục triệt để lỗi ReferenceError targetDocId gây treo thông báo cập nhật phiên bản mới trong ErrorBoundary; kiểm thử Edge headless pass 100%, test_integrity 186/186 PASS, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 16/10/2026 (Cập nhật email liên hệ về dữ liệu mục 7 trong PrivacyPage thành hung061195@gmail.com; test_integrity 186/186 PASS, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -349,6 +349,15 @@
   3. **Cập nhật `src/main.tsx`**: Listener `vite:preloadError` tự động dùng cache-busting URL để reload khi có bản build mới.
   4. **Cập nhật `vercel.json`**: Rewrite loại trừ thư mục `assets/` (`/((?!api/|assets/).*)`) để các tệp tĩnh không bị rewrite nhầm thành HTML.
   5. **Kiểm thử**: `npm run lint` (`tsc --noEmit`) 0 lỗi, `npm run build` PASS, Edge headless preview test xác nhận trang chủ render thành công 100% không còn thông báo lỗi, `scripts/test_integrity.js` PASS 186/186 (100%).
+
+---
+
+## 📧 Cập Nhật Email Liên Hệ Dữ Liệu Trong Chính Sách Bảo Mật (2026-10-16)
+- **Yêu cầu người dùng**: Tại trang `https://apexhome.vn/chinh-sach-bao-mat`, nội dung bên dưới mục 7 "Liên hệ về dữ liệu" đổi email `contact@apexhome.vn` thành `hung061195@gmail.com`.
+- **Thực hiện**:
+  1. Cập nhật mục 7 trong [`src/pages/PrivacyPage.tsx`](../src/pages/PrivacyPage.tsx) hiển thị đường dẫn `mailto:hung061195@gmail.com` kèm nhãn `hung061195@gmail.com`.
+  2. Kiểm thử: `npm run lint` PASS (0 lỗi), `npm run build` PASS (894ms), `scripts/test_integrity.js` PASS 186/186 (100%).
+
 
 
 
