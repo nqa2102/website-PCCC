@@ -1,6 +1,6 @@
 # Trạng Thái Tiến Độ Go-Live Website APEX VN (GO-LIVE-STATUS.md)
 
-*Cập nhật lần cuối: 16/10/2026 (Cập nhật email liên hệ về dữ liệu mục 7 trong PrivacyPage thành hung061195@gmail.com; test_integrity 186/186 PASS, lint & build 0 lỗi).*  
+*Cập nhật lần cuối: 16/10/2026 (Tích hợp Google Tag Manager GTM-55BHCBJ3 vào index.html, CSP và tracking.ts cho đội ngũ chạy Ads; test_integrity 186/186 PASS, lint & build 0 lỗi).*  
 *Tài liệu tham chiếu*: [`docs/TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md`](./TIEU-CHUAN-VA-PROMPT-CUA-THEP-VAN-GO.md), [`docs/Lo-trinh-Golive-Website-APEX-VN.md`](./Lo-trinh-Golive-Website-APEX-VN.md), [`docs/PROMPT-TRANG-CHI-TIET-DANH-MUC.md`](./PROMPT-TRANG-CHI-TIET-DANH-MUC.md), [`docs/VIEC-CON-LAI.md`](./VIEC-CON-LAI.md) & [`AGENTS.md`](../AGENTS.md)
 
 ---
@@ -357,6 +357,18 @@
 - **Thực hiện**:
   1. Cập nhật mục 7 trong [`src/pages/PrivacyPage.tsx`](../src/pages/PrivacyPage.tsx) hiển thị đường dẫn `mailto:hung061195@gmail.com` kèm nhãn `hung061195@gmail.com`.
   2. Kiểm thử: `npm run lint` PASS (0 lỗi), `npm run build` PASS (894ms), `scripts/test_integrity.js` PASS 186/186 (100%).
+
+---
+
+## 📈 Tích Hợp Google Tag Manager (GTM-55BHCBJ3) Cho Đội Ngũ Ads (2026-10-16)
+- **Yêu cầu người dùng**: Gắn mã theo dõi Google Tag Manager (`GTM-55BHCBJ3`) gồm thẻ `<script>` trong `<head>` và `<noscript><iframe>` trong `<body>` để phục vụ đo lường traffic và chiến dịch quảng cáo.
+- **Thực hiện**:
+  1. Thêm đoạn mã `<script>` Google Tag Manager vào đầu `<head>` trong [`index.html`](../index.html).
+  2. Thêm đoạn mã `<noscript>` Google Tag Manager ngay sau thẻ mở `<body>` trong [`index.html`](../index.html).
+  3. Bổ sung `'unsafe-inline'` vào `script-src` trong Content-Security-Policy của [`vercel.json`](../vercel.json) để cho phép inline script của GTM thực thi an toàn.
+  4. Cấu hình mặc định `GTM_ID = 'GTM-55BHCBJ3'` trong [`src/lib/tracking.ts`](../src/lib/tracking.ts) để tự động đẩy sự kiện chuyển đổi (`apex_page_view`, `generate_lead`, `contact_click`) vào `window.dataLayer`, hỗ trợ agency ads thiết lập custom trigger đo conversion.
+  5. Kiểm thử: `npm run lint` PASS (0 lỗi), `npm run build` PASS, kiểm thử render Edge headless xác nhận `GTM-55BHCBJ3` hiện diện đầy đủ trong DOM và 0 lỗi, `scripts/test_integrity.js` PASS 186/186 (100%).
+
 
 
 

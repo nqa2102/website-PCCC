@@ -26,7 +26,7 @@ const ADS_ID = import.meta.env.VITE_GOOGLE_ADS_ID as string | undefined; // dạ
 const ADS_LEAD_LABEL = import.meta.env.VITE_GOOGLE_ADS_LEAD_LABEL as string | undefined;
 const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID as string | undefined;
 // Google Tag Manager cho đơn vị chạy quảng cáo tự quản lý thẻ (dạng GTM-XXXXXXX)
-const GTM_ID = import.meta.env.VITE_GTM_ID as string | undefined;
+const GTM_ID = (import.meta.env.VITE_GTM_ID as string | undefined) || 'GTM-55BHCBJ3';
 
 export const trackingConfigured = Boolean(GA4_ID || ADS_ID || META_PIXEL_ID || GTM_ID);
 
@@ -63,7 +63,7 @@ export const loadTracking = () => {
   if (loaded || !trackingConfigured || getConsent() !== 'granted') return;
   loaded = true;
 
-  if (GTM_ID) {
+  if (GTM_ID && !document.querySelector('script[src*="googletagmanager.com/gtm.js"]')) {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
     loadScript(`https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(GTM_ID)}`);
