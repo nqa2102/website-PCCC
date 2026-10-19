@@ -269,7 +269,7 @@ const mapProducts = (items: AdminProduct[]): Product[] => {
       if (orig) {
         return {
           ...orig,
-          name: ap.name,
+          name: (ap.id === 'cua-thep-ei120-2-canh' && ap.name === 'Cửa Thép Ngăn Cháy 2 Cánh EI120') ? orig.name : ap.name,
           slug: ap.slug || orig.slug,
           category: ap.category as Product['category'],
           categoryName: ap.categoryName || orig.categoryName,
@@ -279,7 +279,7 @@ const mapProducts = (items: AdminProduct[]): Product[] => {
           longDescription: ap.longDescription || orig.longDescription || ap.shortDescription || orig.description,
           features: Array.isArray(ap.features) && ap.features.length > 0 ? ap.features : orig.features,
           popular: ap.featured,
-          image: ap.image || orig.image,
+          image: (ap.image && !ap.image.startsWith('/assets/')) ? ap.image : orig.image,
           gallery: Array.isArray(ap.gallery) && ap.gallery.length > 0 ? ap.gallery : orig.gallery,
           projectImages: Array.isArray(ap.projectImages) && ap.projectImages.length > 0 ? ap.projectImages : (orig as any)?.projectImages,
           priceEstimate: ap.priceEstimate || orig.priceEstimate || 'Liên hệ',

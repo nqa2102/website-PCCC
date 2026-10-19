@@ -21,6 +21,14 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
+    // Tự động dọn dẹp các đường dẫn /assets/ tĩnh cũ trong DB và cập nhật tên Cửa Thép Vân Gỗ 2 Cánh EI120
+    try {
+      await sql`UPDATE products SET image = NULL WHERE image LIKE '/assets/%'`;
+      await sql`UPDATE products SET name = 'Cửa Thép Vân Gỗ 2 Cánh EI120' WHERE id = 'cua-thep-ei120-2-canh' AND name = 'Cửa Thép Ngăn Cháy 2 Cánh EI120'`;
+    } catch (cleanupErr) {
+      console.warn('Lỗi dọn dẹp đường dẫn ảnh tĩnh:', cleanupErr);
+    }
+
     const [companyRows, productRows, documentRows, contentRows, projectRows] = await Promise.all([
       sql`
         SELECT 
