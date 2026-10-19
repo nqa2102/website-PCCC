@@ -308,6 +308,7 @@
   6. Kết quả kiểm thử: `npm run lint` PASS, 186/186 test integrity PASS, `npm run build` PASS, Browser Subagent UAT PASS.
 
 ---
+<<<<<<< Updated upstream
 
 ## 🔍 Hoàn Thiện Tìm Kiếm Sản Phẩm Key-by-Key & Xóa Huy Hiệu Neon DB (2026-10-16)
 - **Yêu cầu người dùng**:
@@ -371,10 +372,19 @@
 
 
 
+---
 
-
-
-
-
-
-
+## 🖼️ Cập Nhật Hình Ảnh Thật Lưới Sản Phẩm Trang Chủ (2026-10-19)
+- **Yêu cầu người dùng**:
+  1. Ảnh 2 (cửa thép xám đôi lắp hành lang): dành cho Cửa Thép Ngăn Cháy 1 Cánh EI70.
+  2. Ảnh 3 (cửa thép trắng hành lang căn hộ): dành cho Cửa Thép Ngăn Cháy 1 Cánh EI90, xóa ngày tháng giờ chụp và watermark/thương hiệu ngoại lai.
+  3. Ảnh 4 (cửa 2 cánh lệch vân gỗ kèm khóa thông minh): dành cho Cửa Thép Vân Gỗ 2 Cánh EI120.
+- **Thực hiện kỹ thuật**:
+  1. `src/assets/images/products/cua-thep-ei70-1-canh-cover.webp`: Crop tỉ lệ 4:5, xuất chuẩn WebP 1200x1500px chất lượng cao từ ảnh 2.
+  2. `src/assets/images/products/cua-thep-ei90-1-canh-cover.webp`: Tẩy sạch hoàn toàn lớp chữ ngày tháng, toạ độ GPS và đường ống phía trên trần; xóa sạch watermark/chữ in trên nẹp bảo vệ bên phải; giữ nguyên cánh cửa thép trắng, tay nắm inox, phào chỉ và cột đá tự nhiên; xuất chuẩn WebP 1200x1500px sạch 100% metadata.
+  3. `src/assets/images/products/cua-thep-ei120-2-canh-cover.webp`: Căn giữa cửa vân gỗ 2 cánh mẹ bồng con kèm khóa vân tay điện tử, xuất chuẩn WebP 1200x1500px từ ảnh 4.
+- **Kết quả kiểm thử**:
+  - `npm run lint` (tsc --noEmit): PASS 0 lỗi.
+  - `node scripts/test_integrity.js`: 186/186 PASS (100%).
+  - `npm run build`: PASS thành công (720ms).
+  - Browser UAT: Kiểm tra trực quan cả 4 thẻ sản phẩm trên trang chủ hiển thị đúng ảnh thật, sắc nét, không watermark.

@@ -104,7 +104,7 @@ export const PRODUCTS: Product[] = [
     ],
     image: cuaThepEi70Cover,
     gallery: [cuaThepEi70Cover, cuaThepEi70_2, cuaThepEi70_3, cuaThepEi70_4, cuaThepEi70_5],
-    imageAlt: 'Cửa thép ngăn cháy 1 cánh sơn tĩnh điện xám lắp cạnh hộp chữa cháy PCCC – APEX',
+    imageAlt: 'Cửa thép ngăn cháy 1 cánh sơn tĩnh điện xám lắp tại hành lang – APEX',
     priceEstimate: 'Liên hệ',
     popular: true
   },
@@ -134,7 +134,7 @@ export const PRODUCTS: Product[] = [
     ],
     image: cuaThepEi90_1Cover,
     gallery: [cuaThepEi90_1Cover, cuaThepEi90_1_2, cuaThepEi90_1_3, cuaThepEi90_1_4],
-    imageAlt: 'Cửa thép ngăn cháy 1 cánh EI90 sơn tĩnh điện xám hoàn thiện tại sảnh văn phòng – APEX',
+    imageAlt: 'Cửa thép ngăn cháy 1 cánh EI90 màu trắng hoàn thiện tại công trình – APEX',
     priceEstimate: 'Liên hệ'
   },
   {
@@ -169,18 +169,18 @@ export const PRODUCTS: Product[] = [
   {
     id: 'cua-thep-ei120-2-canh',
     slug: 'cua-thep-ei120-2-canh',
-    name: 'Cửa Thép Ngăn Cháy 2 Cánh EI120',
+    name: 'Cửa Thép Vân Gỗ 2 Cánh EI120',
     category: 'cua-thep-ngan-chay',
     categoryName: 'Cửa thép ngăn cháy',
     fireRating: 'EI120',
     certificationNo: '2225/KD-PCCC-P7',
-    description: 'Cửa thép chống cháy cấp độ cao nhất EI120 (120 phút), chuyên dụng cho trạm biến áp chính, trạm bơm PCCC trung tâm và phân khoang cháy nhà xưởng nặng.',
-    longDescription: 'Cửa thép ngăn cháy 2 cánh EI120 đạt chứng nhận kiểm định số 2225/KD-PCCC-P7. Khung bao thép dày 1.6mm chấn gia cường, cánh thép dày 1.2mm với lõi bông gốm Ceramic mật độ cực cao 128kg/m³, giữ nhiệt độ mặt không cháy dưới 140°C trong suốt 120 phút thử nghiệm lửa.',
+    description: 'Cửa thép vân gỗ chống cháy 2 cánh cấp độ cao nhất EI120 (120 phút), dập huỳnh tinh tế kết hợp khóa thông minh, cách âm và chống cháy vượt trội cho căn hộ, biệt thự và sảnh đón.',
+    longDescription: 'Cửa thép vân gỗ 2 cánh EI120 đạt chứng nhận kiểm định số 2225/KD-PCCC-P7. Khung bao thép dày 1.6mm chấn gia cường, cánh thép dày 1.2mm với lõi bông gốm Ceramic mật độ cực cao 128kg/m³, giữ nhiệt độ mặt không cháy dưới 140°C trong suốt 120 phút thử nghiệm lửa. Bề mặt phủ film vân gỗ tự nhiên sang trọng kết hợp khóa điện tử thông minh.',
     specs: {
       material: 'Thép mạ kẽm độ dày cao, chấn gấp CNC dung sai ±0.5mm',
       thickness: 'Cánh dày 50mm (thép 1.0 - 1.2mm) / Khung dày 1.4 - 1.6mm',
       insulation: 'Lõi bông gốm Ceramic siêu cách nhiệt 128kg/m³',
-      finish: 'Sơn tĩnh điện Jotun ngoài trời 2 thành phần',
+      finish: 'Sơn in truyền nhiệt vân gỗ 3D chống trầy xước',
       standard: 'QCVN 06:2022/BXD, TCVN 9383:2012 (Mã 2225/KD-PCCC-P7)',
       warranty: '12 - 24 tháng theo hợp đồng'
     },
@@ -192,7 +192,7 @@ export const PRODUCTS: Product[] = [
     ],
     image: cuaThepEi120_2Cover,
     gallery: [cuaThepEi120_2Cover, cuaThepEi120_2_2, cuaThepEi120_2_3],
-    imageAlt: 'Cửa thép ngăn cháy 2 cánh EI120 có ô kính quan sát chịu nhiệt và tay nắm inox – APEX',
+    imageAlt: 'Cửa thép vân gỗ 2 cánh EI120 sang trọng trang bị khóa điện tử thông minh – APEX',
     priceEstimate: 'Liên hệ',
     popular: true
   },
