@@ -9,6 +9,13 @@ import {
   Send,
   ShieldCheck,
   X,
+  ChevronRight,
+  ChevronLeft,
+  Layers,
+  Ruler,
+  Building2,
+  Flame,
+  FileCheck2,
 } from 'lucide-react';
 import { appendWebsiteLead, useLiveData } from '../admin/adminData';
 import { ApexMark } from './brand';
@@ -18,6 +25,7 @@ import {
   PRODUCT_CATEGORY_DEFINITIONS,
   PRODUCT_CATEGORY_GROUPS,
 } from './products/ProductCategoryGrid';
+import { trackLead } from '../lib/tracking';
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -189,7 +197,8 @@ const MATERIAL_OPTIONS = [
 
 export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, preselectedProduct }) => {
   const { company } = useLiveData();
-  const [activeTab, setActiveTab] = useState<'form' | 'direct'>('form');
+  const [activeTab, setActiveTab] = useState<'wizard' | 'direct'>('wizard');
+  const [wizardStep, setWizardStep] = useState<1 | 2 | 3>(1);
 
   // Khởi tạo danh mục đã chuẩn hóa từ preselectedProduct
   const resolveInitialCategory = (raw?: string | null): ProductCategory => {
@@ -204,7 +213,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
   const currentConfig = QUOTE_CONFIG_BY_CATEGORY[selectedCategory] || QUOTE_CONFIG_BY_CATEGORY['cua-thep-ngan-chay'];
   const isFireRated = currentConfig.group === 'fire-protection';
 
-  // State thông số kỹ thuật
+  // State thông số kỹ thuật (Bước 1 & 2)
   const [fireRating, setFireRating] = useState<string>(currentConfig.defaultRating || 'EI70');
   const [leafType, setLeafType] = useState('1-leaf');
   const [widthMm, setWidthMm] = useState<number>(currentConfig.defaultW);
@@ -223,7 +232,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
   const [finish, setFinish] = useState<string>(currentConfig.defaultFinish || FINISH_OPTIONS[0]);
   const [material, setMaterial] = useState<string>(currentConfig.defaultMaterial || MATERIAL_OPTIONS[0]);
 
-  // Thông tin liên hệ
+  // Thông tin liên hệ & Dự án (Bước 3)
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -237,7 +246,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Hàm cập nhật khi đổi category
+  // Cập nhật khi đổi category
   const applyCategory = (newCat: ProductCategory) => {
     setSelectedCategory(newCat);
     const cfg = QUOTE_CONFIG_BY_CATEGORY[newCat];
@@ -257,54 +266,46 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
     }
   };
 
-  // Đồng bộ khi modal được mở với preselectedProduct mới
   useEffect(() => {
-    if (isOpen) {
-      const resolved = resolveInitialCategory(preselectedProduct);
-      applyCategory(resolved);
-      setErrorMsg('');
-      setSubmitted(false);
+    if (preselectedProduct) {
+      applyCategory(resolveInitialCategory(preselectedProduct));
     }
-  }, [isOpen, preselectedProduct]);
+  }, [preselectedProduct]);
 
   if (!isOpen) return null;
 
+  // Xử lý gửi biểu mẫu dự toán (Bước 3)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim() || !phone.trim()) {
-      setErrorMsg('Vui lòng nhập họ tên và số điện thoại liên hệ.');
+    setErrorMsg('');
+
+    const cleanPhone = phone.trim().replace(/[^\d+]/g, '');
+    if (!cleanPhone || cleanPhone.length < 9) {
+      setErrorMsg('Vui lòng nhập số điện thoại hoặc Zalo hợp lệ (tối thiểu 9 chữ số) để kỹ sư gửi dự toán.');
       return;
     }
+
     if (!consent) {
-      setErrorMsg('Vui lòng xác nhận đồng ý để APEX xử lý thông tin và liên hệ báo giá.');
+      setErrorMsg('Vui lòng đồng ý với chính sách xử lý dữ liệu trước khi gửi yêu cầu.');
       return;
     }
 
     setSubmitting(true);
-    setErrorMsg('');
 
-    const leafLabel = currentConfig.hasLeafType
-      ? LEAF_TYPES.find((l) => l.id === leafType)?.label || leafType
-      : '';
-
-    const accessoriesList: string[] = [];
-    if (currentConfig.hasDoorAccessories) {
-      if (hasDoorCloser) accessoriesList.push('Tay co thủy lực');
-      if (hasPanicBar) accessoriesList.push('Thanh thoát hiểm panic');
-      if (hasVisionGlass) accessoriesList.push('Ô kính ngăn cháy');
+    const specLines: string[] = [];
+    specLines.push(`Sản phẩm: ${currentConfig.name}`);
+    if (isFireRated && fireRating) {
+      specLines.push(`Cấp chống cháy: ${fireRating}`);
     }
 
-    const specLines: string[] = [
-      `Sản phẩm: ${currentConfig.name}${isFireRated && fireRating ? ` (${fireRating})` : ''}`,
-    ];
-
+    const leafLabel = LEAF_TYPES.find((l) => l.id === leafType)?.label;
     if (currentConfig.hasLeafType && leafLabel) {
       specLines.push(`Kiểu cánh: ${leafLabel}`);
     }
 
     if (currentConfig.hasLengthM) {
       specLines.push(
-        `Kích thước: R${widthMm} x C${heightMm} mm, Chiều dài tuyến: ${lengthM} m, Khối lượng: ${quantity} mét/hệ`
+        `Kích thước: R${widthMm} x C${heightMm} mm, Tuyến: ${lengthM} m, Khối lượng: ${quantity} mét/hệ`
       );
     } else if (currentConfig.hasDepth) {
       specLines.push(
@@ -321,20 +322,28 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
       if (material) specLines.push(`Vật liệu/Độ dày: ${material}`);
       if (finish) specLines.push(`Hoàn thiện: ${finish}`);
     }
+
+    const accessoriesList: string[] = [];
+    if (currentConfig.hasDoorAccessories) {
+      if (hasDoorCloser) accessoriesList.push('Tay co thủy lực');
+      if (hasPanicBar) accessoriesList.push('Thanh thoát hiểm panic');
+      if (hasVisionGlass) accessoriesList.push('Ô kính quan sát');
+    }
     if (accessoriesList.length) {
       specLines.push(`Phụ kiện: ${accessoriesList.join(', ')}`);
     }
-    if (projectLocation) specLines.push(`Công trình/Địa điểm: ${projectLocation.trim()}`);
-    if (notes) specLines.push(`Ghi chú thêm: ${notes.trim()}`);
+    if (companyName) specLines.push(`Đơn vị / Nhà thầu: ${companyName.trim()}`);
+    if (projectLocation) specLines.push(`Dự án / Địa điểm: ${projectLocation.trim()}`);
+    if (notes) specLines.push(`Ghi chú: ${notes.trim()}`);
 
     const composedMessage = specLines.join('\n');
 
     try {
       await appendWebsiteLead({
         fullName: fullName.trim(),
-        phone: phone.trim(),
+        phone: cleanPhone,
         email: email.trim() || undefined,
-        topic: `Yêu cầu báo giá: ${currentConfig.name}`,
+        topic: `Dự toán dự án: ${currentConfig.name} (${isFireRated ? fireRating : (ipRating || 'Cơ điện')})`,
         message: composedMessage,
         consent,
         website,
@@ -343,7 +352,9 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
         fireRating: isFireRated ? fireRating : undefined,
         projectLocation: projectLocation.trim() || undefined,
         company: companyName.trim() || undefined,
+        source: 'quote_wizard_modal',
       });
+      trackLead('quote_wizard');
       setSubmitted(true);
     } catch {
       setErrorMsg(
@@ -356,11 +367,12 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
 
   const handleResetAndClose = () => {
     setSubmitted(false);
+    setWizardStep(1);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/75 p-3 backdrop-blur-sm sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-3 backdrop-blur-xs sm:p-4 overflow-y-auto">
       <div className="relative my-auto w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-white shadow-2xl">
         {/* Modal Header */}
         <div className="relative bg-slate-950 px-6 py-5 text-white sm:px-8">
@@ -378,23 +390,23 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
           </div>
           <div className="mt-1 flex items-center gap-2.5">
             <ApexMark size={24} variant="faceted-gold" />
-            <h2 className="text-xl sm:text-2xl font-bold text-white">Yêu cầu bảng báo giá kỹ thuật</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-white">Yêu cầu bảng báo giá dự toán công trình</h2>
           </div>
           <p className="mt-1 text-xs text-slate-300">
-            Cung cấp cấu hình thực tế của 10 nhóm sản phẩm để nhận phương án báo giá và hồ sơ kiểm định tương ứng.
+            Báo giá bảo mật theo khối lượng thực tế và bản vẽ dự án, kèm trọn bộ hồ sơ kiểm định PCCC hợp chuẩn.
           </p>
 
-          {/* Tab selector */}
+          {/* Tab selector: Wizard vs Hotline/Zalo */}
           <div className="mt-4 flex gap-2 border-b border-white/15 pb-0 text-xs font-semibold">
             <button
-              onClick={() => setActiveTab('form')}
+              onClick={() => setActiveTab('wizard')}
               className={`pb-2.5 px-3 transition-colors border-b-2 ${
-                activeTab === 'form'
+                activeTab === 'wizard'
                   ? 'border-red-500 text-white font-bold'
                   : 'border-transparent text-slate-400 hover:text-white'
               }`}
             >
-              Điền cấu hình nhận báo giá
+              Quy trình nhận báo giá 3 bước
             </button>
             <button
               onClick={() => setActiveTab('direct')}
@@ -413,7 +425,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
         {activeTab === 'direct' ? (
           <div className="space-y-4 p-6 sm:p-8">
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Quý khách cần trao đổi gấp về kích thước đặc thù, hồ sơ kiểm định PCCC hoặc tiến độ sản xuất, vui lòng liên hệ trực tiếp:
+              Quý khách cần trao đổi khẩn cấp về hồ sơ thẩm duyệt PCCC, thông số kích thước ô chờ đặc thù hoặc tiến độ sản xuất:
             </p>
             <a
               href={company.hotlineHref}
@@ -423,7 +435,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
                 <Phone className="h-5 w-5" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-xs font-semibold uppercase text-red-700">Gọi Hotline kỹ thuật</span>
+                <span className="block text-xs font-semibold uppercase text-red-700">Gọi Hotline kỹ thuật 24/7</span>
                 <strong className="mt-0.5 block text-xl text-slate-950 font-bold">{company.hotlineDisplay}</strong>
               </span>
               <span className="text-xs font-bold text-red-700 bg-white px-3 py-1.5 rounded-md border border-red-200">
@@ -441,7 +453,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
                 <MessageCircle className="h-5 w-5" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-xs font-semibold uppercase text-blue-700">Nhắn Zalo kinh doanh</span>
+                <span className="block text-xs font-semibold uppercase text-blue-700">Nhắn Zalo kinh doanh dự án</span>
                 <strong className="mt-0.5 block text-base text-slate-950 font-bold">Zalo: {company.hotlineDisplay}</strong>
               </span>
               <span className="text-xs font-bold text-blue-700 bg-white px-3 py-1.5 rounded-md border border-blue-200">
@@ -465,9 +477,9 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
               <CheckCircle2 className="h-8 w-8" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900">Tiếp nhận yêu cầu báo giá thành công!</h3>
+            <h3 className="text-lg font-bold text-slate-900">Tiếp nhận yêu cầu dự toán công trình thành công!</h3>
             <p className="max-w-md mx-auto text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Cảm ơn Quý khách <strong className="text-slate-900">{fullName}</strong>. Chuyên viên kinh doanh APEX sẽ liên hệ lại qua số điện thoại <strong className="text-red-700">{phone}</strong> trong vòng 1-2 ngày để gửi bảng dự toán chi tiết nhóm <strong className="text-slate-900">{currentConfig.name}</strong>.
+              Cảm ơn Quý khách <strong className="text-slate-900">{fullName}</strong>. Chuyên viên kinh doanh APEX sẽ liên hệ lại qua số điện thoại/Zalo <strong className="text-red-700">{phone}</strong> trong vòng 1-2 ngày để gửi bảng dự toán chi tiết nhóm <strong className="text-slate-900">{currentConfig.name}</strong> kèm hồ sơ kiểm định kỹ thuật tương ứng.
             </p>
             <div className="pt-4 flex justify-center gap-3">
               <button
@@ -486,388 +498,541 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({ isOpen, onClose, presele
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-5 sm:p-7 max-h-[72vh] overflow-y-auto space-y-5 text-xs">
+          <div className="p-5 sm:p-7 max-h-[75vh] overflow-y-auto">
+            {/* Step Wizard Progress Bar */}
+            <div className="mb-6">
+              <div className="grid grid-cols-3 gap-2 pb-3 border-b border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setWizardStep(1)}
+                  className={`flex items-center gap-2 text-left transition-colors ${
+                    wizardStep === 1
+                      ? 'text-red-700 font-bold'
+                      : wizardStep > 1
+                      ? 'text-emerald-700 font-semibold'
+                      : 'text-slate-400'
+                  }`}
+                >
+                  <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
+                    wizardStep === 1
+                      ? 'bg-red-600 text-white'
+                      : wizardStep > 1
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-200 text-slate-600'
+                  }`}>
+                    {wizardStep > 1 ? '✓' : '1'}
+                  </span>
+                  <span className="text-xs truncate">Chủng loại & EI</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setWizardStep(2)}
+                  className={`flex items-center gap-2 text-left transition-colors ${
+                    wizardStep === 2
+                      ? 'text-red-700 font-bold'
+                      : wizardStep > 2
+                      ? 'text-emerald-700 font-semibold'
+                      : 'text-slate-400'
+                  }`}
+                >
+                  <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
+                    wizardStep === 2
+                      ? 'bg-red-600 text-white'
+                      : wizardStep > 2
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-200 text-slate-600'
+                  }`}>
+                    {wizardStep > 2 ? '✓' : '2'}
+                  </span>
+                  <span className="text-xs truncate">Quy cách & Kích thước</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setWizardStep(3)}
+                  className={`flex items-center gap-2 text-left transition-colors ${
+                    wizardStep === 3
+                      ? 'text-red-700 font-bold'
+                      : 'text-slate-400'
+                  }`}
+                >
+                  <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold ${
+                    wizardStep === 3
+                      ? 'bg-red-600 text-white'
+                      : 'bg-slate-200 text-slate-600'
+                  }`}>
+                    3
+                  </span>
+                  <span className="text-xs truncate">Dự án & Báo giá</span>
+                </button>
+              </div>
+            </div>
+
             {errorMsg && (
-              <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs leading-5">
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs leading-5">
                 {errorMsg}
               </div>
             )}
 
-            {/* Bước 1: Chọn sản phẩm (10 nhóm chia 2 cụm rõ ràng) */}
-            <div>
-              <span className="block font-bold text-slate-900 uppercase tracking-wider mb-2">
-                1. Nhóm sản phẩm quan tâm (10 nhóm)
-              </span>
-
-              <div className="space-y-3">
-                {PRODUCT_CATEGORY_GROUPS.map((grp) => (
-                  <div key={grp.label} className="bg-slate-50/70 p-2.5 rounded-xl border border-slate-200">
-                    <span className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
-                      {grp.label}
+            {/* BƯỚC 1: CHỌN SẢN PHẨM & CẤP CHỊU LỬA */}
+            {wizardStep === 1 && (
+              <div className="space-y-5 text-xs">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                      <Layers className="h-4 w-4 text-red-600" /> Chọn hệ sản phẩm dự án (10 nhóm)
                     </span>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-                      {grp.ids.map((catId) => {
-                        const def = PRODUCT_CATEGORY_DEFINITIONS.find((d) => d.id === catId);
-                        const isSelected = selectedCategory === catId;
-                        return (
-                          <button
-                            key={catId}
-                            type="button"
-                            onClick={() => applyCategory(catId)}
-                            className={`min-h-10 p-2 text-left rounded-lg border text-xs transition-all ${
-                              isSelected
-                                ? 'border-red-600 bg-red-50 text-red-950 font-bold ring-1 ring-red-600 shadow-xs'
-                                : 'border-slate-200 bg-white hover:bg-slate-100/70 text-slate-700'
-                            }`}
-                          >
-                            <span className="block truncate">{def?.name || catId}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
+                    <span className="text-[11px] text-slate-500 font-medium">Bước 1/3</span>
                   </div>
-                ))}
-              </div>
 
-              {/* Chỉ số EI: CHỈ hiển thị với nhóm ngăn cháy */}
-              {isFireRated && (
-                <div className="mt-3 flex items-center gap-2 bg-amber-50/60 p-2.5 rounded-lg border border-amber-200/70">
-                  <span className="text-amber-950 font-bold shrink-0">Cấp chịu lửa EI:</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {FIRE_RATINGS.map((rating) => (
-                      <button
-                        key={rating}
-                        type="button"
-                        onClick={() => setFireRating(rating)}
-                        className={`min-h-8 px-3 py-1 rounded-md text-xs font-semibold border transition-colors ${
-                          fireRating === rating
-                            ? 'bg-slate-950 text-white border-slate-950 shadow-xs'
-                            : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400'
-                        }`}
-                      >
-                        {rating}
-                      </button>
+                  <div className="space-y-3">
+                    {PRODUCT_CATEGORY_GROUPS.map((grp) => (
+                      <div key={grp.label} className="bg-slate-50/70 p-3 rounded-xl border border-slate-200">
+                        <span className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2 px-1">
+                          {grp.label}
+                        </span>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                          {grp.ids.map((catId) => {
+                            const def = PRODUCT_CATEGORY_DEFINITIONS.find((d) => d.id === catId);
+                            const isSelected = selectedCategory === catId;
+                            return (
+                              <button
+                                key={catId}
+                                type="button"
+                                onClick={() => applyCategory(catId)}
+                                className={`min-h-11 p-2.5 text-left rounded-lg border text-xs transition-all ${
+                                  isSelected
+                                    ? 'border-red-600 bg-red-50 text-red-950 font-bold ring-2 ring-red-600/30 shadow-xs'
+                                    : 'border-slate-200 bg-white hover:bg-slate-100/70 text-slate-700'
+                                }`}
+                              >
+                                <span className="block truncate font-medium">{def?.name || catId}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     ))}
                   </div>
-                </div>
-              )}
-            </div>
 
-            {/* Bước 2: Kích thước & Quy cách theo nhóm */}
-            <div className="border-t border-slate-200 pt-4">
-              <span className="block font-bold text-slate-900 uppercase tracking-wider mb-2">
-                2. Quy cách & Kích thước thiết kế
-              </span>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {/* Kiểu cánh (chỉ cửa thép/kính) */}
-                {currentConfig.hasLeafType && (
-                  <div>
-                    <label className="block text-[11px] text-slate-600 font-medium mb-1">Kiểu cánh</label>
-                    <select
-                      value={leafType}
-                      onChange={(e) => setLeafType(e.target.value)}
-                      className="w-full h-10 border border-slate-300 rounded-md px-2 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                    >
-                      {LEAF_TYPES.map((l) => (
-                        <option key={l.id} value={l.id}>{l.label}</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
-
-                {/* Chiều rộng */}
-                <div>
-                  <label className="block text-[11px] text-slate-600 font-medium mb-1">Chiều rộng (mm)</label>
-                  <input
-                    type="number"
-                    min={100}
-                    max={20000}
-                    step={10}
-                    value={widthMm}
-                    onChange={(e) => setWidthMm(Number(e.target.value))}
-                    className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                  />
+                  {/* Cấp chịu lửa EI (Chỉ nhóm ngăn cháy) */}
+                  {isFireRated && (
+                    <div className="mt-4 bg-amber-50/60 p-3.5 rounded-xl border border-amber-200/70">
+                      <div className="flex items-center gap-1.5 text-amber-950 font-bold mb-2">
+                        <Flame className="h-4 w-4 text-red-600" />
+                        <span>Cấp giới hạn chịu lửa thiết kế (EI):</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {FIRE_RATINGS.map((rating) => (
+                          <button
+                            key={rating}
+                            type="button"
+                            onClick={() => setFireRating(rating)}
+                            className={`min-h-9 px-4 py-1.5 rounded-lg text-xs font-bold border transition-colors ${
+                              fireRating === rating
+                                ? 'bg-slate-950 text-white border-slate-950 shadow-sm'
+                                : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400'
+                            }`}
+                          >
+                            {rating}
+                          </button>
+                        ))}
+                      </div>
+                      <p className="mt-2 text-[11px] text-amber-800">
+                        Đạt thử nghiệm chịu lửa theo QCVN 06:2022/BXD và TCVN 9383:2012 với đầy đủ tem kiểm định PCCC.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
-                {/* Chiều cao */}
-                <div>
-                  <label className="block text-[11px] text-slate-600 font-medium mb-1">Chiều cao (mm)</label>
-                  <input
-                    type="number"
-                    min={100}
-                    max={20000}
-                    step={10}
-                    value={heightMm}
-                    onChange={(e) => setHeightMm(Number(e.target.value))}
-                    className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                  />
-                </div>
-
-                {/* Chiều sâu (Tủ điện, Tủ rack, Shelter, Tủ nguồn) */}
-                {currentConfig.hasDepth && (
-                  <div>
-                    <label className="block text-[11px] text-slate-600 font-medium mb-1">Chiều sâu (mm)</label>
-                    <input
-                      type="number"
-                      min={100}
-                      max={10000}
-                      step={10}
-                      value={depthMm}
-                      onChange={(e) => setDepthMm(Number(e.target.value))}
-                      className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                    />
-                  </div>
-                )}
-
-                {/* Chiều dài tuyến (Thang máng cáp) */}
-                {currentConfig.hasLengthM && (
-                  <div>
-                    <label className="block text-[11px] text-slate-600 font-medium mb-1">Chiều dài (m)</label>
-                    <input
-                      type="number"
-                      min={1}
-                      max={50000}
-                      step={5}
-                      value={lengthM}
-                      onChange={(e) => setLengthM(Number(e.target.value))}
-                      className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                    />
-                  </div>
-                )}
-
-                {/* Số lượng */}
-                <div>
-                  <label className="block text-[11px] text-slate-600 font-medium mb-1">
-                    {currentConfig.hasLengthM ? 'Số mét / Đoạn' : 'Số lượng (Bộ / Tủ)'}
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={10000}
-                    value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
-                    className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                  />
+                <div className="pt-4 border-t border-slate-100 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setWizardStep(2)}
+                    className="inline-flex min-h-11 items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2.5 rounded-lg transition-colors shadow-sm"
+                  >
+                    Tiếp tục: Nhập kích thước & quy cách <ChevronRight className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
+            )}
 
-              {/* Nhóm cơ điện - viễn thông: Cấp IP, Vật liệu, Xử lý bề mặt */}
-              {!isFireRated && (
-                <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-slate-50 p-3 rounded-lg border border-slate-200">
-                  {currentConfig.hasIpRating && (
+            {/* BƯỚC 2: QUY CÁCH & KÍCH THƯỚC */}
+            {wizardStep === 2 && (
+              <div className="space-y-5 text-xs">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                      <Ruler className="h-4 w-4 text-red-600" /> Thông số kích thước: {currentConfig.name}
+                    </span>
+                    <span className="text-[11px] text-slate-500 font-medium">Bước 2/3</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    {/* Kiểu cánh (chỉ cửa thép/kính) */}
+                    {currentConfig.hasLeafType && (
+                      <div>
+                        <label className="block text-[11px] text-slate-600 font-medium mb-1">Kiểu cánh</label>
+                        <select
+                          value={leafType}
+                          onChange={(e) => setLeafType(e.target.value)}
+                          className="w-full h-10 border border-slate-300 rounded-md px-2 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                        >
+                          {LEAF_TYPES.map((l) => (
+                            <option key={l.id} value={l.id}>{l.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    {/* Chiều rộng */}
                     <div>
-                      <label className="block text-[11px] text-slate-600 font-medium mb-1">Cấp bảo vệ IP</label>
-                      <select
-                        value={ipRating}
-                        onChange={(e) => setIpRating(e.target.value)}
-                        className="w-full h-10 border border-slate-300 rounded-md px-2 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                      >
-                        {IP_RATINGS.map((ip) => (
-                          <option key={ip} value={ip}>{ip}</option>
-                        ))}
-                      </select>
+                      <label className="block text-[11px] text-slate-600 font-medium mb-1">Chiều rộng (mm)</label>
+                      <input
+                        type="number"
+                        min={100}
+                        max={20000}
+                        step={10}
+                        value={widthMm}
+                        onChange={(e) => setWidthMm(Number(e.target.value))}
+                        className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                      />
+                    </div>
+
+                    {/* Chiều cao */}
+                    <div>
+                      <label className="block text-[11px] text-slate-600 font-medium mb-1">Chiều cao (mm)</label>
+                      <input
+                        type="number"
+                        min={100}
+                        max={20000}
+                        step={10}
+                        value={heightMm}
+                        onChange={(e) => setHeightMm(Number(e.target.value))}
+                        className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                      />
+                    </div>
+
+                    {/* Chiều sâu (Tủ điện, Tủ rack, Shelter, Tủ nguồn) */}
+                    {currentConfig.hasDepth && (
+                      <div>
+                        <label className="block text-[11px] text-slate-600 font-medium mb-1">Chiều sâu (mm)</label>
+                        <input
+                          type="number"
+                          min={100}
+                          max={10000}
+                          step={10}
+                          value={depthMm}
+                          onChange={(e) => setDepthMm(Number(e.target.value))}
+                          className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                        />
+                      </div>
+                    )}
+
+                    {/* Chiều dài tuyến (Thang máng cáp) */}
+                    {currentConfig.hasLengthM && (
+                      <div>
+                        <label className="block text-[11px] text-slate-600 font-medium mb-1">Chiều dài (m)</label>
+                        <input
+                          type="number"
+                          min={1}
+                          max={50000}
+                          step={5}
+                          value={lengthM}
+                          onChange={(e) => setLengthM(Number(e.target.value))}
+                          className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                        />
+                      </div>
+                    )}
+
+                    {/* Số lượng */}
+                    <div>
+                      <label className="block text-[11px] text-slate-600 font-medium mb-1">
+                        {currentConfig.hasLengthM ? 'Số mét / Tuyến' : 'Số lượng (Bộ / Tủ)'}
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={10000}
+                        value={quantity}
+                        onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+                        className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600 font-bold"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Cơ điện viễn thông */}
+                  {!isFireRated && (
+                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                      {currentConfig.hasIpRating && (
+                        <div>
+                          <label className="block text-[11px] text-slate-600 font-medium mb-1">Cấp bảo vệ IP</label>
+                          <select
+                            value={ipRating}
+                            onChange={(e) => setIpRating(e.target.value)}
+                            className="w-full h-10 border border-slate-300 rounded-md px-2 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                          >
+                            {IP_RATINGS.map((ip) => (
+                              <option key={ip} value={ip}>{ip}</option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
+                      <div className={!currentConfig.hasIpRating ? 'sm:col-span-1.5' : ''}>
+                        <label className="block text-[11px] text-slate-600 font-medium mb-1">Hoàn thiện bề mặt</label>
+                        <select
+                          value={finish}
+                          onChange={(e) => setFinish(e.target.value)}
+                          className="w-full h-10 border border-slate-300 rounded-md px-2 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                        >
+                          {FINISH_OPTIONS.map((f) => (
+                            <option key={f} value={f}>{f}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className={!currentConfig.hasIpRating ? 'sm:col-span-1.5' : ''}>
+                        <label className="block text-[11px] text-slate-600 font-medium mb-1">Vật liệu / Độ dày</label>
+                        <select
+                          value={material}
+                          onChange={(e) => setMaterial(e.target.value)}
+                          className="w-full h-10 border border-slate-300 rounded-md px-2 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                        >
+                          {MATERIAL_OPTIONS.map((m) => (
+                            <option key={m} value={m}>{m}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   )}
 
-                  <div className={!currentConfig.hasIpRating ? 'sm:col-span-1.5' : ''}>
-                    <label className="block text-[11px] text-slate-600 font-medium mb-1">Hoàn thiện bề mặt</label>
-                    <select
-                      value={finish}
-                      onChange={(e) => setFinish(e.target.value)}
-                      className="w-full h-10 border border-slate-300 rounded-md px-2 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                    >
-                      {FINISH_OPTIONS.map((f) => (
-                        <option key={f} value={f}>{f}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className={!currentConfig.hasIpRating ? 'sm:col-span-1.5' : ''}>
-                    <label className="block text-[11px] text-slate-600 font-medium mb-1">Vật liệu / Độ dày</label>
-                    <select
-                      value={material}
-                      onChange={(e) => setMaterial(e.target.value)}
-                      className="w-full h-10 border border-slate-300 rounded-md px-2 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                    >
-                      {MATERIAL_OPTIONS.map((m) => (
-                        <option key={m} value={m}>{m}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              )}
-
-              {/* Phụ kiện cửa (chỉ cửa thép/kính) */}
-              {currentConfig.hasDoorAccessories && (
-                <div className="mt-3 flex flex-wrap gap-4 pt-1">
-                  <label className="inline-flex items-center gap-2 cursor-pointer text-slate-700 min-h-8">
-                    <input
-                      type="checkbox"
-                      checked={hasDoorCloser}
-                      onChange={(e) => setHasDoorCloser(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600"
-                    />
-                    <span>Tay co thủy lực tự đóng</span>
-                  </label>
-                  <label className="inline-flex items-center gap-2 cursor-pointer text-slate-700 min-h-8">
-                    <input
-                      type="checkbox"
-                      checked={hasPanicBar}
-                      onChange={(e) => setHasPanicBar(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600"
-                    />
-                    <span>Khóa thanh thoát hiểm (Panic bar)</span>
-                  </label>
-                  <label className="inline-flex items-center gap-2 cursor-pointer text-slate-700 min-h-8">
-                    <input
-                      type="checkbox"
-                      checked={hasVisionGlass}
-                      onChange={(e) => setHasVisionGlass(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600"
-                    />
-                    <span>Ô kính quan sát ngăn cháy</span>
-                  </label>
-                </div>
-              )}
-            </div>
-
-            {/* Bước 3: Thông tin nhận báo giá */}
-            <div className="border-t border-slate-200 pt-4">
-              <span className="block font-bold text-slate-900 uppercase tracking-wider mb-2">
-                3. Thông tin nhận dự toán & Hồ sơ kỹ thuật
-              </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] text-slate-600 font-medium mb-1">
-                    Họ và tên <span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nguyễn Văn A"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] text-slate-600 font-medium mb-1">
-                    Số điện thoại <span className="text-red-600">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="0912 xxx xxx"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] text-slate-600 font-medium mb-1">Email (nếu có)</label>
-                  <input
-                    type="email"
-                    placeholder="email@congty.vn"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] text-slate-600 font-medium mb-1">Công ty / Đơn vị (nếu có)</label>
-                  <input
-                    type="text"
-                    placeholder="Công ty Xây dựng / Cơ điện ABC"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="block text-[11px] text-slate-600 font-medium mb-1">Địa điểm công trình / Dự án</label>
-                  <input
-                    type="text"
-                    placeholder="KCN VSIP, Hà Nội, Bắc Ninh..."
-                    value={projectLocation}
-                    onChange={(e) => setProjectLocation(e.target.value)}
-                    className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                  />
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <label className="block text-[11px] text-slate-600 font-medium mb-1">Ghi chú đặc thù</label>
-                <input
-                  type="text"
-                  placeholder="Yêu cầu màu sơn RAL, tiến độ bàn giao, cấp kiểm định PCCC hoặc chứng chỉ xuất xưởng..."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
-                />
-              </div>
-            </div>
-
-            {/* Bẫy chống bot */}
-            <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-              <label>
-                Website
-                <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
-              </label>
-            </div>
-
-            {/* Đồng ý xử lý dữ liệu cá nhân (Nghị định 13/2023) */}
-            <label className="flex items-start gap-2 text-[11px] leading-5 text-slate-600 cursor-pointer">
-              <input
-                type="checkbox"
-                required
-                checked={consent}
-                onChange={(e) => setConsent(e.target.checked)}
-                className="mt-0.5 h-4 w-4 shrink-0 accent-red-600"
-              />
-              <span>
-                Tôi đồng ý để APEX lưu và xử lý thông tin trên nhằm liên hệ tư vấn, báo giá theo{' '}
-                <a href="/chinh-sach-bao-mat" target="_blank" rel="noopener noreferrer" className="font-semibold text-red-700 underline">
-                  chính sách bảo mật
-                </a>
-                .
-              </span>
-            </label>
-
-            {/* Nút hành động */}
-            <div className="border-t border-slate-200 pt-4 flex flex-col sm:flex-row items-center justify-end gap-3">
-              <div className="flex gap-2 w-full sm:w-auto">
-                <button
-                  type="button"
-                  onClick={handleResetAndClose}
-                  className="min-h-10 w-1/3 sm:w-auto px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 font-bold hover:bg-slate-50 transition-colors"
-                >
-                  Hủy
-                </button>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="min-h-10 flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2.5 rounded-lg transition-colors shadow-sm disabled:opacity-60"
-                >
-                  {submitting ? (
-                    <>
-                      <LoaderCircle className="h-4 w-4 animate-spin" />
-                      <span>Đang gửi...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4" />
-                      <span>Gửi yêu cầu báo giá</span>
-                    </>
+                  {/* Phụ kiện cửa (chỉ cửa thép/kính) */}
+                  {currentConfig.hasDoorAccessories && (
+                    <div className="mt-4 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                      <span className="block font-bold text-slate-900 mb-2">Phụ kiện đồng bộ theo cửa:</span>
+                      <div className="flex flex-wrap gap-4">
+                        <label className="inline-flex items-center gap-2 cursor-pointer text-slate-700 min-h-8">
+                          <input
+                            type="checkbox"
+                            checked={hasDoorCloser}
+                            onChange={(e) => setHasDoorCloser(e.target.checked)}
+                            className="h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600"
+                          />
+                          <span>Tay co thủy lực tự đóng</span>
+                        </label>
+                        <label className="inline-flex items-center gap-2 cursor-pointer text-slate-700 min-h-8">
+                          <input
+                            type="checkbox"
+                            checked={hasPanicBar}
+                            onChange={(e) => setHasPanicBar(e.target.checked)}
+                            className="h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600"
+                          />
+                          <span>Khóa thanh thoát hiểm (Panic bar)</span>
+                        </label>
+                        <label className="inline-flex items-center gap-2 cursor-pointer text-slate-700 min-h-8">
+                          <input
+                            type="checkbox"
+                            checked={hasVisionGlass}
+                            onChange={(e) => setHasVisionGlass(e.target.checked)}
+                            className="h-4 w-4 rounded border-slate-300 text-red-600 focus:ring-red-600"
+                          />
+                          <span>Ô kính quan sát ngăn cháy</span>
+                        </label>
+                      </div>
+                    </div>
                   )}
-                </button>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={() => setWizardStep(1)}
+                    className="inline-flex min-h-11 items-center gap-1.5 px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50"
+                  >
+                    <ChevronLeft className="h-4 w-4" /> Quay lại
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setWizardStep(3)}
+                    className="inline-flex min-h-11 items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-2.5 rounded-lg transition-colors shadow-sm"
+                  >
+                    Tiếp tục: Thông tin dự án <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
+            )}
+
+            {/* BƯỚC 3: THÔNG TIN DỰ ÁN & GỬI BÁO GIÁ */}
+            {wizardStep === 3 && (
+              <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                      <Building2 className="h-4 w-4 text-red-600" /> Thông tin công trình & Người nhận dự toán
+                    </span>
+                    <span className="text-[11px] text-slate-500 font-medium">Bước 3/3</span>
+                  </div>
+
+                  {/* Tóm tắt cấu hình đã chọn */}
+                  <div className="mb-4 bg-slate-50 p-3 rounded-lg border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+                    <div className="text-[11px] text-slate-700">
+                      <strong>Cấu hình:</strong> {currentConfig.name}{' '}
+                      {isFireRated ? `(${fireRating})` : ''} -{' '}
+                      {currentConfig.hasLeafType ? `${LEAF_TYPES.find((l) => l.id === leafType)?.label} - ` : ''}
+                      {widthMm}x{heightMm} mm ({quantity} {currentConfig.hasLengthM ? 'mét' : 'bộ'})
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setWizardStep(2)}
+                      className="text-red-700 hover:underline text-[11px] font-semibold"
+                    >
+                      Sửa cấu hình
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[11px] text-slate-600 font-medium mb-1">
+                        Họ và tên người nhận <span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Nguyễn Văn A"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] text-slate-600 font-medium mb-1">
+                        Số điện thoại / Zalo <span className="text-red-600">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="0912 xxx xxx"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] text-slate-600 font-medium mb-1">Email nhận dự toán (nếu có)</label>
+                      <input
+                        type="email"
+                        placeholder="duan@congty.vn"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] text-slate-600 font-medium mb-1">Công ty / Nhà thầu (nếu có)</label>
+                      <input
+                        type="text"
+                        placeholder="Công ty Xây dựng / Cơ điện ABC"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                      />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="block text-[11px] text-slate-600 font-medium mb-1">Tên dự án / Địa điểm công trình</label>
+                      <input
+                        type="text"
+                        placeholder="KCN VSIP Bắc Ninh, Tòa nhà Hà Nội, Nhà xưởng Hải Phòng..."
+                        value={projectLocation}
+                        onChange={(e) => setProjectLocation(e.target.value)}
+                        className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-3">
+                    <label className="block text-[11px] text-slate-600 font-medium mb-1">Ghi chú yêu cầu kỹ thuật đặc thù</label>
+                    <input
+                      type="text"
+                      placeholder="Mã màu sơn RAL, tiến độ bàn giao, cấp kiểm định PCCC hoặc chứng chỉ xuất xưởng..."
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      className="w-full h-10 border border-slate-300 rounded-md px-2.5 text-xs bg-white text-slate-900 outline-none focus:border-red-600"
+                    />
+                  </div>
+                </div>
+
+                {/* Bẫy chống bot */}
+                <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                  <label>
+                    Website
+                    <input type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+                  </label>
+                </div>
+
+                {/* Đồng ý xử lý dữ liệu cá nhân (Nghị định 13/2023) */}
+                <label className="flex items-start gap-2 text-[11px] leading-5 text-slate-600 cursor-pointer pt-1">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-red-600"
+                  />
+                  <span>
+                    Tôi đồng ý để APEX lưu và xử lý thông tin trên nhằm liên hệ tư vấn, báo giá theo{' '}
+                    <a href="/chinh-sach-bao-mat" target="_blank" rel="noopener noreferrer" className="font-semibold text-red-700 underline">
+                      chính sách bảo mật
+                    </a>
+                    .
+                  </span>
+                </label>
+
+                {/* Nút hành động */}
+                <div className="border-t border-slate-200 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setWizardStep(2)}
+                    className="inline-flex min-h-11 items-center gap-1.5 px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50 w-full sm:w-auto"
+                  >
+                    <ChevronLeft className="h-4 w-4" /> Quay lại bước 2
+                  </button>
+
+                  <div className="flex gap-2 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={handleResetAndClose}
+                      className="min-h-11 px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 font-bold hover:bg-slate-50 transition-colors"
+                    >
+                      Hủy
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="min-h-11 flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white font-bold px-7 py-2.5 rounded-lg transition-colors shadow-md disabled:opacity-60"
+                    >
+                      {submitting ? (
+                        <>
+                          <LoaderCircle className="h-4 w-4 animate-spin" />
+                          <span>Đang gửi dự toán...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-4 w-4" />
+                          <span>Gửi yêu cầu dự toán công trình</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+          </div>
         )}
       </div>
     </div>

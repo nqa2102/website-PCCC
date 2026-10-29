@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { getDb, requireAdminRole, ROLE_ACCESS } from './_db.js';
+import { sendLeadNotification } from './_mailer.js';
 
 const LEAD_STATUSES = ['new', 'contacted', 'qualified', 'closed', 'lost'];
 const LEAD_PRIORITIES = ['high', 'medium', 'low'];
@@ -107,7 +108,7 @@ export default async function handler(req: any, res: any) {
         for (const row of allRows) {
           lines.push([
             csvEscape(row.id),
-            csvEscape(row.createdAt ? new Date(row.createdAt).toISOString() : ''),
+            csvEscape(row.createdAt ? new Date(row.createdAt).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour: '2-digit', minute: '2-digit', second: '2-digit', day: '2-digit', month: '2-digit', year: 'numeric' }) : ''),
             csvEscape(row.fullName),
             csvEscape(row.phone),
             csvEscape(row.email),
@@ -302,47 +303,29 @@ export default async function handler(req: any, res: any) {
         }
       }
 
-      // 6. Gửi email thông báo nội bộ qua Resend nếu có cấu hình API Key
-      // NOTIFICATION_EMAIL: một hoặc nhiều địa chỉ nhận, phân tách bằng dấu phẩy
-      const notifyTo = (process.env.NOTIFICATION_EMAIL || '').split(',').map((item) => item.trim()).filter(Boolean);
-      if (!process.env.RESEND_API_KEY || notifyTo.length === 0) {
-        console.warn('Chưa gửi email báo lead mới: thiếu RESEND_API_KEY hoặc NOTIFICATION_EMAIL.');
-      } else {
-        try {
-          const mailRes = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              // Đặt RESEND_FROM (vd: "APEX Website <thongbao@apexhome.vn>") sau khi xác thực tên miền trên Resend
-              from: process.env.RESEND_FROM || 'APEX Website <onboarding@resend.dev>',
-              to: notifyTo,
-              // Bấm "Trả lời" trong email là trả lời thẳng cho khách (nếu khách để lại email)
-              ...(lead.email ? { reply_to: lead.email } : {}),
-              subject: `[APEX PCCC] Khách hàng mới: ${String(fullName).trim()} - ${String(phone).trim()}`,
-              html: `
-                <h2>Có yêu cầu tư vấn mới từ website APEX VN</h2>
-                <p><strong>Họ tên:</strong> ${escapeHtml(String(fullName).trim())}</p>
-                <p><strong>Điện thoại:</strong> ${escapeHtml(String(phone).trim())}</p>
-                <p><strong>Email:</strong> ${email ? escapeHtml(String(email).trim()) : 'Chưa cung cấp'}</p>
-                <p><strong>Công ty:</strong> ${company ? escapeHtml(String(company).trim()) : 'Chưa cung cấp'}</p>
-                <p><strong>Dự án:</strong> ${projectName ? escapeHtml(String(projectName).trim()) : 'Chưa cung cấp'}</p>
-                <p><strong>Sản phẩm quan tâm:</strong> ${productInterest ? escapeHtml(String(productInterest).trim()) : 'Tư vấn chung'}</p>
-                <p><strong>Nội dung:</strong> ${message ? escapeHtml(String(message).trim()) : 'Không có'}</p>
-                <hr/>
-                <p><small>Hệ thống tự động ghi nhận tại Neon DB lúc ${new Date().toISOString()}</small></p>
-              `,
-            }),
-          });
-          if (!mailRes.ok) {
-            // Lead vẫn đã lưu trong Neon; chỉ ghi log để kiểm tra cấu hình Resend
-            console.error('Resend từ chối gửi email báo lead:', mailRes.status, await mailRes.text().catch(() => ''));
-          }
-        } catch (mailErr) {
-          console.error('Lỗi gửi email thông báo qua Resend:', mailErr);
+      // 6. Gửi email thông báo tự động cho admin (Resend hoặc SMTP / Gmail)
+      try {
+        const mailResult = await sendLeadNotification({
+          id: leadId,
+          fullName: lead.fullName,
+          phone: lead.phone,
+          email: lead.email,
+          company: lead.company,
+          projectName: lead.projectName,
+          projectLocation: lead.projectLocation,
+          productInterest: lead.productInterest,
+          fireRating: lead.fireRating,
+          source: lead.source,
+          message: lead.message,
+          createdAt: new Date().toISOString(),
+        });
+        if (mailResult.success) {
+          console.log(`[LEAD_NOTIFY] Đã gửi email thông báo lead ${leadId} thành công qua ${mailResult.provider} tới:`, mailResult.recipients.join(', '));
+        } else {
+          console.warn(`[LEAD_NOTIFY] Chưa gửi được email thông báo lead ${leadId}:`, mailResult.error);
         }
+      } catch (mailErr) {
+        console.error('[LEAD_NOTIFY] Lỗi ngoại lệ khi gửi email thông báo lead:', mailErr);
       }
 
       return res.status(200).json({

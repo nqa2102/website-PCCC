@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   ArrowRight, Award,
-  CheckCircle2, FileCheck2, Flame,
+  CheckCircle2, Download, FileCheck2, Flame,
   MapPin, MessageSquare, ShieldCheck, Wrench,
+  FileText, ExternalLink, Layers, Sparkles
 } from 'lucide-react';
 import {
   HERO_IMAGE, PARTNER_LOGOS,
@@ -14,6 +15,7 @@ interface HomePageProps {
   onNavigate: (tab: string, itemId?: string) => void;
   onOpenQuote: (productId?: string) => void;
   onOpenChat: () => void;
+  onOpenCatalog?: () => void;
 }
 
 const trustPoints = [
@@ -39,8 +41,75 @@ const projectProcess = [
   ['Bàn giao', 'Đối chiếu hạng mục, hồ sơ liên quan và chính sách bảo hành.'],
 ];
 
-export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onOpenChat }) => {
+// 4 Nhóm giải pháp phân tab trang chủ
+type SolutionTab = 'steel' | 'roller' | 'glass' | 'mep';
+
+const SOLUTION_TABS: { id: SolutionTab; label: string; badge: string; desc: string }[] = [
+  {
+    id: 'steel',
+    label: 'Cửa Thép & Vân Gỗ',
+    badge: 'EI70 - EI120',
+    desc: 'Lối thoát nạn, phòng kỹ thuật, sảnh & căn hộ cao cấp'
+  },
+  {
+    id: 'roller',
+    label: 'Cửa Cuốn & Rèm Ngăn Cháy',
+    badge: 'EI60 - EI90',
+    desc: 'Phân khoang siêu trường tầng hầm, TTTM & nhà xưởng'
+  },
+  {
+    id: 'glass',
+    label: 'Cửa Kính & Vách Kính',
+    badge: 'EI60 - EI90',
+    desc: 'Kiến trúc mở sảnh đón, thông tầng & văn phòng hạng A'
+  },
+  {
+    id: 'mep',
+    label: 'Cơ Điện & Trạm Shelter',
+    badge: 'IP55 - TCVN',
+    desc: 'Tủ điện, thang máng cáp & trạm viễn thông công nghiệp'
+  },
+];
+
+// Danh sách giấy chứng nhận kiểm định PCCC tiêu biểu
+const CERTIFICATES = [
+  {
+    code: '1803/KD-PCCC-P7',
+    authority: 'Cục Cảnh sát PCCC & CNCH',
+    title: 'Cửa thép ngăn cháy 1 cánh & 2 cánh',
+    rating: 'EI70 - EI90',
+    standard: 'QCVN 06:2022/BXD & TCVN 9383:2012',
+    scope: 'Áp dụng buồng thang bộ, lối thoát nạn, phòng kỹ thuật điện nước toàn quốc.'
+  },
+  {
+    code: '1786/KD-PCCC-P7',
+    authority: 'Cục Cảnh sát PCCC & CNCH',
+    title: 'Cửa kính ngăn cháy & Vách kính cố định',
+    rating: 'EI60 - EI90',
+    standard: 'QCVN 06:2022/BXD',
+    scope: 'Kính gel cách nhiệt đa tầng, khung thép gia cường bọc Inox 304 kiến trúc mở.'
+  },
+  {
+    code: '2736/KD-PCCC-P7',
+    authority: 'Cục Cảnh sát PCCC & CNCH',
+    title: 'Cửa cuốn chống cháy & Rèm ngăn khói',
+    rating: 'EI60 - EI90',
+    standard: 'TCVN 9383:2012',
+    scope: 'Phân chia khoang cháy tầng hầm đỗ xe, trung tâm thương mại và nhà xưởng công nghiệp.'
+  },
+  {
+    code: '2225/KD-PCCC-P7',
+    authority: 'Cục Cảnh sát PCCC & CNCH',
+    title: 'Cửa thép vân gỗ cách nhiệt & Hệ cơ điện',
+    rating: 'EI120 / IP55',
+    standard: 'QCVN 06:2022/BXD & ISO 9001:2015',
+    scope: 'Cửa căn hộ cao cấp 120 phút kết hợp giải pháp tủ điện cơ điện hạ thế, trạm shelter.'
+  },
+];
+
+export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onOpenChat, onOpenCatalog }) => {
   const { products, projects } = useLiveData();
+  const [activeTab, setActiveTab] = useState<SolutionTab>('steel');
 
   const handleLink = (e: React.MouseEvent<HTMLAnchorElement>, tab: string, itemId?: string) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
@@ -48,14 +117,52 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
     onNavigate(tab, itemId);
   };
 
+  // Lọc sản phẩm theo tab đang chọn
+  const filteredProducts = useMemo(() => {
+    switch (activeTab) {
+      case 'steel':
+        return products.filter((p) =>
+          p.category === 'cua-thep-ngan-chay' || p.category === 'cua-thep-van-go'
+        ).slice(0, 4);
+      case 'roller':
+        return products.filter((p) =>
+          p.category === 'cua-cuon-ngan-chay' || p.category === 'rem-ngan-chay'
+        ).slice(0, 4);
+      case 'glass':
+        return products.filter((p) =>
+          p.category === 'cua-kinh-ngan-chay'
+        ).slice(0, 4);
+      case 'mep':
+        return products.filter((p) =>
+          p.category === 'tu-dien' ||
+          p.category === 'thang-mang-cap' ||
+          p.category === 'tu-rack' ||
+          p.category === 'nha-tram-shelter' ||
+          p.category === 'tu-nguon-outdoor'
+        ).slice(0, 4);
+      default:
+        return products.slice(0, 4);
+    }
+  }, [products, activeTab]);
+
   return (
     <div className="w-full bg-neutral-50">
-      <section className="relative min-h-[520px] overflow-hidden bg-[#102b21] text-white sm:min-h-[540px]">
-        <img src={HERO_IMAGE} alt="Cửa chống cháy APEX tại công trình" width="1376" height="768" loading="eager" fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full object-cover object-center" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,43,33,0.97)_0%,rgba(16,43,33,0.84)_48%,rgba(39,36,31,0.16)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#102b21]/75 to-transparent" />
+      {/* Hero Section */}
+      <section className="relative min-h-[520px] overflow-hidden bg-[#102b21] text-white sm:min-h-[560px]">
+        <img
+          src={HERO_IMAGE}
+          alt="Cửa chống cháy APEX tại công trình"
+          width="1376"
+          height="768"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(16,43,33,0.97)_0%,rgba(16,43,33,0.86)_48%,rgba(39,36,31,0.22)_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#102b21]/80 to-transparent" />
 
-        <div className="relative mx-auto flex min-h-[520px] max-w-7xl flex-col justify-center px-5 py-12 sm:min-h-[540px] sm:px-8 lg:px-10">
+        <div className="relative mx-auto flex min-h-[520px] max-w-7xl flex-col justify-center px-5 py-14 sm:min-h-[560px] sm:px-8 lg:px-10">
           <div className="max-w-3xl">
             <p className="mb-6 flex items-center gap-3 text-xs font-semibold text-red-300">
               <span className="h-px w-10 bg-red-400" />
@@ -65,18 +172,29 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
               Bảo vệ công trình bằng giải pháp được kiểm chứng.
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg sm:leading-8">
-              APEX cung cấp giải pháp ngăn cháy toàn diện cho nhà ở và công trình, từ cửa thép, cửa kính đến cửa cuốn và rèm ngăn cháy.
+              APEX sản xuất và cung ứng đồng bộ hệ thống ngăn cháy & cơ điện công nghiệp: Cửa thép EI70–EI120, Cửa kính, Cửa cuốn siêu trường, Rèm ngăn khói và Tủ điện viễn thông.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <a
                 href="/san-pham"
                 onClick={(e) => handleLink(e, 'products')}
-                className="flex min-h-12 items-center gap-2 bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700"
+                className="flex min-h-12 items-center gap-2 bg-red-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 shadow-sm"
               >
                 Xem sản phẩm <ArrowRight className="h-4 w-4" />
               </a>
-              <button onClick={onOpenChat} className="flex min-h-12 items-center gap-2 border border-white/40 bg-black/15 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-slate-950">
-                Trao đổi với kỹ sư <MessageSquare className="h-4 w-4" />
+              {onOpenCatalog && (
+                <button
+                  onClick={onOpenCatalog}
+                  className="flex min-h-12 items-center gap-2 border border-white/60 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-slate-950"
+                >
+                  <Download className="h-4 w-4" /> Tải Hồ sơ năng lực & Catalog
+                </button>
+              )}
+              <button
+                onClick={onOpenChat}
+                className="flex min-h-12 items-center gap-2 border border-white/30 bg-black/20 px-5 py-3 text-sm font-semibold text-white/90 backdrop-blur-sm transition-colors hover:bg-white/20"
+              >
+                Trao đổi kỹ sư <MessageSquare className="h-4 w-4" />
               </button>
             </div>
           </div>
@@ -92,6 +210,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
+      {/* Sản phẩm chủ lực với 4 tab giải pháp */}
       <section className="bg-white py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
@@ -100,54 +219,239 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
               <h2 className="section-title">Hệ sản phẩm đồng bộ cho từng khoang cháy</h2>
             </div>
             <p className="max-w-2xl text-sm leading-7 text-slate-600 sm:text-base lg:pb-1">
-              Từ cửa thép cho hành lang thoát hiểm đến cửa cuốn siêu trường và rèm ngăn khói, mỗi cấu hình đều được lựa chọn theo vị trí lắp đặt và hồ sơ thiết kế PCCC.
+              Từ cửa thép cho hành lang thoát hiểm đến cửa cuốn siêu trường và rèm ngăn khói, mỗi cấu hình đều được sản xuất chuẩn hóa theo vị trí lắp đặt và hồ sơ thiết kế thẩm duyệt PCCC.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-px overflow-hidden border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-4">
-            {products.slice(0, 4).map((product) => (
-              <article key={product.id} className="group flex min-w-0 flex-col bg-white">
+          {/* 4 Solution Tabs */}
+          <div className="mt-10 border-b border-slate-200">
+            <div className="flex flex-wrap gap-2 pb-px sm:gap-3">
+              {SOLUTION_TABS.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`group relative flex flex-col text-left px-4 py-3 sm:px-5 sm:py-3.5 transition-all rounded-t-lg border-t-2 ${
+                      isActive
+                        ? 'border-red-600 bg-neutral-50 text-slate-950 shadow-xs'
+                        : 'border-transparent text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm sm:text-base font-bold ${isActive ? 'text-red-700' : 'text-slate-800'}`}>
+                        {tab.label}
+                      </span>
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                        isActive ? 'bg-red-100 text-red-800' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
+                      }`}>
+                        {tab.badge}
+                      </span>
+                    </div>
+                    <span className="mt-0.5 hidden text-xs text-slate-500 sm:block">
+                      {tab.desc}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Product Grid */}
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {filteredProducts.map((product) => (
+              <article
+                key={product.id}
+                className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-md"
+              >
                 <a
                   href={pathForRoute('products', product.id)}
                   onClick={(e) => handleLink(e, 'products', product.id)}
                   className="relative block h-56 overflow-hidden bg-slate-100 text-left"
-                  aria-label={`Xem ${product.name}`}
+                  aria-label={`Xem chi tiết ${product.name}`}
                 >
-                  <img src={product.image} alt={product.name} width="1200" height="896" loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
-                  <span className="absolute left-4 top-4 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-900 shadow-sm">{product.fireRating}</span>
+                  <img
+                    src={product.image}
+                    alt={product.imageAlt || product.name}
+                    width="1200"
+                    height="896"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute left-3 top-3 flex flex-col gap-1.5">
+                    {product.fireRating && (
+                      <span className="inline-flex items-center gap-1 bg-red-600/95 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm backdrop-blur-xs">
+                        <Flame className="h-3 w-3" /> {product.fireRating}
+                      </span>
+                    )}
+                    {product.certificationNo && (
+                      <span className="inline-flex items-center gap-1 bg-slate-900/90 px-2 py-0.5 text-[10px] font-semibold text-slate-100 shadow-sm backdrop-blur-xs">
+                        <FileCheck2 className="h-2.5 w-2.5 text-amber-400" /> {product.certificationNo}
+                      </span>
+                    )}
+                  </div>
                 </a>
                 <div className="flex flex-1 flex-col p-5">
-                  <h3 className="text-base font-semibold leading-6 text-slate-900">{product.name}</h3>
-                  <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{product.description}</p>
-                  <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
-                    <span className="text-xs font-semibold uppercase text-red-700">{product.priceEstimate || 'Liên hệ'}</span>
-                    <button onClick={() => onOpenQuote(product.category)} className="text-xs font-semibold text-slate-700 hover:text-red-700">Liên hệ kinh doanh</button>
+                  <h3 className="line-clamp-2 text-base font-bold leading-6 text-slate-900 group-hover:text-red-700 transition-colors">
+                    {product.name}
+                  </h3>
+                  <p className="mt-2.5 line-clamp-2 text-xs leading-5 text-slate-600">
+                    {product.description}
+                  </p>
+                  <div className="mt-auto pt-5">
+                    <div className="flex items-center justify-between border-t border-slate-100 pt-3">
+                      <div>
+                        <span className="block text-[10px] uppercase font-bold text-slate-400">Dự toán</span>
+                        <span className="text-xs font-bold text-red-700">Báo giá theo dự án</span>
+                      </div>
+                      <button
+                        onClick={() => onOpenQuote(product.category)}
+                        className="rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-red-700"
+                      >
+                        Nhận báo giá
+                      </button>
+                    </div>
                   </div>
                 </div>
               </article>
             ))}
           </div>
-          <a
-            href="/san-pham"
-            onClick={(e) => handleLink(e, 'products')}
-            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-red-700"
-          >
-            Xem toàn bộ danh mục <ArrowRight className="h-4 w-4" />
-          </a>
+
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-slate-100 pt-6">
+            <a
+              href="/san-pham"
+              onClick={(e) => handleLink(e, 'products')}
+              className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 hover:text-red-700"
+            >
+              Xem toàn bộ danh mục sản phẩm <ArrowRight className="h-4 w-4" />
+            </a>
+            {onOpenCatalog && (
+              <button
+                onClick={onOpenCatalog}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-red-700 hover:text-red-800"
+              >
+                <Download className="h-3.5 w-3.5" /> Tải tài liệu thông số kỹ thuật PDF
+              </button>
+            )}
+          </div>
         </div>
       </section>
 
+      {/* KHỐI HỒ SƠ PHÁP LÝ & GIẤY KIỂM ĐỊNH PCCC (Trọng tâm B2B) */}
+      <section className="border-t border-slate-200 bg-slate-900 py-18 text-white sm:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-red-600/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-red-400 border border-red-500/30">
+                <ShieldCheck className="h-3.5 w-3.5" /> Pháp lý & Chứng nhận độc lập
+              </span>
+              <h2 className="mt-4 text-3xl font-bold leading-tight text-white sm:text-4xl">
+                Hồ sơ kiểm định phương tiện PCCC theo QCVN 06:2022/BXD
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-slate-300">
+                Toàn bộ sản phẩm ngăn cháy APEX xuất xưởng đều có hồ sơ kiểm định do Cục Cảnh sát PCCC & CNCH cấp hoặc kết quả đốt mẫu thử nghiệm chịu lửa tại Viện Chuyên ngành PCCC (IBST), đáp ứng đầy đủ điều kiện nghiệm thu công trình thực tế trên toàn quốc.
+              </p>
+
+              <div className="mt-8 space-y-3">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                  <p className="text-xs sm:text-sm text-slate-200">
+                    <strong>Đốt mẫu thực tế lò ngang & lò đứng:</strong> Thử nghiệm giới hạn chịu lửa E (tính toàn vẹn) và I (tính cách nhiệt).
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                  <p className="text-xs sm:text-sm text-slate-200">
+                    <strong>Đồng bộ tem kiểm định & CO/CQ:</strong> Cấp mã định danh kiểm định cho từng lô sản phẩm bàn giao tại công trình.
+                  </p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
+                  <p className="text-xs sm:text-sm text-slate-200">
+                    <strong>Hỗ trợ kỹ sư giải trình thẩm duyệt:</strong> Cung cấp bản vẽ chi tiết cấu tạo, báo cáo thử nghiệm khi Cảnh sát PCCC kiểm tra.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                {onOpenCatalog ? (
+                  <button
+                    onClick={onOpenCatalog}
+                    className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-red-600 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-red-700 shadow-md"
+                  >
+                    <Download className="h-4 w-4" /> Tải trọn bộ Hồ sơ & Giấy kiểm định
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => onOpenQuote()}
+                    className="inline-flex min-h-12 items-center gap-2 rounded-lg bg-red-600 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-red-700 shadow-md"
+                  >
+                    Yêu cầu hồ sơ kiểm định <ArrowRight className="h-4 w-4" />
+                  </button>
+                )}
+                <button
+                  onClick={() => onOpenQuote()}
+                  className="inline-flex min-h-12 items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/80 px-5 py-3 text-sm font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
+                >
+                  Gửi yêu cầu dự toán
+                </button>
+              </div>
+            </div>
+
+            {/* 4 Cards giấy kiểm định */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {CERTIFICATES.map((cert) => (
+                <div
+                  key={cert.code}
+                  className="relative flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-950/70 p-5 shadow-lg transition-all hover:border-slate-700 hover:bg-slate-950"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="font-mono text-xs font-bold text-amber-400 bg-amber-400/10 px-2.5 py-1 rounded border border-amber-400/20">
+                      Số: {cert.code}
+                    </span>
+                    <span className="text-[11px] font-bold text-red-400 bg-red-500/10 px-2 py-0.5 rounded">
+                      {cert.rating}
+                    </span>
+                  </div>
+
+                  <div className="mt-4">
+                    <span className="block text-[10px] uppercase font-bold text-slate-400">
+                      {cert.authority}
+                    </span>
+                    <h3 className="mt-1 text-sm font-bold text-white">
+                      {cert.title}
+                    </h3>
+                    <p className="mt-2 text-xs leading-relaxed text-slate-400">
+                      {cert.scope}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 border-t border-slate-800/80 pt-3 flex items-center justify-between text-[11px] text-slate-400">
+                    <span className="truncate">{cert.standard}</span>
+                    <span className="text-emerald-400 font-semibold shrink-0">Hợp quy</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Quy trình phối hợp dự án */}
       <section className="border-y border-slate-200 bg-white py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
             <div>
               <span className="section-kicker">Quy trình phối hợp dự án</span>
               <h2 className="section-title max-w-lg">Khóa đúng dữ liệu trước khi sản xuất.</h2>
-              <p className="mt-5 max-w-lg text-sm leading-7 text-slate-600">Quy trình được bắt đầu từ bản vẽ và điều kiện thực tế, giúp hạn chế sai khác giữa cấu hình sản phẩm, vị trí lắp đặt và hồ sơ công trình.</p>
+              <p className="mt-5 max-w-lg text-sm leading-7 text-slate-600">
+                Quy trình được bắt đầu từ bản vẽ và điều kiện thực tế, giúp hạn chế triệt để sai khác giữa cấu hình sản phẩm, vị trí lắp đặt và hồ sơ nghiệm thu PCCC công trình.
+              </p>
               <a
                 href="/lien-he"
                 onClick={(e) => handleLink(e, 'contact')}
-                className="mt-7 inline-flex min-h-11 items-center gap-2 bg-red-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-800"
+                className="mt-7 inline-flex min-h-11 items-center gap-2 bg-red-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-red-800 rounded-lg shadow-sm"
               >
                 Gửi yêu cầu khảo sát <ArrowRight className="h-4 w-4" />
               </a>
@@ -165,6 +469,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
+      {/* Dự án tiêu biểu & Đối tác */}
       <section className="border-b border-slate-200 bg-neutral-50 py-20 sm:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           {projects.length > 0 && (
@@ -185,7 +490,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
 
               <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {projects.slice(0, 3).map((project) => (
-                  <article key={project.id} className="group flex flex-col border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md">
+                  <article key={project.id} className="group flex flex-col border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-md rounded-xl overflow-hidden">
                     <div className="relative h-52 overflow-hidden bg-slate-100">
                       <img src={project.image} alt={project.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
                       <span className="absolute left-3 top-3 bg-red-600 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
@@ -228,6 +533,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
+      {/* Giá trị cốt lõi */}
       <section className="relative overflow-hidden bg-slate-950 py-20 text-white sm:py-24">
         <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#dc2626_0%,#f97316_45%,#dc2626_100%)]" />
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
@@ -266,6 +572,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
+      {/* Cấu hình vật tư */}
       <section className="border-b border-slate-200 bg-white py-14">
         <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:px-10">
           <div><span className="section-kicker">Cấu hình vật tư</span><h2 className="mt-3 text-2xl font-semibold text-slate-950">Chọn đúng vật liệu cho từng vị trí lắp đặt.</h2></div>
@@ -277,10 +584,29 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onOpenQuote, onO
         </div>
       </section>
 
+      {/* CTA Footer Banner */}
       <section className="bg-red-700 py-14 text-white">
         <div className="mx-auto flex max-w-7xl flex-col justify-between gap-7 px-5 sm:px-8 md:flex-row md:items-center lg:px-10">
-          <div><p className="text-xs font-semibold text-red-100">Cần tư vấn cho dự án đang triển khai?</p><h2 className="mt-2 max-w-2xl text-2xl font-semibold leading-9 text-white sm:text-3xl">Gửi bản vẽ hoặc yêu cầu kỹ thuật, APEX sẽ phản hồi phương án phù hợp.</h2></div>
-          <button onClick={() => onOpenQuote()} className="flex min-h-12 shrink-0 items-center justify-center gap-2 bg-white px-6 py-3 text-sm font-semibold text-red-700 hover:bg-red-50">Gọi hoặc nhắn kinh doanh <ArrowRight className="h-4 w-4" /></button>
+          <div>
+            <p className="text-xs font-semibold text-red-100 uppercase tracking-wider">Tư vấn kỹ thuật & Dự toán công trình</p>
+            <h2 className="mt-2 max-w-2xl text-2xl font-semibold leading-9 text-white sm:text-3xl">Gửi bản vẽ hoặc yêu cầu kỹ thuật, APEX sẽ phản hồi phương án và báo giá chi tiết.</h2>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => onOpenQuote()}
+              className="flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-bold text-red-700 shadow-md hover:bg-red-50"
+            >
+              Yêu cầu báo giá kỹ thuật <ArrowRight className="h-4 w-4" />
+            </button>
+            {onOpenCatalog && (
+              <button
+                onClick={onOpenCatalog}
+                className="flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-lg border border-white/60 bg-red-800/60 px-5 py-3 text-sm font-semibold text-white hover:bg-red-800"
+              >
+                <Download className="h-4 w-4" /> Tải Catalog PCCC
+              </button>
+            )}
+          </div>
         </div>
       </section>
     </div>

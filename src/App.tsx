@@ -19,6 +19,7 @@ const ContactPage = lazy(() => import('./pages/ContactPage').then((module) => ({
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((module) => ({ default: module.PrivacyPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((module) => ({ default: module.NotFoundPage })));
 const QuoteModal = lazy(() => import('./components/QuoteModal').then((module) => ({ default: module.QuoteModal })));
+const CatalogModal = lazy(() => import('./components/CatalogModal').then((module) => ({ default: module.CatalogModal })));
 const LiveChatModal = lazy(() => import('./components/LiveChatModal').then((module) => ({ default: module.LiveChatModal })));
 const SearchModal = lazy(() => import('./components/SearchModal').then((module) => ({ default: module.SearchModal })));
 const AdminPortal = lazy(() => import('./admin/AdminPortal').then((module) => ({ default: module.AdminPortal })));
@@ -37,6 +38,7 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(() => initialRoute.tab === 'admin');
   const [activeTab, setActiveTab] = useState<string>(() => initialRoute.tab === 'admin' ? 'home' : initialRoute.tab);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [catalogModalOpen, setCatalogModalOpen] = useState(false);
   const [quotePreselectedProduct, setQuotePreselectedProduct] = useState<string | undefined>();
   const [chatModalOpen, setChatModalOpen] = useState(false);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
@@ -188,6 +190,7 @@ export default function App() {
               onNavigate={handleNavigate}
               onOpenQuote={handleOpenQuote}
               onOpenChat={() => setChatModalOpen(true)}
+              onOpenCatalog={() => setCatalogModalOpen(true)}
             />
           )}
 
@@ -265,6 +268,11 @@ export default function App() {
           isOpen
           onClose={() => setQuoteModalOpen(false)}
           preselectedProduct={quotePreselectedProduct}
+        />}
+
+        {catalogModalOpen && <CatalogModal
+          isOpen
+          onClose={() => setCatalogModalOpen(false)}
         />}
 
         {chatModalOpen && <LiveChatModal

@@ -206,6 +206,14 @@ function devApiPlugin(): Plugin {
             const body = await parseBody();
             const newLead = { ...body, id: `lead-${Date.now()}`, createdAt: new Date().toISOString().slice(0, 16) };
             devLeads.unshift(newLead);
+            try {
+              const { sendLeadNotification } = await import('./api/_mailer.js');
+              sendLeadNotification(newLead).then((res) => {
+                if (res.success) {
+                  console.log('[DEV_MAIL] Đã gửi mail thông báo lead mới tới:', res.recipients.join(', '));
+                }
+              }).catch(() => {});
+            } catch {}
             return json(200, { ok: true, lead: newLead });
           }
           if (method === 'PUT') {

@@ -171,7 +171,9 @@ export interface WebsiteLeadInput {
   message?: string;
   consent: boolean;
   website?: string;
-  formName?: 'quote' | 'contact';
+  formName?: 'quote' | 'contact' | 'catalog' | string;
+  source?: string;
+  notes?: string;
   // Các trường lưu tách riêng (form báo giá)
   productInterest?: string;
   fireRating?: string;

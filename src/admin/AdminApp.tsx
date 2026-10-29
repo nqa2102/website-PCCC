@@ -13,6 +13,7 @@ import {
   ChevronUp,
   CircleUserRound,
   ClipboardList,
+  Clock,
   Download,
   ExternalLink,
   FileBadge2,
@@ -154,6 +155,45 @@ const localDate = (value?: string) => {
   }
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? value : date.toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' });
+};
+
+const formatLeadTime = (iso?: string) => {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleTimeString('vi-VN', {
+    timeZone: 'Asia/Ho_Chi_Minh',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+};
+
+const formatLeadDate = (iso?: string) => {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('vi-VN', {
+    timeZone: 'Asia/Ho_Chi_Minh',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  }).replace(/-/g, '/');
+};
+
+const formatLeadDateTimeFull = (iso?: string) => {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString('vi-VN', {
+    timeZone: 'Asia/Ho_Chi_Minh',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 };
 
 const toInputDateTime = (value?: string) => {
@@ -583,7 +623,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ onExit, userEmail = '', user
 
     const rows = state.leads.map((l) => [
       `"${l.id}"`,
-      `"${l.createdAt}"`,
+      `"${formatLeadDateTimeFull(l.createdAt)}"`,
       `"${l.fullName.replace(/"/g, '""')}"`,
       `"${l.phone}"`,
       `"${(l.email || '').replace(/"/g, '""')}"`,
@@ -1267,10 +1307,11 @@ const LeadsTable = ({
   if (!leads.length) return <EmptyState label="yêu cầu khách hàng" />;
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[880px] border-collapse text-left text-xs">
+      <table className="w-full min-w-[960px] border-collapse text-left text-xs">
         <thead>
           <tr className="border-b border-neutral-200 bg-neutral-50 text-[10px] uppercase text-slate-500">
-            <th className="px-4 py-3 sm:px-6">Khách hàng / Liên hệ</th>
+            <th className="px-4 py-3 sm:px-6 whitespace-nowrap">Thời gian gửi</th>
+            <th className="px-4 py-3">Khách hàng / Liên hệ</th>
             <th className="px-4 py-3">Nhu cầu / Công trình</th>
             <th className="px-4 py-3">Phụ trách</th>
             <th className="px-4 py-3">Trạng thái</th>
@@ -1283,7 +1324,16 @@ const LeadsTable = ({
             const cleanPhone = lead.phone ? lead.phone.replace(/[^\d+]/g, '') : '';
             return (
               <tr key={lead.id} className="hover:bg-neutral-50 transition-colors">
-                <td className="px-4 py-3 sm:px-6">
+                <td className="px-4 py-3 sm:px-6 whitespace-nowrap">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-900">
+                    <Clock className="h-3.5 w-3.5 text-red-600 shrink-0" />
+                    <span>{formatLeadTime(lead.createdAt)}</span>
+                  </div>
+                  <span className="text-[11px] text-slate-500 block mt-0.5">
+                    {formatLeadDate(lead.createdAt)}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
                   <strong className="block text-slate-950 font-bold">{lead.fullName}</strong>
                   <div className="mt-1 flex items-center gap-2 text-slate-600">
                     <span className="font-mono">{lead.phone}</span>
@@ -1990,6 +2040,20 @@ const LeadEditor = ({ data, onChange }: { data: AdminLead; onChange: (data: Admi
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-slate-50 border border-slate-200 rounded text-xs text-slate-700">
+        <div className="flex items-center gap-2">
+          <Clock className="h-4 w-4 text-red-600 shrink-0" />
+          <span><strong>Thời gian tiếp nhận:</strong> {formatLeadDateTimeFull(data.createdAt)} (Giờ Việt Nam)</span>
+        </div>
+        <div className="flex items-center gap-3 text-slate-500">
+          {data.source && (
+            <span>Nguồn: <strong className="text-slate-800">{data.source}</strong></span>
+          )}
+          {data.id && (
+            <span className="font-mono text-[11px] bg-neutral-200 px-1.5 py-0.5 rounded text-slate-700">ID: {data.id}</span>
+          )}
+        </div>
+      </div>
       {cleanPhone && (
         <div className="flex flex-wrap items-center gap-2 p-3 bg-red-50/70 border border-red-200 rounded">
           <span className="text-xs font-bold text-slate-800">Liên hệ trực tiếp:</span>
